@@ -40,6 +40,64 @@ class EventDispatcher {
     }
 }
 
+function attachShadow(instance, options) {
+    const shadowRoot = instance.attachShadow(options || {});
+    const t = document.createElement('template');
+    t.innerHTML = instance.template;
+    shadowRoot.appendChild(t.content.cloneNode(true));
+    instance.bindTemplate();
+}
+function attachDOM(instance, options) {
+    const t = document.createElement('template');
+    t.innerHTML = instance.elementMeta.template;
+    instance.appendChild(t.content.cloneNode(true));
+    instance.bindTemplate();
+}
+function attachStyle(instance, options) {
+    const id = `${instance.elementMeta.selector}`;
+    if (!document.getElementById(`${id}-x`)) {
+        const t = document.createElement('style');
+        t.setAttribute('id', `${id}-x`);
+        t.innerText = instance.elementMeta.style;
+        t.innerText = t.innerText.replace(/:host/gi, `[is=${id}]`);
+        document.head.appendChild(t);
+    }
+}
+
+function getParent(el) {
+    return el.parentNode;
+}
+function getChildNodes() {
+    function getChildren(node, path = [], result = []) {
+        if (!node.children.length)
+            result.push(path.concat(node));
+        for (const child of node.children)
+            getChildren(child, path.concat(child), result);
+        return result;
+    }
+    const nodes = getChildren(this, []).reduce((nodes, curr) => {
+        return nodes.concat(curr);
+    }, []);
+    return nodes.filter((item, index) => { return nodes.indexOf(item) >= index; });
+}
+function getSiblings(el, filter) {
+    if (!filter) {
+        filter = [];
+    }
+    return Array.from(getParent(el).children).filter((elem) => {
+        return elem.tagName !== 'TEXT' && elem.tagName !== 'STYLE';
+    });
+}
+function querySelector(selector) {
+    return document.querySelector(selector);
+}
+function querySelectorAll(selector) {
+    return Array.from(document.querySelectorAll(selector));
+}
+function getElementIndex(el) {
+    return getSiblings(el).indexOf(el);
+}
+
 const TEMPLATE_BIND_REGEX = /\{\{(\s*)(.*?)(\s*)\}\}/g;
 const BIND_SUFFIX = ' __state';
 Object.byString = function (o, s) {
@@ -81,19 +139,6 @@ class BoundHandler {
         return true;
     }
 }
-function getChildNodes() {
-    function getChildren(node, path = [], result = []) {
-        if (!node.children.length)
-            result.push(path.concat(node));
-        for (const child of node.children)
-            getChildren(child, path.concat(child), result);
-        return result;
-    }
-    const nodes = getChildren(this, []).reduce((nodes, curr) => {
-        return nodes.concat(curr);
-    }, []);
-    return nodes.filter((item, index) => { return nodes.indexOf(item) >= index; });
-}
 function bindTemplate() {
     if (!this.elementMeta)
         this.elementMeta = {};
@@ -103,15 +148,6 @@ function bindTemplate() {
         ['handler' + BIND_SUFFIX]: new BoundHandler(this)
     };
     this.state = new Proxy(this, this.elementMeta.boundState['handler' + BIND_SUFFIX]);
-}
-function compileTemplate(elementMeta, target) {
-    target.prototype.elementMeta = Object.assign({}, elementMeta);
-    target.prototype.elementMeta.eventMap = {};
-    target.prototype.template = document.createElement('template');
-    target.prototype.template = `<style>${elementMeta.style}</style>${elementMeta.template}`;
-    target.prototype.getChildNodes = getChildNodes;
-    target.prototype.bindTemplateNodes = bindTemplateNodes;
-    target.prototype.bindTemplate = bindTemplate;
 }
 function bindTemplateNodes() {
     if (!this.elementMeta)
@@ -129,48 +165,14 @@ function bindTemplateNodes() {
         return node;
     });
 }
-function getParent(el) {
-    return el.parentNode;
-}
-function querySelector(selector) {
-    return document.querySelector(selector);
-}
-function querySelectorAll(selector) {
-    return Array.from(document.querySelectorAll(selector));
-}
-function getSiblings(el, filter) {
-    if (!filter) {
-        filter = [];
-    }
-    return Array.from(getParent(el).children).filter((elem) => {
-        return elem.tagName !== 'TEXT' && elem.tagName !== 'STYLE';
-    });
-}
-function getElementIndex(el) {
-    return getSiblings(el).indexOf(el);
-}
-function attachShadow(instance, options) {
-    const shadowRoot = instance.attachShadow(options || {});
-    const t = document.createElement('template');
-    t.innerHTML = instance.template;
-    shadowRoot.appendChild(t.content.cloneNode(true));
-    instance.bindTemplate();
-}
-function attachDOM(instance, options) {
-    const t = document.createElement('template');
-    t.innerHTML = instance.elementMeta.template;
-    instance.appendChild(t.content.cloneNode(true));
-    instance.bindTemplate();
-}
-function attachStyle(instance, options) {
-    const id = `${instance.elementMeta.selector}`;
-    if (!document.getElementById(`${id}-x`)) {
-        const t = document.createElement('style');
-        t.setAttribute('id', `${id}-x`);
-        t.innerText = instance.elementMeta.style;
-        t.innerText = t.innerText.replace(/:host/gi, `[is=${id}]`);
-        document.head.appendChild(t);
-    }
+function compileTemplate(elementMeta, target) {
+    target.prototype.elementMeta = Object.assign({}, elementMeta);
+    target.prototype.elementMeta.eventMap = {};
+    target.prototype.template = document.createElement('template');
+    target.prototype.template = `<style>${elementMeta.style}</style>${elementMeta.template}`;
+    target.prototype.getChildNodes = getChildNodes;
+    target.prototype.bindTemplateNodes = bindTemplateNodes;
+    target.prototype.bindTemplate = bindTemplate;
 }
 
 const html = (...args) => {

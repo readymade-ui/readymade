@@ -1,4 +1,4 @@
-import { css, Component, InputComponent, Listen } from '../../../index';
+import { css, Component, InputComponent, Listen } from '../../../../modules/core/index';
 
 @Component({
   selector: 'my-input',
