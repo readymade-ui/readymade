@@ -1,6 +1,14 @@
 # readymade
 
-JavaScript microlibrary for developing Web Components with Decorators.
+JavaScript microlibrary for developing Web Components with Decorators that uses only native spec to provide robust features.
+
+🎰 Declare metadata for CSS and HTML ShadowDOM template
+☕️ Single interface for 'autonomous custom elements' and 'customized built-in elements'
+🎤 Event Emitter pattern
+1️⃣ One-way data binding
+🌲 Treeshakable
+🏋️‍ Weighing in ~2Kb for 'Hello World' (gzipped)
+
 
 ### Problem
 
@@ -65,7 +73,7 @@ import { Component, html, css, attachDOM, attachStyle, Listen } from '@readymade
 		}
 	`,
 })
-class MyButtonComponent extends ButtonComponent {
+class MyButtonComponent extends HTMLButtonElement {
 	constructor() {
 		super();
 		attachDOM(this);
