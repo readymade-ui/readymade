@@ -9,7 +9,6 @@ JavaScript microlibrary for developing Web Components with Decorators that uses 
 - 🌲 Treeshakable
 - 🏋️‍ Weighing in ~2Kb for 'Hello World' (gzipped)
 
-
 ### Problem
 
 When coding Web Components with Custom Elements API there is a lot of boilerplate that is repeated in all class declarations. Suppose you are developing a UI library with dozens of Custom Elements. At the very least you need to attach ShadowDOM and provide a template and styling.
@@ -108,6 +107,48 @@ class MyButtonComponent extends ButtonComponent {
 	}
 }
 ```
+
+### Events
+
+Readymade comes packaged with an event emitter and event listener pattern in the form of Method Decorators.
+
+
+```js
+  @Emitter('bang', { bubbles: true, composed: true })
+  @Listen('click')
+  public onClick(event) {
+			this.emitter.broadcast('bang');
+  }
+```
+
+Declaring an `Emitter` stores a CustomEvent on the element that can later be emitted with `dispatchEvent` or broadcast with `BroadcastChannel API`.
+
+
+## One-Way Data Binding
+
+A property called 'state' stores local state on the Custom Element that can be bound to the template. Under the hood, a handler bound to ES2015 `Proxy` updates the template without the need for `eval`.
+
+```js
+@Component({
+  selector: 'my-button',
+  template: html`
+   {{model}}
+	`
+})
+class MyButtonComponent extends ButtonComponent {
+  constructor() {
+    super();
+    this.state.model = 'Click';
+  }
+```
+
+### Treeshakable
+
+readymade is developed with named ES2015 exports that work elegantly with build tools like Rollup.
+
+### Weighing in ~2Kb
+
+A simple `Hello World` bundle weighs around `2Kb` gzipped and `~1.7Kb` with brotli compression.
 
 
 ## Getting Started
