@@ -46,7 +46,7 @@ Provide a set of reusable functions that reduce duplicate code and provide some 
 The below example is a button that extends HTMLButtonElement. Since this is a customized built-in elements, MyButtonComponent extends from the native HTMLButtonElement, we cannot attach Shadow DOM. attachDOM compiles the template as the my-button innerHTML and places a style tag in the `<head>` to style the Element.
 
 ```js
-import { Component, html, css, attachDOM, attachStyle, Listen } from '@readymade/ui';
+import { Component, html, css, attachDOM, attachStyle, Listen } from '@readymade/core';
 
 @Component({
 	selector: 'my-button',
@@ -92,7 +92,7 @@ Wa la! A Custom Element that retains all the behaviors of a button, yet extends 
 We can go even further to reduce boilerplate by importing one of readymade-ui classes that already extend HTMLButtonElement.
 
 ```js
-import { Component, html, css, ButtonComponent } from '@readymade/ui';
+import { Component, html, css, ButtonComponent } from '@readymade/core';
 
 class MyButtonComponent extends ButtonComponent {
 	constructor() {
