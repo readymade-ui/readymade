@@ -1,16 +1,44 @@
 # readymade
 
-Microlibrary for coding Web Components with TypeScript Decorators.
+JavaScript microlibrary for developing Web Components with Decorators.
 
 ### Problem
 
-When developing Web Components with Custom Elements API there is a lot of boilerplate that is repeated in all class declarations.
+When coding Web Components with Custom Elements API there is a lot of boilerplate that is repeated in all class declarations. Suppose you are developing a UI library with dozens of Custom Elements. At the very least you need to attach ShadowDOM and provide a template and styling.
+
+```js
+const shadowRoot: ShadowRoot = this.attachShadow(options || {});
+const t = document.createElement('template');
+t.innerHTML = `
+<style>
+.content {
+	color: red;
+}
+</style>
+<div class="content"> Some Content </div>
+`;
+shadowRoot.appendChild(t.content.cloneNode(true));
+```
+
+This can result in inconsistant approaches as different engineers work on the library, making it harder for build tooling to statically analyze a component and process the CSS and HTML. What if you could have an interface like this that handles all the boilerplate for you?
+
+```js
+@Component({
+	template: html`
+		<div class="content"> Some Content </div>
+	`,
+	style: css`
+		.content {
+			color: red;
+		}
+	`,
+})
+```
 
 
 ### Solution
 
-Provide a Functional approach to encapsulate some of this logic into reusable Function, specifically a special kind of higher order Function called a Decorator. Decorators are available in TypeScript. Decorators are used my libraries like Angular and Stencil. This approach can be applied to Custom Elements v1, giving the engineer a consistent interface for generating UI components.
-
+Provide a set of reusable functions that reduce duplicate code and provide some convenience methods. This project specifically uses a special kind of higher order Function called a Decorator. Decorators are currently a proposed feature in ECMAScript. We can start using them now with TypeScript. Decorators are used by libraries like Angular and Stencil. By utilizing Decorators, we gain a consistent interface for coding and generating UI components.
 
 
 ### Example
@@ -18,16 +46,7 @@ Provide a Functional approach to encapsulate some of this logic into reusable Fu
 The below example is a button that extends HTMLButtonElement. Since this is a customized built-in elements, MyButtonComponent extends from the native HTMLButtonElement, we cannot attach Shadow DOM. attachDOM compiles the template as the my-button innerHTML and places a style tag in the `<head>` to style the Element.
 
 ```js
-import { Component, html, css, attachDOM, attachStyle, Listen } from 'src/decorators/component';
-
-class ButtonComponent extends HTMLButtonElement {
-	constructor() {
-		super();
-		attachDOM(this);
-		attachStyle(this);
-		this.onInit();
-	}
-}
+import { Component, html, css, attachDOM, attachStyle, Listen } from '@readymade/ui';
 
 @Component({
 	selector: 'my-button',
@@ -49,6 +68,9 @@ class ButtonComponent extends HTMLButtonElement {
 class MyButtonComponent extends ButtonComponent {
 	constructor() {
 		super();
+		attachDOM(this);
+		attachStyle(this);
+		this.onInit();
 	}
 	@Listen('click')
 	onClick(event) {
@@ -66,6 +88,19 @@ In a template somewhere...
 ```
 
 Wa la! A Custom Element that retains all the behaviors of a button, yet extends button to do other things. In this nieve implementation all that is changed is the style of the button. Creating a customized built in element like this will retain all the behaviors of the element that is extended.
+
+We can go even further to reduce boilerplate by importing one of readymade-ui classes that already extend HTMLButtonElement.
+
+```js
+import { Component, html, css, ButtonComponent } from '@readymade/ui';
+
+class MyButtonComponent extends ButtonComponent {
+	constructor() {
+		super();
+	}
+}
+```
+
 
 ## Getting Started
 
