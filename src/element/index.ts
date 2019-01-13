@@ -4,8 +4,8 @@ const BIND_SUFFIX = ' __state';
 
 Object.byString = function(o, s) {
     if(!s) return o;
-    s = s.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
-    s = s.replace(/^\./, '');           // strip a leading dot
+    s = s.replace(/\[(\w+)\]/g, '.$1');
+    s = s.replace(/^\./, '');
     var a = s.split('.');
     for (var i = 0, n = a.length; i < n; ++i) {
         var k = a[i];
@@ -77,7 +77,6 @@ function compileTemplate(elementMeta: ElementMeta, target: any) {
   target.prototype.bindTemplateNodes = bindTemplateNodes;
   target.prototype.bindTemplate = bindTemplate;
 }
-
 
 function bindTemplateNodes() {
   if (!this.elementMeta) this.elementMeta = {};
