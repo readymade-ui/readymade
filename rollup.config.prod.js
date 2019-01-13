@@ -6,7 +6,7 @@ import inlinePostCSS from 'rollup-plugin-inline-postcss';
 
 export default [
     {
-        input: 'src/polyfill.ts',
+        input: 'src/app/polyfill.ts',
         plugins: [
             resolve(),
             typescript(),
@@ -25,7 +25,7 @@ export default [
         }
     },
     {
-        input: 'src/vendor.ts',
+        input: 'src/app/vendor.ts',
         plugins: [
             resolve(),
             typescript(),
@@ -44,7 +44,7 @@ export default [
         }
     },
     {
-        input: 'src/main.ts',
+        input: 'src/app/main.ts',
         plugins: [
             resolve(),
             minifyHTML(),

@@ -8,10 +8,10 @@ if [[ ! -e dist/style ]]; then
     mkdir dist/style
 fi
 
-cp src/index.html dist/index.html
-cp src/404.html dist/404.html
+cp src/app/index.html dist/index.html
+cp src/app/404.html dist/404.html
 
-node_modules/.bin/postcss src/style/main.css --output dist/style/main.css
+node_modules/.bin/postcss src/app/style/main.css --output dist/style/main.css
 
 if [[ $NODE_ENV == 'prod' ]]; then
     node_modules/.bin/rollup -c rollup.config.prod.js

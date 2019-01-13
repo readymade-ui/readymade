@@ -1,5 +1,5 @@
 import { compileTemplate } from './../element/index';
-import { EventDispatcher } from './../events/index';
+import { EventDispatcher } from './../event/index';
 
 interface EventMeta {
   key: string;
@@ -12,7 +12,6 @@ interface ElementMeta {
   template?: string;
   eventMap?: any;
 };
-
 
 const html = (...args) => {
   return args;

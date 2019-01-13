@@ -1,4 +1,4 @@
-import { css, html, ButtonComponent, Component, Emitter, Listen } from '../../../index';
+import { css, html, ButtonComponent, Component, Emitter, Listen } from '../../../../modules/core/index';
 
 @Component({
   selector: 'my-button',

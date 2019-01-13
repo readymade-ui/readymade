@@ -9,7 +9,7 @@ const clean = {
 };
 
 export default [{
-    input: 'src/index.ts',
+    input: 'src/modules/core/index.ts',
     plugins: [
         resolve(),
         typescript(),
@@ -26,7 +26,7 @@ export default [{
     }
 },
 {
-    input: 'src/index.ts',
+    input: 'src/modules/core/index.ts',
     plugins: [
         resolve(),
         typescript(),
@@ -44,7 +44,7 @@ export default [{
     }
 },
 {
-    input: 'src/index.ts',
+    input: 'src/modules/core/index.ts',
     plugins: [
         resolve(),
         typescript(),
@@ -61,7 +61,7 @@ export default [{
     }
 },
 {
-    input: 'src/index.ts',
+    input: 'src/modules/core/index.ts',
     plugins: [
         resolve(),
         typescript(),

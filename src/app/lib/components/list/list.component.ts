@@ -1,4 +1,4 @@
-import { css, html, Component, CustomElement, getElementIndex, getSiblings, Listen  } from '../../../index';
+import { css, html, Component, CustomElement, getElementIndex, getSiblings, Listen  } from '../../../../modules/core/index';
 
 @Component({
   selector: 'my-list',
