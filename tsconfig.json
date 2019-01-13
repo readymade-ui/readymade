@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "allowJs": true,
+    "experimentalDecorators": true,
+    "module": "ES2015",
+    "outDir": "./dist",
+    "target": "ES2015",
+    "typeRoots": [ "node_modules/@types" ],
+    "types" : ["reflect-metadata"],
+    "sourceMap": true
+  },
+  "include": [
+    "./src/**/*.ts"
+  ]
+}
