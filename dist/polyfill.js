@@ -1,2 +1,188 @@
-!function(e){"use strict";!function(e,t,r){if(!t.get("ungap-li")&&typeof Reflect!=typeof n){var n="extends";try{var l={};l[n]="li";var a=HTMLLIElement,i=function(){return Reflect.construct(a,[],i)};if(i.prototype=r.create(a.prototype),t.define("ungap-li",i,l),!/is="ungap-li"/.test((new i).outerHTML))throw{}}catch(l){var o="attributeChangedCallback",u="connectedCallback",f="disconnectedCallback",c=r.assign,s=r.create,v=r.defineProperties,d=r.setPrototypeOf,b=t.define,p=t.get,w=t.upgrade,g=t.whenDefined,C=s(null);new MutationObserver(function(e){for(var t=0,r=e.length;t<r;t++){for(var n=e[t],l=n.addedNodes,a=n.removedNodes,i=0,o=l.length;i<o;i++)m(l[i]);for(i=0,o=a.length;i<o;i++)y(a[i])}}).observe(e,{childList:!0,subtree:!0}),v(t,{define:{value:function(r,l,a){if(r=r.toLowerCase(),a&&n in a){C[r]=c({},a,{Class:l});for(var i=a[n]+'[is="'+r+'"]',o=e.querySelectorAll(i),u=0,f=o.length;u<f;u++)m(o[u])}else b.apply(t,arguments)}},get:{value:function(e){return e in C?C[e].Class:p.call(t,e)}},upgrade:{value:function(e){var r=L(e);!r||e instanceof r.Class?w.call(t,e):O(e,r)}},whenDefined:{value:function(e){return e in C?Promise.resolve():g.call(t,e)}}});var h=e.createElement;function A(e){for(var t=0,r=e.length;t<r;t++){var n=e[t],l=n.attributeName,a=n.oldValue,i=n.target,u=i.getAttribute(l);o in i&&(a!=u||null!=u)&&i[o](l,a,i.getAttribute(l),null)}}function y(e){if(1===e.nodeType){M(e,y);var t=L(e);t&&e instanceof t.Class&&f in e&&e[f]()}}function L(e){var t=e.getAttribute("is");return t&&(t=t.toLowerCase())in C?C[t]:null}function O(e,t){var r=t.Class,n=r.observedAttributes||[];if(d(e,r.prototype),n.length){new MutationObserver(A).observe(e,{attributes:!0,attributeFilter:n,attributeOldValue:!0});for(var l=[],a=0,i=n.length;a<i;a++)l.push({attributeName:n[a],oldValue:null,target:e});A(l)}}function m(e){if(1===e.nodeType){M(e,m);var t=L(e);t&&(e instanceof t.Class||O(e,t),u in e&&e[u]())}}function M(e,t){for(var r=e.querySelectorAll("[is]"),n=0,l=r.length;n<l;n++)t(r[n])}v(e,{createElement:{value:function(r,n){var l=h.call(e,r);return n&&"is"in n&&(l.setAttribute("is",n.is),t.upgrade(l)),l}}})}}}(document,customElements,Object)}(this.window=this.window||{});
+(function (exports) {
+  'use strict';
+
+  /*! (c) Andrea Giammarchi - ISC */
+  (function (document, customElements, Object) {
+    if (customElements.get('ungap-li') || typeof Reflect == typeof EXTENDS)
+      return;
+    var EXTENDS = 'extends';
+    try {
+      // class LI extends HTMLLIElement {}
+      var desc = {};
+      desc[EXTENDS] = 'li';
+      var HtmlLI = HTMLLIElement;
+      var LI = function () {
+        return Reflect.construct(HtmlLI, [], LI);
+      };
+      LI.prototype = Object.create(HtmlLI.prototype);
+      customElements.define('ungap-li', LI, desc);
+      if (!/is="ungap-li"/.test((new LI).outerHTML))
+        throw {};
+    } catch (o_O) {
+      var ATTRIBUTE_CHANGED_CALLBACK = 'attributeChangedCallback';
+      var CONNECTED_CALLBACK = 'connectedCallback';
+      var DISCONNECTED_CALLBACK = 'disconnectedCallback';
+      var assign = Object.assign;
+      var create = Object.create;
+      var defineProperties = Object.defineProperties;
+      var setPrototypeOf = Object.setPrototypeOf;
+      var define = customElements.define;
+      var get = customElements.get;
+      var upgrade = customElements.upgrade;
+      var whenDefined = customElements.whenDefined;
+      var registry = create(null);
+      new MutationObserver(function (changes) {
+        for (var i = 0, length = changes.length; i < length; i++) {
+          var change = changes[i];
+          var addedNodes = change.addedNodes;
+          var removedNodes = change.removedNodes;
+          for (var j = 0, len = addedNodes.length; j < len; j++)
+            setupIfNeeded(addedNodes[j]);
+          for (var j = 0, len = removedNodes.length; j < len; j++)
+            disconnectIfNeeded(removedNodes[j]);
+        }
+      }).observe(
+        document,
+        {childList: true, subtree: true}
+      );
+      defineProperties(
+        customElements,
+        {
+          define: {
+            value: function (name, Class, options) {
+              name = name.toLowerCase();
+              if (options && EXTENDS in options) {
+                // currently options is not used but preserved for the future
+                registry[name] = assign({}, options, {Class: Class});
+                var query = options[EXTENDS] + '[is="' + name + '"]';
+                var changes = document.querySelectorAll(query);
+                for (var i = 0, length = changes.length; i < length; i++)
+                  setupIfNeeded(changes[i]);
+              }
+              else
+                define.apply(customElements, arguments);
+            }
+          },
+          get: {
+            value: function (name) {
+              return name in registry ?
+                registry[name].Class :
+                get.call(customElements, name);
+            }
+          },
+          upgrade: {
+            value: function (node) {
+              var info = getInfo(node);
+              if (info && !(node instanceof info.Class))
+                setup(node, info);
+              else
+                upgrade.call(customElements, node);
+            }
+          },
+          whenDefined: {
+            value: function (name) {
+              return name in registry ?
+                Promise.resolve() :
+                whenDefined.call(customElements, name);
+            }
+          }
+        }
+      );
+      var createElement = document.createElement;
+      defineProperties(
+        document,
+        {
+          createElement: {
+            value: function (name, options) {
+              var node = createElement.call(document, name);
+              if (options && 'is' in options) {
+                node.setAttribute('is', options.is);
+                customElements.upgrade(node);
+              }
+              return node;
+            }
+          }
+        }
+      );
+      function attributeChanged(changes) {
+        for (var i = 0, length = changes.length; i < length; i++) {
+          var change = changes[i];
+          var attributeName = change.attributeName;
+          var oldValue = change.oldValue;
+          var target = change.target;
+          var newValue = target.getAttribute(attributeName);
+          if (
+            ATTRIBUTE_CHANGED_CALLBACK in target &&
+            !(oldValue == newValue && newValue == null)
+          )
+            target[ATTRIBUTE_CHANGED_CALLBACK](
+              attributeName,
+              oldValue,
+              target.getAttribute(attributeName),
+              // TODO: add getAttributeNS if the node is XML
+              null
+            );
+        }
+      }
+      function disconnectIfNeeded(node) {
+        if (node.nodeType !== 1)
+          return;
+        setupSubNodes(node, disconnectIfNeeded);
+        var info = getInfo(node);
+        if (
+          info &&
+          node instanceof info.Class &&
+          DISCONNECTED_CALLBACK in node
+        )
+          node[DISCONNECTED_CALLBACK]();
+      }
+      function getInfo(node) {
+        var is = node.getAttribute('is');
+        if (is) {
+          is = is.toLowerCase();
+          if (is in registry)
+            return registry[is];
+        }
+        return null;
+      }
+      function setup(node, info) {
+        var Class = info.Class;
+        var oa = Class.observedAttributes || [];
+        setPrototypeOf(node, Class.prototype);
+        if (oa.length) {
+          new MutationObserver(attributeChanged).observe(
+            node,
+            {
+              attributes: true,
+              attributeFilter: oa,
+              attributeOldValue: true
+            }
+          );
+          var changes = [];
+          for (var i = 0, length = oa.length; i < length; i++)
+            changes.push({attributeName: oa[i], oldValue: null, target: node});
+          attributeChanged(changes);
+        }
+      }
+      function setupIfNeeded(node) {
+        if (node.nodeType !== 1)
+          return;
+        setupSubNodes(node, setupIfNeeded);
+        var info = getInfo(node);
+        if (info) {
+          if (!(node instanceof info.Class))
+            setup(node, info);
+          if (CONNECTED_CALLBACK in node)
+            node[CONNECTED_CALLBACK]();
+        }
+      }
+      function setupSubNodes(node, setup) {
+        var nodes = node.querySelectorAll('[is]');
+        for (var i = 0, length = nodes.length; i < length; i++)
+          setup(nodes[i]);
+      }
+    }
+  }(document, customElements, Object));
+
+}((this.window = this.window || {})));
 //# sourceMappingURL=polyfill.js.map

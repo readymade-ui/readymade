@@ -171,14 +171,116 @@ readymade is developed with named ES2015 exports that work elegantly with build 
 
 A simple `Hello World` bundle weighs around `2Kb` gzipped and `~1.7Kb` with brotli compression.
 
-
 ## Getting Started
+
+### Installation
+
+Installing `readymade` is as simple as downloading the npm package and saving it to your project.
+
+```
+npm i @readymade/core --save
+```
+
+### Make A Custom Element
+
+#### 1. Create a new file for your component
+
+```
+touch src/app/components/my.component.ts
+```
+
+#### 2. Create a new component
+
+Here is a simple boilerplate to get started. This boilerplate will attach ShadowDOM to the element, gives you a space for the html template and css styling.
+
+```js
+import { Component, css, html, CustomElement } from '@readymade/core';
+
+@Component({
+  selector: 'my-component',
+  template: html`
+
+	`,
+  style: css`
+
+	`,
+})
+class MyComponent extends CustomElement {
+  constructor() {
+    super();
+  }
+}
+
+customElements.define('my-component', MyComponent);
+
+export { MyComponent };
+```
+
+#### 3. Import MyComponent into your application
+
+i.e.
+
+```
+import { MyComponent } from 'path/to/my.component'
+```
+
+or if you just wish to export from some sort of index.
+
+```
+export { MyComponent } from 'path/to/my.component'
+```
+
+#### 4. Use MyComponent in a template.
+
+```html
+
+<my-component></my-component>
+```
+
+Components made with `readymade` can be used anywhere Custom Elements can be used because they compile down to Custom Elements v1.
+
+## How To Compile Readymade Custom Elements
+
+Readymade is dependent only on one package for compilation: `typescript`.
+
+A sample tsconfig could be as follows. Make sure `experimentalDecorators` is set to `true`.
+
+```js
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "experimentalDecorators": true,
+    "module": "ES2015",
+    "outDir": "./path/to/dist",
+    "target": "ES2015",
+    "sourceMap": true
+  },
+  "include": [
+    "./path/to/**/*.ts"
+  ]
+}
+
+```
+
+This is the bare minumum needed to compile with `typescript`.
+
+
+
+## Develop `readymade` packages.
+
+This repository is essentially a monorepo for developing `@readymade` packages. Below are instructions for installing dependencies and running the development server.
+
+In early beta status, readymade does not have any CI or testing strategy. Any contributions for these are welcome.
+
+readymade does have a development server, development build scripts that build an example site. readymade relies on `rollup` to build distribution packages for the library.
+
+### Installation
 
 ```
 npm install
 ```
 
-## Development
+### Development
 
 The dev build implements a watcher to compile and bundle the app on file change.
 
@@ -186,23 +288,21 @@ The dev build implements a watcher to compile and bundle the app on file change.
 npm start
 ```
 
-Run the express server in a separate tab.
+Run the development server in a separate tab. The development server currently relies on `live-server`.
 
 ```
-node backend/server.js
+npm run dev
 ```
 
-or use a tool like live-server.
+Optionally, build for production and use a local express server to serve the example site bundled for production. This script bundles and minifies the application for production, serving gzipped compressed.
 
 ```
-cd dist
-live-server
+npm run build
 ```
-
-## Production
-
-The prod build minifies the test package and provides an entry point for using the Components defined in the library.
+In another terminal:
 
 ```
-NODE_ENV=prod node index.js
+npm run serve
 ```
+
+This combo of commands builds the example site for production and serves it minified and gzipped.

@@ -1,2 +1,496 @@
-var app=function(e){"use strict";function t(e,t,n,s){var o,l=arguments.length,i=l<3?t:null===s?s=Object.getOwnPropertyDescriptor(t,n):s;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)i=Reflect.decorate(e,t,n,s);else for(var a=e.length-1;a>=0;a--)(o=e[a])&&(i=(l<3?o(i):l>3?o(t,n,i):o(t,n))||i);return l>3&&i&&Object.defineProperty(t,n,i),i}class n{constructor(e){this.target=e,this.channels={default:new BroadcastChannel("default")},this.events={}}get(e){return this.events[e]}set(e,t){return this.events[e]=t,this.get(e)}emit(e){"string"==typeof e&&(e=this.events[e]),this.target.dispatchEvent(e)}broadcast(e,t){"string"==typeof e&&(e=this.events[e]),this.target.dispatchEvent(e),null===(e={type:e.type,detail:e.detail}).detail&&delete e.detail,t?this.channels[t].postMessage(e):this.channels.default.postMessage(e)}setChannel(e){this.channels[e]=new BroadcastChannel(e)}removeChannel(e){this.channels[e].close(),delete this.channels[e]}}function s(){const e=function e(t,n=[],s=[]){t.children.length||s.push(n.concat(t));for(const o of t.children)e(o,n.concat(o),s);return s}(this,[]).reduce((e,t)=>e.concat(t),[]);return e.filter((t,n)=>e.indexOf(t)>=n)}const o=/\{\{(\s*)(.*?)(\s*)\}\}/g,l=" __state";Object.byString=function(e,t){if(!t)return e;for(var n=(t=(t=t.replace(/\[(\w+)\]/g,".$1")).replace(/^\./,"")).split("."),s=0,o=n.length;s<o;++s){var l=n[s];if(!(l in e))return;e=e[l]}return e};class i{constructor(e){this.template=e.innerHTML,this.node=e}update(e){let t=this.template.slice(0);this.node.innerHTML=t.replace(o,(t,n)=>Object.byString(e,/\{\{(\s*)(.*?)(\s*)\}\}/.exec(t)[2])||"")}}class a{constructor(e){this.model=e}set(e,t,n){return e[t]=n,this.model.elementMeta.boundState["node"+l].update(this.model),!0}}function c(){this.elementMeta||(this.elementMeta={}),this.elementMeta.templateRegex=o,this.elementMeta.boundState={["node"+l]:new i(this),["handler"+l]:new a(this)},this.state=new Proxy(this,this.elementMeta.boundState["handler"+l])}function r(){this.elementMeta||(this.elementMeta={}),this.elementMeta.boundNodes=this.getChildNodes().map(e=>(e.elementMeta||(e.elementMeta={}),e.elementMeta.templateRegex=o,e.elementMeta.boundState={["node"+l]:new i(e),["handler"+l]:new a(e)},e.state=new Proxy(e,e.elementMeta.boundState["handler"+l]),e))}const h=()=>{};class p extends HTMLButtonElement{constructor(){super(),function(e,t){const n=document.createElement("template");n.innerHTML=e.elementMeta.template,e.appendChild(n.content.cloneNode(!0)),e.bindTemplate()}(this),function(e,t){const n=`${e.elementMeta.selector}`;if(!document.getElementById(`${n}-x`)){const t=document.createElement("style");t.setAttribute("id",`${n}-x`),t.innerText=e.elementMeta.style,t.innerText=t.innerText.replace(/:host/gi,`[is=${n}]`),document.head.appendChild(t)}}(this),this.onInit&&this.onInit()}}var u,d;return e.MyButtonComponent=class extends p{constructor(){super(),this.state.model="Click"}onClick(e){console.log("click")}},t([(u="click",function(e,t,s){const{onInit:o=h,onDestroy:l=h}=e,i=Symbol(t);e.onInit=function(){o.call(this),function(){const e=this[i]=((...e)=>{s.value.apply(this,e)});this.emitter||(this.emitter=new n(this),d&&(this.elementMeta.eventMap[u]={key:u,handler:t},this.emitter.channels[d].onmessage=(e=>{this[this.elementMeta.eventMap[u].handler](e.data)}))),this.addEventListener(u,e)}.call(this)},e.onDestroy=function(){l.call(this),function(){this.removeEventListener(u,this[i])}.call(this)}})],e.MyButtonComponent.prototype,"onClick",null),e.MyButtonComponent=t([function(e){if(e)return t=>(function(e,t){t.prototype.elementMeta=Object.assign({},e),t.prototype.elementMeta.eventMap={},t.prototype.template=document.createElement("template"),t.prototype.template=`<style>${e.style}</style>${e.template}`,t.prototype.getChildNodes=s,t.prototype.bindTemplateNodes=r,t.prototype.bindTemplate=c}(e,t),t);console.error("Component must include ElementMeta to compile")}({selector:"my-button",template:((...e)=>e)`{{model}}`,style:((...e)=>e)`:host{background:#181818;cursor:pointer;color:#fff;font-weight:400}`})],e.MyButtonComponent),customElements.define("my-button",e.MyButtonComponent,{extends:"button"}),e}({});
-//# sourceMappingURL=main.js.map
+var app = (function (exports) {
+    'use strict';
+
+    /*! *****************************************************************************
+    Copyright (c) Microsoft Corporation. All rights reserved.
+    Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+    this file except in compliance with the License. You may obtain a copy of the
+    License at http://www.apache.org/licenses/LICENSE-2.0
+
+    THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
+    WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
+    MERCHANTABLITY OR NON-INFRINGEMENT.
+
+    See the Apache Version 2.0 License for specific language governing permissions
+    and limitations under the License.
+    ***************************************************************************** */
+
+    function __decorate(decorators, target, key, desc) {
+        var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+        if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+        else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+        return c > 3 && r && Object.defineProperty(target, key, r), r;
+    }
+
+    // events
+    class EventDispatcher {
+        constructor(context) {
+            this.target = context;
+            this.channels = {
+                'default': new BroadcastChannel('default')
+            };
+            this.events = {};
+        }
+        get(eventName) {
+            return this.events[eventName];
+        }
+        set(eventName, ev) {
+            this.events[eventName] = ev;
+            return this.get(eventName);
+        }
+        emit(ev) {
+            if (typeof ev === 'string')
+                ev = this.events[ev];
+            this.target.dispatchEvent(ev);
+        }
+        broadcast(ev, name) {
+            if (typeof ev === 'string')
+                ev = this.events[ev];
+            this.target.dispatchEvent(ev);
+            ev = { type: ev.type, detail: ev.detail };
+            if (ev.detail === null)
+                delete ev.detail;
+            (name) ? this.channels[name].postMessage(ev) : this.channels['default'].postMessage(ev);
+        }
+        setChannel(name) {
+            this.channels[name] = new BroadcastChannel(name);
+        }
+        removeChannel(name) {
+            this.channels[name].close();
+            delete this.channels[name];
+        }
+    }
+
+    function attachShadow(instance, options) {
+        const shadowRoot = instance.attachShadow(options || {});
+        const t = document.createElement('template');
+        t.innerHTML = instance.template;
+        shadowRoot.appendChild(t.content.cloneNode(true));
+        instance.bindTemplate();
+    }
+    function attachDOM(instance, options) {
+        const t = document.createElement('template');
+        t.innerHTML = instance.elementMeta.template;
+        instance.appendChild(t.content.cloneNode(true));
+        instance.bindTemplate();
+    }
+    function attachStyle(instance, options) {
+        const id = `${instance.elementMeta.selector}`;
+        if (!document.getElementById(`${id}-x`)) {
+            const t = document.createElement('style');
+            t.setAttribute('id', `${id}-x`);
+            t.innerText = instance.elementMeta.style;
+            t.innerText = t.innerText.replace(/:host/gi, `[is=${id}]`);
+            document.head.appendChild(t);
+        }
+    }
+
+    function getParent(el) {
+        return el.parentNode;
+    }
+    function getChildNodes() {
+        function getChildren(node, path = [], result = []) {
+            if (!node.children.length)
+                result.push(path.concat(node));
+            for (const child of node.children)
+                getChildren(child, path.concat(child), result);
+            return result;
+        }
+        const nodes = getChildren(this, []).reduce((nodes, curr) => {
+            return nodes.concat(curr);
+        }, []);
+        return nodes.filter((item, index) => { return nodes.indexOf(item) >= index; });
+    }
+    function getSiblings(el, filter) {
+        if (!filter) {
+            filter = [];
+        }
+        return Array.from(getParent(el).children).filter((elem) => {
+            return elem.tagName !== 'TEXT' && elem.tagName !== 'STYLE';
+        });
+    }
+    function getElementIndex(el) {
+        return getSiblings(el).indexOf(el);
+    }
+
+    const TEMPLATE_BIND_REGEX = /\{\{(\s*)(.*?)(\s*)\}\}/g;
+    const BIND_SUFFIX = ' __state';
+    Object.byString = function (o, s) {
+        if (!s)
+            return o;
+        s = s.replace(/\[(\w+)\]/g, '.$1');
+        s = s.replace(/^\./, '');
+        var a = s.split('.');
+        for (var i = 0, n = a.length; i < n; ++i) {
+            var k = a[i];
+            if (k in o) {
+                o = o[k];
+            }
+            else {
+                return;
+            }
+        }
+        return o;
+    };
+    class BoundNode {
+        constructor(node) {
+            this.template = node.innerHTML;
+            this.node = node;
+        }
+        update(data) {
+            let tempTemplate = this.template.slice(0);
+            this.node.innerHTML = tempTemplate.replace(TEMPLATE_BIND_REGEX, (match, variable) => {
+                return Object.byString(data, /\{\{(\s*)(.*?)(\s*)\}\}/.exec(match)[2]) || '';
+            });
+        }
+    }
+    class BoundHandler {
+        constructor(obj) {
+            this.model = obj;
+        }
+        set(target, key, value) {
+            target[key] = value;
+            this.model.elementMeta.boundState['node' + BIND_SUFFIX].update(this.model);
+            return true;
+        }
+    }
+    function bindTemplate() {
+        if (!this.elementMeta)
+            this.elementMeta = {};
+        this.elementMeta.templateRegex = TEMPLATE_BIND_REGEX;
+        this.elementMeta.boundState = {
+            ['node' + BIND_SUFFIX]: new BoundNode(this),
+            ['handler' + BIND_SUFFIX]: new BoundHandler(this)
+        };
+        this.state = new Proxy(this, this.elementMeta.boundState['handler' + BIND_SUFFIX]);
+    }
+    function bindTemplateNodes() {
+        if (!this.elementMeta)
+            this.elementMeta = {};
+        this.elementMeta.boundNodes = this.getChildNodes()
+            .map((node) => {
+            if (!node.elementMeta)
+                node.elementMeta = {};
+            node.elementMeta.templateRegex = TEMPLATE_BIND_REGEX;
+            node.elementMeta.boundState = {
+                ['node' + BIND_SUFFIX]: new BoundNode(node),
+                ['handler' + BIND_SUFFIX]: new BoundHandler(node)
+            };
+            node.state = new Proxy(node, node.elementMeta.boundState['handler' + BIND_SUFFIX]);
+            return node;
+        });
+    }
+    function compileTemplate(elementMeta, target) {
+        target.prototype.elementMeta = Object.assign({}, elementMeta);
+        target.prototype.elementMeta.eventMap = {};
+        target.prototype.template = document.createElement('template');
+        target.prototype.template = `<style>${elementMeta.style}</style>${elementMeta.template}`;
+        target.prototype.getChildNodes = getChildNodes;
+        target.prototype.bindTemplateNodes = bindTemplateNodes;
+        target.prototype.bindTemplate = bindTemplate;
+    }
+
+    const html = (...args) => {
+        return args;
+    };
+    const css = (...args) => {
+        return args;
+    };
+    // tslint:disable-next-line
+    const noop = () => { };
+    // Decorators
+    function Component(attributes) {
+        if (!attributes) {
+            console.error('Component must include ElementMeta to compile');
+            return;
+        }
+        return (target) => {
+            compileTemplate(attributes, target);
+            return target;
+        };
+    }
+    function Emitter(eventName, options) {
+        return function decorator(target, key, descriptor) {
+            const { onInit = noop } = target;
+            function addEvent() {
+                if (!this.emitter) {
+                    this.emitter = new EventDispatcher(this);
+                }
+                this.emitter.set(eventName, new CustomEvent(eventName, options ? options : {}));
+            }
+            target.onInit = function onInitWrapper() {
+                onInit.call(this);
+                addEvent.call(this);
+            };
+        };
+    }
+    function Listen(eventName, channelName) {
+        return function decorator(target, key, descriptor) {
+            const { onInit = noop, onDestroy = noop } = target;
+            const symbolHandler = Symbol(key);
+            function addListener() {
+                const handler = this[symbolHandler] = (...args) => {
+                    descriptor.value.apply(this, args);
+                };
+                if (!this.emitter) {
+                    this.emitter = new EventDispatcher(this);
+                    if (channelName) {
+                        this.elementMeta.eventMap[eventName] = {
+                            key: eventName,
+                            handler: key
+                        };
+                        this.emitter.channels[channelName].onmessage = (ev) => {
+                            this[this.elementMeta.eventMap[eventName].handler](ev.data);
+                        };
+                    }
+                }
+                this.addEventListener(eventName, handler);
+            }
+            function removeListener() {
+                this.removeEventListener(eventName, this[symbolHandler]);
+            }
+            target.onInit = function onInitWrapper() {
+                onInit.call(this);
+                addListener.call(this);
+            };
+            target.onDestroy = function onDestroyWrapper() {
+                onDestroy.call(this);
+                removeListener.call(this);
+            };
+        };
+    }
+
+    class CustomElement extends HTMLElement {
+        constructor() {
+            super();
+            attachShadow(this, { mode: 'open' });
+            if (this.onInit) {
+                this.onInit();
+            }
+        }
+    }
+    class ButtonComponent extends HTMLButtonElement {
+        constructor() {
+            super();
+            attachDOM(this);
+            attachStyle(this);
+            if (this.onInit) {
+                this.onInit();
+            }
+        }
+    }
+    class InputComponent extends HTMLInputElement {
+        constructor() {
+            super();
+            attachStyle(this);
+            if (this.onInit) {
+                this.onInit();
+            }
+        }
+    }
+
+    exports.MyButtonComponent = class MyButtonComponent extends ButtonComponent {
+        constructor() {
+            super();
+            this.state.model = 'Click';
+        }
+        onClick(event) {
+            this.emitter.broadcast('bang');
+        }
+        onKeyUp(event) {
+            if (event.key === 'Enter') {
+                this.emitter.broadcast('bang');
+            }
+        }
+    };
+    __decorate([
+        Emitter('bang', { bubbles: true, composed: true }),
+        Listen('click')
+    ], exports.MyButtonComponent.prototype, "onClick", null);
+    __decorate([
+        Listen('keyup')
+    ], exports.MyButtonComponent.prototype, "onKeyUp", null);
+    exports.MyButtonComponent = __decorate([
+        Component({
+            selector: 'my-button',
+            template: html `{{model}}`,
+            style: css `
+		:host {
+			background: rgba(24, 24, 24, 1);
+			cursor: pointer;
+			color: white;
+			font-weight: 400;
+		}
+	`,
+        })
+    ], exports.MyButtonComponent);
+    customElements.define('my-button', exports.MyButtonComponent, { extends: 'button' });
+
+    exports.MyInputComponent = class MyInputComponent extends InputComponent {
+        constructor() {
+            super();
+        }
+        onFocus(event) {
+            this.value = 'input';
+        }
+    };
+    __decorate([
+        Listen('focus')
+    ], exports.MyInputComponent.prototype, "onFocus", null);
+    exports.MyInputComponent = __decorate([
+        Component({
+            selector: 'my-input',
+            style: css `
+		:host {
+			background: rgba(24, 24, 24, 1);
+			border: 0px none;
+			color: white;
+		}
+	`,
+        })
+    ], exports.MyInputComponent);
+    customElements.define('my-input', exports.MyInputComponent, { extends: 'input' });
+
+    exports.MyListComponent = class MyListComponent extends CustomElement {
+        constructor() {
+            super();
+            this.currentIndex = 0;
+        }
+        deactivateElement(elem) {
+            elem.setAttribute('tabindex', '-1');
+            elem.querySelector('my-item').setAttribute('state', '');
+        }
+        activateElement(elem) {
+            elem.setAttribute('tabindex', '0');
+            elem.querySelector('my-item').setAttribute('state', '--selected');
+        }
+        connectedCallback() {
+            this.setAttribute('tabindex', '0');
+        }
+        onFocus(ev) {
+            for (const li of this.children[0].children) {
+                if (li === this.children[0].children[this.currentIndex]) {
+                    this.activateElement(li);
+                }
+                else {
+                    this.deactivateElement(li);
+                }
+                li.addEventListener('click', (clickEv) => {
+                    getSiblings(li).forEach((elem) => {
+                        this.deactivateElement(elem);
+                    });
+                    this.activateElement(li);
+                    this.onSubmit(clickEv);
+                });
+            }
+        }
+        onKeydown(ev) {
+            const currentElement = this.querySelector('[tabindex]:not([tabindex="-1"])');
+            const siblings = getSiblings(currentElement);
+            this.currentIndex = getElementIndex(currentElement);
+            if (ev.keyCode === 13) {
+                this.onSubmit(ev);
+            }
+            if (ev.keyCode === 38) {
+                // up
+                if (this.currentIndex === 0) {
+                    this.currentIndex = siblings.length - 1;
+                }
+                else {
+                    this.currentIndex -= 1;
+                }
+                siblings.forEach((elem) => {
+                    if (getElementIndex(elem) === this.currentIndex) {
+                        this.activateElement(elem);
+                    }
+                    else {
+                        this.deactivateElement(elem);
+                    }
+                });
+            }
+            if (ev.keyCode === 40) {
+                // down
+                if (this.currentIndex === siblings.length - 1) {
+                    this.currentIndex = 0;
+                }
+                else {
+                    this.currentIndex += 1;
+                }
+                siblings.forEach((elem) => {
+                    if (getElementIndex(elem) === this.currentIndex) {
+                        this.activateElement(elem);
+                    }
+                    else {
+                        this.deactivateElement(elem);
+                    }
+                });
+            }
+        }
+        onSubmit(event) {
+            // console.log(this, event);
+        }
+    };
+    __decorate([
+        Listen('focus')
+    ], exports.MyListComponent.prototype, "onFocus", null);
+    __decorate([
+        Listen('keydown')
+    ], exports.MyListComponent.prototype, "onKeydown", null);
+    exports.MyListComponent = __decorate([
+        Component({
+            selector: 'my-list',
+            template: html `<slot name=menu></slot>`,
+            style: css `
+		:host {
+			display: block;
+			background: rgba(24, 24, 24, 1);
+			width: 200px;
+			height: 200px;
+			color: white;
+			padding: 1em;
+			border-radius: 8px;
+		}
+	`,
+        })
+    ], exports.MyListComponent);
+    customElements.define('my-list', exports.MyListComponent);
+
+    exports.MyItemComponent = class MyItemComponent extends CustomElement {
+        constructor() {
+            super();
+        }
+        onBang(event) {
+            this.getAttribute('state') === '--selected' ? this.setAttribute('state', '') : this.setAttribute('state', '--selected');
+        }
+    };
+    __decorate([
+        Listen('bang', 'default')
+    ], exports.MyItemComponent.prototype, "onBang", null);
+    exports.MyItemComponent = __decorate([
+        Component({
+            selector: 'my-item',
+            template: html `<p><span><slot name=msg>item</slot></span></p>`,
+            style: css `
+		:host {
+			display: block;
+			cursor: pointer;
+		}
+		:host([state='--selected']) {
+			background: rgba(255, 105, 180, 1);
+			color: black;
+			font-weight: 700;
+		}
+	`,
+        })
+    ], exports.MyItemComponent);
+    customElements.define('my-item', exports.MyItemComponent);
+
+    // import { App } from './app';
+    // View Components
+    // export { HomeView } from './view/home.view';
+    // export { ChapterOneView } from './view/chapter1.view';
+
+    return exports;
+
+}({}));
