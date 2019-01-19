@@ -3,9 +3,9 @@ import { Component, css, html, PseudoElement } from '../../modules/core/index';
 @Component({
   selector: 'r-logo',
   template: html`
-    <x-template>
+    <r-template>
       <h1>{{headline}}</h1>
-    </x-template>
+    </r-template>
 	`,
   style: css`
 	  h1 {

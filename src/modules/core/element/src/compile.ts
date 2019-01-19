@@ -28,8 +28,8 @@ function setTemplate(elem: Element, html: string) {
 
 class BoundNode {
   constructor (node) {
-    this.template = node.querySelector('x-template').innerHTML;
-    this.node = node.querySelector('x-template');
+    this.template = node.querySelector('r-template').innerHTML;
+    this.node = node.querySelector('r-template');
   }
   update(data) {
     this.node = setTemplate(this.node, this.template.slice(0).replace(TEMPLATE_BIND_REGEX, (match, variable) => {
