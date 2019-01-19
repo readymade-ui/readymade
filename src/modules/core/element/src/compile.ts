@@ -19,6 +19,12 @@ Object.byString = function(o, s) {
     return o;
 }
 
+function setTemplate(elem: Element, html: string) {
+    const _elem = elem.cloneNode(false);
+    _elem.innerHTML = html;
+    elem.parentNode.replaceChild(_elem, elem);
+}
+
 class BoundNode {
   constructor (node) {
     this.template = node.innerHTML;
@@ -47,7 +53,7 @@ function bindTemplate() {
   if (!this.elementMeta) this.elementMeta = {};
   this.elementMeta.templateRegex = TEMPLATE_BIND_REGEX;
   this.elementMeta.boundState = {
-      ['node' + BIND_SUFFIX]: new BoundNode(this),
+      ['node' + BIND_SUFFIX]: new BoundNode(this.shadowRoot ? this.shadowRoot : this),
       ['handler' + BIND_SUFFIX]: new BoundHandler(this)
   }
   this.state = new Proxy(this, this.elementMeta.boundState['handler' + BIND_SUFFIX]);
