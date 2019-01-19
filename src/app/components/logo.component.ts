@@ -1,9 +1,11 @@
-import { Component, css, html, CustomElement } from '../../modules/core/index';
+import { Component, css, html, PseudoElement } from '../../modules/core/index';
 
 @Component({
   selector: 'r-logo',
   template: html`
-    <h1>{{headline}}</h1>
+    <x-template>
+      <h1>{{headline}}</h1>
+    </x-template>
 	`,
   style: css`
 	  h1 {
@@ -20,7 +22,7 @@ import { Component, css, html, CustomElement } from '../../modules/core/index';
     }
 	`
 })
-class RLogoComponent extends CustomElement {
+class RLogoComponent extends PseudoElement {
   public sizes: string[] = ['is--small', 'is--medium', 'is--large'];
   constructor() {
     super();
@@ -28,6 +30,9 @@ class RLogoComponent extends CustomElement {
   }
   static get observedAttributes() {
     return ['size'];
+  }
+  setRandomNumber() {
+    this.state.headline = 'R';
   }
   attributeChangedCallback(name, oldValue, newValue) {
     switch (name) {
@@ -39,9 +44,9 @@ class RLogoComponent extends CustomElement {
   setSize(size: string) {
     if (this.sizes.includes(size)) {
       for (const item in this.sizes) {
-          this.shadowRoot.querySelector('h1').classList.remove(this.sizes[item]);
+         this.querySelector('h1').classList.remove(this.sizes[item]);
       }
-      this.shadowRoot.querySelector('h1').classList.add(size);
+      this.querySelector('h1').classList.add(size);
     }
   }
 }

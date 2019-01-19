@@ -25,12 +25,21 @@ var app = (function (exports) {
 
     // events
 
-    function attachShadow(instance, options) {
-        const shadowRoot = instance.attachShadow(options || {});
+    function attachDOM(instance, options) {
         const t = document.createElement('template');
-        t.innerHTML = instance.template;
-        shadowRoot.appendChild(t.content.cloneNode(true));
+        t.innerHTML = instance.elementMeta.template;
+        instance.appendChild(t.content.cloneNode(true));
         instance.bindTemplate();
+    }
+    function attachStyle(instance, options) {
+        const id = `${instance.elementMeta.selector}`;
+        if (!document.getElementById(`${id}-x`)) {
+            const t = document.createElement('style');
+            t.setAttribute('id', `${id}-x`);
+            t.innerText = instance.elementMeta.style;
+            t.innerText = t.innerText.replace(/:host/gi, `[is=${id}]`);
+            document.head.appendChild(t);
+        }
     }
 
     function getChildNodes() {
@@ -66,16 +75,21 @@ var app = (function (exports) {
         }
         return o;
     };
+    function setTemplate(elem, html) {
+        const _elem = elem.cloneNode(false);
+        _elem.innerHTML = html;
+        elem.parentNode.replaceChild(_elem, elem);
+        return _elem;
+    }
     class BoundNode {
         constructor(node) {
-            this.template = node.innerHTML;
-            this.node = node;
+            this.template = node.querySelector('x-template').innerHTML;
+            this.node = node.querySelector('x-template');
         }
         update(data) {
-            let tempTemplate = this.template.slice(0);
-            this.node.innerHTML = tempTemplate.replace(TEMPLATE_BIND_REGEX, (match, variable) => {
+            this.node = setTemplate(this.node, this.template.slice(0).replace(TEMPLATE_BIND_REGEX, (match, variable) => {
                 return Object.byString(data, /\{\{(\s*)(.*?)(\s*)\}\}/.exec(match)[2]) || '';
-            });
+            }));
         }
     }
     class BoundHandler {
@@ -142,17 +156,18 @@ var app = (function (exports) {
         };
     }
 
-    class CustomElement extends HTMLElement {
+    class PseudoElement extends HTMLElement {
         constructor() {
             super();
-            attachShadow(this, { mode: 'open' });
+            attachDOM(this);
+            attachStyle(this);
             if (this.onInit) {
                 this.onInit();
             }
         }
     }
 
-    exports.RLogoComponent = class RLogoComponent extends CustomElement {
+    exports.RLogoComponent = class RLogoComponent extends PseudoElement {
         constructor() {
             super();
             this.sizes = ['is--small', 'is--medium', 'is--large'];
@@ -160,6 +175,9 @@ var app = (function (exports) {
         }
         static get observedAttributes() {
             return ['size'];
+        }
+        setRandomNumber() {
+            this.state.headline = 'R';
         }
         attributeChangedCallback(name, oldValue, newValue) {
             switch (name) {
@@ -171,16 +189,16 @@ var app = (function (exports) {
         setSize(size) {
             if (this.sizes.includes(size)) {
                 for (const item in this.sizes) {
-                    this.shadowRoot.querySelector('h1').classList.remove(this.sizes[item]);
+                    this.querySelector('h1').classList.remove(this.sizes[item]);
                 }
-                this.shadowRoot.querySelector('h1').classList.add(size);
+                this.querySelector('h1').classList.add(size);
             }
         }
     };
     exports.RLogoComponent = __decorate([
         Component({
             selector: 'r-logo',
-            template: html `<h1>{{headline}}</h1>`,
+            template: html `<x-template><h1>{{headline}}</h1></x-template>`,
             style: css `
 	  h1 {
       font-size: 1em;
