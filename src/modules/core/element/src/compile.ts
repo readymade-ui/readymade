@@ -23,18 +23,18 @@ function setTemplate(elem: Element, html: string) {
     const _elem = elem.cloneNode(false);
     _elem.innerHTML = html;
     elem.parentNode.replaceChild(_elem, elem);
+    return _elem;
 }
 
 class BoundNode {
   constructor (node) {
-    this.template = node.innerHTML;
-    this.node = node;
+    this.template = node.querySelector('x-template').innerHTML;
+    this.node = node.querySelector('x-template');
   }
   update(data) {
-    let tempTemplate = this.template.slice(0);
-    this.node.innerHTML = tempTemplate.replace(TEMPLATE_BIND_REGEX, (match, variable) => {
+    this.node = setTemplate(this.node, this.template.slice(0).replace(TEMPLATE_BIND_REGEX, (match, variable) => {
       return Object.byString(data, /\{\{(\s*)(.*?)(\s*)\}\}/.exec(match)[2]) || '';
-    });
+    }))
   }
 }
 
