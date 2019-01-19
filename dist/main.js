@@ -24,43 +24,6 @@ var app = (function (exports) {
     }
 
     // events
-    class EventDispatcher {
-        constructor(context) {
-            this.target = context;
-            this.channels = {
-                'default': new BroadcastChannel('default')
-            };
-            this.events = {};
-        }
-        get(eventName) {
-            return this.events[eventName];
-        }
-        set(eventName, ev) {
-            this.events[eventName] = ev;
-            return this.get(eventName);
-        }
-        emit(ev) {
-            if (typeof ev === 'string')
-                ev = this.events[ev];
-            this.target.dispatchEvent(ev);
-        }
-        broadcast(ev, name) {
-            if (typeof ev === 'string')
-                ev = this.events[ev];
-            this.target.dispatchEvent(ev);
-            ev = { type: ev.type, detail: ev.detail };
-            if (ev.detail === null)
-                delete ev.detail;
-            (name) ? this.channels[name].postMessage(ev) : this.channels['default'].postMessage(ev);
-        }
-        setChannel(name) {
-            this.channels[name] = new BroadcastChannel(name);
-        }
-        removeChannel(name) {
-            this.channels[name].close();
-            delete this.channels[name];
-        }
-    }
 
     function attachShadow(instance, options) {
         const shadowRoot = instance.attachShadow(options || {});
@@ -69,26 +32,7 @@ var app = (function (exports) {
         shadowRoot.appendChild(t.content.cloneNode(true));
         instance.bindTemplate();
     }
-    function attachDOM(instance, options) {
-        const t = document.createElement('template');
-        t.innerHTML = instance.elementMeta.template;
-        instance.appendChild(t.content.cloneNode(true));
-        instance.bindTemplate();
-    }
-    function attachStyle(instance, options) {
-        const id = `${instance.elementMeta.selector}`;
-        if (!document.getElementById(`${id}-x`)) {
-            const t = document.createElement('style');
-            t.setAttribute('id', `${id}-x`);
-            t.innerText = instance.elementMeta.style;
-            t.innerText = t.innerText.replace(/:host/gi, `[is=${id}]`);
-            document.head.appendChild(t);
-        }
-    }
 
-    function getParent(el) {
-        return el.parentNode;
-    }
     function getChildNodes() {
         function getChildren(node, path = [], result = []) {
             if (!node.children.length)
@@ -101,17 +45,6 @@ var app = (function (exports) {
             return nodes.concat(curr);
         }, []);
         return nodes.filter((item, index) => { return nodes.indexOf(item) >= index; });
-    }
-    function getSiblings(el, filter) {
-        if (!filter) {
-            filter = [];
-        }
-        return Array.from(getParent(el).children).filter((elem) => {
-            return elem.tagName !== 'TEXT' && elem.tagName !== 'STYLE';
-        });
-    }
-    function getElementIndex(el) {
-        return getSiblings(el).indexOf(el);
     }
 
     const TEMPLATE_BIND_REGEX = /\{\{(\s*)(.*?)(\s*)\}\}/g;
@@ -160,7 +93,7 @@ var app = (function (exports) {
             this.elementMeta = {};
         this.elementMeta.templateRegex = TEMPLATE_BIND_REGEX;
         this.elementMeta.boundState = {
-            ['node' + BIND_SUFFIX]: new BoundNode(this),
+            ['node' + BIND_SUFFIX]: new BoundNode(this.shadowRoot ? this.shadowRoot : this),
             ['handler' + BIND_SUFFIX]: new BoundHandler(this)
         };
         this.state = new Proxy(this, this.elementMeta.boundState['handler' + BIND_SUFFIX]);
@@ -197,8 +130,6 @@ var app = (function (exports) {
     const css = (...args) => {
         return args;
     };
-    // tslint:disable-next-line
-    const noop = () => { };
     // Decorators
     function Component(attributes) {
         if (!attributes) {
@@ -208,56 +139,6 @@ var app = (function (exports) {
         return (target) => {
             compileTemplate(attributes, target);
             return target;
-        };
-    }
-    function Emitter(eventName, options) {
-        return function decorator(target, key, descriptor) {
-            const { onInit = noop } = target;
-            function addEvent() {
-                if (!this.emitter) {
-                    this.emitter = new EventDispatcher(this);
-                }
-                this.emitter.set(eventName, new CustomEvent(eventName, options ? options : {}));
-            }
-            target.onInit = function onInitWrapper() {
-                onInit.call(this);
-                addEvent.call(this);
-            };
-        };
-    }
-    function Listen(eventName, channelName) {
-        return function decorator(target, key, descriptor) {
-            const { onInit = noop, onDestroy = noop } = target;
-            const symbolHandler = Symbol(key);
-            function addListener() {
-                const handler = this[symbolHandler] = (...args) => {
-                    descriptor.value.apply(this, args);
-                };
-                if (!this.emitter) {
-                    this.emitter = new EventDispatcher(this);
-                    if (channelName) {
-                        this.elementMeta.eventMap[eventName] = {
-                            key: eventName,
-                            handler: key
-                        };
-                        this.emitter.channels[channelName].onmessage = (ev) => {
-                            this[this.elementMeta.eventMap[eventName].handler](ev.data);
-                        };
-                    }
-                }
-                this.addEventListener(eventName, handler);
-            }
-            function removeListener() {
-                this.removeEventListener(eventName, this[symbolHandler]);
-            }
-            target.onInit = function onInitWrapper() {
-                onInit.call(this);
-                addListener.call(this);
-            };
-            target.onDestroy = function onDestroyWrapper() {
-                onDestroy.call(this);
-                removeListener.call(this);
-            };
         };
     }
 
@@ -270,221 +151,53 @@ var app = (function (exports) {
             }
         }
     }
-    class ButtonComponent extends HTMLButtonElement {
+
+    exports.RLogoComponent = class RLogoComponent extends CustomElement {
         constructor() {
             super();
-            attachDOM(this);
-            attachStyle(this);
-            if (this.onInit) {
-                this.onInit();
+            this.sizes = ['is--small', 'is--medium', 'is--large'];
+            this.state.headline = 'R';
+        }
+        static get observedAttributes() {
+            return ['size'];
+        }
+        attributeChangedCallback(name, oldValue, newValue) {
+            switch (name) {
+                case 'size':
+                    this.setSize(this.getAttribute('size'));
+                    break;
             }
         }
+        setSize(size) {
+            if (this.sizes.includes(size)) {
+                for (const item in this.sizes) {
+                    this.shadowRoot.querySelector('h1').classList.remove(this.sizes[item]);
+                }
+                this.shadowRoot.querySelector('h1').classList.add(size);
+            }
+        }
+    };
+    exports.RLogoComponent = __decorate([
+        Component({
+            selector: 'r-logo',
+            template: html `<h1>{{headline}}</h1>`,
+            style: css `
+	  h1 {
+      font-size: 1em;
     }
-    class InputComponent extends HTMLInputElement {
-        constructor() {
-            super();
-            attachStyle(this);
-            if (this.onInit) {
-                this.onInit();
-            }
-        }
+    h1.is--small {
+        font-size: 12px;
     }
-
-    exports.MyButtonComponent = class MyButtonComponent extends ButtonComponent {
-        constructor() {
-            super();
-            this.state.model = 'Click';
-        }
-        onClick(event) {
-            this.emitter.broadcast('bang');
-        }
-        onKeyUp(event) {
-            if (event.key === 'Enter') {
-                this.emitter.broadcast('bang');
-            }
-        }
-    };
-    __decorate([
-        Emitter('bang', { bubbles: true, composed: true }),
-        Listen('click')
-    ], exports.MyButtonComponent.prototype, "onClick", null);
-    __decorate([
-        Listen('keyup')
-    ], exports.MyButtonComponent.prototype, "onKeyUp", null);
-    exports.MyButtonComponent = __decorate([
-        Component({
-            selector: 'my-button',
-            template: html `{{model}}`,
-            style: css `
-		:host {
-			background: rgba(24, 24, 24, 1);
-			cursor: pointer;
-			color: white;
-			font-weight: 400;
-		}
-	`,
+    h1.is--medium {
+        font-size: 6em;
+    }
+    h1.is--large {
+        font-size: 12em;
+    }
+	`
         })
-    ], exports.MyButtonComponent);
-    customElements.define('my-button', exports.MyButtonComponent, { extends: 'button' });
-
-    exports.MyInputComponent = class MyInputComponent extends InputComponent {
-        constructor() {
-            super();
-        }
-        onFocus(event) {
-            this.value = 'input';
-        }
-    };
-    __decorate([
-        Listen('focus')
-    ], exports.MyInputComponent.prototype, "onFocus", null);
-    exports.MyInputComponent = __decorate([
-        Component({
-            selector: 'my-input',
-            style: css `
-		:host {
-			background: rgba(24, 24, 24, 1);
-			border: 0px none;
-			color: white;
-		}
-	`,
-        })
-    ], exports.MyInputComponent);
-    customElements.define('my-input', exports.MyInputComponent, { extends: 'input' });
-
-    exports.MyListComponent = class MyListComponent extends CustomElement {
-        constructor() {
-            super();
-            this.currentIndex = 0;
-        }
-        deactivateElement(elem) {
-            elem.setAttribute('tabindex', '-1');
-            elem.querySelector('my-item').setAttribute('state', '');
-        }
-        activateElement(elem) {
-            elem.setAttribute('tabindex', '0');
-            elem.querySelector('my-item').setAttribute('state', '--selected');
-        }
-        connectedCallback() {
-            this.setAttribute('tabindex', '0');
-        }
-        onFocus(ev) {
-            for (const li of this.children[0].children) {
-                if (li === this.children[0].children[this.currentIndex]) {
-                    this.activateElement(li);
-                }
-                else {
-                    this.deactivateElement(li);
-                }
-                li.addEventListener('click', (clickEv) => {
-                    getSiblings(li).forEach((elem) => {
-                        this.deactivateElement(elem);
-                    });
-                    this.activateElement(li);
-                    this.onSubmit(clickEv);
-                });
-            }
-        }
-        onKeydown(ev) {
-            const currentElement = this.querySelector('[tabindex]:not([tabindex="-1"])');
-            const siblings = getSiblings(currentElement);
-            this.currentIndex = getElementIndex(currentElement);
-            if (ev.keyCode === 13) {
-                this.onSubmit(ev);
-            }
-            if (ev.keyCode === 38) {
-                // up
-                if (this.currentIndex === 0) {
-                    this.currentIndex = siblings.length - 1;
-                }
-                else {
-                    this.currentIndex -= 1;
-                }
-                siblings.forEach((elem) => {
-                    if (getElementIndex(elem) === this.currentIndex) {
-                        this.activateElement(elem);
-                    }
-                    else {
-                        this.deactivateElement(elem);
-                    }
-                });
-            }
-            if (ev.keyCode === 40) {
-                // down
-                if (this.currentIndex === siblings.length - 1) {
-                    this.currentIndex = 0;
-                }
-                else {
-                    this.currentIndex += 1;
-                }
-                siblings.forEach((elem) => {
-                    if (getElementIndex(elem) === this.currentIndex) {
-                        this.activateElement(elem);
-                    }
-                    else {
-                        this.deactivateElement(elem);
-                    }
-                });
-            }
-        }
-        onSubmit(event) {
-            // console.log(this, event);
-        }
-    };
-    __decorate([
-        Listen('focus')
-    ], exports.MyListComponent.prototype, "onFocus", null);
-    __decorate([
-        Listen('keydown')
-    ], exports.MyListComponent.prototype, "onKeydown", null);
-    exports.MyListComponent = __decorate([
-        Component({
-            selector: 'my-list',
-            template: html `<slot name=menu></slot>`,
-            style: css `
-		:host {
-			display: block;
-			background: rgba(24, 24, 24, 1);
-			width: 200px;
-			height: 200px;
-			color: white;
-			padding: 1em;
-			border-radius: 8px;
-		}
-	`,
-        })
-    ], exports.MyListComponent);
-    customElements.define('my-list', exports.MyListComponent);
-
-    exports.MyItemComponent = class MyItemComponent extends CustomElement {
-        constructor() {
-            super();
-        }
-        onBang(event) {
-            this.getAttribute('state') === '--selected' ? this.setAttribute('state', '') : this.setAttribute('state', '--selected');
-        }
-    };
-    __decorate([
-        Listen('bang', 'default')
-    ], exports.MyItemComponent.prototype, "onBang", null);
-    exports.MyItemComponent = __decorate([
-        Component({
-            selector: 'my-item',
-            template: html `<p><span><slot name=msg>item</slot></span></p>`,
-            style: css `
-		:host {
-			display: block;
-			cursor: pointer;
-		}
-		:host([state='--selected']) {
-			background: rgba(255, 105, 180, 1);
-			color: black;
-			font-weight: 700;
-		}
-	`,
-        })
-    ], exports.MyItemComponent);
-    customElements.define('my-item', exports.MyItemComponent);
+    ], exports.RLogoComponent);
+    customElements.define('r-logo', exports.RLogoComponent);
 
     // import { App } from './app';
     // View Components
