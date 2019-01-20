@@ -8,8 +8,8 @@ interface EventMeta {
 
 interface ElementMeta {
   selector: string;
-  style?: string;
-  template?: string;
+  style?: string | any[];
+  template?: string | any[];
   eventMap?: any;
 };
 
@@ -56,10 +56,9 @@ function Emitter(eventName: string, options: Event) {
 }
 
 function Listen(eventName: string, channelName?: string) {
-  return function decorator(target: any, key: string | symbol, descriptor: PropertyDescriptor) {
+  return function decorator(target: any, key: string | number, descriptor: PropertyDescriptor) {
       const { onInit = noop, onDestroy = noop } = target;
       const symbolHandler = Symbol(key);
-
       function addListener() {
         const handler = this[symbolHandler] = (...args) => {
           descriptor.value.apply(this, args);

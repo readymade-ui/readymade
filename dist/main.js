@@ -76,17 +76,20 @@ var app = (function (exports) {
         return o;
     };
     function setTemplate(elem, html) {
-        const _elem = elem.cloneNode(false);
-        _elem.innerHTML = html;
-        elem.parentNode.replaceChild(_elem, elem);
-        return _elem;
+        // const _elem = (<Node>elem).cloneNode(false);
+        // (<Element>_elem).innerHTML = html;
+        // (<Element>elem).parentNode.replaceChild((<Element>_elem), (<Element>elem));
+        // return (<Element>_elem);
+        elem.innerHTML = html;
+        return elem;
     }
     class BoundNode {
         constructor(node) {
-            this.template = node.querySelector('x-template').innerHTML;
-            this.node = node.querySelector('x-template');
+            this.template = node.querySelector('r-template').innerHTML;
+            this.node = node.querySelector('r-template');
         }
         update(data) {
+            console.log(this.template.slice(0), this.node);
             this.node = setTemplate(this.node, this.template.slice(0).replace(TEMPLATE_BIND_REGEX, (match, variable) => {
                 return Object.byString(data, /\{\{(\s*)(.*?)(\s*)\}\}/.exec(match)[2]) || '';
             }));
@@ -97,8 +100,16 @@ var app = (function (exports) {
             this.model = obj;
         }
         set(target, key, value) {
+            const change = {
+                [key]: {
+                    previousValue: target[key],
+                    newValue: value
+                }
+            };
             target[key] = value;
             this.model.elementMeta.boundState['node' + BIND_SUFFIX].update(this.model);
+            if (target.onStateChange)
+                target.onStateChange(change);
             return true;
         }
     }
@@ -171,10 +182,16 @@ var app = (function (exports) {
         constructor() {
             super();
             this.sizes = ['is--small', 'is--medium', 'is--large'];
-            this.state.headline = 'R';
+            //this.state.headline = 'R';
+            this.state.headline = Math.floor(Math.random() * 100);
+            setInterval(() => { this.state.headline = Math.floor(Math.random() * 100); }, 1000);
         }
         static get observedAttributes() {
             return ['size'];
+        }
+        onStateChange(change) {
+            // console.log(change);
+            // this.setSize(this.getAttribute('size'));
         }
         setRandomNumber() {
             this.state.headline = 'R';
@@ -187,7 +204,7 @@ var app = (function (exports) {
             }
         }
         setSize(size) {
-            if (this.sizes.includes(size)) {
+            if (this.sizes.indexOf(size) > -1) {
                 for (const item in this.sizes) {
                     this.querySelector('h1').classList.remove(this.sizes[item]);
                 }
@@ -198,7 +215,7 @@ var app = (function (exports) {
     exports.RLogoComponent = __decorate([
         Component({
             selector: 'r-logo',
-            template: html `<x-template><h1>{{headline}}</h1></x-template>`,
+            template: html `<r-template><h1>{{headline}}</h1></r-template>`,
             style: css `
 	  h1 {
       font-size: 1em;

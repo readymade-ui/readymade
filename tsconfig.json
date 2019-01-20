@@ -6,7 +6,9 @@
     "module": "ES2015",
     "outDir": "./dist",
     "target": "ES2015",
-    "sourceMap": true
+    "sourceMap": true,
+    "typeRoots": ["node_modules/@types"],
+    "lib": ["es2017", "dom"]
   },
   "include": [
     "./src/**/*.ts"

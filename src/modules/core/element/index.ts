@@ -1,16 +1,17 @@
-import {
+export {
   attachDOM,
   attachShadow,
   attachStyle
 } from './src/attach';
 
-import {
+export {
+  StateChange,
   bindTemplate,
   bindTemplateNodes,
   compileTemplate
-} from './src/compile'
+} from './src/compile';
 
-import {
+export {
   getSiblings,
   getElementIndex,
   getParent,
@@ -18,19 +19,3 @@ import {
   querySelectorAll,
   getChildNodes
 } from './src/util';
-
-
-export {
-  attachDOM,
-  attachStyle,
-  attachShadow,
-  getSiblings,
-  getElementIndex,
-  getParent,
-  querySelector,
-  querySelectorAll,
-  getChildNodes,
-  bindTemplate,
-  bindTemplateNodes,
-  compileTemplate
-};

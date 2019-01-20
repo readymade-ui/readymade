@@ -1,9 +1,21 @@
 import { getChildNodes } from './util';
+import { ElementMeta } from './../../decorator/index';
 
 const TEMPLATE_BIND_REGEX = /\{\{(\s*)(.*?)(\s*)\}\}/g;
 const BIND_SUFFIX = ' __state';
 
-Object.byString = function(o, s) {
+interface StateChange {
+  [key: string] : {
+    previousValue: any,
+    newValue: any
+  }
+}
+
+interface Node {
+    cloneNode(deep?: boolean): this;
+}
+
+(<any>Object).byString = function(o: any, s: string) {
     if(!s) return o;
     s = s.replace(/\[(\w+)\]/g, '.$1');
     s = s.replace(/^\./, '');
@@ -19,32 +31,46 @@ Object.byString = function(o, s) {
     return o;
 }
 
-function setTemplate(elem: Element, html: string) {
-    const _elem = elem.cloneNode(false);
-    _elem.innerHTML = html;
-    elem.parentNode.replaceChild(_elem, elem);
-    return _elem;
+function setTemplate(elem: Element, html: string): Element {
+    // const _elem = (<Node>elem).cloneNode(false);
+    // (<Element>_elem).innerHTML = html;
+    // (<Element>elem).parentNode.replaceChild((<Element>_elem), (<Element>elem));
+    // return (<Element>_elem);
+    elem.innerHTML = html;
+    return (<Element>elem);
 }
 
 class BoundNode {
+  template: string;
+  node: Element;
   constructor (node) {
     this.template = node.querySelector('r-template').innerHTML;
     this.node = node.querySelector('r-template');
   }
   update(data) {
-    this.node = setTemplate(this.node, this.template.slice(0).replace(TEMPLATE_BIND_REGEX, (match, variable) => {
-      return Object.byString(data, /\{\{(\s*)(.*?)(\s*)\}\}/.exec(match)[2]) || '';
+    console.log(this.template.slice(0), this.node);
+    (<Element>this.node) = setTemplate(this.node, this.template.slice(0).replace(TEMPLATE_BIND_REGEX, (match, variable) => {
+      return (<any>Object).byString(data, /\{\{(\s*)(.*?)(\s*)\}\}/.exec(match)[2]) || '';
     }))
   }
 }
 
 class BoundHandler {
+  model: any;
+  onStateChange: Function;
   constructor(obj) {
     this.model = obj;
   }
   set(target, key, value) {
+    const change = {
+      [key]: {
+        previousValue : target[key],
+        newValue: value
+      }
+    };
     target[key] = value;
     this.model.elementMeta.boundState['node' + BIND_SUFFIX].update(this.model);
+    if (target.onStateChange) target.onStateChange(change);
     return true;
   }
 }
@@ -62,7 +88,7 @@ function bindTemplate() {
 function bindTemplateNodes() {
   if (!this.elementMeta) this.elementMeta = {};
    this.elementMeta.boundNodes = this.getChildNodes()
-  .map((node: Element) => {
+  .map((node: any) => {
     if (!node.elementMeta) node.elementMeta = {};
       node.elementMeta.templateRegex = TEMPLATE_BIND_REGEX;
       node.elementMeta.boundState = {
@@ -86,7 +112,8 @@ function compileTemplate(elementMeta: ElementMeta, target: any) {
 }
 
 export {
+  StateChange,
   bindTemplate,
   bindTemplateNodes,
   compileTemplate
-};
+}
