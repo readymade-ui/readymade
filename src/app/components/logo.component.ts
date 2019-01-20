@@ -1,4 +1,4 @@
-import { Component, css, html, PseudoElement } from '../../modules/core/index';
+import { Component, css, html, PseudoElement, StateChange } from '../../modules/core/index';
 
 @Component({
   selector: 'r-logo',
@@ -24,12 +24,21 @@ import { Component, css, html, PseudoElement } from '../../modules/core/index';
 })
 class RLogoComponent extends PseudoElement {
   public sizes: string[] = ['is--small', 'is--medium', 'is--large'];
+  public state: {
+    headline: string | number;
+  }
   constructor() {
     super();
-    this.state.headline = 'R';
+    //this.state.headline = 'R';
+    this.state.headline = Math.floor(Math.random()*100)
+    setInterval(()=>{ this.state.headline = Math.floor(Math.random()*100) },1000);
   }
   static get observedAttributes() {
     return ['size'];
+  }
+  onStateChange(change: StateChange) {
+    // console.log(change);
+    // this.setSize(this.getAttribute('size'));
   }
   setRandomNumber() {
     this.state.headline = 'R';
@@ -42,7 +51,7 @@ class RLogoComponent extends PseudoElement {
     }
   }
   setSize(size: string) {
-    if (this.sizes.includes(size)) {
+    if (this.sizes.indexOf(size) > -1) {
       for (const item in this.sizes) {
          this.querySelector('h1').classList.remove(this.sizes[item]);
       }

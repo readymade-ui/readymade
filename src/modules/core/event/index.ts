@@ -1,10 +1,9 @@
-import { EventDispatcher } from './index';
 // events
 
 class EventDispatcher {
     public target: Element;
     public events: {
-      [key: string]: CustomEvent
+      [key: string]: CustomEvent<any> | Event
     };
     public channels: {
       [key: string]: BroadcastChannel
@@ -19,7 +18,7 @@ class EventDispatcher {
     public get(eventName: string) {
       return this.events[eventName];
     }
-    public set(eventName: string, ev: CustomEvent | Event) {
+    public set(eventName: string, ev: CustomEvent<any> | Event) {
       this.events[eventName] = ev;
       return this.get(eventName);
     }
@@ -27,13 +26,14 @@ class EventDispatcher {
       if (typeof ev === 'string') ev = this.events[ev];
       this.target.dispatchEvent(ev);
     }
-    public broadcast(ev: Event | string, name?: string) {
+    public broadcast(ev: CustomEvent<any> | Event | string, name?: string) {
       if (typeof ev === 'string') ev = this.events[ev];
       this.target.dispatchEvent(ev);
-
-      ev = { type: ev.type, detail: ev.detail };
-      if (ev.detail === null) delete ev.detail;
-
+      if (!(<any>ev).detail) {
+        (<any>ev) = { type: ev.type };
+      } else {
+        (<any>ev) = { type: ev.type, detail: (<any>ev).detail };
+      }
       (name) ? this.channels[name].postMessage(ev) : this.channels['default'].postMessage(ev);
     }
     public setChannel(name: string) {

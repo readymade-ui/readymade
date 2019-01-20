@@ -3,7 +3,7 @@ function getParent(el) {
 }
 
 function getChildNodes() {
-    function getChildren(node: Element, path: Element[] = [], result: Element[] = []){
+    function getChildren(node: any, path: any[] = [], result: any[] = []){
         if(!node.children.length)
             result.push(path.concat(node));
         for(const child of node.children)
@@ -16,11 +16,8 @@ function getChildNodes() {
    return nodes.filter((item, index) => { return nodes.indexOf(item) >= index; });
 }
 
-function getSiblings(el, filter) {
-  if (!filter) {
-    filter = [];
-  }
-  return Array.from(getParent(el).children).filter((elem) => {
+function getSiblings(el: Element) {
+  return Array.from(getParent(el).children).filter((elem: Element) => {
     return elem.tagName !== 'TEXT' && elem.tagName !== 'STYLE';
   });
 }
