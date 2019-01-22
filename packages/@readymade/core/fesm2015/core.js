@@ -22,9 +22,12 @@ class EventDispatcher {
         if (typeof ev === 'string')
             ev = this.events[ev];
         this.target.dispatchEvent(ev);
-        ev = { type: ev.type, detail: ev.detail };
-        if (ev.detail === null)
-            delete ev.detail;
+        if (!ev.detail) {
+            ev = { type: ev.type };
+        }
+        else {
+            ev = { type: ev.type, detail: ev.detail };
+        }
         (name) ? this.channels[name].postMessage(ev) : this.channels['default'].postMessage(ev);
     }
     setChannel(name) {
@@ -63,7 +66,10 @@ function attachStyle(instance, options) {
 function getParent(el) {
     return el.parentNode;
 }
-function getChildNodes() {
+function getChildNodes(template) {
+    const _elem = template ? template : this;
+    if (!_elem)
+        return [];
     function getChildren(node, path = [], result = []) {
         if (!node.children.length)
             result.push(path.concat(node));
@@ -71,15 +77,12 @@ function getChildNodes() {
             getChildren(child, path.concat(child), result);
         return result;
     }
-    const nodes = getChildren(this, []).reduce((nodes, curr) => {
+    const nodes = getChildren(_elem, []).reduce((nodes, curr) => {
         return nodes.concat(curr);
     }, []);
     return nodes.filter((item, index) => { return nodes.indexOf(item) >= index; });
 }
-function getSiblings(el, filter) {
-    if (!filter) {
-        filter = [];
-    }
+function getSiblings(el) {
     return Array.from(getParent(el).children).filter((elem) => {
         return elem.tagName !== 'TEXT' && elem.tagName !== 'STYLE';
     });
@@ -113,16 +116,22 @@ Object.byString = function (o, s) {
     }
     return o;
 };
+function setTemplate(elem, html) {
+    elem.innerHTML = html;
+    return elem;
+}
 class BoundNode {
     constructor(node) {
-        this.template = node.innerHTML;
+        this.template = document.createElement('div');
+        this.template.innerHTML = node.innerHTML;
         this.node = node;
     }
-    update(data) {
-        let tempTemplate = this.template.slice(0);
-        this.node.innerHTML = tempTemplate.replace(TEMPLATE_BIND_REGEX, (match, variable) => {
+    update(data, target) {
+        this.node = setTemplate(this.node, this.template.innerHTML.replace(TEMPLATE_BIND_REGEX, (match, variable) => {
+            if (match === undefined || match === null)
+                match = '';
             return Object.byString(data, /\{\{(\s*)(.*?)(\s*)\}\}/.exec(match)[2]) || '';
-        });
+        }));
     }
 }
 class BoundHandler {
@@ -130,8 +139,16 @@ class BoundHandler {
         this.model = obj;
     }
     set(target, key, value) {
+        const change = {
+            [key]: {
+                previousValue: target[key],
+                newValue: value
+            }
+        };
         target[key] = value;
-        this.model.elementMeta.boundState['node' + BIND_SUFFIX].update(this.model);
+        this.model.elementMeta.boundState['node' + BIND_SUFFIX].update(this.model, target);
+        if (target.onStateChange)
+            target.onStateChange(change);
         return true;
     }
 }
@@ -140,7 +157,7 @@ function bindTemplate() {
         this.elementMeta = {};
     this.elementMeta.templateRegex = TEMPLATE_BIND_REGEX;
     this.elementMeta.boundState = {
-        ['node' + BIND_SUFFIX]: new BoundNode(this),
+        ['node' + BIND_SUFFIX]: new BoundNode(this.shadowRoot ? this.shadowRoot : this),
         ['handler' + BIND_SUFFIX]: new BoundHandler(this)
     };
     this.state = new Proxy(this, this.elementMeta.boundState['handler' + BIND_SUFFIX]);
@@ -161,6 +178,9 @@ function bindTemplateNodes() {
         return node;
     });
 }
+function setState$1(prop, model) {
+    this.state[prop] = model;
+}
 function compileTemplate(elementMeta, target) {
     target.prototype.elementMeta = Object.assign({}, elementMeta);
     target.prototype.elementMeta.eventMap = {};
@@ -169,6 +189,7 @@ function compileTemplate(elementMeta, target) {
     target.prototype.getChildNodes = getChildNodes;
     target.prototype.bindTemplateNodes = bindTemplateNodes;
     target.prototype.bindTemplate = bindTemplate;
+    target.prototype.setState = setState$1;
 }
 
 const html = (...args) => {
@@ -340,14 +361,6 @@ class CanvasComponent extends HTMLCanvasElement {
     }
 }
 class CollectionComponent extends HTMLCollection {
-    constructor() {
-        super();
-        if (this.onInit) {
-            this.onInit();
-        }
-    }
-}
-class ContentComponent extends HTMLContentElement {
     constructor() {
         super();
         if (this.onInit) {
@@ -714,14 +727,6 @@ class SelectComponent extends HTMLSelectElement {
         }
     }
 }
-class ShadowComponent extends HTMLShadowElement {
-    constructor() {
-        super();
-        if (this.onInit) {
-            this.onInit();
-        }
-    }
-}
 class SlotComponent extends HTMLSlotElement {
     constructor() {
         super();
@@ -870,4 +875,4 @@ class VideoComponent extends HTMLVideoElement {
     }
 }
 
-export { EventDispatcher, attachDOM, attachStyle, attachShadow, getSiblings, getElementIndex, getParent, querySelector, querySelectorAll, getChildNodes, bindTemplate, bindTemplateNodes, compileTemplate, Component, Emitter, Listen, html, css, noop, StructuralElement, PseudoElement, CustomElement, AllCollectionComponent, AnchorComponent, AreaComponent, AudioComponent, BRComponent, BodyComponent, ButtonComponent, CanvasComponent, CollectionComponent, ContentComponent, DListComponent, DataComponent, DataListComponent, DetailsComponent, DialogComponent, DivComponent, EmbedComponent, FieldSetComponent, FormControlsComponent, FormComponent, HRComponent, HeadComponent, HeadingComponent, HtmlComponent, IFrameComponent, ImageComponent, InputComponent, LIComponent, LabelComponent, LegendComponent, LinkComponent, MapComponent, MediaComponent, MenuComponent, MetaComponent, MeterComponent, ModComponent, OListComponent, ObjectComponent, OptGroupComponent, OptionComponent, OptionsCollectionComponent, OutputComponent, ParagraphComponent, ParamComponent, PictureComponent, PreComponent, ProgressComponent, QuoteComponent, ScriptComponent, SelectComponent, ShadowComponent, SlotComponent, SourceComponent, SpanComponent, StyleComponent, TableCaptionComponent, TableCellComponent, TableColComponent, TableComponent, TableRowComponent, TableSectionComponent, TemplateComponent, TimeComponent, TitleComponent, TrackComponent, UListComponent, UnknownComponent, VideoComponent };
+export { EventDispatcher, attachDOM, attachShadow, attachStyle, bindTemplate, bindTemplateNodes, compileTemplate, getSiblings, getElementIndex, getParent, querySelector, querySelectorAll, getChildNodes, Component, Emitter, Listen, html, css, noop, StructuralElement, PseudoElement, CustomElement, AllCollectionComponent, AnchorComponent, AreaComponent, AudioComponent, BRComponent, BodyComponent, ButtonComponent, CanvasComponent, CollectionComponent, DListComponent, DataComponent, DataListComponent, DetailsComponent, DialogComponent, DivComponent, EmbedComponent, FieldSetComponent, FormControlsComponent, FormComponent, HRComponent, HeadComponent, HeadingComponent, HtmlComponent, IFrameComponent, ImageComponent, InputComponent, LIComponent, LabelComponent, LegendComponent, LinkComponent, MapComponent, MediaComponent, MenuComponent, MetaComponent, MeterComponent, ModComponent, OListComponent, ObjectComponent, OptGroupComponent, OptionComponent, OptionsCollectionComponent, OutputComponent, ParagraphComponent, ParamComponent, PictureComponent, PreComponent, ProgressComponent, QuoteComponent, ScriptComponent, SelectComponent, SlotComponent, SourceComponent, SpanComponent, StyleComponent, TableCaptionComponent, TableCellComponent, TableColComponent, TableComponent, TableRowComponent, TableSectionComponent, TemplateComponent, TimeComponent, TitleComponent, TrackComponent, UListComponent, UnknownComponent, VideoComponent };
