@@ -23,8 +23,6 @@ var app = (function (exports) {
         return c > 3 && r && Object.defineProperty(target, key, r), r;
     }
 
-    // events
-
     function attachShadow(instance, options) {
         const shadowRoot = instance.attachShadow(options || {});
         const t = document.createElement('template');
@@ -48,7 +46,6 @@ var app = (function (exports) {
             document.head.appendChild(t);
         }
     }
-
     function getChildNodes(template) {
         const _elem = template ? template : this;
         if (!_elem)
@@ -86,10 +83,6 @@ var app = (function (exports) {
         return o;
     };
     function setTemplate(elem, html) {
-        // const _elem = (<Node>elem).cloneNode(false);
-        // (<Element>_elem).innerHTML = html;
-        // (<Element>elem).parentNode.replaceChild((<Element>_elem), (<Element>elem));
-        // return (<Element>_elem);
         elem.innerHTML = html;
         return elem;
     }
@@ -102,7 +95,7 @@ var app = (function (exports) {
         update(data, target) {
             this.node = setTemplate(this.node, this.template.innerHTML.replace(TEMPLATE_BIND_REGEX, (match, variable) => {
                 if (match === undefined || match === null)
-                    match = ''; // return empty string for null or undefined
+                    match = '';
                 return Object.byString(data, /\{\{(\s*)(.*?)(\s*)\}\}/.exec(match)[2]) || '';
             }));
         }
@@ -151,7 +144,6 @@ var app = (function (exports) {
             return node;
         });
     }
-    // support setting global state for now, what about descendant properties?
     function setState$1(prop, model) {
         this.state[prop] = model;
     }
@@ -172,7 +164,6 @@ var app = (function (exports) {
     const css = (...args) => {
         return args;
     };
-    // Decorators
     function Component(attributes) {
         if (!attributes) {
             console.error('Component must include ElementMeta to compile');
@@ -183,7 +174,6 @@ var app = (function (exports) {
             return target;
         };
     }
-
     class PseudoElement extends HTMLElement {
         constructor() {
             super();

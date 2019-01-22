@@ -1,4 +1,4 @@
-import { Component, css, html, CustomElement, StateChange } from '../../modules/core/index';
+import { Component, css, html, CustomElement, StateChange } from '@readymade/core';
 
 @Component({
   selector: 'r-unit',
@@ -21,6 +21,8 @@ import { Component, css, html, CustomElement, StateChange } from '../../modules/
 	`
 })
 class RUnitComponent extends CustomElement {
+  setState: Function;
+  getAttribute: Function;
   public state: {
     headline: string | number;
   }
