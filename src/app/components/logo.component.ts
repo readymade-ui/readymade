@@ -1,4 +1,4 @@
-import { Component, css, html, CustomElement, StateChange } from '@readymade/core';
+import { Component, css, html, CustomElement, StateChange } from './../../modules/core/index';
 
 @Component({
   selector: 'r-logo',

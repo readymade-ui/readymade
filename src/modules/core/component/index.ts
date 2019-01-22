@@ -1,8 +1,32 @@
 import { attachDOM, attachShadow, attachStyle } from './../element/index';
 
+export interface OnInit {
+    () : void;
+}
+
+export interface StateChange {
+  [key: string] : {
+    previousValue: any,
+    newValue: any
+  }
+}
+
+export interface OnStateChange {
+    (change: StateChange) : void;
+}
+
+export interface SetState {
+    (property: string, model: any) : void;
+}
+
+export interface OnDestroy {
+    () : void;
+}
+
 export class StructuralElement extends HTMLElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
@@ -10,8 +34,9 @@ export class StructuralElement extends HTMLElement {
 }
 
 export class PseudoElement extends HTMLElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     attachDOM(this);
@@ -21,8 +46,9 @@ export class PseudoElement extends HTMLElement {
 }
 
 export class CustomElement extends HTMLElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     attachShadow(this, { mode: 'open' });
@@ -31,16 +57,18 @@ export class CustomElement extends HTMLElement {
 }
 
 export class AllCollectionComponent extends HTMLAllCollection {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
   }
 }
 export class AnchorComponent extends HTMLAnchorElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     attachDOM(this);
@@ -49,8 +77,9 @@ export class AnchorComponent extends HTMLAnchorElement {
   }
 }
 export class AreaComponent extends HTMLAreaElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     attachStyle(this);
@@ -58,8 +87,9 @@ export class AreaComponent extends HTMLAreaElement {
   }
 }
 export class AudioComponent extends HTMLAudioElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     attachStyle(this);
@@ -67,8 +97,9 @@ export class AudioComponent extends HTMLAudioElement {
   }
 }
 export class BRComponent extends HTMLBRElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     attachStyle(this);
@@ -76,8 +107,9 @@ export class BRComponent extends HTMLBRElement {
   }
 }
 export class BodyComponent extends HTMLBodyElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     attachShadow(this, { mode: 'open' });
@@ -85,8 +117,9 @@ export class BodyComponent extends HTMLBodyElement {
   }
 }
 export class ButtonComponent extends HTMLButtonElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     attachDOM(this);
@@ -95,8 +128,9 @@ export class ButtonComponent extends HTMLButtonElement {
   }
 }
 export class CanvasComponent extends HTMLCanvasElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     attachStyle(this);
@@ -104,24 +138,27 @@ export class CanvasComponent extends HTMLCanvasElement {
   }
 }
 export class CollectionComponent extends HTMLCollection {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
   }
 }
 // export class ContentComponent extends HTMLContentElement {
-//   onInit: Function;
-setState: Function;
+//   onInit: OnInit;
+//   setState: SetState;
+//   onDestroy: OnDestroy;
 //   constructor() {
 //     super();
 //     if (this.onInit) { this.onInit(); }
 //   }
 // }
 export class DListComponent extends HTMLDListElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     attachDOM(this);
@@ -130,16 +167,18 @@ export class DListComponent extends HTMLDListElement {
   }
 }
 export class DataComponent extends HTMLDataElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
   }
 }
 export class DataListComponent extends HTMLDataListElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     attachDOM(this);
@@ -148,8 +187,9 @@ export class DataListComponent extends HTMLDataListElement {
   }
 }
 export class DetailsComponent extends HTMLDetailsElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     attachDOM(this);
@@ -158,8 +198,9 @@ export class DetailsComponent extends HTMLDetailsElement {
   }
 }
 export class DialogComponent extends HTMLDialogElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     attachDOM(this);
@@ -169,8 +210,9 @@ export class DialogComponent extends HTMLDialogElement {
 }
 
 export class DivComponent extends HTMLDivElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     attachShadow(this, { mode: 'open' });
@@ -178,16 +220,18 @@ export class DivComponent extends HTMLDivElement {
   }
 }
 // export class DocumentComponent extends HTMLDocumentElement {
-//     onInit: Function;
-setState: Function;
+//     onInit: OnInit;
+//     setState: SetState;
+//     onDestroy: OnDestroy;
 //     constructor() {
 //         super();
 //         attachShadow(this);
 //     }
 // }
 export class EmbedComponent extends HTMLEmbedElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     attachStyle(this);
@@ -195,8 +239,9 @@ export class EmbedComponent extends HTMLEmbedElement {
   }
 }
 export class FieldSetComponent extends HTMLFieldSetElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     attachStyle(this);
@@ -204,16 +249,18 @@ export class FieldSetComponent extends HTMLFieldSetElement {
   }
 }
 export class FormControlsComponent extends HTMLFormControlsCollection {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
   }
 }
 export class FormComponent extends HTMLFormElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     attachStyle(this);
@@ -221,8 +268,9 @@ export class FormComponent extends HTMLFormElement {
   }
 }
 export class HRComponent extends HTMLHRElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     attachStyle(this);
@@ -230,16 +278,18 @@ export class HRComponent extends HTMLHRElement {
   }
 }
 export class HeadComponent extends HTMLHeadElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
   }
 }
 export class HeadingComponent extends HTMLHeadingElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     attachShadow(this, { mode: 'open' });
@@ -247,16 +297,18 @@ export class HeadingComponent extends HTMLHeadingElement {
   }
 }
 export class HtmlComponent extends HTMLHtmlElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
   }
 }
 export class IFrameComponent extends HTMLIFrameElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     attachStyle(this);
@@ -264,8 +316,9 @@ export class IFrameComponent extends HTMLIFrameElement {
   }
 }
 export class ImageComponent extends HTMLImageElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     attachStyle(this);
@@ -273,8 +326,9 @@ export class ImageComponent extends HTMLImageElement {
   }
 }
 export class InputComponent extends HTMLInputElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     attachStyle(this);
@@ -282,8 +336,9 @@ export class InputComponent extends HTMLInputElement {
   }
 }
 export class LIComponent extends HTMLLIElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     attachDOM(this);
@@ -292,8 +347,9 @@ export class LIComponent extends HTMLLIElement {
   }
 }
 export class LabelComponent extends HTMLLabelElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     attachDOM(this);
@@ -302,8 +358,9 @@ export class LabelComponent extends HTMLLabelElement {
   }
 }
 export class LegendComponent extends HTMLLegendElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     attachStyle(this);
@@ -311,8 +368,9 @@ export class LegendComponent extends HTMLLegendElement {
   }
 }
 export class LinkComponent extends HTMLLinkElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     attachStyle(this);
@@ -320,8 +378,9 @@ export class LinkComponent extends HTMLLinkElement {
   }
 }
 export class MapComponent extends HTMLMapElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     attachDOM(this);
@@ -331,32 +390,36 @@ export class MapComponent extends HTMLMapElement {
 }
 
 export class MediaComponent extends HTMLMediaElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
   }
 }
 export class MenuComponent extends HTMLMenuElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
   }
 }
 export class MetaComponent extends HTMLMetaElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
   }
 }
 export class MeterComponent extends HTMLMeterElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     attachStyle(this);
@@ -364,16 +427,18 @@ export class MeterComponent extends HTMLMeterElement {
   }
 }
 export class ModComponent extends HTMLModElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
   }
 }
 export class OListComponent extends HTMLOListElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     attachDOM(this);
@@ -382,8 +447,9 @@ export class OListComponent extends HTMLOListElement {
   }
 }
 export class ObjectComponent extends HTMLObjectElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     attachStyle(this);
@@ -391,32 +457,36 @@ export class ObjectComponent extends HTMLObjectElement {
   }
 }
 export class OptGroupComponent extends HTMLOptGroupElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
   }
 }
 export class OptionComponent extends HTMLOptionElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
   }
 }
 export class OptionsCollectionComponent extends HTMLOptionsCollection {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
   }
 }
 export class OutputComponent extends HTMLOutputElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     attachStyle(this);
@@ -424,8 +494,9 @@ export class OutputComponent extends HTMLOutputElement {
   }
 }
 export class ParagraphComponent extends HTMLParagraphElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     attachShadow(this, { mode: 'open' });
@@ -433,88 +504,99 @@ export class ParagraphComponent extends HTMLParagraphElement {
   }
 }
 export class ParamComponent extends HTMLParamElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
   }
 }
 export class PictureComponent extends HTMLPictureElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
   }
 }
 export class PreComponent extends HTMLPreElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
   }
 }
 export class ProgressComponent extends HTMLProgressElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
   }
 }
 export class QuoteComponent extends HTMLQuoteElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
   }
 }
 export class ScriptComponent extends HTMLScriptElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
   }
 }
 export class SelectComponent extends HTMLSelectElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
   }
 }
 // export class ShadowComponent extends HTMLShadowElement {
-//   onInit: Function;
-setState: Function;
+//   onInit: OnInit;
+//   setState: SetState;
+//   onDestroy: OnDestroy;
 //   constructor() {
 //     super();
 //     if (this.onInit) { this.onInit(); }
 //   }
 // }
 export class SlotComponent extends HTMLSlotElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
   }
 }
 export class SourceComponent extends HTMLSourceElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
   }
 }
 export class SpanComponent extends HTMLSpanElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     attachShadow(this, { mode: 'open' });
@@ -522,40 +604,45 @@ export class SpanComponent extends HTMLSpanElement {
   }
 }
 export class StyleComponent extends HTMLStyleElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
   }
 }
 export class TableCaptionComponent extends HTMLTableCaptionElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
   }
 }
 export class TableCellComponent extends HTMLTableCellElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
   }
 }
 export class TableColComponent extends HTMLTableColElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
   }
 }
 export class TableComponent extends HTMLTableElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     attachDOM(this);
@@ -565,8 +652,9 @@ export class TableComponent extends HTMLTableElement {
 }
 
 export class TableRowComponent extends HTMLTableRowElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     attachDOM(this);
@@ -575,8 +663,9 @@ export class TableRowComponent extends HTMLTableRowElement {
   }
 }
 export class TableSectionComponent extends HTMLTableSectionElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     attachDOM(this);
@@ -585,23 +674,26 @@ export class TableSectionComponent extends HTMLTableSectionElement {
   }
 }
 export class TemplateComponent extends HTMLTemplateElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
   }
 }
 // export class TextareaComponent extends HTMLTextareaElement {
-//     onInit: Function;
-setState: Function;
+//     onInit: OnInit;
+//     setState: SetState;
+//     onDestroy: OnDestroy;
 //     constructor() {
 //         super();
 //     }
 // }
 export class TimeComponent extends HTMLTimeElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     attachStyle(this);
@@ -609,24 +701,27 @@ export class TimeComponent extends HTMLTimeElement {
   }
 }
 export class TitleComponent extends HTMLTitleElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
   }
 }
 export class TrackComponent extends HTMLTrackElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
   }
 }
 export class UListComponent extends HTMLUListElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     attachDOM(this);
@@ -635,8 +730,9 @@ export class UListComponent extends HTMLUListElement {
   }
 }
 export class UnknownComponent extends HTMLUnknownElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
@@ -644,8 +740,9 @@ export class UnknownComponent extends HTMLUnknownElement {
 }
 
 export class VideoComponent extends HTMLVideoElement {
-  onInit: Function;
-  setState: Function;
+  onInit: OnInit;
+  setState: SetState;
+  onDestroy: OnDestroy;
   constructor() {
     super();
     attachStyle(this);

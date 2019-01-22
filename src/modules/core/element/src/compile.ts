@@ -1,17 +1,10 @@
 import { getChildNodes } from './util';
 import { ElementMeta } from './../../decorator/index';
-
-declare let htmldiff: any;
+import { OnStateChange, StateChange } from './../../component/index';
 
 const TEMPLATE_BIND_REGEX = /\{\{(\s*)(.*?)(\s*)\}\}/g;
 const BIND_SUFFIX = ' __state';
 
-interface StateChange {
-  [key: string] : {
-    previousValue: any,
-    newValue: any
-  }
-}
 
 interface Node {
     cloneNode(deep?: boolean): this;
@@ -62,7 +55,6 @@ function copyAttributes(node: any, template: any) {
 class BoundNode {
   template: Element;
   node: Element;
-  templateNode: any;
   previousNode: Element;
   constructor (node) {
     this.template = document.createElement('div');
@@ -71,7 +63,7 @@ class BoundNode {
   }
   update(data: any, target: any) {
     (<Element>this.node) = setTemplate(this.node, this.template.innerHTML.replace(TEMPLATE_BIND_REGEX, (match, variable) => {
-      if (match === undefined || match === null) match = ''; // return empty string for null or undefined
+      if (match === undefined || match === null) match = '';
       return (<any>Object).byString(data, /\{\{(\s*)(.*?)(\s*)\}\}/.exec(match)[2]) || '';
     }));
   }
@@ -79,7 +71,7 @@ class BoundNode {
 
 class BoundHandler {
   model: any;
-  onStateChange: Function;
+  onStateChange: OnStateChange;
   constructor(obj) {
     this.model = obj;
   }

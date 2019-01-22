@@ -1,16 +1,20 @@
 import { compileTemplate } from './../element/index';
 import { EventDispatcher } from './../event/index';
 
+export interface EventHandler {
+    () : void;
+}
+
 interface EventMeta {
   key: string;
-  handler: Function;
+  handler: EventHandler;
 };
 
 interface ElementMeta {
   selector: string;
   style?: string | any[];
   template?: string | any[];
-  eventMap?: any;
+  eventMap?: { [key:string]: EventMeta };
 };
 
 const html = (...args) => {
