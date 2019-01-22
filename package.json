@@ -11,7 +11,7 @@
     "build": "NODE_ENV=prod node index.js",
     "dev": "live-server ./dist --entry-file=index.html",
     "serve": "node backend/server.js",
-    "bundle:core": "rollup -c rollup.library.js"
+    "bundle:core": "./build-lib.sh"
   },
   "repository": {
     "type": "git",
