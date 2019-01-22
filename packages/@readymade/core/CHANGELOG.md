@@ -7,3 +7,6 @@
 - FIX several issues with types, stricter types now throughout library
 - FIX issue where bound text could print undefined or null, now defaults to empty string
 
+## 1.0.0-beta.0
+
+- Initial release
