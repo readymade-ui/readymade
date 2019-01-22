@@ -3,3 +3,5 @@
 .DS_Store
 .rpt2_cache
 node_modules
+dist/app
+dist/modules

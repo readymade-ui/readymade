@@ -21,8 +21,6 @@ import { Component, css, html, CustomElement, StateChange } from '@readymade/cor
 	`
 })
 class RUnitComponent extends CustomElement {
-  setState: Function;
-  getAttribute: Function;
   public state: {
     headline: string | number;
   }
