@@ -12,7 +12,7 @@
     "dev": "live-server ./dist --entry-file=index.html",
     "serve": "node backend/server.js",
     "bundle:core": "rollup -c rollup.library.js",
-    "deploy:core": "cp -R ./packages/@readymade/core/* ../readymade-core"
+    "deploy:core": "cp -R ./packages/@readymade/core/. ../readymade-core"
   },
   "repository": {
     "type": "git",
