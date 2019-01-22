@@ -1,4 +1,4 @@
-import { Component, css, html, PseudoElement, StateChange } from '../../modules/core/index';
+import { Component, css, html, PseudoElement, StateChange } from '@readymade/core';
 
 @Component({
   selector: 'r-logo',
@@ -10,6 +10,8 @@ import { Component, css, html, PseudoElement, StateChange } from '../../modules/
 	`
 })
 class RLogoComponent extends PseudoElement {
+  setState: Function;
+  getAttribute: Function;
   public sizes: string[] = ['is--small', 'is--medium', 'is--large'];
   public state: {
     headline: string;
