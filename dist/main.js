@@ -30,22 +30,6 @@ var app = (function (exports) {
         shadowRoot.appendChild(t.content.cloneNode(true));
         instance.bindTemplate();
     }
-    function attachDOM(instance, options) {
-        const t = document.createElement('template');
-        t.innerHTML = instance.elementMeta.template;
-        instance.appendChild(t.content.cloneNode(true));
-        instance.bindTemplate();
-    }
-    function attachStyle(instance, options) {
-        const id = `${instance.elementMeta.selector}`;
-        if (!document.getElementById(`${id}-x`)) {
-            const t = document.createElement('style');
-            t.setAttribute('id', `${id}-x`);
-            t.innerText = instance.elementMeta.style;
-            t.innerText = t.innerText.replace(/:host/gi, `[is=${id}]`);
-            document.head.appendChild(t);
-        }
-    }
     function getChildNodes(template) {
         const _elem = template ? template : this;
         if (!_elem)
@@ -174,16 +158,6 @@ var app = (function (exports) {
             return target;
         };
     }
-    class PseudoElement extends HTMLElement {
-        constructor() {
-            super();
-            attachDOM(this);
-            attachStyle(this);
-            if (this.onInit) {
-                this.onInit();
-            }
-        }
-    }
     class CustomElement extends HTMLElement {
         constructor() {
             super();
@@ -234,7 +208,7 @@ var app = (function (exports) {
     ], exports.RUnitComponent);
     customElements.define('r-unit', exports.RUnitComponent);
 
-    exports.RLogoComponent = class RLogoComponent extends PseudoElement {
+    exports.RLogoComponent = class RLogoComponent extends CustomElement {
         constructor() {
             super();
             this.sizes = ['is--small', 'is--medium', 'is--large'];
