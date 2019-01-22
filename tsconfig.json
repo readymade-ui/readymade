@@ -1,14 +1,14 @@
 {
   "compilerOptions": {
     "baseUrl": "./",
-    "allowJs": true,
     "experimentalDecorators": true,
     "module": "ES2015",
     "outDir": "./dist",
     "target": "ES2015",
     "sourceMap": true,
     "typeRoots": ["node_modules/@types"],
-    "lib": ["es2017", "dom"]
+    "lib": ["es2017", "dom"],
+    "declaration": true
   },
   "include": [
     "./src/**/*.ts"

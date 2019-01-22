@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.0.0-beta.2
+
+- FIX main field in package.json to point to FESM instead of UMD module
+- NEW type definitions exported to modules/core/index.d.ts
+
 ## 1.0.0-beta.1
 
 - NEW setState method allows setting global properties on state
