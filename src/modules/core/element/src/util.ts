@@ -2,7 +2,9 @@ function getParent(el) {
   return el.parentNode;
 }
 
-function getChildNodes() {
+function getChildNodes(template?:any) {
+  const _elem = template ? template : this;
+  if (!_elem) return [];
     function getChildren(node: any, path: any[] = [], result: any[] = []){
         if(!node.children.length)
             result.push(path.concat(node));
@@ -10,7 +12,7 @@ function getChildNodes() {
             getChildren(child, path.concat(child), result);
         return result;
     }
-   const nodes : Element[] = getChildren(this, []).reduce((nodes, curr) => {
+   const nodes : Element[] = getChildren(_elem, []).reduce((nodes, curr) => {
      return nodes.concat(curr);
    },[]);
    return nodes.filter((item, index) => { return nodes.indexOf(item) >= index; });

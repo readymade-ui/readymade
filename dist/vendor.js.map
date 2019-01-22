@@ -1,1 +1,1 @@
-{"version":3,"file":"vendor.js","sources":["../src/app/vendor.ts"],"sourcesContent":["// export { Router } from '@vaadin/router';\n"],"names":[],"mappings":";;;CAAA,2CAA2C;;;;"}
+{"version":3,"file":"vendor.js","sources":["../src/app/vendor.ts"],"sourcesContent":["// export { Router } from '@vaadin/router';\n\n"],"names":[],"mappings":";;;CAAA,2CAA2C;;;;"}

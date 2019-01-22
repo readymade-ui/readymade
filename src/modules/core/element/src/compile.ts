@@ -1,6 +1,8 @@
 import { getChildNodes } from './util';
 import { ElementMeta } from './../../decorator/index';
 
+declare let htmldiff: any;
+
 const TEMPLATE_BIND_REGEX = /\{\{(\s*)(.*?)(\s*)\}\}/g;
 const BIND_SUFFIX = ' __state';
 
@@ -40,18 +42,38 @@ function setTemplate(elem: Element, html: string): Element {
     return (<Element>elem);
 }
 
-class BoundNode {
-  template: string;
-  node: Element;
-  constructor (node) {
-    this.template = node.querySelector('r-template').innerHTML;
-    this.node = node.querySelector('r-template');
+// testing copying attributes from element to template
+function copyAttributes(node: any, template: any) {
+  const _template = getChildNodes(template);
+  const _node = node.host ? getChildNodes(node.shadowRoot) : getChildNodes(node);
+  let index = 0;
+  do {
+      let aIndex = 0;
+      const _attributes = _node[index].attributes;
+      while(aIndex < _attributes.length) {
+          _template[index].setAttribute(_attributes[aIndex].nodeName, _attributes[aIndex].nodeValue);
+          aIndex++;
+      }
+      index++;
   }
-  update(data) {
-    console.log(this.template.slice(0), this.node);
-    (<Element>this.node) = setTemplate(this.node, this.template.slice(0).replace(TEMPLATE_BIND_REGEX, (match, variable) => {
+  while(index < _node.length);
+}
+
+class BoundNode {
+  template: Element;
+  node: Element;
+  templateNode: any;
+  previousNode: Element;
+  constructor (node) {
+    this.template = document.createElement('div');
+    this.template.innerHTML = node.innerHTML;
+    this.node = node;
+  }
+  update(data: any, target: any) {
+    (<Element>this.node) = setTemplate(this.node, this.template.innerHTML.replace(TEMPLATE_BIND_REGEX, (match, variable) => {
+      if (match === undefined || match === null) match = ''; // return empty string for null or undefined
       return (<any>Object).byString(data, /\{\{(\s*)(.*?)(\s*)\}\}/.exec(match)[2]) || '';
-    }))
+    }));
   }
 }
 
@@ -69,7 +91,7 @@ class BoundHandler {
       }
     };
     target[key] = value;
-    this.model.elementMeta.boundState['node' + BIND_SUFFIX].update(this.model);
+    this.model.elementMeta.boundState['node' + BIND_SUFFIX].update(this.model, target);
     if (target.onStateChange) target.onStateChange(change);
     return true;
   }
@@ -101,6 +123,12 @@ function bindTemplateNodes() {
     });
 }
 
+
+// support setting global state for now, what about descendant properties?
+function setState(prop: string, model: any) {
+    this.state[prop] = model;
+}
+
 function compileTemplate(elementMeta: ElementMeta, target: any) {
   target.prototype.elementMeta = Object.assign({}, elementMeta);
   target.prototype.elementMeta.eventMap = {};
@@ -109,6 +137,7 @@ function compileTemplate(elementMeta: ElementMeta, target: any) {
   target.prototype.getChildNodes = getChildNodes;
   target.prototype.bindTemplateNodes = bindTemplateNodes;
   target.prototype.bindTemplate = bindTemplate;
+  target.prototype.setState = setState;
 }
 
 export {
