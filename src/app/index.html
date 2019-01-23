@@ -24,6 +24,52 @@
         <!-- <h3>JavaScript microlibrary for developing Web Components with Decorators.</h3>
         <p>The name 'readymade' is an homage to Marcel Duchamp, an artist in the 20th century who made art with ordinary objects. Like Duchamp's readymades, this library picks up ordinary objects found in ECMAScript, repositions and joins them together to form something completely new: a set of tools that make developing Web Components easier.</p> -->
     </header>
+
+    <section>
+        <pre is="r-pre">
+            <code slot="code" class="language-js">
+import { css, html, ButtonComponent, Component, Emitter, Listen } from '../../../../modules/core/index';
+
+@Component({
+    selector: 'my-button',
+    template: html`
+    {{model}}
+    `,
+    style: css`
+        :host {
+            background: rgba(24, 24, 24, 1);
+            cursor: pointer;
+            color: white;
+            font-weight: 400;
+        }
+    `,
+})
+class MyButtonComponent extends ButtonComponent {
+
+    constructor() {
+        super();
+        this.state.model = 'Click';
+    }
+
+    @Emitter('bang', { bubbles: true, composed: true })
+    @Listen('click')
+    public onClick(event) {
+        this.emitter.broadcast('bang');
+    }
+    @Listen('keyup')
+    public onKeyUp(event) {
+        if (event.key === 'Enter') {
+            this.emitter.broadcast('bang');
+        }
+    }
+}
+
+customElements.define('my-button', MyButtonComponent, { extends: 'button'});
+
+export { MyButtonComponent };
+            </code>
+        </pre>
+    </section>
     <footer>
        <h6>This site was compiled with Readymade.</h6>
     </footer>

@@ -3,7 +3,8 @@
 // const app = new App().bootstrap();
 
 // Library Components
-export { RUnitComponent } from './components/unit.component';
+export { RHeadlineComponent } from './components/headline.component';
+export { RCodeComponent } from './components/code.component';
 export { RLogoComponent } from './components/logo.component';
 
 // View Components

@@ -1,7 +1,7 @@
 import { Component, css, html, CustomElement, StateChange } from './../../modules/core/index';
 
 @Component({
-  selector: 'r-unit',
+  selector: 'r-headline',
   template: html`
     <h1 class="{{size}}">{{headline}}</h1>
 	`,
@@ -20,7 +20,7 @@ import { Component, css, html, CustomElement, StateChange } from './../../module
     }
 	`
 })
-class RUnitComponent extends CustomElement {
+class RHeadlineComponent extends CustomElement {
   public state: {
     headline: string | number;
   }
@@ -43,6 +43,6 @@ class RUnitComponent extends CustomElement {
   }
 }
 
-customElements.define('r-unit', RUnitComponent);
+customElements.define('r-headline', RHeadlineComponent);
 
-export { RUnitComponent };
+export { RHeadlineComponent };
