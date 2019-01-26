@@ -6,8 +6,14 @@ import { Component, css, html, CustomElement, StateChange } from './../../module
     <h1 class="{{size}}">{{headline}}</h1>
 	`,
   style: css`
+    h1 {
+      font-family: 'Major Mono Display', sans-serif;
+    }
  	  h1, span {
       font-size: 1em;
+      letter-spacing: 0.05em;
+      margin-block-start: 0.3em;
+      margin-block-end: 0em;
     }
     h1.is--small, span.is--small {
         font-size: 12px;

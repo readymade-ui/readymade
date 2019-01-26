@@ -41,7 +41,7 @@ function Component(attributes: ElementMeta) {
   };
 }
 
-function Emitter(eventName: string, options: Event) {
+function Emitter(eventName: string, options: any) {
   return function decorator(target: any, key: string | symbol, descriptor: PropertyDescriptor) {
       const { onInit = noop } = target;
 

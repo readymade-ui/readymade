@@ -18,15 +18,16 @@ import { css, html, Component, CustomElement, getElementIndex, getSiblings, List
 	`,
 })
 class MyListComponent extends CustomElement {
+  currentIndex: number;
   constructor() {
     super();
     this.currentIndex = 0;
   }
-  public deactivateElement(elem: HTMLElement) {
+  public deactivateElement(elem: Element) {
     elem.setAttribute('tabindex', '-1');
     elem.querySelector('my-item').setAttribute('state', '');
   }
-  public activateElement(elem: HTMLElement) {
+  public activateElement(elem: Element) {
     elem.setAttribute('tabindex', '0');
     elem.querySelector('my-item').setAttribute('state', '--selected');
   }

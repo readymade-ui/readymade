@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Abel|Arimo|Oxygen:700');
+@import url('https://fonts.googleapis.com/css?family=Arimo|Major+Mono+Display');
 @import url('../assets/fonts/DankMono-Regular/fonts');
 @import url('../assets/fonts/DankMono-Italic/fonts');
 
@@ -15,6 +15,13 @@ body {
     height: 100%;
     overflow-y: auto;
 
+}
+
+r-code {
+    position: relative;
+    left: 50%;
+    max-width: 640px;
+    transform: translateX(-50%);
 }
 
 button, input {
@@ -65,7 +72,7 @@ button, input {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    font-family: 'Oxygen', serif;
+    font-family: 'Major Mono Display', serif;
 }
 
 h1 {
@@ -78,7 +85,7 @@ h6 {
 }
 
 p {
-    font-size: 1.1em;
+    font-size: 1.0em;
 }
 
 
@@ -96,7 +103,11 @@ footer {
     transform: translateX(-50%);
     width: 60%;
     text-align: center;
+    margin-bottom: 60px;
 }
 
+footer p {
+    font-family: 'Major Mono Display', sans-sarif;
+}
 [is=my-button]{background:#181818;cursor:pointer;color:#fff;font-weight:400}
 [is=my-input]{background:#181818;border:0;color:#fff}

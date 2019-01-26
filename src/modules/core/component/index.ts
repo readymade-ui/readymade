@@ -1,4 +1,5 @@
 import { attachDOM, attachShadow, attachStyle } from './../element/index';
+import { EventDispatcher } from './../event/index';
 
 export interface OnInit {
     () : void;
@@ -24,6 +25,7 @@ export interface OnDestroy {
 }
 
 export class StructuralElement extends HTMLElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
@@ -34,6 +36,7 @@ export class StructuralElement extends HTMLElement {
 }
 
 export class PseudoElement extends HTMLElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     attachDOM(this);
@@ -46,7 +49,7 @@ export class PseudoElement extends HTMLElement {
 }
 
 export class CustomElement extends HTMLElement {
-
+  emitter: EventDispatcher;
   constructor() {
     super();
     attachShadow(this, { mode: 'open' });
@@ -58,6 +61,7 @@ export class CustomElement extends HTMLElement {
 }
 
 export class AllCollectionComponent extends HTMLAllCollection {
+  emitter: EventDispatcher;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
@@ -67,6 +71,7 @@ export class AllCollectionComponent extends HTMLAllCollection {
   onDestroy?() : void;
 }
 export class AnchorComponent extends HTMLAnchorElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     attachDOM(this);
@@ -78,6 +83,7 @@ export class AnchorComponent extends HTMLAnchorElement {
   onDestroy?() : void;
 }
 export class AreaComponent extends HTMLAreaElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     attachStyle(this);
@@ -88,6 +94,7 @@ export class AreaComponent extends HTMLAreaElement {
   onDestroy?() : void;
 }
 export class AudioComponent extends HTMLAudioElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     attachStyle(this);
@@ -98,6 +105,7 @@ export class AudioComponent extends HTMLAudioElement {
   onDestroy?() : void;
 }
 export class BRComponent extends HTMLBRElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     attachStyle(this);
@@ -108,6 +116,7 @@ export class BRComponent extends HTMLBRElement {
   onDestroy?() : void;
 }
 export class BodyComponent extends HTMLBodyElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     attachShadow(this, { mode: 'open' });
@@ -118,6 +127,7 @@ export class BodyComponent extends HTMLBodyElement {
   onDestroy?() : void;
 }
 export class ButtonComponent extends HTMLButtonElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     attachDOM(this);
@@ -129,6 +139,7 @@ export class ButtonComponent extends HTMLButtonElement {
   onDestroy?() : void;
 }
 export class CanvasComponent extends HTMLCanvasElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     attachStyle(this);
@@ -139,6 +150,7 @@ export class CanvasComponent extends HTMLCanvasElement {
   onDestroy?() : void;
 }
 export class CollectionComponent extends HTMLCollection {
+  emitter: EventDispatcher;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
@@ -149,6 +161,7 @@ export class CollectionComponent extends HTMLCollection {
 }
 
 export class DListComponent extends HTMLDListElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     attachDOM(this);
@@ -160,6 +173,7 @@ export class DListComponent extends HTMLDListElement {
   onDestroy?() : void;
 }
 export class DataComponent extends HTMLDataElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
@@ -169,6 +183,7 @@ export class DataComponent extends HTMLDataElement {
   onDestroy?() : void;
 }
 export class DataListComponent extends HTMLDataListElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     attachDOM(this);
@@ -180,6 +195,7 @@ export class DataListComponent extends HTMLDataListElement {
   onDestroy?() : void;
 }
 export class DetailsComponent extends HTMLDetailsElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     attachDOM(this);
@@ -191,6 +207,7 @@ export class DetailsComponent extends HTMLDetailsElement {
   onDestroy?() : void;
 }
 export class DialogComponent extends HTMLDialogElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     attachDOM(this);
@@ -203,6 +220,7 @@ export class DialogComponent extends HTMLDialogElement {
 }
 
 export class DivComponent extends HTMLDivElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     attachShadow(this, { mode: 'open' });
@@ -214,6 +232,7 @@ export class DivComponent extends HTMLDivElement {
 }
 
 export class EmbedComponent extends HTMLEmbedElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     attachStyle(this);
@@ -224,6 +243,7 @@ export class EmbedComponent extends HTMLEmbedElement {
   onDestroy?() : void;
 }
 export class FieldSetComponent extends HTMLFieldSetElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     attachStyle(this);
@@ -234,6 +254,7 @@ export class FieldSetComponent extends HTMLFieldSetElement {
   onDestroy?() : void;
 }
 export class FormControlsComponent extends HTMLFormControlsCollection {
+  emitter: EventDispatcher;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
@@ -243,6 +264,7 @@ export class FormControlsComponent extends HTMLFormControlsCollection {
   onDestroy?() : void;
 }
 export class FormComponent extends HTMLFormElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     attachStyle(this);
@@ -253,6 +275,7 @@ export class FormComponent extends HTMLFormElement {
   onDestroy?() : void;
 }
 export class HRComponent extends HTMLHRElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     attachStyle(this);
@@ -263,6 +286,7 @@ export class HRComponent extends HTMLHRElement {
   onDestroy?() : void;
 }
 export class HeadComponent extends HTMLHeadElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
@@ -272,6 +296,7 @@ export class HeadComponent extends HTMLHeadElement {
   onDestroy?() : void;
 }
 export class HeadingComponent extends HTMLHeadingElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     attachShadow(this, { mode: 'open' });
@@ -282,6 +307,7 @@ export class HeadingComponent extends HTMLHeadingElement {
   onDestroy?() : void;
 }
 export class HtmlComponent extends HTMLHtmlElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
@@ -291,6 +317,7 @@ export class HtmlComponent extends HTMLHtmlElement {
   onDestroy?() : void;
 }
 export class IFrameComponent extends HTMLIFrameElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     attachStyle(this);
@@ -301,6 +328,7 @@ export class IFrameComponent extends HTMLIFrameElement {
   onDestroy?() : void;
 }
 export class ImageComponent extends HTMLImageElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     attachStyle(this);
@@ -311,6 +339,7 @@ export class ImageComponent extends HTMLImageElement {
   onDestroy?() : void;
 }
 export class InputComponent extends HTMLInputElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     attachStyle(this);
@@ -321,6 +350,7 @@ export class InputComponent extends HTMLInputElement {
   onDestroy?() : void;
 }
 export class LIComponent extends HTMLLIElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     attachDOM(this);
@@ -332,6 +362,7 @@ export class LIComponent extends HTMLLIElement {
   onDestroy?() : void;
 }
 export class LabelComponent extends HTMLLabelElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     attachDOM(this);
@@ -343,6 +374,7 @@ export class LabelComponent extends HTMLLabelElement {
   onDestroy?() : void;
 }
 export class LegendComponent extends HTMLLegendElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     attachStyle(this);
@@ -353,6 +385,7 @@ export class LegendComponent extends HTMLLegendElement {
   onDestroy?() : void;
 }
 export class LinkComponent extends HTMLLinkElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     attachStyle(this);
@@ -363,6 +396,7 @@ export class LinkComponent extends HTMLLinkElement {
   onDestroy?() : void;
 }
 export class MapComponent extends HTMLMapElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     attachDOM(this);
@@ -375,6 +409,7 @@ export class MapComponent extends HTMLMapElement {
 }
 
 export class MediaComponent extends HTMLMediaElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
@@ -384,6 +419,7 @@ export class MediaComponent extends HTMLMediaElement {
   onDestroy?() : void;
 }
 export class MenuComponent extends HTMLMenuElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
@@ -393,6 +429,7 @@ export class MenuComponent extends HTMLMenuElement {
   onDestroy?() : void;
 }
 export class MetaComponent extends HTMLMetaElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
@@ -402,6 +439,7 @@ export class MetaComponent extends HTMLMetaElement {
   onDestroy?() : void;
 }
 export class MeterComponent extends HTMLMeterElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     attachStyle(this);
@@ -412,6 +450,7 @@ export class MeterComponent extends HTMLMeterElement {
   onDestroy?() : void;
 }
 export class ModComponent extends HTMLModElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
@@ -421,6 +460,7 @@ export class ModComponent extends HTMLModElement {
   onDestroy?() : void;
 }
 export class OListComponent extends HTMLOListElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     attachDOM(this);
@@ -432,6 +472,7 @@ export class OListComponent extends HTMLOListElement {
   onDestroy?() : void;
 }
 export class ObjectComponent extends HTMLObjectElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     attachStyle(this);
@@ -442,6 +483,7 @@ export class ObjectComponent extends HTMLObjectElement {
   onDestroy?() : void;
 }
 export class OptGroupComponent extends HTMLOptGroupElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
@@ -451,6 +493,7 @@ export class OptGroupComponent extends HTMLOptGroupElement {
   onDestroy?() : void;
 }
 export class OptionComponent extends HTMLOptionElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
@@ -460,6 +503,7 @@ export class OptionComponent extends HTMLOptionElement {
   onDestroy?() : void;
 }
 export class OptionsCollectionComponent extends HTMLOptionsCollection {
+  emitter: EventDispatcher;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
@@ -469,6 +513,7 @@ export class OptionsCollectionComponent extends HTMLOptionsCollection {
   onDestroy?() : void;
 }
 export class OutputComponent extends HTMLOutputElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     attachStyle(this);
@@ -479,6 +524,7 @@ export class OutputComponent extends HTMLOutputElement {
   onDestroy?() : void;
 }
 export class ParagraphComponent extends HTMLParagraphElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     attachShadow(this, { mode: 'open' });
@@ -489,6 +535,7 @@ export class ParagraphComponent extends HTMLParagraphElement {
   onDestroy?() : void;
 }
 export class ParamComponent extends HTMLParamElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
@@ -498,6 +545,7 @@ export class ParamComponent extends HTMLParamElement {
   onDestroy?() : void;
 }
 export class PictureComponent extends HTMLPictureElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
@@ -507,6 +555,7 @@ export class PictureComponent extends HTMLPictureElement {
   onDestroy?() : void;
 }
 export class PreComponent extends HTMLPreElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     attachDOM(this);
@@ -518,6 +567,7 @@ export class PreComponent extends HTMLPreElement {
   onDestroy?() : void;
 }
 export class ProgressComponent extends HTMLProgressElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
@@ -527,6 +577,7 @@ export class ProgressComponent extends HTMLProgressElement {
   onDestroy?() : void;
 }
 export class QuoteComponent extends HTMLQuoteElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
@@ -536,6 +587,7 @@ export class QuoteComponent extends HTMLQuoteElement {
   onDestroy?() : void;
 }
 export class ScriptComponent extends HTMLScriptElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
@@ -545,6 +597,7 @@ export class ScriptComponent extends HTMLScriptElement {
   onDestroy?() : void;
 }
 export class SelectComponent extends HTMLSelectElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
@@ -555,6 +608,7 @@ export class SelectComponent extends HTMLSelectElement {
 }
 
 export class SlotComponent extends HTMLSlotElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
@@ -564,6 +618,7 @@ export class SlotComponent extends HTMLSlotElement {
   onDestroy?() : void;
 }
 export class SourceComponent extends HTMLSourceElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
@@ -573,6 +628,7 @@ export class SourceComponent extends HTMLSourceElement {
   onDestroy?() : void;
 }
 export class SpanComponent extends HTMLSpanElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     attachShadow(this, { mode: 'open' });
@@ -583,6 +639,7 @@ export class SpanComponent extends HTMLSpanElement {
   onDestroy?() : void;
 }
 export class StyleComponent extends HTMLStyleElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
@@ -592,6 +649,7 @@ export class StyleComponent extends HTMLStyleElement {
   onDestroy?() : void;
 }
 export class TableCaptionComponent extends HTMLTableCaptionElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
@@ -601,6 +659,7 @@ export class TableCaptionComponent extends HTMLTableCaptionElement {
   onDestroy?() : void;
 }
 export class TableCellComponent extends HTMLTableCellElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
@@ -610,6 +669,7 @@ export class TableCellComponent extends HTMLTableCellElement {
   onDestroy?() : void;
 }
 export class TableColComponent extends HTMLTableColElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
@@ -619,6 +679,7 @@ export class TableColComponent extends HTMLTableColElement {
   onDestroy?() : void;
 }
 export class TableComponent extends HTMLTableElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     attachDOM(this);
@@ -631,6 +692,7 @@ export class TableComponent extends HTMLTableElement {
 }
 
 export class TableRowComponent extends HTMLTableRowElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     attachDOM(this);
@@ -642,6 +704,7 @@ export class TableRowComponent extends HTMLTableRowElement {
   onDestroy?() : void;
 }
 export class TableSectionComponent extends HTMLTableSectionElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     attachDOM(this);
@@ -653,6 +716,7 @@ export class TableSectionComponent extends HTMLTableSectionElement {
   onDestroy?() : void;
 }
 export class TemplateComponent extends HTMLTemplateElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
@@ -663,6 +727,7 @@ export class TemplateComponent extends HTMLTemplateElement {
 }
 
 export class TimeComponent extends HTMLTimeElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     attachStyle(this);
@@ -673,6 +738,7 @@ export class TimeComponent extends HTMLTimeElement {
   onDestroy?() : void;
 }
 export class TitleComponent extends HTMLTitleElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
@@ -682,6 +748,7 @@ export class TitleComponent extends HTMLTitleElement {
   onDestroy?() : void;
 }
 export class TrackComponent extends HTMLTrackElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
@@ -691,6 +758,7 @@ export class TrackComponent extends HTMLTrackElement {
   onDestroy?() : void;
 }
 export class UListComponent extends HTMLUListElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     attachDOM(this);
@@ -702,6 +770,7 @@ export class UListComponent extends HTMLUListElement {
   onDestroy?() : void;
 }
 export class UnknownComponent extends HTMLUnknownElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     if (this.onInit) { this.onInit(); }
@@ -712,6 +781,7 @@ export class UnknownComponent extends HTMLUnknownElement {
 }
 
 export class VideoComponent extends HTMLVideoElement {
+  emitter: EventDispatcher;
   constructor() {
     super();
     attachStyle(this);

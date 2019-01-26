@@ -1,10 +1,10 @@
-declare let Router: any; // imported in vendor.ts
+// declare let Router: any; // imported in vendor.ts
 
 // import { RouteConfig, routeConfig } from './app.routes';
 
 export class App {
 
-  public routes: RouteConfig[] = [];
+  // public routes: RouteConfig[] = [];
   public rootSelector: string;
 
   // public configureRouter(config: RouteConfig, outletSelector?: string) {

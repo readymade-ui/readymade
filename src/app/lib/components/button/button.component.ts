@@ -16,6 +16,10 @@ import { css, html, ButtonComponent, Component, Emitter, Listen } from '../../..
 })
 class MyButtonComponent extends ButtonComponent {
 
+  state: {
+    model: string;
+  }
+
   constructor() {
     super();
     this.state.model = 'Click';
