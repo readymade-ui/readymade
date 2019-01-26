@@ -26,16 +26,15 @@
     </header>
 
     <section>
-        <pre is="r-pre">
-            <code slot="code" class="language-js">
-import { css, html, ButtonComponent, Component, Emitter, Listen } from '../../../../modules/core/index';
+        <r-code type="typescript">
+import { ButtonComponent, Component, Emitter, Listen } from '@readymade/core';
 
 @Component({
     selector: 'my-button',
-    template: html`
+    template:`
     {{model}}
     `,
-    style: css`
+    style:`
         :host {
             background: rgba(24, 24, 24, 1);
             cursor: pointer;
@@ -67,8 +66,7 @@ class MyButtonComponent extends ButtonComponent {
 customElements.define('my-button', MyButtonComponent, { extends: 'button'});
 
 export { MyButtonComponent };
-            </code>
-        </pre>
+    </r-code>
     </section>
     <footer>
        <h6>This site was compiled with Readymade.</h6>
