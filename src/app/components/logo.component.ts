@@ -3,7 +3,7 @@ import { Component, css, html, CustomElement, StateChange } from './../../module
 @Component({
   selector: 'r-logo',
   template: html`
-    <r-unit headline="{{headline}}" size="{{size}}"></r-unit>
+    <r-headline headline="{{headline}}" size="{{size}}"></r-headline>
 	`,
   style: css`
 
