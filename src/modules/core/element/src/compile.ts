@@ -1,6 +1,6 @@
-import { getChildNodes } from './util';
-import { ElementMeta } from './../../decorator/index';
-import { OnStateChange, StateChange } from './../../component/index';
+import { getChildNodes } from './util.js';
+import { ElementMeta } from './../../decorator/index.js';
+import { OnStateChange, StateChange } from './../../component/index.js';
 
 const TEMPLATE_BIND_REGEX = /\{\{(\s*)(.*?)(\s*)\}\}/g;
 const BIND_SUFFIX = ' __state';

@@ -49,7 +49,9 @@ export default [
             resolve(),
             minifyHTML(),
             inlinePostCSS(),
-            typescript(),
+            typescript({
+                typescript: require('typescript')
+            }),
             terser()
         ],
         onwarn: ( warning, next ) => {
@@ -58,7 +60,7 @@ export default [
         },
         output: {
             name: 'app',
-            file: 'dist/main.js',
+            file: 'dist/app/main.js',
             format: 'iife',
             sourcemap: true
         }

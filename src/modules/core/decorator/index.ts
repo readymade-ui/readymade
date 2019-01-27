@@ -1,5 +1,5 @@
-import { compileTemplate } from './../element/index';
-import { EventDispatcher } from './../event/index';
+import { compileTemplate } from './../element/index.js';
+import { EventDispatcher } from './../event/index.js';
 
 export interface EventHandler {
     () : void;

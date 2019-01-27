@@ -1,4 +1,4 @@
-import { css, html, Component, CustomElement, Listen } from '../../../../modules/core/index';
+import { css, html, Component, CustomElement, Listen } from '../../../../modules/core/index.js';
 
 @Component({
   selector: 'my-item',

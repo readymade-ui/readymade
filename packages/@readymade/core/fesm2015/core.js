@@ -178,7 +178,7 @@ function bindTemplateNodes() {
         return node;
     });
 }
-function setState$1(prop, model) {
+function setState(prop, model) {
     this.state[prop] = model;
 }
 function compileTemplate(elementMeta, target) {
@@ -189,7 +189,7 @@ function compileTemplate(elementMeta, target) {
     target.prototype.getChildNodes = getChildNodes;
     target.prototype.bindTemplateNodes = bindTemplateNodes;
     target.prototype.bindTemplate = bindTemplate;
-    target.prototype.setState = setState$1;
+    target.prototype.setState = setState;
 }
 
 const html = (...args) => {
@@ -690,6 +690,8 @@ class PictureComponent extends HTMLPictureElement {
 class PreComponent extends HTMLPreElement {
     constructor() {
         super();
+        attachDOM(this);
+        attachStyle(this);
         if (this.onInit) {
             this.onInit();
         }

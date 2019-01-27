@@ -4,13 +4,9 @@
 
 // Library Components
 
-import { RHeadlineComponent } from './components/headline.component';
-import { RCodeComponent } from './components/code.component';
-import { RLogoComponent } from './components/logo.component';
-
-export { RHeadlineComponent } from './components/headline.component';
-export { RCodeComponent } from './components/code.component';
-export { RLogoComponent } from './components/logo.component';
+export { RHeadlineComponent } from './components/headline.component.js';
+export { RCodeComponent } from './components/code.component.js';
+export { RLogoComponent } from './components/logo.component.js';
 
 // View Components
 // export { HomeView } from './view/home.view';

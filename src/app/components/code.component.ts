@@ -1,4 +1,5 @@
-import { Component, css, html, CustomElement, StateChange } from './../../modules/core/index';
+import { Component, css, html, CustomElement, StateChange } from './../../modules/core/index.js';
+
 declare let Prism: any;
 
 @Component({
@@ -9,8 +10,9 @@ declare let Prism: any;
       </code>
     </pre>
     <slot hidden></slot>
-	`,
+  `,
   style: css`
+
     :host {
       display: block;
       width: calc(100% - 80px);

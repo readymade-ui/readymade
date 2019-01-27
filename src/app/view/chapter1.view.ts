@@ -1,4 +1,4 @@
-import { css, html, Component, CustomElement } from './../../modules/core/index';
+import { css, html, Component, CustomElement } from './../../modules/core/index.js';
 
 @Component({
   selector: 'chapter1-view',

@@ -1,10 +1,5 @@
-import { ElementMeta } from './../../decorator/index';
-interface StateChange {
-    [key: string]: {
-        previousValue: any;
-        newValue: any;
-    };
-}
+import { ElementMeta } from './../../decorator/index.js';
+import { StateChange } from './../../component/index.js';
 declare function bindTemplate(): void;
 declare function bindTemplateNodes(): void;
 declare function compileTemplate(elementMeta: ElementMeta, target: any): void;

@@ -1,4 +1,4 @@
-import { Component, css, html, CustomElement, StateChange } from './../../modules/core/index';
+import { Component, css, html, CustomElement, StateChange } from './../../modules/core/index.js';
 
 @Component({
   selector: 'r-logo',
@@ -39,6 +39,7 @@ class RLogoComponent extends CustomElement {
     }
   }
 }
+
 
 customElements.define('r-logo', RLogoComponent);
 

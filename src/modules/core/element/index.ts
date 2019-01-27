@@ -2,14 +2,14 @@ export {
   attachDOM,
   attachShadow,
   attachStyle
-} from './src/attach';
+} from './src/attach.js';
 
 export {
   StateChange,
   bindTemplate,
   bindTemplateNodes,
   compileTemplate
-} from './src/compile';
+} from './src/compile.js';
 
 export {
   getSiblings,
@@ -18,4 +18,4 @@ export {
   querySelector,
   querySelectorAll,
   getChildNodes
-} from './src/util';
+} from './src/util.js';

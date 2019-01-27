@@ -11,7 +11,7 @@
     "build": "NODE_ENV=prod node index.js",
     "dev": "live-server ./dist --entry-file=index.html",
     "serve": "node backend/server.js",
-    "bundle:core": "rollup -c rollup.library.js"
+    "bundle:core": "node build-lib.js"
   },
   "repository": {
     "type": "git",
@@ -60,6 +60,7 @@
     "postcss-mixins": "^6.2.1",
     "rollup": "^0.66.0",
     "rollup-plugin-cleanup": "^3.1.0",
+    "rollup-plugin-commonjs": "^9.2.0",
     "rollup-plugin-inline-postcss": "^1.0.0",
     "rollup-plugin-minify-html-literals": "^1.1.2",
     "rollup-plugin-node-resolve": "^3.4.0",

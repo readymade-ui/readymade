@@ -1,5 +1,5 @@
-export * from './event/index';
-export * from './element/index';
-export * from './decorator/index';
-export * from './component/index';
+export * from './event/index.js';
+export * from './element/index.js';
+export * from './decorator/index.js';
+export * from './component/index.js';
 
