@@ -28,46 +28,48 @@
 
     <section>
         <r-code type="typescript">
-import { ButtonComponent, Component, Emitter, Listen } from '@readymade/core';
+            <span hidden>
+            import { ButtonComponent, Component, Emitter, Listen } from '@readymade/core';
 
-@Component({
-    selector: 'my-button',
-    template:`
-    {{model}}
-    `,
-    style:`
-        :host {
-            background: rgba(24, 24, 24, 1);
-            cursor: pointer;
-            color: white;
-            font-weight: 400;
-        }
-    `,
-})
-class MyButtonComponent extends ButtonComponent {
+            @Component({
+                selector: 'my-button',
+                template:`
+                {{model}}
+                `,
+                style:`
+                    :host {
+                        background: rgba(24, 24, 24, 1);
+                        cursor: pointer;
+                        color: white;
+                        font-weight: 400;
+                    }
+                `,
+            })
+            class MyButtonComponent extends ButtonComponent {
 
-    constructor() {
-        super();
-        this.state.model = 'Click';
-    }
+                constructor() {
+                    super();
+                    this.state.model = 'Click';
+                }
 
-    @Emitter('bang', { bubbles: true, composed: true })
-    @Listen('click')
-    public onClick(event) {
-        this.emitter.broadcast('bang');
-    }
-    @Listen('keyup')
-    public onKeyUp(event) {
-        if (event.key === 'Enter') {
-            this.emitter.broadcast('bang');
-        }
-    }
-}
+                @Emitter('bang', { bubbles: true, composed: true })
+                @Listen('click')
+                public onClick(event) {
+                    this.emitter.broadcast('bang');
+                }
+                @Listen('keyup')
+                public onKeyUp(event) {
+                    if (event.key === 'Enter') {
+                        this.emitter.broadcast('bang');
+                    }
+                }
+            }
 
-customElements.define('my-button', MyButtonComponent, { extends: 'button'});
+            customElements.define('my-button', MyButtonComponent, { extends: 'button'});
 
-export { MyButtonComponent };
-    </r-code>
+            export { MyButtonComponent };
+            </span>
+        </r-code>
     </section>
     <footer>
        <p>this site was compiled with readymade.</p>

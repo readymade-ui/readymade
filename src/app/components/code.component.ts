@@ -19,10 +19,6 @@ declare let Prism: any;
       padding: 40px;
     }
 
-    [hidden] {
-      display: none!important;
-    }
-
     code[class*="language-"],
     pre[class*="language-"] {
         -moz-tab-size: 2;
@@ -214,7 +210,7 @@ class RCodeComponent extends CustomElement {
   }
 
   onSlotChange(ev: any) {
-    const code = ((<any>this.shadowRoot.querySelector('slot').assignedNodes())[0].textContent);
+    const code = ((<any>this.shadowRoot.querySelector('slot').assignedNodes())[1].textContent);
     this.shadowRoot.querySelector('code').innerHTML = Prism.highlight(code, Prism.languages[this.getAttribute('type')], this.getAttribute('type'));
   }
 }
