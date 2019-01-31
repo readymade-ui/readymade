@@ -15,8 +15,8 @@ declare let Prism: any;
 
     :host {
       display: block;
-      width: calc(100% - 80px);
-      padding: 40px;
+      padding-top: 40px;
+      padding-bottom: 40px;
     }
 
     code[class*="language-"],

@@ -1,5 +1,5 @@
-import { attachDOM, attachShadow, attachStyle } from './../element/index.js';
-import { EventDispatcher } from './../event/index.js';
+import { attachDOM, attachShadow, attachStyle } from './../element/element.js';
+import { EventDispatcher } from './../event/event.js';
 
 export interface OnInit {
     () : void;
@@ -24,13 +24,33 @@ export interface OnDestroy {
     () : void;
 }
 
+function bindListeners(target: any) {
+  for (let prop in target) {
+    if (prop.includes('$listen')) {
+      this[prop].onListener.call(this);
+    }
+  }
+}
+
+function bindEmitters(target: any) {
+  for (let prop in target) {
+    if (prop.includes('$emit')) {
+      target[prop].call(target);
+    }
+  }
+}
+
 export class StructuralElement extends HTMLElement {
   emitter: EventDispatcher;
   constructor() {
     super();
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -41,21 +61,30 @@ export class PseudoElement extends HTMLElement {
     super();
     attachDOM(this);
     attachStyle(this);
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
+
 
 export class CustomElement extends HTMLElement {
   emitter: EventDispatcher;
   constructor() {
     super();
     attachShadow(this, { mode: 'open' });
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -64,9 +93,13 @@ export class AllCollectionComponent extends HTMLAllCollection {
   emitter: EventDispatcher;
   constructor() {
     super();
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -76,9 +109,13 @@ export class AnchorComponent extends HTMLAnchorElement {
     super();
     attachDOM(this);
     attachStyle(this);
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -87,9 +124,13 @@ export class AreaComponent extends HTMLAreaElement {
   constructor() {
     super();
     attachStyle(this);
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -98,9 +139,13 @@ export class AudioComponent extends HTMLAudioElement {
   constructor() {
     super();
     attachStyle(this);
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -109,9 +154,13 @@ export class BRComponent extends HTMLBRElement {
   constructor() {
     super();
     attachStyle(this);
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -120,9 +169,13 @@ export class BodyComponent extends HTMLBodyElement {
   constructor() {
     super();
     attachShadow(this, { mode: 'open' });
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -132,9 +185,13 @@ export class ButtonComponent extends HTMLButtonElement {
     super();
     attachDOM(this);
     attachStyle(this);
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -143,9 +200,13 @@ export class CanvasComponent extends HTMLCanvasElement {
   constructor() {
     super();
     attachStyle(this);
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -153,9 +214,13 @@ export class CollectionComponent extends HTMLCollection {
   emitter: EventDispatcher;
   constructor() {
     super();
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -166,9 +231,13 @@ export class DListComponent extends HTMLDListElement {
     super();
     attachDOM(this);
     attachStyle(this);
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -176,9 +245,13 @@ export class DataComponent extends HTMLDataElement {
   emitter: EventDispatcher;
   constructor() {
     super();
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -188,9 +261,13 @@ export class DataListComponent extends HTMLDataListElement {
     super();
     attachDOM(this);
     attachStyle(this);
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -200,9 +277,13 @@ export class DetailsComponent extends HTMLDetailsElement {
     super();
     attachDOM(this);
     attachStyle(this);
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -212,9 +293,13 @@ export class DialogComponent extends HTMLDialogElement {
     super();
     attachDOM(this);
     attachStyle(this);
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -224,9 +309,13 @@ export class DivComponent extends HTMLDivElement {
   constructor() {
     super();
     attachShadow(this, { mode: 'open' });
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -236,9 +325,13 @@ export class EmbedComponent extends HTMLEmbedElement {
   constructor() {
     super();
     attachStyle(this);
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -247,9 +340,13 @@ export class FieldSetComponent extends HTMLFieldSetElement {
   constructor() {
     super();
     attachStyle(this);
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -257,9 +354,13 @@ export class FormControlsComponent extends HTMLFormControlsCollection {
   emitter: EventDispatcher;
   constructor() {
     super();
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -268,9 +369,13 @@ export class FormComponent extends HTMLFormElement {
   constructor() {
     super();
     attachStyle(this);
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -279,9 +384,13 @@ export class HRComponent extends HTMLHRElement {
   constructor() {
     super();
     attachStyle(this);
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -289,9 +398,13 @@ export class HeadComponent extends HTMLHeadElement {
   emitter: EventDispatcher;
   constructor() {
     super();
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -300,9 +413,13 @@ export class HeadingComponent extends HTMLHeadingElement {
   constructor() {
     super();
     attachShadow(this, { mode: 'open' });
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -310,9 +427,13 @@ export class HtmlComponent extends HTMLHtmlElement {
   emitter: EventDispatcher;
   constructor() {
     super();
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -321,9 +442,13 @@ export class IFrameComponent extends HTMLIFrameElement {
   constructor() {
     super();
     attachStyle(this);
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -332,9 +457,13 @@ export class ImageComponent extends HTMLImageElement {
   constructor() {
     super();
     attachStyle(this);
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -343,9 +472,13 @@ export class InputComponent extends HTMLInputElement {
   constructor() {
     super();
     attachStyle(this);
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -355,9 +488,13 @@ export class LIComponent extends HTMLLIElement {
     super();
     attachDOM(this);
     attachStyle(this);
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -367,9 +504,13 @@ export class LabelComponent extends HTMLLabelElement {
     super();
     attachDOM(this);
     attachStyle(this);
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -378,9 +519,13 @@ export class LegendComponent extends HTMLLegendElement {
   constructor() {
     super();
     attachStyle(this);
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -389,9 +534,13 @@ export class LinkComponent extends HTMLLinkElement {
   constructor() {
     super();
     attachStyle(this);
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -401,9 +550,13 @@ export class MapComponent extends HTMLMapElement {
     super();
     attachDOM(this);
     attachStyle(this);
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -412,9 +565,13 @@ export class MediaComponent extends HTMLMediaElement {
   emitter: EventDispatcher;
   constructor() {
     super();
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -422,9 +579,13 @@ export class MenuComponent extends HTMLMenuElement {
   emitter: EventDispatcher;
   constructor() {
     super();
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -432,9 +593,13 @@ export class MetaComponent extends HTMLMetaElement {
   emitter: EventDispatcher;
   constructor() {
     super();
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -443,9 +608,13 @@ export class MeterComponent extends HTMLMeterElement {
   constructor() {
     super();
     attachStyle(this);
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -453,9 +622,13 @@ export class ModComponent extends HTMLModElement {
   emitter: EventDispatcher;
   constructor() {
     super();
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -465,9 +638,13 @@ export class OListComponent extends HTMLOListElement {
     super();
     attachDOM(this);
     attachStyle(this);
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -476,9 +653,13 @@ export class ObjectComponent extends HTMLObjectElement {
   constructor() {
     super();
     attachStyle(this);
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -486,9 +667,13 @@ export class OptGroupComponent extends HTMLOptGroupElement {
   emitter: EventDispatcher;
   constructor() {
     super();
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -496,9 +681,13 @@ export class OptionComponent extends HTMLOptionElement {
   emitter: EventDispatcher;
   constructor() {
     super();
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -506,9 +695,13 @@ export class OptionsCollectionComponent extends HTMLOptionsCollection {
   emitter: EventDispatcher;
   constructor() {
     super();
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -517,9 +710,13 @@ export class OutputComponent extends HTMLOutputElement {
   constructor() {
     super();
     attachStyle(this);
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -528,9 +725,13 @@ export class ParagraphComponent extends HTMLParagraphElement {
   constructor() {
     super();
     attachShadow(this, { mode: 'open' });
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -538,9 +739,13 @@ export class ParamComponent extends HTMLParamElement {
   emitter: EventDispatcher;
   constructor() {
     super();
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -548,9 +753,13 @@ export class PictureComponent extends HTMLPictureElement {
   emitter: EventDispatcher;
   constructor() {
     super();
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -560,9 +769,13 @@ export class PreComponent extends HTMLPreElement {
     super();
     attachDOM(this);
     attachStyle(this);
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -570,9 +783,13 @@ export class ProgressComponent extends HTMLProgressElement {
   emitter: EventDispatcher;
   constructor() {
     super();
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -580,9 +797,13 @@ export class QuoteComponent extends HTMLQuoteElement {
   emitter: EventDispatcher;
   constructor() {
     super();
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -590,9 +811,13 @@ export class ScriptComponent extends HTMLScriptElement {
   emitter: EventDispatcher;
   constructor() {
     super();
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -600,9 +825,13 @@ export class SelectComponent extends HTMLSelectElement {
   emitter: EventDispatcher;
   constructor() {
     super();
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -611,9 +840,13 @@ export class SlotComponent extends HTMLSlotElement {
   emitter: EventDispatcher;
   constructor() {
     super();
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -621,9 +854,13 @@ export class SourceComponent extends HTMLSourceElement {
   emitter: EventDispatcher;
   constructor() {
     super();
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -632,9 +869,13 @@ export class SpanComponent extends HTMLSpanElement {
   constructor() {
     super();
     attachShadow(this, { mode: 'open' });
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -642,9 +883,13 @@ export class StyleComponent extends HTMLStyleElement {
   emitter: EventDispatcher;
   constructor() {
     super();
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -652,9 +897,13 @@ export class TableCaptionComponent extends HTMLTableCaptionElement {
   emitter: EventDispatcher;
   constructor() {
     super();
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -662,9 +911,13 @@ export class TableCellComponent extends HTMLTableCellElement {
   emitter: EventDispatcher;
   constructor() {
     super();
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -672,9 +925,13 @@ export class TableColComponent extends HTMLTableColElement {
   emitter: EventDispatcher;
   constructor() {
     super();
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -684,9 +941,13 @@ export class TableComponent extends HTMLTableElement {
     super();
     attachDOM(this);
     attachStyle(this);
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -697,9 +958,13 @@ export class TableRowComponent extends HTMLTableRowElement {
     super();
     attachDOM(this);
     attachStyle(this);
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -709,9 +974,13 @@ export class TableSectionComponent extends HTMLTableSectionElement {
     super();
     attachDOM(this);
     attachStyle(this);
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -719,9 +988,13 @@ export class TemplateComponent extends HTMLTemplateElement {
   emitter: EventDispatcher;
   constructor() {
     super();
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -731,9 +1004,13 @@ export class TimeComponent extends HTMLTimeElement {
   constructor() {
     super();
     attachStyle(this);
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -741,9 +1018,13 @@ export class TitleComponent extends HTMLTitleElement {
   emitter: EventDispatcher;
   constructor() {
     super();
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -751,9 +1032,13 @@ export class TrackComponent extends HTMLTrackElement {
   emitter: EventDispatcher;
   constructor() {
     super();
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -763,9 +1048,13 @@ export class UListComponent extends HTMLUListElement {
     super();
     attachDOM(this);
     attachStyle(this);
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -773,9 +1062,13 @@ export class UnknownComponent extends HTMLUnknownElement {
   emitter: EventDispatcher;
   constructor() {
     super();
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
@@ -785,9 +1078,13 @@ export class VideoComponent extends HTMLVideoElement {
   constructor() {
     super();
     attachStyle(this);
+    if (this.bindEmitters) this.bindEmitters();
+    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
+  bindEmitters?() : void;
+  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Arimo|Major+Mono+Display');
+@import url('https://fonts.googleapis.com/css?family=Major+Mono+Display|Source+Code+Pro:300');
 @import url('../assets/fonts/DankMono-Regular/fonts');
 @import url('../assets/fonts/DankMono-Italic/fonts');
 
@@ -7,7 +7,7 @@ body {
 
     background: black;
     color:#cdcdcd;
-    font-family: 'Arimo', sans-serif;
+    font-family: 'Source Code Pro', sans-serif;
     font-size: 16px;
     padding: 0px;
     margin: 0px;
@@ -17,11 +17,10 @@ body {
 
 }
 
-r-code {
+header, section, footer {
     position: relative;
     left: 50%;
     max-width: 640px;
-    min-height: 320px;
     transform: translateX(-50%);
 }
 
@@ -51,6 +50,13 @@ ul {
     -webkit-padding-start: 0px;
     -webkit-margin-before: 0px;
     -webkit-margin-after: 0px;
+    margin-top: 4em;
+    margin-bottom: 1em;
+}
+
+ul li {
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 [tabindex] {
@@ -76,8 +82,14 @@ button, input {
     display: none!important;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1 {
     font-family: 'Major Mono Display', serif;
+    line-height: 1.5em;
+}
+
+h2, h3, h4, h5, h6 {
+    font-family: 'Source Code Pro', serif;
+    line-height: 1.5em;
 }
 
 h1 {
@@ -90,24 +102,26 @@ h6 {
 }
 
 p {
-    font-size: 0.8em;
+    font-family: 'Source Code Pro', serif;
+    font-size: 1.0em;
+    line-height: 1.5em;
 }
 
+.hint {
+    opacity: 0.6;
+}
 
 header {
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60%;
     text-align: center;
+}
+
+header h4 {
+    margin-top: 4em;
 }
 
 footer {
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60%;
     text-align: center;
+    margin-top: 60px;
     margin-bottom: 60px;
 }
 

@@ -7,7 +7,9 @@ import { Component, css, html, CustomElement, StateChange } from './../../module
     <r-headline headline="{{subtitle}}"></r-headline>
 	`,
   style: css`
-
+      :host {
+        display: block;
+      }
 	`
 })
 class RLogoComponent extends CustomElement {

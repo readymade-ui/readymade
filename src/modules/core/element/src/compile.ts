@@ -1,6 +1,6 @@
 import { getChildNodes } from './util.js';
-import { ElementMeta } from './../../decorator/index.js';
-import { OnStateChange, StateChange } from './../../component/index.js';
+import { ElementMeta } from './../../decorator/decorator.js';
+import { OnStateChange, StateChange } from './../../component/component.js';
 
 const TEMPLATE_BIND_REGEX = /\{\{(\s*)(.*?)(\s*)\}\}/g;
 const BIND_SUFFIX = ' __state';
@@ -54,7 +54,7 @@ function copyAttributes(node: any, template: any) {
 
 class BoundNode {
   template: Element;
-  node: Element;
+  node: any;
   previousNode: Element;
   constructor (node) {
     this.template = document.createElement('div');
@@ -66,6 +66,7 @@ class BoundNode {
       if (match === undefined || match === null) match = '';
       return (<any>Object).byString(data, /\{\{(\s*)(.*?)(\s*)\}\}/.exec(match)[2]) || '';
     }));
+    if (this.node.onUpdate) this.node.onUpdate();
   }
 }
 
@@ -122,7 +123,7 @@ function setState(prop: string, model: any) {
 }
 
 function compileTemplate(elementMeta: ElementMeta, target: any) {
-  target.prototype.elementMeta = Object.assign({}, elementMeta);
+  target.prototype.elementMeta = Object.assign(target.elementMeta ? target.elementMeta : {}, elementMeta);
   target.prototype.elementMeta.eventMap = {};
   target.prototype.template = document.createElement('template');
   target.prototype.template = `<style>${elementMeta.style}</style>${elementMeta.template}`;
