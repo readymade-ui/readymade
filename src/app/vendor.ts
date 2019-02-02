@@ -1,5 +1,3 @@
-// export { Router } from '@vaadin/router';
-export * from 'hyperhtml/esm';
 export * from 'clipboard';
 export * from 'prismjs';
 export * from 'prismjs/plugins/toolbar/prism-toolbar';
