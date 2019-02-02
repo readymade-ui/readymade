@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Major+Mono+Display|Source+Code+Pro:300');
-@import url('../assets/fonts/DankMono-Regular/fonts');
-@import url('../assets/fonts/DankMono-Italic/fonts');
+@import url('fonts/DankMono-Regular/fonts');
+@import url('fonts/DankMono-Italic/fonts');
 
 
 body {
