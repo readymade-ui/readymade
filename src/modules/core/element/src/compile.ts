@@ -5,68 +5,113 @@ import { OnStateChange, StateChange } from './../../component/component.js';
 const TEMPLATE_BIND_REGEX = /\{\{(\s*)(.*?)(\s*)\}\}/g;
 const BIND_SUFFIX = ' __state';
 
-
 interface Node {
     cloneNode(deep?: boolean): this;
 }
 
-(<any>Object).byString = function(o: any, s: string) {
-    if(!s) return o;
-    s = s.replace(/\[(\w+)\]/g, '.$1');
-    s = s.replace(/^\./, '');
-    var a = s.split('.');
-    for (var i = 0, n = a.length; i < n; ++i) {
-        var k = a[i];
-        if (k in o) {
-            o = o[k];
-        } else {
-            return;
-        }
-    }
-    return o;
-}
+function templateId() {
+  let str = "";
+  const alphabet = "abcdefghijklmnopqrstuvwxyz";
 
-function setTemplate(elem: Element, html: string): Element {
-    // const _elem = (<Node>elem).cloneNode(false);
-    // (<Element>_elem).innerHTML = html;
-    // (<Element>elem).parentNode.replaceChild((<Element>_elem), (<Element>elem));
-    // return (<Element>_elem);
-    elem.innerHTML = html;
-    return (<Element>elem);
-}
-
-// testing copying attributes from element to template
-function copyAttributes(node: any, template: any) {
-  const _template = getChildNodes(template);
-  const _node = node.host ? getChildNodes(node.shadowRoot) : getChildNodes(node);
-  let index = 0;
-  do {
-      let aIndex = 0;
-      const _attributes = _node[index].attributes;
-      while(aIndex < _attributes.length) {
-          _template[index].setAttribute(_attributes[aIndex].nodeName, _attributes[aIndex].nodeValue);
-          aIndex++;
-      }
-      index++;
+  while (str.length < 3) {
+    str += alphabet[Math.floor(Math.random() * alphabet.length)];
   }
-  while(index < _node.length);
+  return str;
 }
+
+function uuidv4() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
+class NodeTree {
+  $parent: any;
+  $parentId: string;
+  $flatMap: any = {};
+  constructor(parentNode?: any, template?: any) {
+    this.$flatMap = {};
+    if (parentNode) {
+      this.$parent = parentNode;
+      this.$parentId = templateId();
+      return this.create(template);
+    }
+    return this;
+  }
+  create(template) {
+
+    const walk = document.createTreeWalker(
+      this.$parent,
+      NodeFilter.SHOW_ELEMENT,
+      { acceptNode: function(node) { return NodeFilter.FILTER_ACCEPT; } },
+      false
+    );
+
+    while(walk.nextNode()) {
+        const id = this.$parentId+'-'+uuidv4().slice(0, 8);
+        const clone = walk.currentNode.cloneNode(true);
+        (<Element>walk.currentNode).setAttribute('r-id', id);
+        (<Element>clone).setAttribute('r-id', id);
+        if (!this.$flatMap[id]) {
+          this.$flatMap[id] = {
+            id: id,
+            node: clone,
+            parent: this.$parent
+          }
+        }
+      }
+      return this;
+  }
+  getAttributes(node) {
+      const attr = [];
+      for (let i=0; i < node.attributes.length; i++) {
+        attr.push(node.attributes[i].nodeName);
+      }
+      return attr;
+  }
+  getVirtualNode(node) {
+    return this.$flatMap[this.getAttributes(node).filter(attr => attr.includes(this.$parentId))[0]]
+  }
+  update(key, value, parent) {
+
+    const regex = new RegExp(`\{\{(\s*)(${key})(\s*)\}\}`, 'gi');
+    const walk = document.createTreeWalker(
+      parent,
+      NodeFilter.SHOW_ELEMENT,
+      { acceptNode: function(node) { return NodeFilter.FILTER_ACCEPT; } },
+      false
+    );
+    while(walk.nextNode()) {
+      if ((<Element>walk.currentNode).getAttribute('r-id')) {
+         const protoNode = this.$flatMap[(<Element>walk.currentNode).getAttribute('r-id')].node;
+         for (let i = 0; i < protoNode.attributes.length; i++) {
+            if (protoNode.attributes[i].nodeValue.match(regex, 'gi')) {
+              (<Element>walk.currentNode).setAttribute(protoNode.attributes[i].nodeName, protoNode.attributes[i].nodeValue.replace(regex, value));
+            }
+         }
+         if (protoNode.textContent.match(regex)) {
+            walk.currentNode.textContent = protoNode.textContent.replace(regex, value);
+         }
+      }
+    }
+    return parent;
+  }
+}
+
+
 
 class BoundNode {
-  template: Element;
-  node: any;
-  previousNode: Element;
-  constructor (node) {
-    this.template = document.createElement('div');
-    this.template.innerHTML = node.innerHTML;
-    this.node = node;
+  $parent: any;
+  nodeTree: NodeTree;
+  templateTree: NodeTree;
+  constructor (parent) {
+    this.$parent = parent;
+    this.nodeTree = new NodeTree(this.$parent, this.templateTree);
   }
-  update(data: any, target: any) {
-    (<Element>this.node) = setTemplate(this.node, this.template.innerHTML.replace(TEMPLATE_BIND_REGEX, (match, variable) => {
-      if (match === undefined || match === null) match = '';
-      return (<any>Object).byString(data, /\{\{(\s*)(.*?)(\s*)\}\}/.exec(match)[2]) || '';
-    }));
-    if (this.node.onUpdate) this.node.onUpdate();
+  update(key: string, value: any) {
+    this.nodeTree.update(key, value, this.$parent);
+    if (this.$parent.onUpdate) this.$parent.onUpdate();
   }
 }
 
@@ -84,38 +129,22 @@ class BoundHandler {
       }
     };
     target[key] = value;
-    this.model.elementMeta.boundState['node' + BIND_SUFFIX].update(this.model, target);
+    this.model.elementMeta.boundState['node' + BIND_SUFFIX].update(key, target[key]);
     if (target.onStateChange) target.onStateChange(change);
     return true;
   }
 }
 
 function bindTemplate() {
-  if (!this.elementMeta) this.elementMeta = {};
-  this.elementMeta.templateRegex = TEMPLATE_BIND_REGEX;
-  this.elementMeta.boundState = {
-      ['node' + BIND_SUFFIX]: new BoundNode(this.shadowRoot ? this.shadowRoot : this),
-      ['handler' + BIND_SUFFIX]: new BoundHandler(this)
+
+  if (!this.elementMeta.boundState) {
+    this.elementMeta.boundState = {};
   }
+  this.elementMeta.boundState['handler' + BIND_SUFFIX] = new BoundHandler(this);
+  this.elementMeta.boundState['node' + BIND_SUFFIX] = new BoundNode(this.shadowRoot ? this.shadowRoot : this);
   this.state = new Proxy(this, this.elementMeta.boundState['handler' + BIND_SUFFIX]);
+
 }
-
-function bindTemplateNodes() {
-  if (!this.elementMeta) this.elementMeta = {};
-   this.elementMeta.boundNodes = this.getChildNodes()
-  .map((node: any) => {
-    if (!node.elementMeta) node.elementMeta = {};
-      node.elementMeta.templateRegex = TEMPLATE_BIND_REGEX;
-      node.elementMeta.boundState = {
-          ['node' + BIND_SUFFIX]: new BoundNode(node),
-          ['handler' + BIND_SUFFIX]: new BoundHandler(node)
-      }
-      node.state = new Proxy(node, node.elementMeta.boundState['handler' + BIND_SUFFIX]);
-      return node;
-
-    });
-}
-
 
 // support setting global state for now, what about descendant properties?
 function setState(prop: string, model: any) {
@@ -128,7 +157,6 @@ function compileTemplate(elementMeta: ElementMeta, target: any) {
   target.prototype.template = document.createElement('template');
   target.prototype.template = `<style>${elementMeta.style}</style>${elementMeta.template}`;
   target.prototype.getChildNodes = getChildNodes;
-  target.prototype.bindTemplateNodes = bindTemplateNodes;
   target.prototype.bindTemplate = bindTemplate;
   target.prototype.setState = setState;
 }
@@ -136,6 +164,5 @@ function compileTemplate(elementMeta: ElementMeta, target: any) {
 export {
   StateChange,
   bindTemplate,
-  bindTemplateNodes,
   compileTemplate
 }

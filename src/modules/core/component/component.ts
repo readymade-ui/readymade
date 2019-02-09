@@ -1,5 +1,6 @@
 import { attachDOM, attachShadow, attachStyle } from './../element/element.js';
 import { EventDispatcher } from './../event/event.js';
+import { ElementMeta } from './../decorator/decorator.js';
 
 export interface OnInit {
     () : void;
@@ -75,6 +76,7 @@ export class PseudoElement extends HTMLElement {
 
 export class CustomElement extends HTMLElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     attachShadow(this, { mode: 'open' });
@@ -166,6 +168,7 @@ export class BRComponent extends HTMLBRElement {
 }
 export class BodyComponent extends HTMLBodyElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     attachShadow(this, { mode: 'open' });
@@ -306,6 +309,7 @@ export class DialogComponent extends HTMLDialogElement {
 
 export class DivComponent extends HTMLDivElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     attachShadow(this, { mode: 'open' });
@@ -410,6 +414,7 @@ export class HeadComponent extends HTMLHeadElement {
 }
 export class HeadingComponent extends HTMLHeadingElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     attachShadow(this, { mode: 'open' });
@@ -722,6 +727,7 @@ export class OutputComponent extends HTMLOutputElement {
 }
 export class ParagraphComponent extends HTMLParagraphElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     attachShadow(this, { mode: 'open' });
@@ -866,6 +872,7 @@ export class SourceComponent extends HTMLSourceElement {
 }
 export class SpanComponent extends HTMLSpanElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     attachShadow(this, { mode: 'open' });

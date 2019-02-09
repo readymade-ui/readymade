@@ -15,6 +15,7 @@ interface ElementMeta {
   style?: string | any[];
   template?: string | any[];
   eventMap?: { [key:string]: EventMeta };
+  boundState?: any;
 };
 
 const html = (...args) => {

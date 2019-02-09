@@ -3,7 +3,7 @@ import { Component, css, html, CustomElement, StateChange } from './../../module
 @Component({
   selector: 'r-headline',
   template: html`
-    <h1 class="{{size}}">{{headline}}</h1>
+    <h1 class="{{copySize}}">{{copy}}</h1>
 	`,
   style: css`
     h1 {
@@ -28,10 +28,15 @@ import { Component, css, html, CustomElement, StateChange } from './../../module
 })
 class RHeadlineComponent extends CustomElement {
   public state: {
-    headline: string | number;
+    copy: string | number;
+    copySize: string;
   }
+  public hyperNode: any;
+
   constructor() {
     super();
+    this.state.copy = '';
+    this.state.copySize = '';
   }
 
   static get observedAttributes() {
@@ -40,15 +45,15 @@ class RHeadlineComponent extends CustomElement {
   attributeChangedCallback(name, oldValue, newValue) {
     switch (name) {
       case 'headline':
-        this.setState('headline', this.getAttribute('headline'));
+        this.setState('copy', newValue);
         break;
       case 'size':
-        this.setState('size', this.getAttribute('size'));
+        this.setState('copySize', newValue);
         break;
     }
   }
 }
 
-customElements.define('r-headline', RHeadlineComponent);
+
 
 export { RHeadlineComponent };

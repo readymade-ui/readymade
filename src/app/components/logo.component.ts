@@ -17,6 +17,7 @@ class RLogoComponent extends CustomElement {
   public state: {
     headline: string;
     subtitle: string;
+    hello: string;
   }
   constructor() {
     super();
@@ -31,7 +32,7 @@ class RLogoComponent extends CustomElement {
   attributeChangedCallback(name, oldValue, newValue) {
     switch (name) {
       case 'size':
-        this.setSize(this.getAttribute('size'));
+        this.setSize(newValue);
         break;
     }
   }
@@ -42,7 +43,5 @@ class RLogoComponent extends CustomElement {
   }
 }
 
-
-customElements.define('r-logo', RLogoComponent);
 
 export { RLogoComponent };

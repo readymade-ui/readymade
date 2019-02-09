@@ -7,7 +7,6 @@ export {
 export {
   StateChange,
   bindTemplate,
-  bindTemplateNodes,
   compileTemplate
 } from './src/compile.js';
 
