@@ -5,10 +5,9 @@ import inlinePostCSS from 'rollup-plugin-inline-postcss';
 
 export default [
     {
-        input: 'src/app/polyfill.ts',
+        input: 'src/app/polyfill.js',
         plugins: [
-            resolve(),
-            typescript()
+            resolve()
         ],
         onwarn: ( warning, next ) => {
             if ( warning.code === 'THIS_IS_UNDEFINED' ) return;

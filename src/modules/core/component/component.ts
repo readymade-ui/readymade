@@ -290,22 +290,22 @@ export class DetailsComponent extends HTMLDetailsElement {
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
-export class DialogComponent extends HTMLDialogElement {
-  emitter: EventDispatcher;
-  constructor() {
-    super();
-    attachDOM(this);
-    attachStyle(this);
-    if (this.bindEmitters) this.bindEmitters();
-    if (this.bindListeners) this.bindListeners();
-    if (this.onInit) { this.onInit(); }
-  }
-  onInit?() : void;
-  bindEmitters?() : void;
-  bindListeners?() : void;
-  setState?(property: string, model: any) : void;
-  onDestroy?() : void;
-}
+// export class DialogComponent extends HTMLDialogElement {
+//   emitter: EventDispatcher;
+//   constructor() {
+//     super();
+//     attachDOM(this);
+//     attachStyle(this);
+//     if (this.bindEmitters) this.bindEmitters();
+//     if (this.bindListeners) this.bindListeners();
+//     if (this.onInit) { this.onInit(); }
+//   }
+//   onInit?() : void;
+//   bindEmitters?() : void;
+//   bindListeners?() : void;
+//   setState?(property: string, model: any) : void;
+//   onDestroy?() : void;
+// }
 
 export class DivComponent extends HTMLDivElement {
   emitter: EventDispatcher;

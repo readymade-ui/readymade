@@ -66,6 +66,7 @@ import { Component, css, html, CustomElement, StateChange, Listen } from './../.
     ul li:hover {
       opacity: 1.0;
       background: rgba(10,10,10,1.0);
+      margin: 10px;
     }
     ul.top {
       position: absolute;
