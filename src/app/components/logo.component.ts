@@ -24,7 +24,7 @@ class RLogoComponent extends CustomElement {
     super();
     this.state.heading = 'R';
     this.state.heading2 = 'readymade';
-    window.requestAnimationFrame(this.update.bind(this));
+    // window.requestAnimationFrame(this.update.bind(this));
   }
 
   static get observedAttributes() {
