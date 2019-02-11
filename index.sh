@@ -13,6 +13,7 @@ if [[ ! -e dist/assets ]]; then
 fi
 
 cp src/app/index.html dist/index.html
+cp src/app/docs.html dist/docs.html
 cp src/app/404.html dist/404.html
 cp -R src/app/assets/. dist/assets/
 

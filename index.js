@@ -20,6 +20,7 @@ watcher
         }
         if (path.includes('index.html')) {
             spawn('cp', ['src/app/index.html', 'dist/index.html'], {stdio:'inherit'});
+            spawn('cp', ['src/app/docs.html', 'dist/docs.html'], {stdio:'inherit'});
         }
         if (path.includes('404.html')) {
             spawn('cp', ['src/app/404.html', 'dist/404.html'], {stdio:'inherit'});

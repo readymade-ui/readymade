@@ -50,5 +50,6 @@ class RLogoComponent extends CustomElement {
   }
 }
 
+customElements.define('r-logo', RLogoComponent);
 
 export { RLogoComponent };

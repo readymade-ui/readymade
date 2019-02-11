@@ -3,7 +3,7 @@ import { css, html, ButtonComponent, Component, Emitter, Listen } from '../../..
 @Component({
   selector: 'my-button',
   template: html`
-   {{model}}
+   <span>{{model}}</span>
 	`,
   style: css`
 		:host {

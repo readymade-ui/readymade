@@ -18,79 +18,18 @@
 </head>
 
 <body>
-    <r-side-nav></r-side-nav>
-    <r-main-nav></r-main-nav>
-
-    <header>
-        <r-logo size="is--large"></r-logo>
-        <h4>JavaScript microlibrary for developing<br /> Web Components with Decorators.</h4>
-    </header>
-
-    <section>
-        <r-stats>
-            <ul>
-                <li> 🎰 Decorator metadata for HTML template and CSS</li>
-                <li> 🎤 Event Emitter </li>
-                <li> 1️⃣ One-way data binding </li>
-                <li> 🌲 Treeshakable </li>
-                <li> 🏋️‍ Weighing in ~2Kb for 'Hello World' <span class="hint">(gzipped)</span> </li>
-            </ul>
-        </r-stats>
-    </section>
-
-    <section>
-        <r-code type="typescript">
-            <span hidden>
-import { ButtonComponent, Component, Emitter, Listen } from '@readymade/core';
-
-@Component({
-    selector: 'my-button',
-    template:`
-    {{model}}
-    `,
-    style:`
-        :host {
-            background: rgba(24, 24, 24, 1);
-            cursor: pointer;
-            color: white;
-            font-weight: 400;
-        }
-    `,
-})
-class MyButtonComponent extends ButtonComponent {
-
-    constructor() {
-        super();
-        this.state.model = 'Click';
-    }
-
-    @Emitter('bang', { bubbles: true, composed: true })
-    @Listen('click')
-    public onClick(event) {
-        this.emitter.broadcast('bang');
-    }
-    @Listen('keyup')
-    public onKeyUp(event) {
-        if (event.key === 'Enter') {
-            this.emitter.broadcast('bang');
-        }
-    }
-}
-
-customElements.define('my-button', MyButtonComponent, { extends: 'button'});
-
-export { MyButtonComponent };
-            </span>
-        </r-code>
-    </section>
-
-    <section>
-        <p>The name 'readymade' is an homage to Marcel Duchamp, an artist in the 20th century who made art with ordinary objects. Like Duchamp's readymades, this library picks up ordinary objects found in ECMAScript, repositions and joins them together to form something completely new: a set of tools that make developing Web Components easier.</p>
-    </section>
-
-    <footer>
-       <p>this site was built with readymade.</p>
-    </footer>
+    <my-list>
+        <ul slot="menu">
+            <li><my-item><span slot="msg">Item 1</span></my-item></li>
+            <li><my-item><span slot="msg">Item 2</span></my-item></li>
+            <li><my-item><span slot="msg">Item 3</span></my-item></li>
+            <li><my-item><span slot="msg">Item 4</span></my-item></li>
+        </ul>
+    </my-list>
+    <br />
+    <br />
+    <button is="my-button"></button>
+    <input is="my-input" type="text">
 
     <script src="app/main.js" type="module"></script>
 
