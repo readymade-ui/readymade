@@ -3,8 +3,8 @@ import { Component, css, html, CustomElement, StateChange } from './../../module
 @Component({
   selector: 'r-logo',
   template: html`
-    <r-headline headline="{{headline}}" size="{{size}}"></r-headline>
-    <r-headline headline="{{subtitle}}"></r-headline>
+    <r-headline headline="{{heading}}" size="{{size}}"></r-headline>
+    <r-headline headline="{{heading2}}"></r-headline>
 	`,
   style: css`
       :host {
@@ -15,14 +15,16 @@ import { Component, css, html, CustomElement, StateChange } from './../../module
 class RLogoComponent extends CustomElement {
   public sizes: string[] = ['is--small', 'is--medium', 'is--large'];
   public state: {
-    headline: string;
-    subtitle: string;
-    hello: string;
+    heading: string;
+    heading2: string;
+    size: string;
   }
+  public letters : string[];
   constructor() {
     super();
-    this.state.headline = 'R';
-    this.state.subtitle = 'readymade';
+    this.state.heading = 'R';
+    this.state.heading2 = 'readymade';
+    // window.requestAnimationFrame(this.update.bind(this));
   }
 
   static get observedAttributes() {
@@ -40,6 +42,11 @@ class RLogoComponent extends CustomElement {
     if (this.sizes.includes(size)) {
       this.setState('size', size);
     }
+  }
+  update() {
+    this.state.heading = Math.round(Math.random()*100).toString();
+    this.state.heading2 =  Math.round(Math.random()*100).toString();
+    //window.requestAnimationFrame(this.update.bind(this));
   }
 }
 
