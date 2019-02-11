@@ -21,7 +21,7 @@ function templateId() {
 function uuidv4() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
     const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16);
+    return v.toString(24);
   });
 }
 
@@ -43,10 +43,10 @@ class NodeTree {
       false
     )
     while(walk.nextNode()) {
-      const id = this.$parentId+'-'+uuidv4().slice(0, 8);
+      const id = this.$parentId+'-'+uuidv4().slice(0, 6);
       const clone = walk.currentNode.cloneNode(true);
-      (<Element>walk.currentNode).setAttribute('r-id', id);
-      (<Element>clone).setAttribute('r-id', id);
+      (<Element>walk.currentNode).setAttribute(id, '');
+      (<Element>clone).setAttribute(id, '');
       if (!this.$flatMap[id]) {
         this.$flatMap[id] = {
           id: id,
@@ -55,6 +55,11 @@ class NodeTree {
         }
       }
     }
+  }
+  getElementByAttribute(node: Element) {
+    return Array.from(node.attributes).filter((attr)=>{
+      return /[A-Za-z0-9]{3}-[A-Za-z0-9]{6}/gm.test(attr.nodeName);
+    })
   }
   update(key, value) {
     const regex = new RegExp(`\{\{(\s*)(${key})(\s*)\}\}`, 'gi');
@@ -65,8 +70,9 @@ class NodeTree {
       false
     )
     while(walk.nextNode()) {
-        const protoNode = this.$flatMap[(<Element>walk.currentNode).getAttribute('r-id')].node;
-        this.$flatMap[(<Element>walk.currentNode).getAttribute('r-id')].currentNode = (<Element>walk.currentNode);
+        const attrId = this.getElementByAttribute((<Element>walk.currentNode))[0].nodeName;
+        const protoNode = this.$flatMap[attrId].node;
+        this.$flatMap[attrId].currentNode = (<Element>walk.currentNode);
          for (let i = 0; i < protoNode.attributes.length; i++) {
             if (protoNode.attributes[i].nodeValue.match(regex, 'gi')) {
               (<Element>walk.currentNode).setAttribute(protoNode.attributes[i].nodeName,
