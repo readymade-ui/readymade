@@ -35,6 +35,35 @@ class NodeTree {
     this.$parentId = templateId();
     this.create();
   }
+  setNode(node: Node, key?: string, value?: any) {
+      const id = this.$parentId+'-'+uuidv4().slice(0, 6);
+      const clone = node.cloneNode(true);
+      (<Element>node).setAttribute(id, '');
+      (<Element>clone).setAttribute(id, '');
+      if (!this.$flatMap[id]) {
+        this.$flatMap[id] = {
+          id: id,
+          node: clone
+        }
+        if (key && value) {
+          this.updateNode(node, key, value);
+        }
+      }
+  }
+  updateNode(node: Node, key: string, value: any) {
+    const regex = new RegExp(`\{\{(\s*)(${key})(\s*)\}\}`, 'gi');
+    const attrId = this.getElementByAttribute((<Element>node))[0].nodeName;
+    const protoNode = this.$flatMap[attrId].node;
+    for (let i = 0; i < protoNode.attributes.length; i++) {
+      if (protoNode.attributes[i].nodeValue.match(regex, 'gi')) {
+        (<Element>node).setAttribute(protoNode.attributes[i].nodeName,
+                                                  protoNode.attributes[i].nodeValue.replace(regex, value));
+      }
+    }
+    if (protoNode.textContent.match(regex)) {
+      (<Element>node).textContent = protoNode.textContent.replace(regex, value);
+    }
+  }
   create() {
     const walk = document.createTreeWalker(
       this.$parent,
@@ -43,17 +72,7 @@ class NodeTree {
       false
     )
     while(walk.nextNode()) {
-      const id = this.$parentId+'-'+uuidv4().slice(0, 6);
-      const clone = walk.currentNode.cloneNode(true);
-      (<Element>walk.currentNode).setAttribute(id, '');
-      (<Element>clone).setAttribute(id, '');
-      if (!this.$flatMap[id]) {
-        this.$flatMap[id] = {
-          id: id,
-          node: clone,
-          parent: this.$parent
-        }
-      }
+      this.setNode(walk.currentNode);
     }
   }
   getElementByAttribute(node: Element) {
@@ -61,8 +80,7 @@ class NodeTree {
       return /[A-Za-z0-9]{3}-[A-Za-z0-9]{6}/gm.test(attr.nodeName);
     })
   }
-  update(key, value) {
-    const regex = new RegExp(`\{\{(\s*)(${key})(\s*)\}\}`, 'gi');
+  update(key: string, value: any) {
     const walk = document.createTreeWalker(
       this.$parent,
       NodeFilter.SHOW_ELEMENT,
@@ -70,24 +88,15 @@ class NodeTree {
       false
     )
     while(walk.nextNode()) {
-        const attrId = this.getElementByAttribute((<Element>walk.currentNode))[0].nodeName;
-        const protoNode = this.$flatMap[attrId].node;
-        this.$flatMap[attrId].currentNode = (<Element>walk.currentNode);
-         for (let i = 0; i < protoNode.attributes.length; i++) {
-            if (protoNode.attributes[i].nodeValue.match(regex, 'gi')) {
-              (<Element>walk.currentNode).setAttribute(protoNode.attributes[i].nodeName,
-                                                       protoNode.attributes[i].nodeValue.replace(regex, value));
-            }
-         }
-         if (protoNode.textContent.match(regex)) {
-            (<Element>walk.currentNode).textContent = protoNode.textContent.replace(regex, value);
-         }
+      if (this.getElementByAttribute((<Element>walk.currentNode)).length > 0) {
+         this.updateNode(walk.currentNode, key, value);
+      } else {
+         this.setNode(walk.currentNode, key, value);
+      }
     }
     return this.$parent;
   }
 }
-
-
 
 class BoundNode {
   $parent: any;
@@ -123,13 +132,6 @@ class BoundHandler {
   }
 }
 
-function bindTemplate() {
-  this.$state = {};
-  this.$state['handler' + BIND_SUFFIX] = new BoundHandler(this);
-  this.$state['node' + BIND_SUFFIX] = new BoundNode(this.shadowRoot ? this.shadowRoot : this);
-  this.state = new Proxy(this, this.$state['handler' + BIND_SUFFIX]);
-}
-
 // support setting global state for now, what about descendant properties?
 function setState(prop: string, model: any) {
     this.state[prop] = model;
@@ -138,11 +140,18 @@ function setState(prop: string, model: any) {
 function compileTemplate(elementMeta: ElementMeta, target: any) {
   target.prototype.elementMeta = Object.assign(target.elementMeta ? target.elementMeta : {}, elementMeta);
   target.prototype.elementMeta.eventMap = {};
-  target.prototype.template = document.createElement('template');
   target.prototype.template = `<style>${elementMeta.style}</style>${elementMeta.template}`;
   target.prototype.bindTemplate = bindTemplate;
   target.prototype.setState = setState;
 }
+
+function bindTemplate() {
+  this.$state = {};
+  this.$state['handler' + BIND_SUFFIX] = new BoundHandler(this);
+  this.$state['node' + BIND_SUFFIX] = new BoundNode(this.shadowRoot ? this.shadowRoot : this);
+  this.state = new Proxy(this, this.$state['handler' + BIND_SUFFIX]);
+}
+
 
 export {
   StateChange,

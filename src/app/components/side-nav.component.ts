@@ -8,7 +8,7 @@ import { Component, css, html, CustomElement, StateChange, Listen } from './../.
         <li><span>getting started</span></li>
         <li><span>components</span></li>
         <li><span>events</span></li>
-        <li><span>data binding</span></li>
+        <li><span>data binding </span></li>
         <li><span>treeshaking</span></li>
         <li><span>typescript</span></li>
         <li><span>bundling</span></li>
@@ -47,26 +47,30 @@ import { Component, css, html, CustomElement, StateChange, Listen } from './../.
       display: block;
       cursor: pointer;
       width: 100%;
-      padding: 1em;
       opacity: 0.8;
       cursor: pointer;
-      padding-left: 56px;
-      background: rgba(10,10,10,0.0);
+
+      padding-inline-start: 0px;
       width: 100%;
       max-width: 320px;
+
+
+    }
+    ul li > span {
+      display: inline-block;
+      position: relative;
+      opacity: 0.8;
+      height: 22px;
+      width: calc(100% - 56px);
+      margin-left: 56px;
+      padding-top: 8px;
+      padding-bottom: 8px;
       padding-left: 0px;
       padding-right: 0px;
-      padding-inline-start: 0px;
     }
-    ul li span {
-      width: 100%;
-      display: block;
-      padding-left: 56px;
-    }
-    ul li:hover {
+    ul li:hover span {
       opacity: 1.0;
-      background: rgba(10,10,10,1.0);
-      margin: 10px;
+      border-color: red transparent red red;
     }
     ul.top {
       position: absolute;
@@ -74,7 +78,7 @@ import { Component, css, html, CustomElement, StateChange, Listen } from './../.
       margin-top: 120px;
     }
     ul.top li {
-      margin-top: 10px;
+
     }
     ul.bottom {
       position: absolute;
@@ -93,7 +97,7 @@ class RSideNavComponent extends CustomElement {
   connectedCallback() {
     // document.addEventListener('click', (ev) => {
     //   if (ev.target !== this.shadowRoot && !this.shadowRoot.contains(ev.target)) {
-    //     this.close();
+    //     this.close({});
     //   } else {
     //     console.log('in nav');
     //   }
@@ -101,7 +105,6 @@ class RSideNavComponent extends CustomElement {
   }
   @Listen('close', 'sidenav')
   public close(ev) {
-
     if (this.status === 'is--inactive') return;
     this.status = 'is--inactive';
     this.animate(
@@ -116,7 +119,7 @@ class RSideNavComponent extends CustomElement {
   }
   @Listen('open', 'sidenav')
   public open(ev) {
-
+     if (this.status === 'is--active') return;
      this.status = 'is--active';
       this.animate(
         [

@@ -39,6 +39,15 @@
     </section>
 
     <section>
+        <h3>Anatomy of a Readymade Component</h3>
+        <ul>
+            <li> Template </li>
+            <li> Styling </li>
+            <li> ES2015 class </li>
+        </ul>
+
+        <p>In this example, a class named MyButtonComponent includes a template and styling for a button. MyButtonComponent has methods for handling click when the component emits a 'bang' event. </p>
+
         <r-code type="typescript">
             <span hidden>
 import { ButtonComponent, Component, Emitter, Listen } from '@readymade/core';
@@ -46,7 +55,7 @@ import { ButtonComponent, Component, Emitter, Listen } from '@readymade/core';
 @Component({
     selector: 'my-button',
     template:`
-    {{model}}
+    <span>{{model}}</span>
     `,
     style:`
         :host {
@@ -82,6 +91,11 @@ customElements.define('my-button', MyButtonComponent, { extends: 'button'});
 export { MyButtonComponent };
             </span>
         </r-code>
+    </section>
+
+    <section>
+        <h3></h3>
+        <p></p>
     </section>
 
     <section>

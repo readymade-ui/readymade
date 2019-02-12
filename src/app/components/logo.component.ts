@@ -24,7 +24,7 @@ class RLogoComponent extends CustomElement {
     super();
     this.state.heading = 'R';
     this.state.heading2 = 'readymade';
-    // window.requestAnimationFrame(this.update.bind(this));
+    // setInterval(this.update.bind(this), 4000);
   }
 
   static get observedAttributes() {
@@ -45,8 +45,7 @@ class RLogoComponent extends CustomElement {
   }
   update() {
     this.state.heading = Math.round(Math.random()*100).toString();
-    this.state.heading2 =  Math.round(Math.random()*100).toString();
-    window.requestAnimationFrame(this.update.bind(this));
+    this.state.heading2 = Math.round(Math.random()*100).toString();
   }
 }
 

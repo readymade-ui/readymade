@@ -13,7 +13,6 @@ function attachDOM(instance: any, options?: any) {
   instance.bindTemplate();
 }
 
-
 function attachStyle(instance: any, options?: any) {
   const id = `${instance.elementMeta.selector}`;
   if (!document.getElementById(`${id}-x`)) {
