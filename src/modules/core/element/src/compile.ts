@@ -115,10 +115,10 @@ class BoundNode {
 class BoundHandler {
   $parent: any;
   onStateChange: OnStateChange;
-  constructor(obj) {
+  constructor(obj: Element) {
     this.$parent = obj;
   }
-  set(target, key, value) {
+  set(target: any, key: string, value: any) {
     const change = {
       [key]: {
         previousValue : target[key],
