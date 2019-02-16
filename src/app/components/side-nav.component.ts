@@ -3,6 +3,7 @@ import { Component, css, html, CustomElement, StateChange, Listen } from './../.
 @Component({
   selector: 'r-side-nav',
   template: html`
+    <div class="background"></div>
     <nav>
       <ul class="top">
         <li><span>getting started</span></li>
@@ -27,11 +28,19 @@ import { Component, css, html, CustomElement, StateChange, Listen } from './../.
       height: 100%;
       width: 0px;
       max-width: 320px;
-      background: rgba(2,2,2,0.97);
       font-family: 'Major Mono Display', serif;
-      overflow-x: hidden;
       z-index: 8888;
+      color: #000;
 		}
+    .background {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: 200%;
+        height: 500%;
+        transform: translateX(520px) translateY(-200px) rotate(-30deg);
+        background: rgba(255,255,255,0.97);
+    }
     nav {
       width: 320px;
       height: 100%;
@@ -53,6 +62,7 @@ import { Component, css, html, CustomElement, StateChange, Listen } from './../.
       padding-inline-start: 0px;
       width: 100%;
       max-width: 320px;
+      font-weight: 700;
 
 
     }
@@ -75,7 +85,7 @@ import { Component, css, html, CustomElement, StateChange, Listen } from './../.
     ul.top {
       position: absolute;
       top: 0px;
-      margin-top: 120px;
+      margin-top: 240px;
     }
     ul.top li {
 

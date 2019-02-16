@@ -8,11 +8,14 @@ import { Component, css, html, CustomElement, StateChange } from './../../module
   style: css`
     h1 {
       font-family: 'Major Mono Display', sans-serif;
+      padding-left: 1.0em;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
  	  h1, span {
       font-size: 1em;
-      letter-spacing: 0.05em;
-      margin-block-start: 0.3em;
+      letter-spacing: -0.04em;
+      margin-block-start: 0em;
       margin-block-end: 0em;
     }
     h1.is--small, span.is--small {
@@ -23,6 +26,7 @@ import { Component, css, html, CustomElement, StateChange } from './../../module
     }
     h1.is--large, span.is--large {
         font-size: 12em;
+        padding-left: 0em;
     }
 	`
 })

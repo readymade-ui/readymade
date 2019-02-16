@@ -47,6 +47,9 @@ import { Component, css, html, CustomElement, StateChange, Emitter, Listen } fro
     ul.left li {
       margin-right: 10px;
     }
+    ul.left li.is--dark {
+      color: #000000;
+    }
     ul.right {
       float: right;
       margin-right: 56px;
@@ -77,9 +80,11 @@ class RMainNavComponent extends CustomElement {
       if (this.isNavOpen === true) {
          this.isNavOpen = false;
          this.emitter.broadcast(this.emitter.get('close'), 'sidenav');
+         navLink.classList.remove('is--dark');
       } else if (this.isNavOpen === false) {
          this.isNavOpen = true;
          this.emitter.broadcast(this.emitter.get('open'), 'sidenav');
+         navLink.classList.add('is--dark');
       }
     });
 
