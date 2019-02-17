@@ -18,7 +18,7 @@ watcher
         if (path.includes('main.css')) {
             spawn('node_modules/.bin/postcss', ['src/app/style/main.css', '--output', 'dist/style/main.css'], {stdio:'inherit'});
         }
-        if (path.includes('index.html')) {
+        if (path.includes('.html')) {
             spawn('cp', ['src/app/index.html', 'dist/index.html'], {stdio:'inherit'});
             spawn('cp', ['src/app/docs.html', 'dist/docs.html'], {stdio:'inherit'});
         }

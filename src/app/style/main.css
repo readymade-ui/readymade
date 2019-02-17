@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Major+Mono+Display|Heebo:100,300,400');
+@import url('https://fonts.googleapis.com/css?family=Major+Mono+Display|Source Sans Pro:100,300,400');
 @import url('fonts/DankMono-Regular/fonts');
 @import url('fonts/DankMono-Italic/fonts');
 
@@ -7,8 +7,8 @@ body {
 
     background: black;
     color:#cdcdcd;
-    font-family: 'Heebo', sans-serif;
-    font-weight: 300;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 400;
     font-size: 16px;
     padding: 0px;
     margin: 0px;
@@ -89,7 +89,7 @@ h1 {
 }
 
 h2, h3, h4, h5, h6 {
-    font-family: 'Heebo', serif;
+    font-family: 'Source Sans Pro', serif;
     font-weight: 300;
     line-height: 1.5em;
 }
@@ -104,7 +104,7 @@ h6 {
 }
 
 p {
-    font-family: 'Heebo', serif;
+    font-family: 'Source Sans Pro', serif;
     font-size: 1.0em;
     line-height: 1.5em;
     padding-top: 40px;
@@ -115,11 +115,13 @@ p {
 }
 
 header {
+    padding-top: 10em;
     text-align: center;
+    padding-bottom: 10em;
 }
 
 header h4 {
-    margin-top: 4em;
+    margin-top: 2em;
 }
 
 footer {
@@ -130,6 +132,8 @@ footer {
 
 footer p {
     font-family: 'Major Mono Display', sans-sarif;
+    font-size: 0.8em;
 }
+
 [is=my-button]{background:#181818;cursor:pointer;color:#fff;font-weight:400}
 [is=my-input]{background:#181818;border:0;color:#fff}

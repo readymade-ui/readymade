@@ -21,6 +21,7 @@ import { Component, css, html, CustomElement, StateChange, Emitter, Listen } fro
       height: 60px;
       margin-right: 40px;
       font-family: 'Major Mono Display', serif;
+      font-weight: 700;
       z-index: 9999;
 		}
     nav {
@@ -48,6 +49,9 @@ import { Component, css, html, CustomElement, StateChange, Emitter, Listen } fro
       margin-right: 10px;
     }
     ul.left li.is--dark {
+      color: #222222;
+    }
+    ul.left li.is--dark:hover {
       color: #000000;
     }
     ul.right {
@@ -69,30 +73,20 @@ class RMainNavComponent extends CustomElement {
   @Emitter('close', {}, 'sidenav')
   connectedCallback() {
 
-    this.onUpdate();
-
-  }
-  onUpdate() {
-
     const navLink = this.shadowRoot.querySelector('[link="side-nav"]');
     navLink.addEventListener('click', () => {
 
       if (this.isNavOpen === true) {
          this.isNavOpen = false;
-         this.emitter.broadcast(this.emitter.get('close'), 'sidenav');
+         this.emitter.broadcast('close', 'sidenav');
          navLink.classList.remove('is--dark');
       } else if (this.isNavOpen === false) {
          this.isNavOpen = true;
-         this.emitter.broadcast(this.emitter.get('open'), 'sidenav');
+         this.emitter.broadcast('open', 'sidenav');
          navLink.classList.add('is--dark');
       }
     });
 
-    const navLink2 = this.shadowRoot.querySelector('[link="side-nav"]');
-    navLink2.addEventListener('click', () => {
-
-    });
-    // console.log(navLink, navLink2);
   }
 }
 

@@ -24,13 +24,14 @@ import { Component, css, html, CustomElement, StateChange, Listen } from './../.
 			display: block;
       position: fixed;
       top: 0px;
-      left: 0px;
+      left: -320px;
       height: 100%;
-      width: 0px;
+      width: 320px;
       max-width: 320px;
       font-family: 'Major Mono Display', serif;
       z-index: 8888;
       color: #000;
+      overflow: visible;
 		}
     .background {
         position: absolute;
@@ -38,7 +39,7 @@ import { Component, css, html, CustomElement, StateChange, Listen } from './../.
         left: 0px;
         width: 200%;
         height: 500%;
-        transform: translateX(520px) translateY(-200px) rotate(-30deg);
+        transform: translateX(-520px) translateY(2000px) rotate(-45deg);
         background: rgba(255,255,255,0.97);
     }
     nav {
@@ -58,13 +59,10 @@ import { Component, css, html, CustomElement, StateChange, Listen } from './../.
       width: 100%;
       opacity: 0.8;
       cursor: pointer;
-
       padding-inline-start: 0px;
       width: 100%;
       max-width: 320px;
       font-weight: 700;
-
-
     }
     ul li > span {
       display: inline-block;
@@ -77,10 +75,11 @@ import { Component, css, html, CustomElement, StateChange, Listen } from './../.
       padding-bottom: 8px;
       padding-left: 0px;
       padding-right: 0px;
+      color: #222222;
     }
     ul li:hover span {
       opacity: 1.0;
-      border-color: red transparent red red;
+      color: #000000;
     }
     ul.top {
       position: absolute;
@@ -101,10 +100,12 @@ import { Component, css, html, CustomElement, StateChange, Listen } from './../.
 })
 class RSideNavComponent extends CustomElement {
   public status: string
+  public background: Element;
   constructor() {
     super();
   }
   connectedCallback() {
+    this.background = this.shadowRoot.querySelector('.background');
     // document.addEventListener('click', (ev) => {
     //   if (ev.target !== this.shadowRoot && !this.shadowRoot.contains(ev.target)) {
     //     this.close({});
@@ -117,29 +118,29 @@ class RSideNavComponent extends CustomElement {
   public close(ev) {
     if (this.status === 'is--inactive') return;
     this.status = 'is--inactive';
-    this.animate(
-      [
-        { width: '320px' },
-        { width: '0px' }
-      ], {
-        duration: 150,
-        fill: 'forwards'
-      }
-    );
+
+    this.animate([
+      { left: '0px' },
+      { left: '-320px' }
+    ], { duration: 150, fill: 'forwards' });
+    this.background.animate([
+      { transform: `translateX(520px) translateY(-200px) rotate(-30deg)`},
+      { transform: `translateX(-520px) translateY(2000px) rotate(-45deg)`}
+    ], { duration: 150, fill: 'forwards' });
   }
   @Listen('open', 'sidenav')
   public open(ev) {
-     if (this.status === 'is--active') return;
-     this.status = 'is--active';
-      this.animate(
-        [
-          { width: '0' },
-          { width: '320px' }
-        ], {
-          duration: 150,
-          fill: 'forwards'
-        }
-      );
+    if (this.status === 'is--active') return;
+    this.status = 'is--active';
+    this.animate([
+      { left: '-320px' },
+      { left: '0px' }
+    ],{ duration: 150, fill: 'forwards' });
+    this.background.animate([
+      { transform: `translateX(-520px) translateY(2000px) rotate(-45deg)`},
+      { transform: `translateX(520px) translateY(-200px) rotate(-30deg)`}
+    ], { duration: 150, fill: 'forwards' });
+
   }
 
 }
