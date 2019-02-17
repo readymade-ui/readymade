@@ -8,12 +8,14 @@ import { Component, css, html, CustomElement, StateChange } from './../../module
   style: css`
     :host {
       display: block;
+      padding-bottom: 10em;
     }
     ::slotted(ul) {
       display: inline-block;
       position: relative;
       left: 50%;
       transform: translateX(-50%);
+      font-weight: 300;
     }
 	`
 })

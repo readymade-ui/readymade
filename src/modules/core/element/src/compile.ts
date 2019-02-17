@@ -145,6 +145,7 @@ function compileTemplate(elementMeta: ElementMeta, target: any) {
   target.prototype.setState = setState;
 }
 
+
 function bindTemplate() {
   this.$state = {};
   this.$state['handler' + BIND_SUFFIX] = new BoundHandler(this);

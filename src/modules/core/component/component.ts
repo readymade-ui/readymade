@@ -43,6 +43,7 @@ function bindEmitters(target: any) {
 
 export class StructuralElement extends HTMLElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     if (this.bindEmitters) this.bindEmitters();
@@ -52,12 +53,12 @@ export class StructuralElement extends HTMLElement {
   onInit?() : void;
   bindEmitters?() : void;
   bindListeners?() : void;
-  setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
 
 export class PseudoElement extends HTMLElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     attachDOM(this);
@@ -93,6 +94,7 @@ export class CustomElement extends HTMLElement {
 
 export class AllCollectionComponent extends HTMLAllCollection {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     if (this.bindEmitters) this.bindEmitters();
@@ -107,6 +109,7 @@ export class AllCollectionComponent extends HTMLAllCollection {
 }
 export class AnchorComponent extends HTMLAnchorElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     attachDOM(this);
@@ -123,6 +126,7 @@ export class AnchorComponent extends HTMLAnchorElement {
 }
 export class AreaComponent extends HTMLAreaElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     attachStyle(this);
@@ -138,6 +142,7 @@ export class AreaComponent extends HTMLAreaElement {
 }
 export class AudioComponent extends HTMLAudioElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     attachStyle(this);
@@ -153,6 +158,7 @@ export class AudioComponent extends HTMLAudioElement {
 }
 export class BRComponent extends HTMLBRElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     attachStyle(this);
@@ -184,6 +190,7 @@ export class BodyComponent extends HTMLBodyElement {
 }
 export class ButtonComponent extends HTMLButtonElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     attachDOM(this);
@@ -200,6 +207,7 @@ export class ButtonComponent extends HTMLButtonElement {
 }
 export class CanvasComponent extends HTMLCanvasElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     attachStyle(this);
@@ -215,6 +223,7 @@ export class CanvasComponent extends HTMLCanvasElement {
 }
 export class CollectionComponent extends HTMLCollection {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     if (this.bindEmitters) this.bindEmitters();
@@ -224,12 +233,12 @@ export class CollectionComponent extends HTMLCollection {
   onInit?() : void;
   bindEmitters?() : void;
   bindListeners?() : void;
-  setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
 
 export class DListComponent extends HTMLDListElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     attachDOM(this);
@@ -246,6 +255,7 @@ export class DListComponent extends HTMLDListElement {
 }
 export class DataComponent extends HTMLDataElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     if (this.bindEmitters) this.bindEmitters();
@@ -255,11 +265,11 @@ export class DataComponent extends HTMLDataElement {
   onInit?() : void;
   bindEmitters?() : void;
   bindListeners?() : void;
-  setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
 export class DataListComponent extends HTMLDataListElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     attachDOM(this);
@@ -276,6 +286,7 @@ export class DataListComponent extends HTMLDataListElement {
 }
 export class DetailsComponent extends HTMLDetailsElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     attachDOM(this);
@@ -290,22 +301,6 @@ export class DetailsComponent extends HTMLDetailsElement {
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
-// export class DialogComponent extends HTMLDialogElement {
-//   emitter: EventDispatcher;
-//   constructor() {
-//     super();
-//     attachDOM(this);
-//     attachStyle(this);
-//     if (this.bindEmitters) this.bindEmitters();
-//     if (this.bindListeners) this.bindListeners();
-//     if (this.onInit) { this.onInit(); }
-//   }
-//   onInit?() : void;
-//   bindEmitters?() : void;
-//   bindListeners?() : void;
-//   setState?(property: string, model: any) : void;
-//   onDestroy?() : void;
-// }
 
 export class DivComponent extends HTMLDivElement {
   emitter: EventDispatcher;
@@ -326,6 +321,7 @@ export class DivComponent extends HTMLDivElement {
 
 export class EmbedComponent extends HTMLEmbedElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     attachStyle(this);
@@ -341,6 +337,7 @@ export class EmbedComponent extends HTMLEmbedElement {
 }
 export class FieldSetComponent extends HTMLFieldSetElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     attachStyle(this);
@@ -356,6 +353,7 @@ export class FieldSetComponent extends HTMLFieldSetElement {
 }
 export class FormControlsComponent extends HTMLFormControlsCollection {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     if (this.bindEmitters) this.bindEmitters();
@@ -365,11 +363,11 @@ export class FormControlsComponent extends HTMLFormControlsCollection {
   onInit?() : void;
   bindEmitters?() : void;
   bindListeners?() : void;
-  setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
 export class FormComponent extends HTMLFormElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     attachStyle(this);
@@ -385,6 +383,7 @@ export class FormComponent extends HTMLFormElement {
 }
 export class HRComponent extends HTMLHRElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     attachStyle(this);
@@ -400,16 +399,12 @@ export class HRComponent extends HTMLHRElement {
 }
 export class HeadComponent extends HTMLHeadElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
-    if (this.bindEmitters) this.bindEmitters();
-    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
-  bindEmitters?() : void;
-  bindListeners?() : void;
-  setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
 export class HeadingComponent extends HTMLHeadingElement {
@@ -430,20 +425,18 @@ export class HeadingComponent extends HTMLHeadingElement {
 }
 export class HtmlComponent extends HTMLHtmlElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
-    if (this.bindEmitters) this.bindEmitters();
-    if (this.bindListeners) this.bindListeners();
     if (this.onInit) { this.onInit(); }
   }
   onInit?() : void;
-  bindEmitters?() : void;
-  bindListeners?() : void;
   setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
 export class IFrameComponent extends HTMLIFrameElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     attachStyle(this);
@@ -459,6 +452,7 @@ export class IFrameComponent extends HTMLIFrameElement {
 }
 export class ImageComponent extends HTMLImageElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     attachStyle(this);
@@ -474,6 +468,7 @@ export class ImageComponent extends HTMLImageElement {
 }
 export class InputComponent extends HTMLInputElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     attachStyle(this);
@@ -489,6 +484,7 @@ export class InputComponent extends HTMLInputElement {
 }
 export class LIComponent extends HTMLLIElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     attachDOM(this);
@@ -505,6 +501,7 @@ export class LIComponent extends HTMLLIElement {
 }
 export class LabelComponent extends HTMLLabelElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     attachDOM(this);
@@ -521,6 +518,7 @@ export class LabelComponent extends HTMLLabelElement {
 }
 export class LegendComponent extends HTMLLegendElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     attachStyle(this);
@@ -536,6 +534,7 @@ export class LegendComponent extends HTMLLegendElement {
 }
 export class LinkComponent extends HTMLLinkElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     attachStyle(this);
@@ -551,6 +550,7 @@ export class LinkComponent extends HTMLLinkElement {
 }
 export class MapComponent extends HTMLMapElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     attachDOM(this);
@@ -568,6 +568,7 @@ export class MapComponent extends HTMLMapElement {
 
 export class MediaComponent extends HTMLMediaElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     if (this.bindEmitters) this.bindEmitters();
@@ -577,11 +578,11 @@ export class MediaComponent extends HTMLMediaElement {
   onInit?() : void;
   bindEmitters?() : void;
   bindListeners?() : void;
-  setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
 export class MenuComponent extends HTMLMenuElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     if (this.bindEmitters) this.bindEmitters();
@@ -591,11 +592,11 @@ export class MenuComponent extends HTMLMenuElement {
   onInit?() : void;
   bindEmitters?() : void;
   bindListeners?() : void;
-  setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
 export class MetaComponent extends HTMLMetaElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     if (this.bindEmitters) this.bindEmitters();
@@ -605,11 +606,11 @@ export class MetaComponent extends HTMLMetaElement {
   onInit?() : void;
   bindEmitters?() : void;
   bindListeners?() : void;
-  setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
 export class MeterComponent extends HTMLMeterElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     attachStyle(this);
@@ -625,6 +626,7 @@ export class MeterComponent extends HTMLMeterElement {
 }
 export class ModComponent extends HTMLModElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     if (this.bindEmitters) this.bindEmitters();
@@ -634,11 +636,11 @@ export class ModComponent extends HTMLModElement {
   onInit?() : void;
   bindEmitters?() : void;
   bindListeners?() : void;
-  setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
 export class OListComponent extends HTMLOListElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     attachDOM(this);
@@ -655,6 +657,7 @@ export class OListComponent extends HTMLOListElement {
 }
 export class ObjectComponent extends HTMLObjectElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     attachStyle(this);
@@ -670,6 +673,7 @@ export class ObjectComponent extends HTMLObjectElement {
 }
 export class OptGroupComponent extends HTMLOptGroupElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     if (this.bindEmitters) this.bindEmitters();
@@ -679,11 +683,11 @@ export class OptGroupComponent extends HTMLOptGroupElement {
   onInit?() : void;
   bindEmitters?() : void;
   bindListeners?() : void;
-  setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
 export class OptionComponent extends HTMLOptionElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     if (this.bindEmitters) this.bindEmitters();
@@ -693,11 +697,11 @@ export class OptionComponent extends HTMLOptionElement {
   onInit?() : void;
   bindEmitters?() : void;
   bindListeners?() : void;
-  setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
 export class OptionsCollectionComponent extends HTMLOptionsCollection {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     if (this.bindEmitters) this.bindEmitters();
@@ -707,11 +711,11 @@ export class OptionsCollectionComponent extends HTMLOptionsCollection {
   onInit?() : void;
   bindEmitters?() : void;
   bindListeners?() : void;
-  setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
 export class OutputComponent extends HTMLOutputElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     attachStyle(this);
@@ -743,6 +747,7 @@ export class ParagraphComponent extends HTMLParagraphElement {
 }
 export class ParamComponent extends HTMLParamElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     if (this.bindEmitters) this.bindEmitters();
@@ -752,11 +757,11 @@ export class ParamComponent extends HTMLParamElement {
   onInit?() : void;
   bindEmitters?() : void;
   bindListeners?() : void;
-  setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
 export class PictureComponent extends HTMLPictureElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     if (this.bindEmitters) this.bindEmitters();
@@ -766,11 +771,11 @@ export class PictureComponent extends HTMLPictureElement {
   onInit?() : void;
   bindEmitters?() : void;
   bindListeners?() : void;
-  setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
 export class PreComponent extends HTMLPreElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     attachDOM(this);
@@ -787,6 +792,7 @@ export class PreComponent extends HTMLPreElement {
 }
 export class ProgressComponent extends HTMLProgressElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     if (this.bindEmitters) this.bindEmitters();
@@ -796,11 +802,11 @@ export class ProgressComponent extends HTMLProgressElement {
   onInit?() : void;
   bindEmitters?() : void;
   bindListeners?() : void;
-  setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
 export class QuoteComponent extends HTMLQuoteElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     if (this.bindEmitters) this.bindEmitters();
@@ -810,11 +816,11 @@ export class QuoteComponent extends HTMLQuoteElement {
   onInit?() : void;
   bindEmitters?() : void;
   bindListeners?() : void;
-  setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
 export class ScriptComponent extends HTMLScriptElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     if (this.bindEmitters) this.bindEmitters();
@@ -824,11 +830,11 @@ export class ScriptComponent extends HTMLScriptElement {
   onInit?() : void;
   bindEmitters?() : void;
   bindListeners?() : void;
-  setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
 export class SelectComponent extends HTMLSelectElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     if (this.bindEmitters) this.bindEmitters();
@@ -838,12 +844,12 @@ export class SelectComponent extends HTMLSelectElement {
   onInit?() : void;
   bindEmitters?() : void;
   bindListeners?() : void;
-  setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
 
 export class SlotComponent extends HTMLSlotElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     if (this.bindEmitters) this.bindEmitters();
@@ -853,11 +859,11 @@ export class SlotComponent extends HTMLSlotElement {
   onInit?() : void;
   bindEmitters?() : void;
   bindListeners?() : void;
-  setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
 export class SourceComponent extends HTMLSourceElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     if (this.bindEmitters) this.bindEmitters();
@@ -867,7 +873,6 @@ export class SourceComponent extends HTMLSourceElement {
   onInit?() : void;
   bindEmitters?() : void;
   bindListeners?() : void;
-  setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
 export class SpanComponent extends HTMLSpanElement {
@@ -888,6 +893,7 @@ export class SpanComponent extends HTMLSpanElement {
 }
 export class StyleComponent extends HTMLStyleElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     if (this.bindEmitters) this.bindEmitters();
@@ -897,11 +903,11 @@ export class StyleComponent extends HTMLStyleElement {
   onInit?() : void;
   bindEmitters?() : void;
   bindListeners?() : void;
-  setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
 export class TableCaptionComponent extends HTMLTableCaptionElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     if (this.bindEmitters) this.bindEmitters();
@@ -911,11 +917,11 @@ export class TableCaptionComponent extends HTMLTableCaptionElement {
   onInit?() : void;
   bindEmitters?() : void;
   bindListeners?() : void;
-  setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
 export class TableCellComponent extends HTMLTableCellElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     if (this.bindEmitters) this.bindEmitters();
@@ -925,11 +931,11 @@ export class TableCellComponent extends HTMLTableCellElement {
   onInit?() : void;
   bindEmitters?() : void;
   bindListeners?() : void;
-  setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
 export class TableColComponent extends HTMLTableColElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     if (this.bindEmitters) this.bindEmitters();
@@ -939,11 +945,11 @@ export class TableColComponent extends HTMLTableColElement {
   onInit?() : void;
   bindEmitters?() : void;
   bindListeners?() : void;
-  setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
 export class TableComponent extends HTMLTableElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     attachDOM(this);
@@ -961,6 +967,7 @@ export class TableComponent extends HTMLTableElement {
 
 export class TableRowComponent extends HTMLTableRowElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     attachDOM(this);
@@ -977,6 +984,7 @@ export class TableRowComponent extends HTMLTableRowElement {
 }
 export class TableSectionComponent extends HTMLTableSectionElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     attachDOM(this);
@@ -993,6 +1001,7 @@ export class TableSectionComponent extends HTMLTableSectionElement {
 }
 export class TemplateComponent extends HTMLTemplateElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     if (this.bindEmitters) this.bindEmitters();
@@ -1002,12 +1011,12 @@ export class TemplateComponent extends HTMLTemplateElement {
   onInit?() : void;
   bindEmitters?() : void;
   bindListeners?() : void;
-  setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
 
 export class TimeComponent extends HTMLTimeElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     attachStyle(this);
@@ -1023,6 +1032,7 @@ export class TimeComponent extends HTMLTimeElement {
 }
 export class TitleComponent extends HTMLTitleElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     if (this.bindEmitters) this.bindEmitters();
@@ -1032,11 +1042,11 @@ export class TitleComponent extends HTMLTitleElement {
   onInit?() : void;
   bindEmitters?() : void;
   bindListeners?() : void;
-  setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
 export class TrackComponent extends HTMLTrackElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     if (this.bindEmitters) this.bindEmitters();
@@ -1046,11 +1056,11 @@ export class TrackComponent extends HTMLTrackElement {
   onInit?() : void;
   bindEmitters?() : void;
   bindListeners?() : void;
-  setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
 export class UListComponent extends HTMLUListElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     attachDOM(this);
@@ -1067,6 +1077,7 @@ export class UListComponent extends HTMLUListElement {
 }
 export class UnknownComponent extends HTMLUnknownElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     if (this.bindEmitters) this.bindEmitters();
@@ -1076,12 +1087,12 @@ export class UnknownComponent extends HTMLUnknownElement {
   onInit?() : void;
   bindEmitters?() : void;
   bindListeners?() : void;
-  setState?(property: string, model: any) : void;
   onDestroy?() : void;
 }
 
 export class VideoComponent extends HTMLVideoElement {
   emitter: EventDispatcher;
+  elementMeta: ElementMeta;
   constructor() {
     super();
     attachStyle(this);

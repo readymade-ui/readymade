@@ -90,7 +90,7 @@ h1 {
 
 h2, h3, h4, h5, h6 {
     font-family: 'Source Sans Pro', serif;
-    font-weight: 300;
+    font-weight: 400;
     line-height: 1.5em;
 }
 
@@ -107,7 +107,6 @@ p {
     font-family: 'Source Sans Pro', serif;
     font-size: 1.0em;
     line-height: 1.5em;
-    padding-top: 40px;
 }
 
 .hint {
@@ -117,11 +116,24 @@ p {
 header {
     padding-top: 10em;
     text-align: center;
-    padding-bottom: 10em;
+    padding-bottom: 2em;
 }
 
+
 header h4 {
+    font-size: 20px;
+    font-weight: 300;
     margin-top: 2em;
+    margin-bottom: 2em;
+}
+
+section h2 {
+    padding: 2px 8px;
+    background: #ffffff;
+    color: #000000;
+    font-size: 1.1em;
+    font-weight: 400;
+    display: inline-block;
 }
 
 footer {

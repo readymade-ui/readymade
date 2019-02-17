@@ -30,23 +30,43 @@
         <r-stats>
             <ul>
                 <li> 🎰 Decorator metadata for HTML template and CSS</li>
-                <li> 🎤 Event Emitter </li>
-                <li> 1️⃣ One-way data binding </li>
-                <li> 🌲 Treeshakable </li>
+                <li> ☕️ Supports 'autonomous' and 'customized built-in' elements</li>
                 <li> 🏋️‍ Weighing in ~2Kb for 'Hello World' <span class="hint">(gzipped)</span> </li>
+                <li> 1️⃣ One-way data binding </li>
+                <li> 🎤 Event Emitter </li>
+                <li> 🌲 Treeshakable </li>
+
             </ul>
         </r-stats>
     </section>
 
     <section>
-        <!-- <h3>Anatomy of a Readymade Component</h3>
-        <ul>
-            <li> Template </li>
-            <li> Styling </li>
-            <li> ES2015 class </li>
-        </ul> -->
+        <h2>Why Readymade?</h2>
+        <p></p>
+        <r-code type="javascript">
+                <span hidden>
+@Component({
+    selector: 'my-button',
+    template:`
+    {{buttonCopy}}
+    `,
+    style:`
+        :host {
+            background: rgba(24, 24, 24, 1);
+            cursor: pointer;
+            color: white;
+            font-weight: 400;
+        }
+    `,
+})
+                </span>
+        </r-code>
+    </section>
 
-        <p>In this example, a class named MyButtonComponent includes a template and styling for a button. MyButtonComponent has methods for handling click when the component emits a 'bang' event. </p>
+    <section>
+        <h2>Example</h2>
+
+        <p>In this example, a class named MyButtonComponent includes a template and styling for a button. MyButtonComponent has a method for handling click when the component emits a 'bang' event. </p>
 
         <r-code type="typescript">
             <span hidden>
@@ -94,8 +114,12 @@ export { MyButtonComponent };
     </section>
 
     <section>
-        <h3></h3>
-        <p></p>
+        <h2>Getting Started</h2>
+        <r-code type="html">
+                <span hidden>
+npm i @readymade/core --save
+                </span>
+        </r-code>
     </section>
 
     <section>
