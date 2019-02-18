@@ -8,7 +8,7 @@ import { Component, css, html, CustomElement, StateChange } from './../../module
   style: css`
     :host {
       display: block;
-      padding-bottom: 10em;
+      padding-bottom: 3em;
     }
     ::slotted(ul) {
       display: inline-block;

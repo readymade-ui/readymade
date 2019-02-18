@@ -6,17 +6,21 @@ import { Component, css, html, CustomElement, StateChange, Listen } from './../.
     <div class="background"></div>
     <nav>
       <ul class="top">
+        <li><span>intro</span></li>
         <li><span>getting started</span></li>
-        <li><span>components</span></li>
-        <li><span>events</span></li>
-        <li><span>data binding </span></li>
-        <li><span>treeshaking</span></li>
-        <li><span>typescript</span></li>
-        <li><span>bundling</span></li>
+        <li><span>install</span></li>
+        <li><span>make a component</span></li>
+        <li><span>component</span></li>
+        <li><span>listen</span></li>
+        <li><span>emitter</span></li>
+        <li><span>data binding</span></li>
+        <li><span>custom elements</span></li>
+        <li><span>built-in elements</span></li>
+        <li><span>why readymade</span></li>
       </ul>
-      <ul class="bottom">
+      <!-- <ul class="bottom">
         <li><span>gitter</span></li>
-      </ul>
+      </ul> -->
     </nav>
   `,
   style: css`
@@ -40,7 +44,7 @@ import { Component, css, html, CustomElement, StateChange, Listen } from './../.
         width: 200%;
         height: 500%;
         transform: translateX(-520px) translateY(2000px) rotate(-45deg);
-        background: rgba(255,255,255,0.97);
+        background: rgba(255,255,255,1.0);
     }
     nav {
       width: 320px;
@@ -70,7 +74,7 @@ import { Component, css, html, CustomElement, StateChange, Listen } from './../.
       opacity: 0.8;
       height: 22px;
       width: calc(100% - 56px);
-      margin-left: 56px;
+      margin-left: 20px;
       padding-top: 8px;
       padding-bottom: 8px;
       padding-left: 0px;

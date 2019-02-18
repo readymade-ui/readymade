@@ -15,8 +15,8 @@ declare let Prism: any;
 
     :host {
       display: block;
-      padding-top: 20px;
-      padding-bottom: 20px;
+      padding-top: 1em;
+      padding-bottom: 1em;
     }
 
     code[class*="language-"],
@@ -65,7 +65,7 @@ declare let Prism: any;
         opacity: .7;
     }
     .token.function {
-        color: #678cb1;
+        color: rgba(117, 191, 255, 1.0);
     }
     .token.class-name {
       color: #e0e2e4;

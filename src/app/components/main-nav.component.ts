@@ -30,6 +30,7 @@ import { Component, css, html, CustomElement, StateChange, Emitter, Listen } fro
     ul {
       margin-block-start: 0em;
       margin-block-end: 0em;
+      padding-inline-start: 0px;
     }
     ul li {
       display: inline-block;
@@ -56,7 +57,7 @@ import { Component, css, html, CustomElement, StateChange, Emitter, Listen } fro
     }
     ul.right {
       float: right;
-      margin-right: 56px;
+      margin-right: 0px;
     }
     ul.right li {
       margin-left: 10px;
