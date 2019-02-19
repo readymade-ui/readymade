@@ -6,10 +6,10 @@ import { Component, css, html, CustomElement, StateChange, Emitter, Listen } fro
     <div class="background"></div>
     <nav>
       <ul class="top">
-        <li><span><a href="#intro">intro</a></span></li>
-        <li><span><a href="#started">getting started</a></span></li>
-        <li><span><a href="#docs">using readymade</a></span></li>
-        <li><span><a href="#why">why readymade</a></span></li>
+        <li><span><a href="#intro">Intro</a></span></li>
+        <li><span><a href="#started">Getting Started</a></span></li>
+        <li><span><a href="#docs">Using Readymade</a></span></li>
+        <li><span><a href="#why">Why Readymade</a></span></li>
       </ul>
       <!-- <ul class="bottom">
         <li><span>gitter</span></li>
@@ -25,7 +25,6 @@ import { Component, css, html, CustomElement, StateChange, Emitter, Listen } fro
       height: 100%;
       width: 320px;
       max-width: 320px;
-      font-family: 'Major Mono Display', serif;
       z-index: 8888;
       color: #000;
       overflow: visible;
@@ -36,7 +35,7 @@ import { Component, css, html, CustomElement, StateChange, Emitter, Listen } fro
         left: 0px;
         width: 200%;
         height: 500%;
-        transform: translateX(-520px) translateY(2000px) rotate(-45deg);
+        transform: translateX(-520px) translateY(2000px) rotate(-32deg);
         background: rgba(255,255,255,1.0);
     }
     nav {
@@ -75,6 +74,7 @@ import { Component, css, html, CustomElement, StateChange, Emitter, Listen } fro
     ul li a:link, ul li a:visited {
       opacity: 0.8;
       color: #222222;
+      text-decoration: none;
     }
     ul li:hover a:link, ul li:hover a:visited {
       opacity: 1.0;
@@ -119,11 +119,11 @@ class RSideNavComponent extends CustomElement {
     this.animate([
       { left: '0px' },
       { left: '-320px' }
-    ], { duration: 150, fill: 'forwards' });
+    ], { duration: 350, fill: 'forwards' });
     this.background.animate([
       { transform: `translateX(520px) translateY(-200px) rotate(-32deg)`},
-      { transform: `translateX(-520px) translateY(2000px) rotate(-45deg)`}
-    ], { duration: 150, fill: 'forwards' });
+      { transform: `translateX(-320px) translateY(2000px) rotate(-32deg)`}
+    ], { duration: 350, fill: 'forwards' });
   }
   @Listen('open', 'sidenav')
   public open(ev) {
@@ -132,11 +132,11 @@ class RSideNavComponent extends CustomElement {
     this.animate([
       { left: '-320px' },
       { left: '0px' }
-    ],{ duration: 150, fill: 'forwards' });
+    ],{ duration: 350, fill: 'forwards' });
     this.background.animate([
-      { transform: `translateX(-520px) translateY(2000px) rotate(-45deg)`},
-      { transform: `translateX(520px) translateY(-200px) rotate(-32deg)`}
-    ], { duration: 150, fill: 'forwards' });
+      { transform: `translateX(-320px) translateY(2000px) rotate(-32deg)`},
+      { transform: `translateX(464px) translateY(-200px) rotate(-32deg)`}
+    ], { duration: 350, fill: 'forwards' });
 
   }
 
