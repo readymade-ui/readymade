@@ -1,4 +1,4 @@
-import { Component, css, html, CustomElement, StateChange, Listen } from './../../modules/core/index.js';
+import { Component, css, html, CustomElement, StateChange, Emitter, Listen } from './../../modules/core/index.js';
 
 @Component({
   selector: 'r-side-nav',
@@ -6,17 +6,10 @@ import { Component, css, html, CustomElement, StateChange, Listen } from './../.
     <div class="background"></div>
     <nav>
       <ul class="top">
-        <li><span>intro</span></li>
-        <li><span>getting started</span></li>
-        <li><span>install</span></li>
-        <li><span>make a component</span></li>
-        <li><span>component</span></li>
-        <li><span>listen</span></li>
-        <li><span>emitter</span></li>
-        <li><span>data binding</span></li>
-        <li><span>custom elements</span></li>
-        <li><span>built-in elements</span></li>
-        <li><span>why readymade</span></li>
+        <li><span><a href="#intro">intro</a></span></li>
+        <li><span><a href="#started">getting started</a></span></li>
+        <li><span><a href="#docs">using readymade</a></span></li>
+        <li><span><a href="#why">why readymade</a></span></li>
       </ul>
       <!-- <ul class="bottom">
         <li><span>gitter</span></li>
@@ -71,7 +64,6 @@ import { Component, css, html, CustomElement, StateChange, Listen } from './../.
     ul li > span {
       display: inline-block;
       position: relative;
-      opacity: 0.8;
       height: 22px;
       width: calc(100% - 56px);
       margin-left: 20px;
@@ -79,9 +71,12 @@ import { Component, css, html, CustomElement, StateChange, Listen } from './../.
       padding-bottom: 8px;
       padding-left: 0px;
       padding-right: 0px;
+    }
+    ul li a:link, ul li a:visited {
+      opacity: 0.8;
       color: #222222;
     }
-    ul li:hover span {
+    ul li:hover a:link, ul li:hover a:visited {
       opacity: 1.0;
       color: #000000;
     }
@@ -108,27 +103,25 @@ class RSideNavComponent extends CustomElement {
   constructor() {
     super();
   }
+  @Emitter('close', {}, 'sidenav')
   connectedCallback() {
     this.background = this.shadowRoot.querySelector('.background');
-    // document.addEventListener('click', (ev) => {
-    //   if (ev.target !== this.shadowRoot && !this.shadowRoot.contains(ev.target)) {
-    //     this.close({});
-    //   } else {
-    //     console.log('in nav');
-    //   }
-    // })
+    Array.from(this.shadowRoot.querySelectorAll('a')).forEach((a) => {
+      a.addEventListener('click', (ev) => {
+        this.emitter.broadcast('close');
+      });
+    });
   }
   @Listen('close', 'sidenav')
-  public close(ev) {
+  public close() {
     if (this.status === 'is--inactive') return;
     this.status = 'is--inactive';
-
     this.animate([
       { left: '0px' },
       { left: '-320px' }
     ], { duration: 150, fill: 'forwards' });
     this.background.animate([
-      { transform: `translateX(520px) translateY(-200px) rotate(-30deg)`},
+      { transform: `translateX(520px) translateY(-200px) rotate(-32deg)`},
       { transform: `translateX(-520px) translateY(2000px) rotate(-45deg)`}
     ], { duration: 150, fill: 'forwards' });
   }
@@ -142,7 +135,7 @@ class RSideNavComponent extends CustomElement {
     ],{ duration: 150, fill: 'forwards' });
     this.background.animate([
       { transform: `translateX(-520px) translateY(2000px) rotate(-45deg)`},
-      { transform: `translateX(520px) translateY(-200px) rotate(-30deg)`}
+      { transform: `translateX(520px) translateY(-200px) rotate(-32deg)`}
     ], { duration: 150, fill: 'forwards' });
 
   }

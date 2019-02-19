@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html class="no-js" lang="">
+
+<head>
+    <base href="/">
+
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Web Components</title>
+
+    <link rel="stylesheet" href="style/main.css">
+    <script src="/lib/web-animations.min.js"></script>
+    <script src="polyfill.js"></script>
+    <script src="vendor.js"></script>
+</head>
+
+<body>
+    <my-list>
+        <ul slot="menu">
+            <li><my-item><span slot="msg">Item 1</span></my-item></li>
+            <li><my-item><span slot="msg">Item 2</span></my-item></li>
+            <li><my-item><span slot="msg">Item 3</span></my-item></li>
+            <li><my-item><span slot="msg">Item 4</span></my-item></li>
+        </ul>
+    </my-list>
+    <br />
+    <br />
+    <button is="my-button"></button>
+    <input is="my-input" type="text">
+
+    <script src="app/main.js" type="module"></script>
+
+</body>
+
+</html>

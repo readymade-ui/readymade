@@ -89,6 +89,10 @@ class RMainNavComponent extends CustomElement {
     });
 
   }
+  @Listen('close')
+  onClose() {
+     this.shadowRoot.querySelector('[link="side-nav"]').classList.remove('is--dark');
+  }
 }
 
 customElements.define('r-main-nav', RMainNavComponent);
