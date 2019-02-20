@@ -3,13 +3,25 @@ import { Component, css, html, CustomElement, StateChange, Emitter, Listen } fro
 @Component({
   selector: 'r-side-nav',
   template: html`
-    <div class="background"></div>
+  <svg class="background" width="44px" height="44px">
+          <clipPath id="clipPath">
+                <polygon stroke-width="3"
+                class="polygon"
+                points="{{points}}"></polygon>
+          </clipPath>
+          <g stroke="none" fill="none" fill-rule="evenodd">
+              <polygon stroke="{{strokeColor}}"
+                        fill="{{fillColor}}"
+                        stroke-width="3"
+                        class="polygon"
+                        points="{{points}}"></polygon>
+          </g>
+    </svg>
     <nav>
       <ul class="top">
         <li><span><a href="#intro">Intro</a></span></li>
         <li><span><a href="#started">Getting Started</a></span></li>
         <li><span><a href="#docs">Using Readymade</a></span></li>
-        <li><span><a href="#why">Why Readymade</a></span></li>
       </ul>
       <!-- <ul class="bottom">
         <li><span>gitter</span></li>
@@ -21,32 +33,29 @@ import { Component, css, html, CustomElement, StateChange, Emitter, Listen } fro
 			display: block;
       position: fixed;
       top: 0px;
-      left: -320px;
+      left: 0px;
       height: 100%;
       width: 320px;
       max-width: 320px;
       z-index: 8888;
       color: #000;
       overflow: visible;
+      clip-path: url(#clipPath);
 		}
-    .background {
-        position: absolute;
-        top: 0px;
-        left: 0px;
-        width: 200%;
-        height: 500%;
-        transform: translateX(-520px) translateY(2000px) rotate(-32deg);
-        background: rgba(255,255,255,1.0);
+    svg {
+      overflow: visible;
+      transform: translateX(0px);
     }
     nav {
-      width: 320px;
+      width: 100%;
       height: 100%;
+       clip-path: url(#clipPath);
     }
     ul {
       margin-block-start: 0em;
       margin-block-end: 0em;
       padding-inline-start: 0px;
-      width: 320px;
+      width: 100%;
       display: block;
     }
     ul li {
@@ -85,9 +94,6 @@ import { Component, css, html, CustomElement, StateChange, Emitter, Listen } fro
       top: 0px;
       margin-top: 240px;
     }
-    ul.top li {
-
-    }
     ul.bottom {
       position: absolute;
       bottom: 0px;
@@ -98,10 +104,25 @@ import { Component, css, html, CustomElement, StateChange, Emitter, Listen } fro
 	`
 })
 class RSideNavComponent extends CustomElement {
+  public direction: string;
   public status: string
   public background: Element;
+  public player: any;
+  public points: string;
+  public currentPointValue: number;
+  public state: {
+     points: string;
+     strokeColor: string;
+     fillColor: string;
+     size: string;
+  }
   constructor() {
     super();
+    this.direction = 'forwards';
+    this.state.size = '10000px';
+    this.state.strokeColor = '#cdcdcd';
+    this.state.fillColor = '#cdcdcd';
+    this.state.points = `7 9 7 34 31 34`;
   }
   @Emitter('close', {}, 'sidenav')
   connectedCallback() {
@@ -116,28 +137,42 @@ class RSideNavComponent extends CustomElement {
   public close() {
     if (this.status === 'is--inactive') return;
     this.status = 'is--inactive';
-    this.animate([
-      { left: '0px' },
-      { left: '-320px' }
-    ], { duration: 350, fill: 'forwards' });
-    this.background.animate([
-      { transform: `translateX(520px) translateY(-200px) rotate(-32deg)`},
-      { transform: `translateX(-320px) translateY(2000px) rotate(-32deg)`}
-    ], { duration: 350, fill: 'forwards' });
+    this.direction = 'reverse';
+    this.player = this.animate([
+      { x: 0 },
+      { x: 100 }
+    ], { duration: 1000, fill: 'forwards' });
+    this.player.play();
+    this.update();
   }
   @Listen('open', 'sidenav')
   public open(ev) {
     if (this.status === 'is--active') return;
+    this.direction = 'forwards';
     this.status = 'is--active';
-    this.animate([
-      { left: '-320px' },
-      { left: '0px' }
-    ],{ duration: 350, fill: 'forwards' });
-    this.background.animate([
-      { transform: `translateX(-320px) translateY(2000px) rotate(-32deg)`},
-      { transform: `translateX(464px) translateY(-200px) rotate(-32deg)`}
-    ], { duration: 350, fill: 'forwards' });
+    this.player = this.animate([
+      { x: 100 },
+      { x: 0 }
+    ],{ duration: 1000, fill: 'forwards' });
+    this.player.play();
+    this.update();
 
+  }
+
+  scale(v: number, min: number, max: number, gmin: number, gmax: number) {
+    return ((v - min) / (max - min)) * (gmax - gmin) + gmin;
+  }
+
+
+  update() {
+      if (this.direction === 'forwards') {
+        this.currentPointValue = this.scale(this.player.currentTime, 0, 1000, 31, 2400);
+      }
+      if (this.direction === 'reverse') {
+        this.currentPointValue = this.scale(this.player.currentTime, 1000, 0, 31, 2400);
+      }
+      this.state.points = `7 9 7 ${this.currentPointValue} ${this.currentPointValue} ${this.currentPointValue}`;
+      window.requestAnimationFrame(this.update.bind(this));
   }
 
 }
