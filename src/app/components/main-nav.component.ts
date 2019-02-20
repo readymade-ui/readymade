@@ -9,6 +9,7 @@ import { Component, css, html, CustomElement, StateChange, Emitter, Listen } fro
       </ul>
       <ul class="right">
         <li link="github">
+        <a href="https://github.com/readymade-ui/readymade" target="_blank">
         <svg width="25px" height="25px" viewBox="0 0 25 25">
             <defs></defs>
             <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -18,6 +19,7 @@ import { Component, css, html, CustomElement, StateChange, Emitter, Listen } fro
                 </g>
             </g>
         </svg>
+        </a>
         </li>
       </ul>
     </nav>
@@ -72,7 +74,8 @@ import { Component, css, html, CustomElement, StateChange, Emitter, Listen } fro
       margin-right: 0px;
     }
     ul.right li {
-      margin-left: 10px;
+      margin-left: 20px;
+      padding-right: 0px;
     }
 	`
 })

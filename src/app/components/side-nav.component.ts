@@ -109,7 +109,10 @@ class RSideNavComponent extends CustomElement {
   public background: Element;
   public player: any;
   public points: string;
-  public currentPointValue: number;
+  public currentPointValue: {
+    a: number;
+    b: number;
+  }
   public state: {
      points: string;
      strokeColor: string;
@@ -122,7 +125,11 @@ class RSideNavComponent extends CustomElement {
     this.state.size = '10000px';
     this.state.strokeColor = '#cdcdcd';
     this.state.fillColor = '#cdcdcd';
-    this.state.points = `7 9 7 34 31 34`;
+    this.state.points = `7 9 7 54 44 54`;
+    this.currentPointValue = {
+      a: 54,
+      b: 44
+    }
   }
   @Emitter('close', {}, 'sidenav')
   connectedCallback() {
@@ -163,15 +170,16 @@ class RSideNavComponent extends CustomElement {
     return ((v - min) / (max - min)) * (gmax - gmin) + gmin;
   }
 
-
   update() {
       if (this.direction === 'forwards') {
-        this.currentPointValue = this.scale(this.player.currentTime, 0, 1000, 31, 2400);
+        this.currentPointValue.a = this.scale(this.player.currentTime, 0, 1000, 54, 2400);
+        this.currentPointValue.b = this.scale(this.player.currentTime, 0, 1000, 44, 2400);
       }
       if (this.direction === 'reverse') {
-        this.currentPointValue = this.scale(this.player.currentTime, 1000, 0, 31, 2400);
+        this.currentPointValue.a = this.scale(this.player.currentTime, 1000, 0, 54, 2400);
+        this.currentPointValue.b = this.scale(this.player.currentTime, 1000, 0, 44, 2400);
       }
-      this.state.points = `7 9 7 ${this.currentPointValue} ${this.currentPointValue} ${this.currentPointValue}`;
+      this.state.points = `7 9 7 ${this.currentPointValue.a} ${this.currentPointValue.b} ${this.currentPointValue.a}`;
       window.requestAnimationFrame(this.update.bind(this));
   }
 
