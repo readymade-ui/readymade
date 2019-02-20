@@ -5,7 +5,6 @@ export {
 } from './src/attach.js';
 
 export {
-  StateChange,
   bindTemplate,
   compileTemplate
 } from './src/compile.js';

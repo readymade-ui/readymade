@@ -5,7 +5,7 @@ import { Component, css, html, CustomElement, StateChange } from './../../module
   template: html`
     <slot></slot>
 	`,
-  style: css`
+  style:`
     :host {
       display: block;
       padding-bottom: 3em;

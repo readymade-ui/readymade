@@ -3,6 +3,6 @@ module.exports = ctx => ({
     'postcss-nested': {},
     'postcss-import': {},
     'postcss-mixins': {},
-    'postcss-csso': ctx.env === 'prod' ? {} : false
+    'cssnano': ctx.env === 'prod' ? {} : false
   }
 })

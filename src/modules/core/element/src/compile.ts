@@ -1,6 +1,6 @@
 import { getChildNodes } from './util.js';
 import { ElementMeta } from './../../decorator/decorator.js';
-import { OnStateChange, StateChange } from './../../component/component.js';
+import { OnStateChange } from './../../component/component.js';
 
 const TEMPLATE_BIND_REGEX = /\{\{(\s*)(.*?)(\s*)\}\}/g;
 const BIND_SUFFIX = ' __state';
@@ -155,7 +155,6 @@ function bindTemplate() {
 
 
 export {
-  StateChange,
   bindTemplate,
   compileTemplate
 }

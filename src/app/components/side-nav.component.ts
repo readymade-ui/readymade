@@ -2,8 +2,10 @@ import { Component, css, html, CustomElement, StateChange, Emitter, Listen } fro
 
 @Component({
   selector: 'r-side-nav',
-  template: html`
-  <svg class="background" width="44px" height="44px">
+  template: `
+  <svg class="background"
+      width="44px"
+      height="44px">
           <clipPath id="clipPath">
                 <polygon stroke-width="3"
                 class="polygon"
@@ -23,9 +25,6 @@ import { Component, css, html, CustomElement, StateChange, Emitter, Listen } fro
         <li><span><a href="#started">Getting Started</a></span></li>
         <li><span><a href="#docs">Using Readymade</a></span></li>
       </ul>
-      <!-- <ul class="bottom">
-        <li><span>gitter</span></li>
-      </ul> -->
     </nav>
   `,
   style: css`
@@ -49,7 +48,7 @@ import { Component, css, html, CustomElement, StateChange, Emitter, Listen } fro
     nav {
       width: 100%;
       height: 100%;
-       clip-path: url(#clipPath);
+      clip-path: url(#clipPath);
     }
     ul {
       margin-block-start: 0em;
