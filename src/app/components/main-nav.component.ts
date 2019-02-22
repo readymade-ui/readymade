@@ -96,9 +96,7 @@ class RMainNavComponent extends CustomElement {
   @Emitter('open', {}, 'sidenav')
   @Emitter('close', {}, 'sidenav')
   connectedCallback() {
-
     const navLink = this.shadowRoot.querySelector('[link="side-nav"]');
-
     this.state.strokeColor = '#cdcdcd';
     this.state.size = '44px';
     navLink.addEventListener('mouseenter', () => {
@@ -120,7 +118,6 @@ class RMainNavComponent extends CustomElement {
   }
   @Listen('close', 'sidenav')
   onClose() {
-    console.log('close');
     this.shadowRoot.querySelector('[link="side-nav"]').classList.remove('is--dark');
   }
 }
