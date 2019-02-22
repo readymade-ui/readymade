@@ -2,11 +2,11 @@ import { Component, css, html, CustomElement, StateChange, Emitter, Listen } fro
 
 @Component({
   selector: 'r-side-nav',
-  template: `
+  template: html`
   <svg class="background"
-      width="44px"
-      height="44px">
-          <clipPath id="clipPath">
+      width="54px"
+      height="60px">
+          <clipPath id="c1">
                 <polygon stroke-width="3"
                 class="polygon"
                 points="{{points}}"></polygon>
@@ -39,16 +39,21 @@ import { Component, css, html, CustomElement, StateChange, Emitter, Listen } fro
       z-index: 8888;
       color: #000;
       overflow: visible;
-      clip-path: url(#clipPath);
 		}
     svg {
       overflow: visible;
       transform: translateX(0px);
     }
     nav {
-      width: 100%;
+      display: block;
+      position: relative;
+      width: 0px;
       height: 100%;
-      clip-path: url(#clipPath);
+      -webkit-clip-path: url(#c1);
+      overflow: hidden;
+    }
+    nav.is--active {
+      width: 100%;
     }
     ul {
       margin-block-start: 0em;
@@ -106,6 +111,7 @@ class RSideNavComponent extends CustomElement {
   public direction: string;
   public status: string
   public background: Element;
+  public nav: Element;
   public player: any;
   public points: string;
   public currentPointValue: {
@@ -132,10 +138,11 @@ class RSideNavComponent extends CustomElement {
   }
   @Emitter('close', {}, 'sidenav')
   connectedCallback() {
+    this.nav = this.shadowRoot.querySelector('nav');
     this.background = this.shadowRoot.querySelector('.background');
     Array.from(this.shadowRoot.querySelectorAll('a')).forEach((a) => {
       a.addEventListener('click', (ev) => {
-        this.emitter.broadcast('close');
+        this.close();
       });
     });
   }
@@ -144,10 +151,12 @@ class RSideNavComponent extends CustomElement {
     if (this.status === 'is--inactive') return;
     this.status = 'is--inactive';
     this.direction = 'reverse';
+    this.emitter.broadcast('close', 'sidenav');
     this.player = this.animate([
       { x: 0 },
       { x: 100 }
-    ], { duration: 1000, fill: 'forwards' });
+    ], { duration: 150, fill: 'forwards',  easing: 'steps(7, end)' });
+    setTimeout(()=>{ this.nav.classList.remove('is--active') }, 50);
     this.player.play();
     this.update();
   }
@@ -159,7 +168,8 @@ class RSideNavComponent extends CustomElement {
     this.player = this.animate([
       { x: 100 },
       { x: 0 }
-    ],{ duration: 1000, fill: 'forwards' });
+    ],{ duration: 550, fill: 'forwards',  easing: 'steps(7, end)' });
+    setTimeout(()=>{ this.nav.classList.add('is--active') }, 150);
     this.player.play();
     this.update();
 
@@ -170,16 +180,16 @@ class RSideNavComponent extends CustomElement {
   }
 
   update() {
-      if (this.direction === 'forwards') {
-        this.currentPointValue.a = this.scale(this.player.currentTime, 0, 1000, 54, 2400);
-        this.currentPointValue.b = this.scale(this.player.currentTime, 0, 1000, 44, 2400);
-      }
-      if (this.direction === 'reverse') {
-        this.currentPointValue.a = this.scale(this.player.currentTime, 1000, 0, 54, 2400);
-        this.currentPointValue.b = this.scale(this.player.currentTime, 1000, 0, 44, 2400);
-      }
-      this.state.points = `7 9 7 ${this.currentPointValue.a} ${this.currentPointValue.b} ${this.currentPointValue.a}`;
-      window.requestAnimationFrame(this.update.bind(this));
+    if (this.direction === 'forwards') {
+      this.currentPointValue.a = this.scale(this.player.currentTime, 0, 350, 54, 2400);
+      this.currentPointValue.b = this.scale(this.player.currentTime, 0, 350, 44, 2550);
+    }
+    if (this.direction === 'reverse') {
+      this.currentPointValue.a = this.scale(this.player.currentTime, 0, 150, 2400, 54);
+      this.currentPointValue.b = this.scale(this.player.currentTime, 0, 150, 2550, 44);
+    }
+    this.state.points = `7 9 7 ${this.currentPointValue.a} ${this.currentPointValue.b} ${this.currentPointValue.a}`;
+    window.requestAnimationFrame(this.update.bind(this));
   }
 
 }

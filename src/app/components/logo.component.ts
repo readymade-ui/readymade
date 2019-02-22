@@ -9,6 +9,7 @@ import { Component, css, html, CustomElement, StateChange } from './../../module
   style: css`
       :host {
         display: block;
+        user-select: none;
       }
 	`
 })

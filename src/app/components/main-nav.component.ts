@@ -34,6 +34,7 @@ import { Component, css, html, CustomElement, StateChange, Emitter, Listen } fro
       margin-right: 40px;
       font-weight: 700;
       z-index: 9999;
+      user-select: none;
 		}
     nav {
       width: 100%;
@@ -62,6 +63,8 @@ import { Component, css, html, CustomElement, StateChange, Emitter, Listen } fro
     ul.left li {
       margin-right: 10px;
       padding: 0px;
+      width: 37px;
+      height: 58px;
     }
     ul.left li.is--dark {
       color: #222222;
@@ -101,26 +104,24 @@ class RMainNavComponent extends CustomElement {
     navLink.addEventListener('mouseenter', () => {
         this.state.fillColor = '#cdcdcd';
     });
-
     navLink.addEventListener('mouseleave', () => {
         this.state.fillColor = '#cdcdcd';
     });
     navLink.addEventListener('click', () => {
-      if (this.isNavOpen === true) {
-         this.isNavOpen = false;
+      if (navLink.classList.contains('is--dark')) {
          this.emitter.broadcast('close', 'sidenav');
          navLink.classList.remove('is--dark');
-      } else if (this.isNavOpen === false) {
-         this.isNavOpen = true;
+      } else {
          this.emitter.broadcast('open', 'sidenav');
          navLink.classList.add('is--dark');
       }
     });
 
   }
-  @Listen('close')
+  @Listen('close', 'sidenav')
   onClose() {
-     this.shadowRoot.querySelector('[link="side-nav"]').classList.remove('is--dark');
+    console.log('close');
+    this.shadowRoot.querySelector('[link="side-nav"]').classList.remove('is--dark');
   }
 }
 
