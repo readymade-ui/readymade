@@ -20,6 +20,13 @@ body {
 
 }
 
+::selection {
+    background: #ff7de9; /* WebKit/Blink Browsers */
+}
+::-moz-selection {
+    background: #ff7de9; /* Gecko Browsers */
+}
+
 header, section, footer {
     position: relative;
     left: 50%;

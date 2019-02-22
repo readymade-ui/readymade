@@ -31,6 +31,12 @@ pre[class*="language-"] {
     color: #e0e2e4;
     text-shadow: none;
 }
+::selection {
+    background: #ff7de9; /* WebKit/Blink Browsers */
+}
+::-moz-selection {
+    background: #ff7de9; /* Gecko Browsers */
+}
 pre[class*="language-"],
 :not(pre)>code[class*="language-"] {
     background: #0e1014;

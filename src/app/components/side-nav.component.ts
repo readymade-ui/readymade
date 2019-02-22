@@ -21,9 +21,28 @@ import { Component, css, html, CustomElement, StateChange, Emitter, Listen } fro
     </svg>
     <nav>
       <ul class="top">
-        <li><span><a href="#intro">Intro</a></span></li>
-        <li><span><a href="#started">Getting Started</a></span></li>
-        <li><span><a href="#docs">Using Readymade</a></span></li>
+        <li>
+          <span><a href="#intro">Intro</a></span>
+           <!-- <ul>
+            <li><span><a href="#whatis">What is Readymade?</a></span></li>
+            <li><span><a href="#example">Example</a></span></li>
+          </ul> -->
+        </li>
+        <li>
+          <span><a href="#started">Getting Started</a></span>
+          <!-- <ul>
+            <li><span><a href="#started">Install</a></span></li>
+            <li><span><a href="#myfirst">First Component</a></span></li>
+          </ul> -->
+        </li>
+        <li>
+          <span><a href="#docs">Using Readymade</a></span>
+          <!-- <ul>
+            <li><span><a href="#decorators">Decorators</a></span></li>
+            <li><span><a href="#databinding">Data Binding</a></span></li>
+            <li><span><a href="#components">Components</a></span></li>
+          </ul> -->
+        </li>
       </ul>
     </nav>
   `,
@@ -130,7 +149,7 @@ class RSideNavComponent extends CustomElement {
     this.state.size = '10000px';
     this.state.strokeColor = '#cdcdcd';
     this.state.fillColor = '#cdcdcd';
-    this.state.points = `7 9 7 54 44 54`;
+    this.state.points = `7 9 7 34 24 34`;
     this.currentPointValue = {
       a: 54,
       b: 44
@@ -181,12 +200,12 @@ class RSideNavComponent extends CustomElement {
 
   update() {
     if (this.direction === 'forwards') {
-      this.currentPointValue.a = this.scale(this.player.currentTime, 0, 350, 54, 2400);
-      this.currentPointValue.b = this.scale(this.player.currentTime, 0, 350, 44, 2550);
+      this.currentPointValue.a = this.scale(this.player.currentTime, 0, 350, 34, 2400);
+      this.currentPointValue.b = this.scale(this.player.currentTime, 0, 350, 24, 2550);
     }
     if (this.direction === 'reverse') {
-      this.currentPointValue.a = this.scale(this.player.currentTime, 0, 150, 2400, 54);
-      this.currentPointValue.b = this.scale(this.player.currentTime, 0, 150, 2550, 44);
+      this.currentPointValue.a = this.scale(this.player.currentTime, 0, 150, 2400, 34);
+      this.currentPointValue.b = this.scale(this.player.currentTime, 0, 150, 2550, 24);
     }
     this.state.points = `7 9 7 ${this.currentPointValue.a} ${this.currentPointValue.b} ${this.currentPointValue.a}`;
     window.requestAnimationFrame(this.update.bind(this));
