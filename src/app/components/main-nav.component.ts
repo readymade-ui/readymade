@@ -55,8 +55,10 @@ import { Component, css, html, CustomElement, StateChange, Emitter, Listen } fro
       margin-right: 0px;
     }
     ul.right li {
-      margin-left: 20px;
-      padding-right: 0px;
+      margin-left: 0px;
+      padding-right: 10px;
+      text-align: right;
+      transform: translateY(-5px);
     }
 	`,
    template: html`
