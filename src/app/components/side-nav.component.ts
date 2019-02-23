@@ -147,8 +147,8 @@ class RSideNavComponent extends CustomElement {
     super();
     this.direction = 'forwards';
     this.state.size = '10000px';
-    this.state.strokeColor = '#cdcdcd';
-    this.state.fillColor = '#cdcdcd';
+    this.state.strokeColor = '#efefef';
+    this.state.fillColor = '#efefef';
     this.state.points = `7 9 7 34 24 34`;
     this.currentPointValue = {
       a: 54,
