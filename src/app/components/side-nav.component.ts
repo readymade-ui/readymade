@@ -9,14 +9,14 @@ import { Component, css, html, CustomElement, StateChange, Emitter, Listen } fro
           <clipPath id="c1">
                 <polygon stroke-width="3"
                 class="polygon"
-                points="{{points}}"></polygon>
+                attr.points="{{points}}"></polygon>
           </clipPath>
           <g stroke="none" fill="none" fill-rule="evenodd">
               <polygon stroke="{{strokeColor}}"
                         fill="{{fillColor}}"
                         stroke-width="3"
                         class="polygon"
-                        points="{{points}}"></polygon>
+                        attr.points="{{points}}"></polygon>
           </g>
     </svg>
     <nav>
