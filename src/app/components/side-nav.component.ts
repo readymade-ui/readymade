@@ -2,50 +2,6 @@ import { Component, css, html, CustomElement, StateChange, Emitter, Listen } fro
 
 @Component({
   selector: 'r-side-nav',
-  template: html`
-  <svg class="background"
-      width="54px"
-      height="60px">
-          <clipPath id="c1">
-                <polygon stroke-width="3"
-                class="polygon"
-                attr.points="{{points}}"></polygon>
-          </clipPath>
-          <g stroke="none" fill="none" fill-rule="evenodd">
-              <polygon stroke="{{strokeColor}}"
-                        fill="{{fillColor}}"
-                        stroke-width="3"
-                        class="polygon"
-                        attr.points="{{points}}"></polygon>
-          </g>
-    </svg>
-    <nav>
-      <ul class="top">
-        <li>
-          <span><a href="#intro">Intro</a></span>
-           <!-- <ul>
-            <li><span><a href="#whatis">What is Readymade?</a></span></li>
-            <li><span><a href="#example">Example</a></span></li>
-          </ul> -->
-        </li>
-        <li>
-          <span><a href="#started">Getting Started</a></span>
-          <!-- <ul>
-            <li><span><a href="#started">Install</a></span></li>
-            <li><span><a href="#myfirst">First Component</a></span></li>
-          </ul> -->
-        </li>
-        <li>
-          <span><a href="#docs">Using Readymade</a></span>
-          <!-- <ul>
-            <li><span><a href="#decorators">Decorators</a></span></li>
-            <li><span><a href="#databinding">Data Binding</a></span></li>
-            <li><span><a href="#components">Components</a></span></li>
-          </ul> -->
-        </li>
-      </ul>
-    </nav>
-  `,
   style: css`
 		:host {
 			display: block;
@@ -105,12 +61,12 @@ import { Component, css, html, CustomElement, StateChange, Emitter, Listen } fro
     }
     ul li a:link, ul li a:visited {
       opacity: 0.8;
-      color: #222222;
+      color: #000000;
       text-decoration: none;
     }
     ul li:hover a:link, ul li:hover a:visited {
       opacity: 1.0;
-      color: #000000;
+      color: #FFFFFF;
     }
     ul.top {
       position: absolute;
@@ -124,7 +80,51 @@ import { Component, css, html, CustomElement, StateChange, Emitter, Listen } fro
     ul.bottom li {
       margin-bottom: 10px;
     }
-	`
+	`,
+  template: html`
+  <svg class="background"
+      width="54px"
+      height="60px">
+          <clipPath id="c1">
+                <polygon stroke-width="3"
+                class="polygon"
+                attr.points="{{points}}"></polygon>
+          </clipPath>
+          <g stroke="none" fill="none" fill-rule="evenodd">
+              <polygon stroke="{{strokeColor}}"
+                        fill="{{fillColor}}"
+                        stroke-width="3"
+                        class="polygon"
+                        attr.points="{{points}}"></polygon>
+          </g>
+    </svg>
+    <nav>
+      <ul class="top">
+        <li>
+          <span><a href="#intro">Intro</a></span>
+           <!-- <ul>
+            <li><span><a href="#whatis">What is Readymade?</a></span></li>
+            <li><span><a href="#example">Example</a></span></li>
+          </ul> -->
+        </li>
+        <li>
+          <span><a href="#started">Getting Started</a></span>
+          <!-- <ul>
+            <li><span><a href="#started">Install</a></span></li>
+            <li><span><a href="#myfirst">First Component</a></span></li>
+          </ul> -->
+        </li>
+        <li>
+          <span><a href="#docs">Using Readymade</a></span>
+          <!-- <ul>
+            <li><span><a href="#decorators">Decorators</a></span></li>
+            <li><span><a href="#databinding">Data Binding</a></span></li>
+            <li><span><a href="#components">Components</a></span></li>
+          </ul> -->
+        </li>
+      </ul>
+    </nav>
+  `
 })
 class RSideNavComponent extends CustomElement {
   public direction: string;
@@ -147,8 +147,8 @@ class RSideNavComponent extends CustomElement {
     super();
     this.direction = 'forwards';
     this.state.size = '10000px';
-    this.state.strokeColor = '#efefef';
-    this.state.fillColor = '#efefef';
+    this.state.strokeColor = '#cfcfcf';
+    this.state.fillColor = '#cfcfcf';
     this.state.points = `7 9 7 34 24 34`;
     this.currentPointValue = {
       a: 54,

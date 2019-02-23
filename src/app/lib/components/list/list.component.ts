@@ -2,9 +2,6 @@ import { css, html, Component, CustomElement, getElementIndex, getSiblings, List
 
 @Component({
   selector: 'my-list',
-  template: html`
-		<slot name="menu"></slot>
-	`,
   style: css`
 		:host {
 			display: block;
@@ -16,6 +13,9 @@ import { css, html, Component, CustomElement, getElementIndex, getSiblings, List
 			border-radius: 8px;
 		}
 	`,
+  template: html`
+		<slot name="menu"></slot>
+	`
 })
 class MyListComponent extends CustomElement {
   currentIndex: number;

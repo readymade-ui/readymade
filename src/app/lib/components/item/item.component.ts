@@ -2,11 +2,6 @@ import { css, html, Component, CustomElement, Listen } from '../../../../modules
 
 @Component({
   selector: 'my-item',
-  template: html`
-		<p>
-			<span><slot name="msg">item</slot></span>
-		</p>
-	`,
   style: css`
 		:host {
 			display: block;
@@ -18,6 +13,11 @@ import { css, html, Component, CustomElement, Listen } from '../../../../modules
 			font-weight: 700;
 		}
 	`,
+	template: html`
+		<p>
+			<span><slot name="msg">item</slot></span>
+		</p>
+	`
 })
 class MyItemComponent extends CustomElement {
   constructor() {

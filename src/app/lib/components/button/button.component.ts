@@ -2,9 +2,6 @@ import { css, html, ButtonComponent, Component, Emitter, Listen } from '../../..
 
 @Component({
   selector: 'my-button',
-  template: html`
-   <span>{{model}}</span>
-	`,
   style: css`
 		:host {
 			background: rgba(24, 24, 24, 1);
@@ -13,6 +10,9 @@ import { css, html, ButtonComponent, Component, Emitter, Listen } from '../../..
 			font-weight: 400;
 		}
 	`,
+  template: html`
+   <span>{{model}}</span>
+	`
 })
 class MyButtonComponent extends ButtonComponent {
 

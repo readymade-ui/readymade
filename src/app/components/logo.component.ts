@@ -2,15 +2,15 @@ import { Component, css, html, CustomElement, StateChange } from './../../module
 
 @Component({
   selector: 'r-logo',
-  template: html`
-    <r-headline headline="{{heading}}" size="{{size}}"></r-headline>
-    <r-headline headline="{{heading2}}"></r-headline>
-	`,
   style: css`
       :host {
         display: block;
         user-select: none;
       }
+	`,
+   template: html`
+    <r-headline headline="{{heading}}" size="{{size}}"></r-headline>
+    <r-headline headline="{{heading2}}"></r-headline>
 	`
 })
 class RLogoComponent extends CustomElement {

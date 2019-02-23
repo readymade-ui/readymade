@@ -2,9 +2,6 @@ import { Component, css, html, CustomElement, StateChange } from './../../module
 
 @Component({
   selector: 'r-headline',
-  template: html`
-    <h1 class="{{copySize}}">{{copy}}</h1>
-	`,
   style: css`
     h1 {
       font-family: 'Major Mono Display', sans-serif;
@@ -28,7 +25,10 @@ import { Component, css, html, CustomElement, StateChange } from './../../module
         font-size: 12em;
         padding-left: 0em;
     }
-	`
+	`,
+   template: html`
+    <h1 class="{{copySize}}">{{copy}}</h1>
+	`,
 })
 class RHeadlineComponent extends CustomElement {
   public state: {

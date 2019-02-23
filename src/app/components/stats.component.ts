@@ -2,13 +2,9 @@ import { Component, css, html, CustomElement, StateChange } from './../../module
 
 @Component({
   selector: 'r-stats',
-  template: html`
-    <slot></slot>
-	`,
   style: css`
     :host {
       display: block;
-      padding-bottom: 3em;
     }
     ::slotted(ul) {
       display: inline-block;
@@ -17,6 +13,9 @@ import { Component, css, html, CustomElement, StateChange } from './../../module
       transform: translateX(-50%);
       font-weight: 300;
     }
+	`,
+   template: html`
+    <slot></slot>
 	`
 })
 class RStatsComponent extends CustomElement {

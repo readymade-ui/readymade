@@ -8,7 +8,7 @@ import { css, Component, InputComponent, Listen } from '../../../../modules/core
 			border: 0px none;
 			color: white;
 		}
-	`,
+	`
 })
 class MyInputComponent extends InputComponent {
   constructor() {
