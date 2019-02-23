@@ -17,8 +17,8 @@ if [[ ! -e dist/assets ]]; then
 fi
 
 cp node_modules/web-animations-js/web-animations.min.js dist/lib/web-animations.min.js
+cp node_modules/web-animations-js/web-animations.min.js.map dist/lib/web-animations.min.js.map
 cp src/app/index.html dist/index.html
-cp src/app/docs.html dist/docs.html
 cp src/app/404.html dist/404.html
 cp -R src/app/assets/. dist/assets/
 
