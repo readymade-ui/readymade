@@ -1,6 +1,6 @@
-import { getChildNodes } from './util.js';
-import { ElementMeta } from './../../decorator/decorator.js';
 import { OnStateChange } from './../../component/component.js';
+import { ElementMeta } from './../../decorator/decorator.js';
+import { getChildNodes } from './util.js';
 
 const TEMPLATE_BIND_REGEX = /\{\{(\s*)(.*?)(\s*)\}\}/g;
 const BIND_SUFFIX = ' __state';
@@ -10,95 +10,97 @@ interface Node {
 }
 
 function templateId() {
-  let str = "";
-  const alphabet = "abcdefghijklmnopqrstuvwxyz";
+  let str = '';
+  const alphabet = 'abcdefghijklmnopqrstuvwxyz';
   while (str.length < 3) {
     str += alphabet[Math.floor(Math.random() * alphabet.length)];
   }
   return str;
 }
 
+/* tslint:disable */
 function uuidv4() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
     const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
     return v.toString(24);
   });
 }
+/* tslint:enable */
 
 class NodeTree {
-  $parent: any;
-  $parentId: string;
-  $flatMap: any = {};
+  public $parent: any;
+  public $parentId: string;
+  public $flatMap: any = {};
   constructor(parentNode?: any) {
     this.$parent = parentNode;
     this.$flatMap = {};
     this.$parentId = templateId();
     this.create();
   }
-  setNode(node: Node, key?: string, value?: any) {
-      const id = this.$parentId+'-'+uuidv4().slice(0, 6);
+  public setNode(node: Node, key?: string, value?: any) {
+      const id = this.$parentId + '-' + uuidv4().slice(0, 6);
       const clone = node.cloneNode(true);
-      (<Element>node).setAttribute(id, '');
-      (<Element>clone).setAttribute(id, '');
+      (node as Element).setAttribute(id, '');
+      (clone as Element).setAttribute(id, '');
       if (!this.$flatMap[id]) {
         this.$flatMap[id] = {
-          id: id,
-          node: clone
-        }
+          id,
+          node: clone,
+        };
         if (key && value) {
           this.updateNode(node, key, value);
         }
       }
   }
-  updateNode(node: Node, key: string, value: any) {
+  public updateNode(node: Node, key: string, value: any) {
 
     const regex = new RegExp(`\{\{(\s*)(${key})(\s*)\}\}`, 'gi');
-    const attrId = this.getElementByAttribute((<Element>node))[0].nodeName;
+    const attrId = this.getElementByAttribute((node as Element))[0].nodeName;
     const protoNode = this.$flatMap[attrId].node;
     let attr;
-    for (let i = 0; i < protoNode.attributes.length; i++) {
-      attr = protoNode.attributes[i].nodeName;
-      if (attr.includes('attr.') && !protoNode.getAttribute(protoNode.attributes[i].nodeName.replace('attr.', ''))) {
-        attr = protoNode.attributes[i].nodeName.replace('attr.', '');
-        protoNode.setAttribute(attr, protoNode.attributes[i].nodeValue.replace(TEMPLATE_BIND_REGEX, ''));
-        (<Element>node).removeAttribute(protoNode.attributes[i].nodeName);
+    for (const attribute of protoNode.attributes) {
+      attr = attribute.nodeName;
+      if (attr.includes('attr.') && !protoNode.getAttribute(attribute.nodeName.replace('attr.', ''))) {
+        attr = attribute.nodeName.replace('attr.', '');
+        protoNode.setAttribute(attr, attribute.nodeValue.replace(TEMPLATE_BIND_REGEX, ''));
+        (node as Element).removeAttribute(attribute.nodeName);
       }
-      if (protoNode.attributes[i].nodeValue.match(regex, 'gi')) {
-        (<Element>node).setAttribute(attr, protoNode.attributes[i].nodeValue.replace(regex, value));
+      if (attribute.nodeValue.match(regex, 'gi')) {
+        (node as Element).setAttribute(attr, attribute.nodeValue.replace(regex, value));
       }
-      if (protoNode.attributes[i].nodeName.includes('attr.')) {
-        (<Element>node).removeAttribute(protoNode.attributes[i].nodeName);
+      if (attribute.nodeName.includes('attr.')) {
+        (node as Element).removeAttribute(attribute.nodeName);
       }
     }
     if (protoNode.textContent.match(regex)) {
-      (<Element>node).textContent = protoNode.textContent.replace(regex, value);
+      (node as Element).textContent = protoNode.textContent.replace(regex, value);
     }
   }
-  create() {
+  public create() {
     const walk = document.createTreeWalker(
       this.$parent,
       NodeFilter.SHOW_ELEMENT,
-      { acceptNode: function(node) { return NodeFilter.FILTER_ACCEPT; } },
-      false
-    )
-    while(walk.nextNode()) {
+      { acceptNode(node) { return NodeFilter.FILTER_ACCEPT; } },
+      false,
+    );
+    while (walk.nextNode()) {
       this.setNode(walk.currentNode);
     }
   }
-  getElementByAttribute(node: Element) {
-    return Array.from(node.attributes).filter((attr)=>{
+  public getElementByAttribute(node: Element) {
+    return Array.from(node.attributes).filter((attr) => {
       return /[A-Za-z0-9]{3}-[A-Za-z0-9]{6}/gm.test(attr.nodeName);
-    })
+    });
   }
-  update(key: string, value: any) {
+  public update(key: string, value: any) {
     const walk = document.createTreeWalker(
       this.$parent,
       NodeFilter.SHOW_ELEMENT,
-      { acceptNode: function(node) { return NodeFilter.FILTER_ACCEPT; } },
-      false
-    )
-    while(walk.nextNode()) {
-      if (this.getElementByAttribute((<Element>walk.currentNode)).length > 0) {
+      { acceptNode(node) { return NodeFilter.FILTER_ACCEPT; } },
+      false,
+    );
+    while (walk.nextNode()) {
+      if (this.getElementByAttribute((walk.currentNode as Element)).length > 0) {
          this.updateNode(walk.currentNode, key, value);
       } else {
          this.setNode(walk.currentNode, key, value);
@@ -109,35 +111,35 @@ class NodeTree {
 }
 
 class BoundNode {
-  $parent: any;
-  $tree: NodeTree;
-  templateTree: NodeTree;
-  constructor (parent) {
+  public $parent: any;
+  public $tree: NodeTree;
+  public templateTree: NodeTree;
+  constructor(parent) {
     this.$parent = parent;
     this.$tree = new NodeTree(this.$parent);
   }
-  update(key: string, value: any) {
+  public update(key: string, value: any) {
     this.$tree.update(key, value);
-    if (this.$parent.onUpdate) this.$parent.onUpdate();
+    if (this.$parent.onUpdate) { this.$parent.onUpdate(); }
   }
 }
 
 class BoundHandler {
-  $parent: any;
-  onStateChange: OnStateChange;
+  public $parent: any;
+  public onStateChange: OnStateChange;
   constructor(obj: Element) {
     this.$parent = obj;
   }
-  set(target: any, key: string, value: any) {
+  public set(target: any, key: string, value: any) {
     const change = {
       [key]: {
         previousValue : target[key],
-        newValue: value
-      }
+        newValue: value,
+      },
     };
     target[key] = value;
     this.$parent.$state['node' + BIND_SUFFIX].update(key, target[key]);
-    if (target.onStateChange) target.onStateChange(change);
+    if (target.onStateChange) { target.onStateChange(change); }
     return true;
   }
 }
@@ -155,7 +157,6 @@ function compileTemplate(elementMeta: ElementMeta, target: any) {
   target.prototype.setState = setState;
 }
 
-
 function bindTemplate() {
   this.$state = {};
   this.$state['handler' + BIND_SUFFIX] = new BoundHandler(this);
@@ -163,8 +164,7 @@ function bindTemplate() {
   this.state = new Proxy(this, this.$state['handler' + BIND_SUFFIX]);
 }
 
-
 export {
   bindTemplate,
-  compileTemplate
-}
+  compileTemplate,
+};

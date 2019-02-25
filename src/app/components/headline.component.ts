@@ -1,4 +1,4 @@
-import { Component, css, html, CustomElement, StateChange } from './../../modules/core/index.js';
+import { Component, css, CustomElement, html, StateChange } from './../../modules/core/index.js';
 
 @Component({
   selector: 'r-headline',
@@ -34,7 +34,7 @@ class RHeadlineComponent extends CustomElement {
   public state: {
     copy: string | number;
     copySize: string;
-  }
+  };
   public hyperNode: any;
 
   constructor() {
@@ -46,7 +46,7 @@ class RHeadlineComponent extends CustomElement {
   static get observedAttributes() {
     return ['headline', 'size'];
   }
-  attributeChangedCallback(name, oldValue, newValue) {
+  public attributeChangedCallback(name, oldValue, newValue) {
 
     switch (name) {
       case 'headline':

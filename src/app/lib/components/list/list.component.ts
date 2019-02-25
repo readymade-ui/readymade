@@ -1,4 +1,4 @@
-import { css, html, Component, CustomElement, getElementIndex, getSiblings, Listen  } from '../../../../modules/core/index.js';
+import { Component, css, CustomElement, getElementIndex, getSiblings, html, Listen  } from '../../../../modules/core/index.js';
 
 @Component({
   selector: 'my-list',
@@ -15,10 +15,10 @@ import { css, html, Component, CustomElement, getElementIndex, getSiblings, List
 	`,
   template: html`
 		<slot name="menu"></slot>
-	`
+	`,
 })
 class MyListComponent extends CustomElement {
-  currentIndex: number;
+  public currentIndex: number;
   constructor() {
     super();
     this.currentIndex = 0;

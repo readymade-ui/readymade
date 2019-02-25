@@ -3,15 +3,15 @@
 class EventDispatcher {
     public target: Element;
     public events: {
-      [key: string]: CustomEvent<any> | Event
+      [key: string]: CustomEvent<any> | Event,
     };
     public channels: {
-      [key: string]: BroadcastChannel
+      [key: string]: BroadcastChannel,
     };
     constructor(context: any, channelName?: string) {
       this.target = context;
-			this.channels = {
-        'default': new BroadcastChannel('default')
+      this.channels = {
+        default: new BroadcastChannel('default'),
       };
       if (channelName) {
         this.setChannel(channelName);
@@ -26,32 +26,32 @@ class EventDispatcher {
       return this.get(eventName);
     }
     public emit(ev: Event | string) {
-      if (typeof ev === 'string') ev = this.events[ev];
+      if (typeof ev === 'string') { ev = this.events[ev]; }
       this.target.dispatchEvent(ev);
     }
     public broadcast(ev: CustomEvent<any> | Event | string, name?: string) {
-      if (typeof ev === 'string') ev = this.events[ev];
+      if (typeof ev === 'string') { ev = this.events[ev]; }
       this.target.dispatchEvent(ev);
       const evt = {
         bubbles: ev.bubbles,
         cancelBubble: ev.cancelBubble,
         cancelable: ev.cancelable,
         defaultPrevented: ev.defaultPrevented,
-        detail: (<CustomEvent>ev).detail,
+        detail: (ev as CustomEvent).detail,
         timeStamp: ev.timeStamp,
-        type: ev.type
+        type: ev.type,
       }; // TODO: figure out a better way to clone the event?
-      (name) ? this.channels[name].postMessage(evt) : this.channels['default'].postMessage(evt);
+      (name) ? this.channels[name].postMessage(evt) : this.channels.default.postMessage(evt);
     }
     public setChannel(name: string) {
       this.channels[name] = new BroadcastChannel(name);
       this.channels[name].onmessage = (ev) => {
-          for (let prop in (<any>this.target).elementMeta.eventMap) {
+          for (const prop in (this.target as any).elementMeta.eventMap) {
             if (prop.includes(name) && prop.includes(ev.data.type)) {
-              this.target[(<any>this.target).elementMeta.eventMap[prop].handler](ev.data);
+              this.target[(this.target as any).elementMeta.eventMap[prop].handler](ev.data);
             }
           }
-      }
+      };
     }
     public removeChannel(name: string) {
       this.channels[name].close();
@@ -59,7 +59,6 @@ class EventDispatcher {
     }
 }
 
-
 export  {
-  EventDispatcher
-}
+  EventDispatcher,
+};

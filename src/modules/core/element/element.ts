@@ -1,12 +1,12 @@
 export {
   attachDOM,
   attachShadow,
-  attachStyle
+  attachStyle,
 } from './src/attach.js';
 
 export {
   bindTemplate,
-  compileTemplate
+  compileTemplate,
 } from './src/compile.js';
 
 export {
@@ -15,5 +15,5 @@ export {
   getParent,
   querySelector,
   querySelectorAll,
-  getChildNodes
+  getChildNodes,
 } from './src/util.js';

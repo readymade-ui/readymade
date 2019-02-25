@@ -1,4 +1,4 @@
-import { Component, css, html, CustomElement, StateChange } from './../../modules/core/index.js';
+import { Component, css, CustomElement, html, StateChange } from './../../modules/core/index.js';
 
 @Component({
   selector: 'r-logo',
@@ -11,7 +11,7 @@ import { Component, css, html, CustomElement, StateChange } from './../../module
   template: html`
     <r-headline headline="{{heading}}" size="{{size}}"></r-headline>
     <r-headline headline="{{heading2}}"></r-headline>
-	`
+	`,
 })
 class RLogoComponent extends CustomElement {
   public sizes: string[] = ['is--small', 'is--medium', 'is--large'];
@@ -19,8 +19,8 @@ class RLogoComponent extends CustomElement {
     heading: string;
     heading2: string;
     size: string;
-  }
-  public letters : string[];
+  };
+  public letters: string[];
   constructor() {
     super();
     this.state.heading = 'R';
@@ -32,21 +32,21 @@ class RLogoComponent extends CustomElement {
     return ['size'];
   }
 
-  attributeChangedCallback(name, oldValue, newValue) {
+  public attributeChangedCallback(name, oldValue, newValue) {
     switch (name) {
       case 'size':
         this.setSize(newValue);
         break;
     }
   }
-  setSize(size: string) {
+  public setSize(size: string) {
     if (this.sizes.includes(size)) {
       this.setState('size', size);
     }
   }
-  update() {
-    this.state.heading = Math.round(Math.random()*100).toString();
-    this.state.heading2 = Math.round(Math.random()*100).toString();
+  public update() {
+    this.state.heading = Math.round(Math.random() * 100).toString();
+    this.state.heading2 = Math.round(Math.random() * 100).toString();
   }
 }
 

@@ -1,4 +1,4 @@
-import { css, Component, InputComponent, Listen } from '../../../../modules/core/index.js';
+import { Component, css, InputComponent, Listen } from '../../../../modules/core/index.js';
 
 @Component({
   selector: 'my-input',
@@ -8,7 +8,7 @@ import { css, Component, InputComponent, Listen } from '../../../../modules/core
 			border: 0px none;
 			color: white;
 		}
-	`
+	`,
 })
 class MyInputComponent extends InputComponent {
   constructor() {

@@ -17,7 +17,7 @@ export class App {
 
   public bootstrap(selector?: string) {
 
-    //this.configureRouter(routeConfig, selector);
+    // this.configureRouter(routeConfig, selector);
     return this;
 
   }

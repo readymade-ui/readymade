@@ -1,4 +1,4 @@
-import { Component, css, html, CustomElement, StateChange, Emitter, Listen } from './../../modules/core/index.js';
+import { Component, css, CustomElement, Emitter, html, Listen, StateChange } from './../../modules/core/index.js';
 
 @Component({
   selector: 'r-main-nav',
@@ -81,17 +81,17 @@ import { Component, css, html, CustomElement, StateChange, Emitter, Listen } fro
   `})
 class RMainNavComponent extends CustomElement {
   public isNavOpen: boolean;
-  public state : {
+  public state: {
     resourceLinkFillColor: string;
     size: string;
-  }
+  };
   constructor() {
     super();
     this.isNavOpen = false;
   }
   @Emitter('open', {}, 'sidenav')
   @Emitter('close', {}, 'sidenav')
-  connectedCallback() {
+  public connectedCallback() {
     const navLink = this.shadowRoot.querySelector('[link="side-nav"]');
     const resourceLink = this.shadowRoot.querySelector('[link="resource"]');
     this.state.resourceLinkFillColor = '#cfcfcf';
@@ -114,7 +114,7 @@ class RMainNavComponent extends CustomElement {
 
   }
   @Listen('close', 'sidenav')
-  onClose() {
+  public onClose() {
     this.shadowRoot.querySelector('[link="side-nav"]').classList.remove('is--dark');
   }
 }

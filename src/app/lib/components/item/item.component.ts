@@ -1,4 +1,4 @@
-import { css, html, Component, CustomElement, Listen } from '../../../../modules/core/index.js';
+import { Component, css, CustomElement, html, Listen } from '../../../../modules/core/index.js';
 
 @Component({
   selector: 'my-item',
@@ -13,11 +13,11 @@ import { css, html, Component, CustomElement, Listen } from '../../../../modules
 			font-weight: 700;
 		}
 	`,
-	template: html`
+  template: html`
 		<p>
 			<span><slot name="msg">item</slot></span>
 		</p>
-	`
+	`,
 })
 class MyItemComponent extends CustomElement {
   constructor() {

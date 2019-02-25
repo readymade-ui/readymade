@@ -1,4 +1,4 @@
-import { css, html, ButtonComponent, Component, Emitter, Listen } from '../../../../modules/core/index.js';
+import { ButtonComponent, Component, css, Emitter, html, Listen } from '../../../../modules/core/index.js';
 
 @Component({
   selector: 'my-button',
@@ -12,13 +12,13 @@ import { css, html, ButtonComponent, Component, Emitter, Listen } from '../../..
 	`,
   template: html`
    <span>{{model}}</span>
-	`
+	`,
 })
 class MyButtonComponent extends ButtonComponent {
 
-  state: {
+  public state: {
     model: string;
-  }
+  };
 
   constructor() {
     super();
@@ -28,7 +28,7 @@ class MyButtonComponent extends ButtonComponent {
   @Emitter('bang', { bubbles: true, composed: true })
   @Listen('click')
   public onClick(event) {
-			this.emitter.broadcast('bang');
+      this.emitter.broadcast('bang');
   }
   @Listen('keyup')
   public onKeyUp(event) {

@@ -1,4 +1,4 @@
-import { Component, css, html, CustomElement, StateChange } from './../../modules/core/index.js';
+import { Component, css, CustomElement, html, StateChange } from './../../modules/core/index.js';
 
 @Component({
   selector: 'r-stats',
@@ -16,32 +16,31 @@ import { Component, css, html, CustomElement, StateChange } from './../../module
 	`,
   template: html`
     <slot></slot>
-	`
+	`,
 })
 class RStatsComponent extends CustomElement {
   constructor() {
     super();
-    this.shadowRoot.querySelector('slot').addEventListener('slotchange', event => this.onSlotChange(event));
+    this.shadowRoot.querySelector('slot').addEventListener('slotchange', (event) => this.onSlotChange(event));
   }
-  onSlotChange(ev: any) {
+  public onSlotChange(ev: any) {
      this.animateIn();
   }
-  animateIn() {
+  public animateIn() {
     const ul = this.shadowRoot.querySelector('slot').assignedNodes()[1];
-    Array.from((<Element>ul).children).forEach((li: Element, index) => {
+    Array.from((ul as Element).children).forEach((li: Element, index) => {
       li.animate(
         [
           { opacity: '0', color: '#000' },
           { opacity: '0', offset: (index * 0.1)},
-          { opacity: '1', color: '#fff' }
+          { opacity: '1', color: '#fff' },
         ], {
-          duration: (2000)
-        }
+          duration: (2000),
+        },
       );
     });
   }
 }
-
 
 customElements.define('r-stats', RStatsComponent);
 

@@ -1,4 +1,4 @@
-import { Component, css, html, CustomElement, StateChange, Emitter, Listen } from './../../modules/core/index.js';
+import { Component, css, CustomElement, Emitter, html, Listen, StateChange } from './../../modules/core/index.js';
 
 @Component({
   selector: 'r-side-nav',
@@ -124,11 +124,11 @@ import { Component, css, html, CustomElement, StateChange, Emitter, Listen } fro
         </li>
       </ul>
     </nav>
-  `
+  `,
 })
 class RSideNavComponent extends CustomElement {
   public direction: string;
-  public status: string
+  public status: string;
   public background: Element;
   public nav: Element;
   public player: any;
@@ -136,13 +136,13 @@ class RSideNavComponent extends CustomElement {
   public currentPointValue: {
     a: number;
     b: number;
-  }
+  };
   public state: {
      points: string;
      strokeColor: string;
      fillColor: string;
      size: string;
-  }
+  };
   constructor() {
     super();
     this.direction = 'forwards';
@@ -152,11 +152,11 @@ class RSideNavComponent extends CustomElement {
     this.state.points = `7 9 7 34 24 34`;
     this.currentPointValue = {
       a: 54,
-      b: 44
-    }
+      b: 44,
+    };
   }
   @Emitter('close', {}, 'sidenav')
-  connectedCallback() {
+  public connectedCallback() {
     this.nav = this.shadowRoot.querySelector('nav');
     this.background = this.shadowRoot.querySelector('.background');
     Array.from(this.shadowRoot.querySelectorAll('a')).forEach((a) => {
@@ -167,38 +167,38 @@ class RSideNavComponent extends CustomElement {
   }
   @Listen('close', 'sidenav')
   public close() {
-    if (this.status === 'is--inactive') return;
+    if (this.status === 'is--inactive') { return; }
     this.status = 'is--inactive';
     this.direction = 'reverse';
     this.emitter.broadcast('close', 'sidenav');
     this.player = this.animate([
       { x: 0 },
-      { x: 100 }
+      { x: 100 },
     ], { duration: 150, fill: 'forwards',  easing: 'steps(7, end)' });
-    setTimeout(()=>{ this.nav.classList.remove('is--active') }, 50);
+    setTimeout(() => { this.nav.classList.remove('is--active'); }, 50);
     this.player.play();
     this.update();
   }
   @Listen('open', 'sidenav')
   public open(ev) {
-    if (this.status === 'is--active') return;
+    if (this.status === 'is--active') { return; }
     this.direction = 'forwards';
     this.status = 'is--active';
     this.player = this.animate([
       { x: 100 },
-      { x: 0 }
-    ],{ duration: 550, fill: 'forwards',  easing: 'steps(7, end)' });
-    setTimeout(()=>{ this.nav.classList.add('is--active') }, 150);
+      { x: 0 },
+    ], { duration: 550, fill: 'forwards',  easing: 'steps(7, end)' });
+    setTimeout(() => { this.nav.classList.add('is--active'); }, 150);
     this.player.play();
     this.update();
 
   }
 
-  scale(v: number, min: number, max: number, gmin: number, gmax: number) {
+  public scale(v: number, min: number, max: number, gmin: number, gmax: number) {
     return ((v - min) / (max - min)) * (gmax - gmin) + gmin;
   }
 
-  update() {
+  public update() {
     if (this.direction === 'forwards') {
       this.currentPointValue.a = this.scale(this.player.currentTime, 0, 350, 34, 2400);
       this.currentPointValue.b = this.scale(this.player.currentTime, 0, 350, 24, 2550);

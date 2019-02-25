@@ -1,4 +1,4 @@
-import { Component, css, html, CustomElement, StateChange } from './../../modules/core/index.js';
+import { Component, css, CustomElement, html, StateChange } from './../../modules/core/index.js';
 
 declare let Prism: any;
 
@@ -185,23 +185,23 @@ declare let Prism: any;
     template: html`
         <pre class="language-{{type}}"><code class="language-{{type}}"></code></pre>
         <slot hidden></slot>
-    `
+    `,
 })
 class RCodeComponent extends CustomElement {
 
   public state: {
     type: string;
-  }
+  };
   constructor() {
     super();
-    this.shadowRoot.querySelector('slot').addEventListener('slotchange', event => this.onSlotChange(event));
+    this.shadowRoot.querySelector('slot').addEventListener('slotchange', (event) => this.onSlotChange(event));
   }
 
   static get observedAttributes() {
     return ['type'];
   }
 
-  attributeChangedCallback(name, oldValue, newValue) {
+  public attributeChangedCallback(name, oldValue, newValue) {
     switch (name) {
       case 'type':
         this.setState('type', this.getAttribute('type'));
@@ -209,8 +209,8 @@ class RCodeComponent extends CustomElement {
     }
   }
 
-  onSlotChange(ev: any) {
-    const code = ((<any>this.shadowRoot.querySelector('slot').assignedNodes())[1].textContent);
+  public onSlotChange(ev: any) {
+    const code = ((this.shadowRoot.querySelector('slot').assignedNodes() as any)[1].textContent);
     this.shadowRoot.querySelector('code').innerHTML = Prism.highlight(code, Prism.languages[this.getAttribute('type')], this.getAttribute('type'));
   }
 }
