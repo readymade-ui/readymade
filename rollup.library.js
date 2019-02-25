@@ -12,7 +12,9 @@ export default [{
     input: 'src/modules/core/index.ts',
     plugins: [
         resolve(),
-        typescript(),
+        typescript({
+            typescript: require('typescript')
+        }),
         cleanup(clean)
     ],
     onwarn: ( warning, next ) => {
@@ -29,7 +31,9 @@ export default [{
     input: 'src/modules/core/index.ts',
     plugins: [
         resolve(),
-        typescript(),
+        typescript({
+            typescript: require('typescript')
+        }),
         cleanup(clean),
         terser()
     ],
@@ -47,7 +51,9 @@ export default [{
     input: 'src/modules/core/index.ts',
     plugins: [
         resolve(),
-        typescript(),
+        typescript({
+            typescript: require('typescript')
+        }),
         cleanup(clean)
     ],
     onwarn: ( warning, next ) => {
@@ -64,7 +70,9 @@ export default [{
     input: 'src/modules/core/index.ts',
     plugins: [
         resolve(),
-        typescript(),
+        typescript({
+            typescript: require('typescript')
+        }),
         cleanup(clean),
         terser()
     ],

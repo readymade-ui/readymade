@@ -1,9 +1,12 @@
 class EventDispatcher {
-    constructor(context) {
+    constructor(context, channelName) {
         this.target = context;
         this.channels = {
-            'default': new BroadcastChannel('default')
+            default: new BroadcastChannel('default'),
         };
+        if (channelName) {
+            this.setChannel(channelName);
+        }
         this.events = {};
     }
     get(eventName) {
@@ -14,24 +17,36 @@ class EventDispatcher {
         return this.get(eventName);
     }
     emit(ev) {
-        if (typeof ev === 'string')
+        if (typeof ev === 'string') {
             ev = this.events[ev];
+        }
         this.target.dispatchEvent(ev);
     }
     broadcast(ev, name) {
-        if (typeof ev === 'string')
+        if (typeof ev === 'string') {
             ev = this.events[ev];
+        }
         this.target.dispatchEvent(ev);
-        if (!ev.detail) {
-            ev = { type: ev.type };
-        }
-        else {
-            ev = { type: ev.type, detail: ev.detail };
-        }
-        (name) ? this.channels[name].postMessage(ev) : this.channels['default'].postMessage(ev);
+        const evt = {
+            bubbles: ev.bubbles,
+            cancelBubble: ev.cancelBubble,
+            cancelable: ev.cancelable,
+            defaultPrevented: ev.defaultPrevented,
+            detail: ev.detail,
+            timeStamp: ev.timeStamp,
+            type: ev.type,
+        };
+        (name) ? this.channels[name].postMessage(evt) : this.channels.default.postMessage(evt);
     }
     setChannel(name) {
         this.channels[name] = new BroadcastChannel(name);
+        this.channels[name].onmessage = (ev) => {
+            for (const prop in this.target.elementMeta.eventMap) {
+                if (prop.includes(name) && prop.includes(ev.data.type)) {
+                    this.target[this.target.elementMeta.eventMap[prop].handler](ev.data);
+                }
+            }
+        };
     }
     removeChannel(name) {
         this.channels[name].close();
@@ -63,24 +78,161 @@ function attachStyle(instance, options) {
     }
 }
 
+const TEMPLATE_BIND_REGEX = /\{\{(\s*)(.*?)(\s*)\}\}/g;
+const BIND_SUFFIX = ' __state';
+function templateId() {
+    let str = '';
+    const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+    while (str.length < 3) {
+        str += alphabet[Math.floor(Math.random() * alphabet.length)];
+    }
+    return str;
+}
+function uuidv4() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(24);
+    });
+}
+class NodeTree {
+    constructor(parentNode) {
+        this.$flatMap = {};
+        this.$parent = parentNode;
+        this.$flatMap = {};
+        this.$parentId = templateId();
+        this.create();
+    }
+    setNode(node, key, value) {
+        const id = this.$parentId + '-' + uuidv4().slice(0, 6);
+        const clone = node.cloneNode(true);
+        node.setAttribute(id, '');
+        clone.setAttribute(id, '');
+        if (!this.$flatMap[id]) {
+            this.$flatMap[id] = {
+                id,
+                node: clone,
+            };
+            if (key && value) {
+                this.updateNode(node, key, value);
+            }
+        }
+    }
+    updateNode(node, key, value) {
+        const regex = new RegExp(`\{\{(\s*)(${key})(\s*)\}\}`, 'gi');
+        const attrId = this.getElementByAttribute(node)[0].nodeName;
+        const protoNode = this.$flatMap[attrId].node;
+        let attr;
+        for (const attribute of protoNode.attributes) {
+            attr = attribute.nodeName;
+            if (attr.includes('attr.') && !protoNode.getAttribute(attribute.nodeName.replace('attr.', ''))) {
+                attr = attribute.nodeName.replace('attr.', '');
+                protoNode.setAttribute(attr, attribute.nodeValue.replace(TEMPLATE_BIND_REGEX, ''));
+                node.removeAttribute(attribute.nodeName);
+            }
+            if (attribute.nodeValue.match(regex, 'gi')) {
+                node.setAttribute(attr, attribute.nodeValue.replace(regex, value));
+            }
+            if (attribute.nodeName.includes('attr.')) {
+                node.removeAttribute(attribute.nodeName);
+            }
+        }
+        if (protoNode.textContent.match(regex)) {
+            node.textContent = protoNode.textContent.replace(regex, value);
+        }
+    }
+    create() {
+        const walk = document.createTreeWalker(this.$parent, NodeFilter.SHOW_ELEMENT, { acceptNode(node) { return NodeFilter.FILTER_ACCEPT; } }, false);
+        while (walk.nextNode()) {
+            this.setNode(walk.currentNode);
+        }
+    }
+    getElementByAttribute(node) {
+        return Array.from(node.attributes).filter((attr) => {
+            return /[A-Za-z0-9]{3}-[A-Za-z0-9]{6}/gm.test(attr.nodeName);
+        });
+    }
+    update(key, value) {
+        const walk = document.createTreeWalker(this.$parent, NodeFilter.SHOW_ELEMENT, { acceptNode(node) { return NodeFilter.FILTER_ACCEPT; } }, false);
+        while (walk.nextNode()) {
+            if (this.getElementByAttribute(walk.currentNode).length > 0) {
+                this.updateNode(walk.currentNode, key, value);
+            }
+            else {
+                this.setNode(walk.currentNode, key, value);
+            }
+        }
+        return this.$parent;
+    }
+}
+class BoundNode {
+    constructor(parent) {
+        this.$parent = parent;
+        this.$tree = new NodeTree(this.$parent);
+    }
+    update(key, value) {
+        this.$tree.update(key, value);
+        if (this.$parent.onUpdate) {
+            this.$parent.onUpdate();
+        }
+    }
+}
+class BoundHandler {
+    constructor(obj) {
+        this.$parent = obj;
+    }
+    set(target, key, value) {
+        const change = {
+            [key]: {
+                previousValue: target[key],
+                newValue: value,
+            },
+        };
+        target[key] = value;
+        this.$parent.$state['node' + BIND_SUFFIX].update(key, target[key]);
+        if (target.onStateChange) {
+            target.onStateChange(change);
+        }
+        return true;
+    }
+}
+function setState(prop, model) {
+    this.state[prop] = model;
+}
+function compileTemplate(elementMeta, target) {
+    target.prototype.elementMeta = Object.assign(target.elementMeta ? target.elementMeta : {}, elementMeta);
+    target.prototype.elementMeta.eventMap = {};
+    target.prototype.template = `<style>${elementMeta.style}</style>${elementMeta.template}`;
+    target.prototype.bindTemplate = bindTemplate;
+    target.prototype.setState = setState;
+}
+function bindTemplate() {
+    this.$state = {};
+    this.$state['handler' + BIND_SUFFIX] = new BoundHandler(this);
+    this.$state['node' + BIND_SUFFIX] = new BoundNode(this.shadowRoot ? this.shadowRoot : this);
+    this.state = new Proxy(this, this.$state['handler' + BIND_SUFFIX]);
+}
+
 function getParent(el) {
     return el.parentNode;
 }
 function getChildNodes(template) {
-    const _elem = template ? template : this;
-    if (!_elem)
+    const elem = template ? template : this;
+    if (!elem) {
         return [];
+    }
     function getChildren(node, path = [], result = []) {
-        if (!node.children.length)
+        if (!node.children.length) {
             result.push(path.concat(node));
-        for (const child of node.children)
+        }
+        for (const child of node.children) {
             getChildren(child, path.concat(child), result);
+        }
         return result;
     }
-    const nodes = getChildren(_elem, []).reduce((nodes, curr) => {
-        return nodes.concat(curr);
+    const nodes = getChildren(elem, []).reduce((nd, curr) => {
+        return nd.concat(curr);
     }, []);
-    return nodes.filter((item, index) => { return nodes.indexOf(item) >= index; });
+    return nodes.filter((item, index) => nodes.indexOf(item) >= index);
 }
 function getSiblings(el) {
     return Array.from(getParent(el).children).filter((elem) => {
@@ -95,101 +247,6 @@ function querySelectorAll(selector) {
 }
 function getElementIndex(el) {
     return getSiblings(el).indexOf(el);
-}
-
-const TEMPLATE_BIND_REGEX = /\{\{(\s*)(.*?)(\s*)\}\}/g;
-const BIND_SUFFIX = ' __state';
-Object.byString = function (o, s) {
-    if (!s)
-        return o;
-    s = s.replace(/\[(\w+)\]/g, '.$1');
-    s = s.replace(/^\./, '');
-    var a = s.split('.');
-    for (var i = 0, n = a.length; i < n; ++i) {
-        var k = a[i];
-        if (k in o) {
-            o = o[k];
-        }
-        else {
-            return;
-        }
-    }
-    return o;
-};
-function setTemplate(elem, html) {
-    elem.innerHTML = html;
-    return elem;
-}
-class BoundNode {
-    constructor(node) {
-        this.template = document.createElement('div');
-        this.template.innerHTML = node.innerHTML;
-        this.node = node;
-    }
-    update(data, target) {
-        this.node = setTemplate(this.node, this.template.innerHTML.replace(TEMPLATE_BIND_REGEX, (match, variable) => {
-            if (match === undefined || match === null)
-                match = '';
-            return Object.byString(data, /\{\{(\s*)(.*?)(\s*)\}\}/.exec(match)[2]) || '';
-        }));
-    }
-}
-class BoundHandler {
-    constructor(obj) {
-        this.model = obj;
-    }
-    set(target, key, value) {
-        const change = {
-            [key]: {
-                previousValue: target[key],
-                newValue: value
-            }
-        };
-        target[key] = value;
-        this.model.elementMeta.boundState['node' + BIND_SUFFIX].update(this.model, target);
-        if (target.onStateChange)
-            target.onStateChange(change);
-        return true;
-    }
-}
-function bindTemplate() {
-    if (!this.elementMeta)
-        this.elementMeta = {};
-    this.elementMeta.templateRegex = TEMPLATE_BIND_REGEX;
-    this.elementMeta.boundState = {
-        ['node' + BIND_SUFFIX]: new BoundNode(this.shadowRoot ? this.shadowRoot : this),
-        ['handler' + BIND_SUFFIX]: new BoundHandler(this)
-    };
-    this.state = new Proxy(this, this.elementMeta.boundState['handler' + BIND_SUFFIX]);
-}
-function bindTemplateNodes() {
-    if (!this.elementMeta)
-        this.elementMeta = {};
-    this.elementMeta.boundNodes = this.getChildNodes()
-        .map((node) => {
-        if (!node.elementMeta)
-            node.elementMeta = {};
-        node.elementMeta.templateRegex = TEMPLATE_BIND_REGEX;
-        node.elementMeta.boundState = {
-            ['node' + BIND_SUFFIX]: new BoundNode(node),
-            ['handler' + BIND_SUFFIX]: new BoundHandler(node)
-        };
-        node.state = new Proxy(node, node.elementMeta.boundState['handler' + BIND_SUFFIX]);
-        return node;
-    });
-}
-function setState(prop, model) {
-    this.state[prop] = model;
-}
-function compileTemplate(elementMeta, target) {
-    target.prototype.elementMeta = Object.assign({}, elementMeta);
-    target.prototype.elementMeta.eventMap = {};
-    target.prototype.template = document.createElement('template');
-    target.prototype.template = `<style>${elementMeta.style}</style>${elementMeta.template}`;
-    target.prototype.getChildNodes = getChildNodes;
-    target.prototype.bindTemplateNodes = bindTemplateNodes;
-    target.prototype.bindTemplate = bindTemplate;
-    target.prototype.setState = setState;
 }
 
 const html = (...args) => {
@@ -209,53 +266,88 @@ function Component(attributes) {
         return target;
     };
 }
-function Emitter(eventName, options) {
+function Emitter(eventName, options, channelName) {
     return function decorator(target, key, descriptor) {
-        const { onInit = noop } = target;
-        function addEvent() {
-            if (!this.emitter) {
-                this.emitter = new EventDispatcher(this);
-            }
-            this.emitter.set(eventName, new CustomEvent(eventName, options ? options : {}));
+        const channel = channelName ? channelName : 'default';
+        let prop = '';
+        if (eventName) {
+            prop = '$emit' + channel + eventName;
         }
-        target.onInit = function onInitWrapper() {
-            onInit.call(this);
-            addEvent.call(this);
+        else {
+            prop = '$emit' + channel;
+        }
+        function addEvent(name, chan) {
+            if (!this.emitter) {
+                this.emitter = new EventDispatcher(this, chan);
+            }
+            if (name) {
+                this.emitter.set(name, new CustomEvent(name, options ? options : {}));
+            }
+            if (chan && !this.emitter.channels[chan]) {
+                this.emitter.setChannel(chan);
+            }
+        }
+        function bindEmitters() {
+            for (const property in this) {
+                if (property.includes('$emit')) {
+                    this[property].call(this);
+                }
+            }
+        }
+        if (!target[prop]) {
+            target[prop] = function () {
+                addEvent.call(this, eventName, channelName);
+            };
+        }
+        target.bindEmitters = function onEmitterInit() {
+            bindEmitters.call(this);
         };
     };
 }
 function Listen(eventName, channelName) {
     return function decorator(target, key, descriptor) {
-        const { onInit = noop, onDestroy = noop } = target;
         const symbolHandler = Symbol(key);
-        function addListener() {
+        let prop = '';
+        if (channelName) {
+            prop = '$listen' + eventName + channelName;
+        }
+        else {
+            prop = '$listen' + eventName;
+        }
+        function addListener(name, chan) {
             const handler = this[symbolHandler] = (...args) => {
                 descriptor.value.apply(this, args);
             };
             if (!this.emitter) {
-                this.emitter = new EventDispatcher(this);
-                if (channelName) {
-                    this.elementMeta.eventMap[eventName] = {
-                        key: eventName,
-                        handler: key
-                    };
-                    this.emitter.channels[channelName].onmessage = (ev) => {
-                        this[this.elementMeta.eventMap[eventName].handler](ev.data);
-                    };
-                }
+                this.emitter = new EventDispatcher(this, chan ? chan : null);
             }
-            this.addEventListener(eventName, handler);
+            this.elementMeta.eventMap[prop] = {
+                key: name,
+                handler: key,
+            };
+            this.addEventListener(name, handler);
         }
         function removeListener() {
             this.removeEventListener(eventName, this[symbolHandler]);
         }
-        target.onInit = function onInitWrapper() {
-            onInit.call(this);
-            addListener.call(this);
-        };
-        target.onDestroy = function onDestroyWrapper() {
-            onDestroy.call(this);
-            removeListener.call(this);
+        function addListeners() {
+            for (const property in this) {
+                if (property.includes('$listen')) {
+                    this[property].onListener.call(this);
+                }
+            }
+        }
+        if (!target[prop]) {
+            target[prop] = {};
+            target[prop].onListener = function onInitWrapper() {
+                addListener.call(this, eventName, channelName);
+            };
+            target[prop].onDestroyListener = function onDestroyWrapper() {
+                removeListener.call(this, eventName, channelName);
+            };
+        }
+        target.bindListeners = function onListenerInit() {
+            addListeners.call(this);
         };
     };
 }
@@ -263,6 +355,12 @@ function Listen(eventName, channelName) {
 class StructuralElement extends HTMLElement {
     constructor() {
         super();
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -273,6 +371,12 @@ class PseudoElement extends HTMLElement {
         super();
         attachDOM(this);
         attachStyle(this);
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -282,6 +386,12 @@ class CustomElement extends HTMLElement {
     constructor() {
         super();
         attachShadow(this, { mode: 'open' });
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -290,6 +400,12 @@ class CustomElement extends HTMLElement {
 class AllCollectionComponent extends HTMLAllCollection {
     constructor() {
         super();
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -300,6 +416,12 @@ class AnchorComponent extends HTMLAnchorElement {
         super();
         attachDOM(this);
         attachStyle(this);
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -309,6 +431,12 @@ class AreaComponent extends HTMLAreaElement {
     constructor() {
         super();
         attachStyle(this);
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -318,6 +446,12 @@ class AudioComponent extends HTMLAudioElement {
     constructor() {
         super();
         attachStyle(this);
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -327,6 +461,12 @@ class BRComponent extends HTMLBRElement {
     constructor() {
         super();
         attachStyle(this);
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -336,6 +476,12 @@ class BodyComponent extends HTMLBodyElement {
     constructor() {
         super();
         attachShadow(this, { mode: 'open' });
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -346,6 +492,12 @@ class ButtonComponent extends HTMLButtonElement {
         super();
         attachDOM(this);
         attachStyle(this);
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -355,6 +507,12 @@ class CanvasComponent extends HTMLCanvasElement {
     constructor() {
         super();
         attachStyle(this);
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -363,6 +521,12 @@ class CanvasComponent extends HTMLCanvasElement {
 class CollectionComponent extends HTMLCollection {
     constructor() {
         super();
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -373,6 +537,12 @@ class DListComponent extends HTMLDListElement {
         super();
         attachDOM(this);
         attachStyle(this);
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -381,6 +551,12 @@ class DListComponent extends HTMLDListElement {
 class DataComponent extends HTMLDataElement {
     constructor() {
         super();
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -391,6 +567,12 @@ class DataListComponent extends HTMLDataListElement {
         super();
         attachDOM(this);
         attachStyle(this);
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -401,16 +583,12 @@ class DetailsComponent extends HTMLDetailsElement {
         super();
         attachDOM(this);
         attachStyle(this);
-        if (this.onInit) {
-            this.onInit();
+        if (this.bindEmitters) {
+            this.bindEmitters();
         }
-    }
-}
-class DialogComponent extends HTMLDialogElement {
-    constructor() {
-        super();
-        attachDOM(this);
-        attachStyle(this);
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -420,6 +598,12 @@ class DivComponent extends HTMLDivElement {
     constructor() {
         super();
         attachShadow(this, { mode: 'open' });
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -429,6 +613,12 @@ class EmbedComponent extends HTMLEmbedElement {
     constructor() {
         super();
         attachStyle(this);
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -438,6 +628,12 @@ class FieldSetComponent extends HTMLFieldSetElement {
     constructor() {
         super();
         attachStyle(this);
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -446,6 +642,12 @@ class FieldSetComponent extends HTMLFieldSetElement {
 class FormControlsComponent extends HTMLFormControlsCollection {
     constructor() {
         super();
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -455,6 +657,12 @@ class FormComponent extends HTMLFormElement {
     constructor() {
         super();
         attachStyle(this);
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -464,6 +672,12 @@ class HRComponent extends HTMLHRElement {
     constructor() {
         super();
         attachStyle(this);
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -481,6 +695,12 @@ class HeadingComponent extends HTMLHeadingElement {
     constructor() {
         super();
         attachShadow(this, { mode: 'open' });
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -498,6 +718,12 @@ class IFrameComponent extends HTMLIFrameElement {
     constructor() {
         super();
         attachStyle(this);
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -507,6 +733,12 @@ class ImageComponent extends HTMLImageElement {
     constructor() {
         super();
         attachStyle(this);
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -516,6 +748,12 @@ class InputComponent extends HTMLInputElement {
     constructor() {
         super();
         attachStyle(this);
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -526,6 +764,12 @@ class LIComponent extends HTMLLIElement {
         super();
         attachDOM(this);
         attachStyle(this);
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -536,6 +780,12 @@ class LabelComponent extends HTMLLabelElement {
         super();
         attachDOM(this);
         attachStyle(this);
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -545,6 +795,12 @@ class LegendComponent extends HTMLLegendElement {
     constructor() {
         super();
         attachStyle(this);
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -554,6 +810,12 @@ class LinkComponent extends HTMLLinkElement {
     constructor() {
         super();
         attachStyle(this);
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -564,6 +826,12 @@ class MapComponent extends HTMLMapElement {
         super();
         attachDOM(this);
         attachStyle(this);
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -572,6 +840,12 @@ class MapComponent extends HTMLMapElement {
 class MediaComponent extends HTMLMediaElement {
     constructor() {
         super();
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -580,6 +854,12 @@ class MediaComponent extends HTMLMediaElement {
 class MenuComponent extends HTMLMenuElement {
     constructor() {
         super();
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -588,6 +868,12 @@ class MenuComponent extends HTMLMenuElement {
 class MetaComponent extends HTMLMetaElement {
     constructor() {
         super();
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -597,6 +883,12 @@ class MeterComponent extends HTMLMeterElement {
     constructor() {
         super();
         attachStyle(this);
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -605,6 +897,12 @@ class MeterComponent extends HTMLMeterElement {
 class ModComponent extends HTMLModElement {
     constructor() {
         super();
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -615,6 +913,12 @@ class OListComponent extends HTMLOListElement {
         super();
         attachDOM(this);
         attachStyle(this);
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -624,6 +928,12 @@ class ObjectComponent extends HTMLObjectElement {
     constructor() {
         super();
         attachStyle(this);
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -632,6 +942,12 @@ class ObjectComponent extends HTMLObjectElement {
 class OptGroupComponent extends HTMLOptGroupElement {
     constructor() {
         super();
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -640,6 +956,12 @@ class OptGroupComponent extends HTMLOptGroupElement {
 class OptionComponent extends HTMLOptionElement {
     constructor() {
         super();
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -648,6 +970,12 @@ class OptionComponent extends HTMLOptionElement {
 class OptionsCollectionComponent extends HTMLOptionsCollection {
     constructor() {
         super();
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -657,6 +985,12 @@ class OutputComponent extends HTMLOutputElement {
     constructor() {
         super();
         attachStyle(this);
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -666,6 +1000,12 @@ class ParagraphComponent extends HTMLParagraphElement {
     constructor() {
         super();
         attachShadow(this, { mode: 'open' });
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -674,6 +1014,12 @@ class ParagraphComponent extends HTMLParagraphElement {
 class ParamComponent extends HTMLParamElement {
     constructor() {
         super();
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -682,6 +1028,12 @@ class ParamComponent extends HTMLParamElement {
 class PictureComponent extends HTMLPictureElement {
     constructor() {
         super();
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -692,6 +1044,12 @@ class PreComponent extends HTMLPreElement {
         super();
         attachDOM(this);
         attachStyle(this);
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -700,6 +1058,12 @@ class PreComponent extends HTMLPreElement {
 class ProgressComponent extends HTMLProgressElement {
     constructor() {
         super();
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -708,6 +1072,12 @@ class ProgressComponent extends HTMLProgressElement {
 class QuoteComponent extends HTMLQuoteElement {
     constructor() {
         super();
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -716,6 +1086,12 @@ class QuoteComponent extends HTMLQuoteElement {
 class ScriptComponent extends HTMLScriptElement {
     constructor() {
         super();
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -724,6 +1100,12 @@ class ScriptComponent extends HTMLScriptElement {
 class SelectComponent extends HTMLSelectElement {
     constructor() {
         super();
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -732,6 +1114,12 @@ class SelectComponent extends HTMLSelectElement {
 class SlotComponent extends HTMLSlotElement {
     constructor() {
         super();
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -740,6 +1128,12 @@ class SlotComponent extends HTMLSlotElement {
 class SourceComponent extends HTMLSourceElement {
     constructor() {
         super();
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -749,6 +1143,12 @@ class SpanComponent extends HTMLSpanElement {
     constructor() {
         super();
         attachShadow(this, { mode: 'open' });
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -757,6 +1157,12 @@ class SpanComponent extends HTMLSpanElement {
 class StyleComponent extends HTMLStyleElement {
     constructor() {
         super();
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -765,6 +1171,12 @@ class StyleComponent extends HTMLStyleElement {
 class TableCaptionComponent extends HTMLTableCaptionElement {
     constructor() {
         super();
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -773,6 +1185,12 @@ class TableCaptionComponent extends HTMLTableCaptionElement {
 class TableCellComponent extends HTMLTableCellElement {
     constructor() {
         super();
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -781,6 +1199,12 @@ class TableCellComponent extends HTMLTableCellElement {
 class TableColComponent extends HTMLTableColElement {
     constructor() {
         super();
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -791,6 +1215,12 @@ class TableComponent extends HTMLTableElement {
         super();
         attachDOM(this);
         attachStyle(this);
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -801,6 +1231,12 @@ class TableRowComponent extends HTMLTableRowElement {
         super();
         attachDOM(this);
         attachStyle(this);
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -811,6 +1247,12 @@ class TableSectionComponent extends HTMLTableSectionElement {
         super();
         attachDOM(this);
         attachStyle(this);
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -819,6 +1261,12 @@ class TableSectionComponent extends HTMLTableSectionElement {
 class TemplateComponent extends HTMLTemplateElement {
     constructor() {
         super();
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -828,6 +1276,12 @@ class TimeComponent extends HTMLTimeElement {
     constructor() {
         super();
         attachStyle(this);
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -836,6 +1290,12 @@ class TimeComponent extends HTMLTimeElement {
 class TitleComponent extends HTMLTitleElement {
     constructor() {
         super();
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -844,6 +1304,12 @@ class TitleComponent extends HTMLTitleElement {
 class TrackComponent extends HTMLTrackElement {
     constructor() {
         super();
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -854,6 +1320,12 @@ class UListComponent extends HTMLUListElement {
         super();
         attachDOM(this);
         attachStyle(this);
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -862,6 +1334,12 @@ class UListComponent extends HTMLUListElement {
 class UnknownComponent extends HTMLUnknownElement {
     constructor() {
         super();
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
@@ -871,10 +1349,16 @@ class VideoComponent extends HTMLVideoElement {
     constructor() {
         super();
         attachStyle(this);
+        if (this.bindEmitters) {
+            this.bindEmitters();
+        }
+        if (this.bindListeners) {
+            this.bindListeners();
+        }
         if (this.onInit) {
             this.onInit();
         }
     }
 }
 
-export { EventDispatcher, attachDOM, attachShadow, attachStyle, bindTemplate, bindTemplateNodes, compileTemplate, getSiblings, getElementIndex, getParent, querySelector, querySelectorAll, getChildNodes, Component, Emitter, Listen, html, css, noop, StructuralElement, PseudoElement, CustomElement, AllCollectionComponent, AnchorComponent, AreaComponent, AudioComponent, BRComponent, BodyComponent, ButtonComponent, CanvasComponent, CollectionComponent, DListComponent, DataComponent, DataListComponent, DetailsComponent, DialogComponent, DivComponent, EmbedComponent, FieldSetComponent, FormControlsComponent, FormComponent, HRComponent, HeadComponent, HeadingComponent, HtmlComponent, IFrameComponent, ImageComponent, InputComponent, LIComponent, LabelComponent, LegendComponent, LinkComponent, MapComponent, MediaComponent, MenuComponent, MetaComponent, MeterComponent, ModComponent, OListComponent, ObjectComponent, OptGroupComponent, OptionComponent, OptionsCollectionComponent, OutputComponent, ParagraphComponent, ParamComponent, PictureComponent, PreComponent, ProgressComponent, QuoteComponent, ScriptComponent, SelectComponent, SlotComponent, SourceComponent, SpanComponent, StyleComponent, TableCaptionComponent, TableCellComponent, TableColComponent, TableComponent, TableRowComponent, TableSectionComponent, TemplateComponent, TimeComponent, TitleComponent, TrackComponent, UListComponent, UnknownComponent, VideoComponent };
+export { EventDispatcher, attachDOM, attachShadow, attachStyle, bindTemplate, compileTemplate, getSiblings, getElementIndex, getParent, querySelector, querySelectorAll, getChildNodes, Component, Emitter, Listen, html, css, noop, StructuralElement, PseudoElement, CustomElement, AllCollectionComponent, AnchorComponent, AreaComponent, AudioComponent, BRComponent, BodyComponent, ButtonComponent, CanvasComponent, CollectionComponent, DListComponent, DataComponent, DataListComponent, DetailsComponent, DivComponent, EmbedComponent, FieldSetComponent, FormControlsComponent, FormComponent, HRComponent, HeadComponent, HeadingComponent, HtmlComponent, IFrameComponent, ImageComponent, InputComponent, LIComponent, LabelComponent, LegendComponent, LinkComponent, MapComponent, MediaComponent, MenuComponent, MetaComponent, MeterComponent, ModComponent, OListComponent, ObjectComponent, OptGroupComponent, OptionComponent, OptionsCollectionComponent, OutputComponent, ParagraphComponent, ParamComponent, PictureComponent, PreComponent, ProgressComponent, QuoteComponent, ScriptComponent, SelectComponent, SlotComponent, SourceComponent, SpanComponent, StyleComponent, TableCaptionComponent, TableCellComponent, TableColComponent, TableComponent, TableRowComponent, TableSectionComponent, TemplateComponent, TimeComponent, TitleComponent, TrackComponent, UListComponent, UnknownComponent, VideoComponent };
