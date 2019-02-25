@@ -14,7 +14,7 @@ import { Component, css, html, CustomElement, StateChange } from './../../module
       font-weight: 300;
     }
 	`,
-   template: html`
+  template: html`
     <slot></slot>
 	`
 })

@@ -26,7 +26,7 @@ import { Component, css, html, CustomElement, StateChange } from './../../module
         padding-left: 0em;
     }
 	`,
-   template: html`
+  template: html`
     <h1 class="{{copySize}}">{{copy}}</h1>
 	`,
 })

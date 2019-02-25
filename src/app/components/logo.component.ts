@@ -8,7 +8,7 @@ import { Component, css, html, CustomElement, StateChange } from './../../module
         user-select: none;
       }
 	`,
-   template: html`
+  template: html`
     <r-headline headline="{{heading}}" size="{{size}}"></r-headline>
     <r-headline headline="{{heading2}}"></r-headline>
 	`

@@ -82,7 +82,7 @@ import { Component, css, html, CustomElement, StateChange, Emitter, Listen } fro
     }
 	`,
   template: html`
-  <svg class="background"
+    <svg class="background"
       width="54px"
       height="60px">
           <clipPath id="c1">
