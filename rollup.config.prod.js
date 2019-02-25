@@ -46,7 +46,9 @@ export default [
         plugins: [
             resolve(),
             minifyHTML(),
-            inlinePostCSS(),
+            inlinePostCSS({
+                styleRegex: /(css\`((.|\n)*)\`)(,)/g
+            }),
             typescript({
                 typescript: require('typescript')
             }),

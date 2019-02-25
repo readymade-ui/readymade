@@ -9,7 +9,7 @@
     "sourceMap": false,
     "typeRoots": ["node_modules/@types"],
     "lib": ["es2017", "dom", "dom.iterable"],
-    "declaration": true
+    "declaration": false
   },
   "include": [
     "./src/**/*.ts"

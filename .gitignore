@@ -2,5 +2,6 @@
 .cache
 .DS_Store
 .rpt2_cache
+.vscode
 node_modules
 dist/
