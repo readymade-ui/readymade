@@ -1,7 +1,7 @@
 {
   "name": "@readymade/core",
-  "version": "1.0.0-beta.2",
-  "description": "JavaScript microlibrary for developing Web Components with Decorators",
+  "version": "1.0.0-beta.3",
+  "description": "JavaScript microlibrary for developing Web Components with ECMAScript Decorators",
   "umd": "./bundles/core.js",
   "main": "./fesm2015/core.js",
   "es2015": "./fesm2015/core.js",

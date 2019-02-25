@@ -92,6 +92,14 @@ button, input {
     display: none!important;
 }
 
+a:link, a:visited {
+    color: #cdcdcd;
+}
+
+a:link:hover, a:visited:hover {
+    color: #ffffff;
+}
+
 h1 {
     font-family: 'Major Mono Display', serif;
     line-height: 1.5em;
@@ -150,6 +158,9 @@ section h2 {
     display: inline-block;
 }
 
+section ul li {
+    margin-bottom: 0.25em;
+}
 
 .definition__list li{
     padding-bottom: 0.5em;

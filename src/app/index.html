@@ -40,10 +40,10 @@
     </section>
 
     <section id="intro">
-        <h1>Intro</h1>
-        <p>Readymade is a JavaScript library for building user interfaces with Web Components.</p>
+        <h1>Introducing @readymade/core</h1>
+        <p>Readymade is a JavaScript library for building user interfaces with Web Components. <span class="i__c">@readymade/core</span> provides an interface for bootstrapping new custom elements.</p>
         <h2 id="whatis">What is Readymade?</h2>
-        <p>Readymade simplifies handling template and styling for Web Components via an interface similar to Angular. The library is treeshakable and optimized for bundling with ES2015 module pattern.</p>
+        <p>Readymade simplifies handling template and styling for Web Components via an interface similar to Angular.</p>
         <r-code type="javascript">
                 <span hidden>
 @Component({
@@ -68,7 +68,7 @@
         <h2>Example</h2>
 
         <p>Readymade components are stateful, enabling one-way data binding with a template. Emitters broadcast events across DOM where they otherwise can't bubble. In this example, a class named <span class="i__c">MyButtonComponent
-            </span> includes a template and styling for a button. A call to action is bound to the template through the <span class="i__c">state</span> property. MyButtonComponent includes decorators and methods for handling click <span class="i__c">@Listen('click')</span> and <span class="i__c">@Listen('keyup')</span>. The component broadcasts a `bang` event. </p>
+            </span> includes a template and styling for a button. A call to action is bound to the template through the <span class="i__c">state</span> property. MyButtonComponent includes decorators and methods for handling click. The button component broadcasts a 'bang' event when the user clicks on it.</p>
 
         <r-code type="typescript">
             <span hidden>
@@ -216,7 +216,7 @@ customElements.define('my-component', MyComponent);
     <section id="docs">
         <h1>Using Readymade</h1>
         <h2 id="decorators">Decorators</h2>
-        <p>Readymade implements UI components using a decorator pattern. Decorators are currently in stage 2 proposal for the ECMAScript Internationalization API Specification. This means decorators are not available in browsers yet, but should become part of the JavaScript language in the future. Readymade uses Typescript to make decorators available today.</p>
+        <p>Readymade implements UI components using a decorator pattern. Decorators are currently in stage 2 proposal for the ECMAScript Internationalization API Specification. A class decorator called @Component allows you to declare styling and template for custom elements. The @Emitter decorator provides a way to declare CustomEvents that can be emitted or broadcasted to other elements. The @Listen decorator provides a way to bind a class method to the callback of an event listener.</p>
         <h3>Types of Readymade Decorators</h3>
         <ul class="definition__list">
             <li><span class="definition__title">@Component</span> metadata class decorator for defining template and styling</li>
@@ -272,8 +272,7 @@ public onKeyUp(event) {
     <section>
         <h2 id="databinding">Data Binding</h2>
         <p>Readymade includes custom state used for one-way data binding with templates.</p>
-        <h3>state</h3>
-        <p>Every component developed with Readymade comes with a property called <span class="i__c">state</span>. Any property declared on state can be bound to a component's template. In the example below state has an interface that includes a property called <span class="i__c">buttonCopy</span>.</p>
+        <p>Every component developed with Readymade comes with a property called <span class="i__c">state</span>. Any property declared on state can be bound to a template. In the example below state has an interface that includes a property called <span class="i__c">buttonCopy</span>.</p>
         <r-code type="javascript">
                 <span hidden>
 class MyComponent extends CustomElement {
@@ -283,7 +282,7 @@ state: {
                 </span>
         </r-code>
         <h3>template</h3>
-        <p> In this example, <span class="i__c">buttonCopy</span> is bound to the template. Set the value of <span class="i__c">buttonCopy</span> in the class contructor to initialize the view with the value of <span class="i__c">Click</span>.</p>
+        <p> In this example, <span class="i__c">buttonCopy</span> is bound to the template. Set the value of <span class="i__c">buttonCopy</span> in the class constructor so the button can display with a call to action: <span class="i__c">Click</span>.</p>
         <r-code type="javascript">
                 <span hidden>
 @Component({
@@ -300,9 +299,7 @@ constructor() {
                 </span>
         </r-code>
         <h3>Proxy</h3>
-        <p><span class="i__c">state</span> can be updated at any time and the changes will propagate to the template.</p>
-        <p>Components set <span class="i__c">attributes</span> and <span class="i__c">innerText</span> of any DOM Node in the template.</p>
-        <p>When a change to state happens, Readymade crawls the DOM of the element. Readymade uses ES2015 <span class="i__c">Proxy</span> to bind state to the template.</p>
+        <p>A ES2015 Proxy listens for changes to <span class="i__c">state</span>. Readymade listens for changes to state with a Proxy and then uses the DOM TreeWalker API to crawl nodes and update DOM. Attributes that serve as ids for nodes are consequently stored in DOM.</p>
     </section>
     <section>
         <h2 id="components">Components</h2>
@@ -346,6 +343,14 @@ class MyInputComponent extends InputComponent
             <p>Readymade started as an exercise to see how component based frameworks like Angular, Polymer, and Stencil could be built with just available browser API. The microlibrary that came to fruition includes some powerful features that minify down to ~2Kb gzipped for a 'Hello World'.</p>
 
             <p>The name of the project readymade is an homage to Marcel Duchamp, an artist in the 20th century who made art with ordinary objects. Like Duchamp's readymades, this library picks up ordinary objects found in ECMAScript, repositions and joins them together to form something completely new.</p>
+     </section>
+
+     <section id="resources">
+        <h1>Resources</h1>
+        <ul>
+            <li><a href="https://www.npmjs.com/package/@readymade/core">npm</a></li>
+            <li><a href="https://github.com/readymade-ui/readymade">Github</a></li>
+        </ul>
      </section>
 
     <footer>

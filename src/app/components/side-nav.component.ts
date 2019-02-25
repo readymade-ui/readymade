@@ -9,12 +9,15 @@ import { Component, css, CustomElement, Emitter, html, Listen, StateChange } fro
       top: 0px;
       left: 0px;
       height: 100%;
-      width: 320px;
+      width: 0px;
       max-width: 320px;
       z-index: 8888;
       color: #000;
       overflow: visible;
 		}
+    :host.is--active {
+      width: 320px;
+    }
     svg {
       overflow: visible;
       transform: translateX(0px);
@@ -22,13 +25,13 @@ import { Component, css, CustomElement, Emitter, html, Listen, StateChange } fro
     nav {
       display: block;
       position: relative;
-      width: 0px;
+      width: 0%;
       height: 100%;
       -webkit-clip-path: url(#c1);
       overflow: hidden;
     }
     nav.is--active {
-      width: 100%;
+      width: 320px;
     }
     ul {
       margin-block-start: 0em;
@@ -102,25 +105,15 @@ import { Component, css, CustomElement, Emitter, html, Listen, StateChange } fro
       <ul class="top">
         <li>
           <span><a href="#intro">Intro</a></span>
-           <!-- <ul>
-            <li><span><a href="#whatis">What is Readymade?</a></span></li>
-            <li><span><a href="#example">Example</a></span></li>
-          </ul> -->
         </li>
         <li>
           <span><a href="#started">Getting Started</a></span>
-          <!-- <ul>
-            <li><span><a href="#started">Install</a></span></li>
-            <li><span><a href="#myfirst">First Component</a></span></li>
-          </ul> -->
         </li>
         <li>
           <span><a href="#docs">Using Readymade</a></span>
-          <!-- <ul>
-            <li><span><a href="#decorators">Decorators</a></span></li>
-            <li><span><a href="#databinding">Data Binding</a></span></li>
-            <li><span><a href="#components">Components</a></span></li>
-          </ul> -->
+        </li>
+        <li>
+          <span><a href="#resources">Resources</a></span>
         </li>
       </ul>
     </nav>
@@ -175,6 +168,7 @@ class RSideNavComponent extends CustomElement {
       { x: 0 },
       { x: 100 },
     ], { duration: 150, fill: 'forwards',  easing: 'steps(7, end)' });
+    setTimeout(() => { this.classList.remove('is--active'); }, 50);
     setTimeout(() => { this.nav.classList.remove('is--active'); }, 50);
     this.player.play();
     this.update();
@@ -188,7 +182,8 @@ class RSideNavComponent extends CustomElement {
       { x: 100 },
       { x: 0 },
     ], { duration: 550, fill: 'forwards',  easing: 'steps(7, end)' });
-    setTimeout(() => { this.nav.classList.add('is--active'); }, 150);
+    setTimeout(() => { this.classList.add('is--active'); }, 0);
+    setTimeout(() => { this.nav.classList.add('is--active'); }, 0);
     this.player.play();
     this.update();
 
