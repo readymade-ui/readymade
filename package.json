@@ -10,7 +10,7 @@
     "start": "node index.js",
     "dev": "live-server ./dist --entry-file=index.html",
     "serve": "node backend/server.js",
-    "bundle:core": "node build-lib.js",
+    "bundle:core": "./build-lib.sh",
     "build": "NODE_ENV=prod ./index.sh",
     "build:gh-pages": "node build-gh-pages.js",
     "deploy:gh-pages": "gh-pages -d dist --branch gh-pages"

@@ -4,7 +4,6 @@
 
 - UPDATE data binding is now non-deformational
 - FIX issues with type definition generation
-- FIX several typing issues
 
 ## 1.0.0-beta.2
 
