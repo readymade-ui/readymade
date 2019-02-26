@@ -168,9 +168,9 @@ class RSideNavComponent extends CustomElement {
     this.player = this.animate([
       { x: 0 },
       { x: 100 },
-    ], { duration: 350, fill: 'forwards',  easing: 'steps(7, end)' });
-    setTimeout(() => { this.classList.remove('is--active'); }, 250);
-    setTimeout(() => { this.nav.classList.remove('is--active'); }, 250);
+    ], { duration: 150, fill: 'forwards',  easing: 'steps(7, end)' });
+    setTimeout(() => { this.classList.remove('is--active'); }, 50);
+    setTimeout(() => { this.nav.classList.remove('is--active'); }, 50);
     this.player.play();
     this.update();
   }
