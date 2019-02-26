@@ -210,6 +210,7 @@ class RCodeComponent extends CustomElement {
   }
 
   public onSlotChange(ev: any) {
+    if (!((this.shadowRoot.querySelector('slot').assignedNodes() as any)[1])) return;
     const code = ((this.shadowRoot.querySelector('slot').assignedNodes() as any)[1].textContent);
     this.shadowRoot.querySelector('code').innerHTML = Prism.highlight(code, Prism.languages[this.getAttribute('type')], this.getAttribute('type'));
   }

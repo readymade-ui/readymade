@@ -8,11 +8,12 @@
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "seed": "mkdir dist && mkdir dist/style",
     "start": "node index.js",
-    "build": "NODE_ENV=prod node index.js",
     "dev": "live-server ./dist --entry-file=index.html",
     "serve": "node backend/server.js",
     "bundle:core": "node build-lib.js",
-    "deploy:gh-pages": "gh-pages -d dist"
+    "build": "NODE_ENV=prod ./index.sh",
+    "build:gh-pages": "node build-gh-pages.js",
+    "deploy:gh-pages": "gh-pages -d dist --branch gh-pages"
   },
   "repository": {
     "type": "git",
@@ -66,6 +67,9 @@
     "postcss-import": "^12.0.1",
     "postcss-mixins": "^6.2.1",
     "postcss-nested": "^4.1.1",
+    "posthtml": "^0.11.3",
+    "posthtml-inline": "^1.0.0",
+    "posthtml-inline-assets": "^3.0.0",
     "rollup": "^0.66.0",
     "rollup-plugin-cleanup": "^3.1.0",
     "rollup-plugin-commonjs": "^9.2.0",
