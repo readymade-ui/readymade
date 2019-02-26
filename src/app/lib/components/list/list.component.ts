@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { css, html, Component, CustomElement, getElementIndex, getSiblings, Listen  } from '../../../../modules/core/index';
 
 @Component({
@@ -5,6 +6,12 @@ import { css, html, Component, CustomElement, getElementIndex, getSiblings, List
   template: html`
 		<slot name="menu"></slot>
 	`,
+=======
+import { Component, css, CustomElement, getElementIndex, getSiblings, html, Listen  } from '../../../../modules/core/index.js';
+
+@Component({
+  selector: 'my-list',
+>>>>>>> dev
   style: css`
 		:host {
 			display: block;
@@ -16,17 +23,34 @@ import { css, html, Component, CustomElement, getElementIndex, getSiblings, List
 			border-radius: 8px;
 		}
 	`,
+<<<<<<< HEAD
 })
 class MyListComponent extends CustomElement {
+=======
+  template: html`
+		<slot name="menu"></slot>
+	`,
+})
+class MyListComponent extends CustomElement {
+  public currentIndex: number;
+>>>>>>> dev
   constructor() {
     super();
     this.currentIndex = 0;
   }
+<<<<<<< HEAD
   public deactivateElement(elem: HTMLElement) {
     elem.setAttribute('tabindex', '-1');
     elem.querySelector('my-item').setAttribute('state', '');
   }
   public activateElement(elem: HTMLElement) {
+=======
+  public deactivateElement(elem: Element) {
+    elem.setAttribute('tabindex', '-1');
+    elem.querySelector('my-item').setAttribute('state', '');
+  }
+  public activateElement(elem: Element) {
+>>>>>>> dev
     elem.setAttribute('tabindex', '0');
     elem.querySelector('my-item').setAttribute('state', '--selected');
   }

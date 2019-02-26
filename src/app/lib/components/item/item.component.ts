@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { css, html, Component, CustomElement, Listen } from '../../../../modules/core/index';
 
 @Component({
@@ -7,6 +8,12 @@ import { css, html, Component, CustomElement, Listen } from '../../../../modules
 			<span><slot name="msg">item</slot></span>
 		</p>
 	`,
+=======
+import { Component, css, CustomElement, html, Listen } from '../../../../modules/core/index.js';
+
+@Component({
+  selector: 'my-item',
+>>>>>>> dev
   style: css`
 		:host {
 			display: block;
@@ -18,6 +25,14 @@ import { css, html, Component, CustomElement, Listen } from '../../../../modules
 			font-weight: 700;
 		}
 	`,
+<<<<<<< HEAD
+=======
+  template: html`
+		<p>
+			<span><slot name="msg">item</slot></span>
+		</p>
+	`,
+>>>>>>> dev
 })
 class MyItemComponent extends CustomElement {
   constructor() {

@@ -11,7 +11,11 @@
         "quotemark": [true, "single"],
         "max-classes-per-file": [false],
         "eofline": true,
+<<<<<<< HEAD
         "max-line-length": [true, 180],
+=======
+        "max-line-length": [false],
+>>>>>>> dev
         "interface-name": [true, "never-prefix"],
         "no-console": [true, "log", "warn"]
     },

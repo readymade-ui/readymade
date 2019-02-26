@@ -1,5 +1,13 @@
 # CHANGELOG
 
+<<<<<<< HEAD
+=======
+## 1.0.0-beta.3
+
+- UPDATE data binding is now non-deformational
+- FIX issues with type definition generation
+
+>>>>>>> dev
 ## 1.0.0-beta.2
 
 - FIX main field in package.json to point to FESM instead of UMD module

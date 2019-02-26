@@ -12,7 +12,13 @@ export default [{
     input: 'src/modules/core/index.ts',
     plugins: [
         resolve(),
+<<<<<<< HEAD
         typescript(),
+=======
+        typescript({
+            typescript: require('typescript')
+        }),
+>>>>>>> dev
         cleanup(clean)
     ],
     onwarn: ( warning, next ) => {
@@ -29,7 +35,13 @@ export default [{
     input: 'src/modules/core/index.ts',
     plugins: [
         resolve(),
+<<<<<<< HEAD
         typescript(),
+=======
+        typescript({
+            typescript: require('typescript')
+        }),
+>>>>>>> dev
         cleanup(clean),
         terser()
     ],
@@ -47,7 +59,13 @@ export default [{
     input: 'src/modules/core/index.ts',
     plugins: [
         resolve(),
+<<<<<<< HEAD
         typescript(),
+=======
+        typescript({
+            typescript: require('typescript')
+        }),
+>>>>>>> dev
         cleanup(clean)
     ],
     onwarn: ( warning, next ) => {
@@ -64,7 +82,13 @@ export default [{
     input: 'src/modules/core/index.ts',
     plugins: [
         resolve(),
+<<<<<<< HEAD
         typescript(),
+=======
+        typescript({
+            typescript: require('typescript')
+        }),
+>>>>>>> dev
         cleanup(clean),
         terser()
     ],

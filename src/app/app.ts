@@ -1,10 +1,18 @@
+<<<<<<< HEAD
 declare let Router: any; // imported in vendor.ts
+=======
+// declare let Router: any; // imported in vendor.ts
+>>>>>>> dev
 
 // import { RouteConfig, routeConfig } from './app.routes';
 
 export class App {
 
+<<<<<<< HEAD
   public routes: RouteConfig[] = [];
+=======
+  // public routes: RouteConfig[] = [];
+>>>>>>> dev
   public rootSelector: string;
 
   // public configureRouter(config: RouteConfig, outletSelector?: string) {
@@ -17,7 +25,11 @@ export class App {
 
   public bootstrap(selector?: string) {
 
+<<<<<<< HEAD
     //this.configureRouter(routeConfig, selector);
+=======
+    // this.configureRouter(routeConfig, selector);
+>>>>>>> dev
     return this;
 
   }

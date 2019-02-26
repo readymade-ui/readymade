@@ -8,10 +8,19 @@
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "seed": "mkdir dist && mkdir dist/style",
     "start": "node index.js",
+<<<<<<< HEAD
     "build": "NODE_ENV=prod node index.js",
     "dev": "live-server ./dist --entry-file=index.html",
     "serve": "node backend/server.js",
     "bundle:core": "./build-lib.sh"
+=======
+    "dev": "live-server ./dist --entry-file=index.html",
+    "serve": "node backend/server.js",
+    "bundle:core": "./build-lib.sh",
+    "build": "NODE_ENV=prod ./index.sh",
+    "build:gh-pages": "node build-gh-pages.js",
+    "deploy:gh-pages": "gh-pages -d dist --branch gh-pages"
+>>>>>>> dev
   },
   "repository": {
     "type": "git",
@@ -41,29 +50,63 @@
     "@vaadin/router": "^1.2.0",
     "@webcomponents/custom-elements": "^1.2.1",
     "@webcomponents/webcomponentsjs": "^2.2.1",
+<<<<<<< HEAD
     "compression": "^1.7.3",
     "express": "^4.16.4",
     "reflect-metadata": "^0.1.12"
+=======
+    "clipboard": "^2.0.4",
+    "compression": "^1.7.3",
+    "express": "^4.16.4",
+    "prismjs": "^1.15.0",
+    "reflect-metadata": "^0.1.12",
+    "web-animations-js": "^2.3.1"
+>>>>>>> dev
   },
   "devDependencies": {
     "@babel/core": "^7.2.0",
     "@types/node": "^10.12.12",
     "chokidar": "^2.0.4",
+<<<<<<< HEAD
     "livereload": "^0.7.0",
     "postcss": "^7.0.7",
+=======
+    "cssesc": "^3.0.0",
+    "cssnano": "^4.1.10",
+    "findup": "^0.1.5",
+    "gh-pages": "^2.0.1",
+    "js-string-escape": "^1.0.1",
+    "livereload": "^0.7.0",
+    "postcss": "^7.0.14",
+>>>>>>> dev
     "postcss-cli": "^6.1.0",
     "postcss-csso": "^3.0.0",
     "postcss-host": "^1.1.2",
     "postcss-import": "^12.0.1",
     "postcss-mixins": "^6.2.1",
+<<<<<<< HEAD
     "rollup": "^0.66.0",
     "rollup-plugin-cleanup": "^3.1.0",
     "rollup-plugin-inline-postcss": "^1.0.0",
+=======
+    "postcss-nested": "^4.1.1",
+    "posthtml": "^0.11.3",
+    "posthtml-inline": "^1.0.0",
+    "posthtml-inline-assets": "^3.0.0",
+    "rollup": "^0.66.0",
+    "rollup-plugin-cleanup": "^3.1.0",
+    "rollup-plugin-commonjs": "^9.2.0",
+    "rollup-plugin-inline-postcss": "^1.0.1",
+>>>>>>> dev
     "rollup-plugin-minify-html-literals": "^1.1.2",
     "rollup-plugin-node-resolve": "^3.4.0",
     "rollup-plugin-terser": "^3.0.0",
     "rollup-plugin-typescript2": "^0.19.2",
     "rollup-plugin-uglify": "^6.0.0",
+<<<<<<< HEAD
+=======
+    "rollup-typescript": "^1.2.0",
+>>>>>>> dev
     "terser": "^3.11.0",
     "tslib": "^1.9.3",
     "tslint": "^5.12.0",
