@@ -37,7 +37,7 @@
   },
   "homepage": "https://github.com/steveblue/custom-elements#readme",
   "dependencies": {
-    "@readymade/core": "^1.0.0-beta.2",
+    "@readymade/core": "^1.0.0-beta.3",
     "@types/webcomponents.js": "^0.6.33",
     "@ungap/custom-elements-builtin": "^0.1.2",
     "@vaadin/router": "^1.2.0",
