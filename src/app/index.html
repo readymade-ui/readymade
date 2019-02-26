@@ -67,8 +67,8 @@
     <section>
         <h2>Example</h2>
 
-        <p>Readymade components are stateful, enabling one-way data binding with a template. Emitters broadcast events across DOM where they otherwise can't bubble. In this example, a class named <span class="i__c">MyButtonComponent
-            </span> includes a template and styling for a button. A call to action is bound to the template through the <span class="i__c">state</span> property. MyButtonComponent includes decorators and methods for handling click. The button component broadcasts a 'bang' event when the user clicks on it.</p>
+        <p>In this example, a class named <span class="i__c">MyButtonComponent
+            </span> includes a template and styling for a button. A call to action is bound to the template through the <span class="i__c">state</span> property. MyButtonComponent includes decorators and methods for handling when the user clicks. The button component broadcasts a 'bang' event when the user clicks on it. Readymade components are stateful, enabling one-way data binding with a template. Emitters broadcast events with the BroadcastChannel API, meaning Readymade components can emit events where they otherwise can't bubble and even to other browsing contexts like a ServiceWorker.</p>
 
         <r-code type="typescript">
             <span hidden>
@@ -152,7 +152,7 @@ npm i typescript --save
 }
                 </span>
         </r-code>
-        <p>Readymade can be compiled with typescript or your bundler of choice.</p>
+        <p>Readymade is compiled with Typescript.</p>
         <r-code type="javascript">
                 <span hidden>
 tsc -p tsconfig.json --watch
@@ -200,7 +200,7 @@ class MyComponent extends CustomElement {
 }
                 </span>
         </r-code>
-        <p>Use the customElements API to define a new HTML element called <span class="i__c">my-component</span>. </p>
+        <p>Use the CustomElements API to define a new HTML element called <span class="i__c">my-component</span>. </p>
         <r-code type="javascript">
                 <span hidden>
 customElements.define('my-component', MyComponent);
@@ -216,7 +216,7 @@ customElements.define('my-component', MyComponent);
     <section id="docs">
         <h1>Using Readymade</h1>
         <h2 id="decorators">Decorators</h2>
-        <p>Readymade implements UI components using a decorator pattern. Decorators are currently in stage 2 proposal for the ECMAScript Internationalization API Specification. A class decorator called @Component allows you to declare styling and template for custom elements. The @Emitter decorator provides a way to declare CustomEvents that can be emitted or broadcasted to other elements. The @Listen decorator provides a way to bind a class method to the callback of an event listener.</p>
+        <p>Readymade implements UI components using a decorator pattern. Decorators are currently in stage 2 proposal for the ECMAScript Internationalization API Specification. A class decorator called Component allows you to declare styling and template for custom elements. The Emitter decorator provides a way to declare CustomEvents that can be emitted or broadcasted to other elements. The Listen decorator binds a method to the callback of an event listener.</p>
         <h3>Types of Readymade Decorators</h3>
         <ul class="definition__list">
             <li><span class="definition__title">@Component</span> metadata class decorator for defining template and styling</li>
@@ -245,7 +245,7 @@ class MyButtonComponent extends CustomElement
                 </span>
         </r-code>
         <h3>@Listen</h3>
-        <p>The Listen decorator modifies a method on the component's class definition. It sets up <span class="i__c">addEventListener</span> for native DOM Events and CustomEvent defined with the Emitter decorator. The below example listens for <span class="i__c">keyup</span> events and emits a CustomEvent when the user presses <span class="i__c">Enter</span>. This decorate takes the event name in it's first argument. When listening for broadcasted events, a channel name can be specified in the second argument.</p>
+        <p>The Listen sets up <span class="i__c">addEventListener</span> for Events. This example listens for <span class="i__c">keyup</span> events and emits a CustomEvent when the user presses <span class="i__c">Enter</span>. This method decorator takes the event name in it's first argument. When listening for broadcasted events over the BroadcastChannel API, a channel name can be specified in the second argument.</p>
         <r-code type="javascript">
                 <span hidden>
 @Listen('keyup')
@@ -257,7 +257,7 @@ public onKeyUp(event) {
                 </span>
         </r-code>
         <h3>@Emitter</h3>
-        <p>The Emitter decorator defines CustomEvent the component can emit. This decorator takes the CustomEvent type as a first arugment and options for the CustomEvent in the second argument. When broadcasting events, a channel name can be specified in the third argument.</p>
+        <p>The Emitter decorator defines CustomEvent the component can emit. This decorator takes the CustomEvent type as a first arugment and options for the CustomEvent in the second argument. If you want to broadcast Event with this Emitter, a channel name can be specified in the third argument.</p>
         <r-code type="javascript">
                 <span hidden>
 @Emitter('bang', options)
@@ -266,13 +266,13 @@ public onKeyUp(event) {
         <p>Emitters are stored on the component instance with the property <span class="i__c">emitter</span>. There are two methods for Emitters: <span class="i__c">emit</span> and <span class="i__c">broadcast</span>. </p>
         <ul class="definition__list">
                 <li><span class="definition__title">emit</span> calls <span class="i__c">dispatchEvent</span> internally.</li>
-                <li><span class="definition__title">broadcast</span> uses <span class="i__c">BroadcastChannel</span> API to broadcast events to any other DOM Element irrespective of position in DOM tree.</li>
+                <li><span class="definition__title">broadcast</span> uses <span class="i__c">BroadcastChannel API</span> to broadcast events even to other browser contexts.</li>
         </ul>
     </section>
     <section>
         <h2 id="databinding">Data Binding</h2>
-        <p>Readymade includes custom state used for one-way data binding with templates.</p>
-        <p>Every component developed with Readymade comes with a property called <span class="i__c">state</span>. Any property declared on state can be bound to a template. In the example below state has an interface that includes a property called <span class="i__c">buttonCopy</span>.</p>
+        <p>Readymade includes state used for one-way data binding with templates.</p>
+        <p>In the example below state is declared with a property called <span class="i__c">buttonCopy</span>.</p>
         <r-code type="javascript">
                 <span hidden>
 class MyComponent extends CustomElement {
@@ -282,7 +282,7 @@ state: {
                 </span>
         </r-code>
         <h3>template</h3>
-        <p> In this example, <span class="i__c">buttonCopy</span> is bound to the template. Set the value of <span class="i__c">buttonCopy</span> in the class constructor so the button can display with a call to action: <span class="i__c">Click</span>.</p>
+        <p><span class="i__c">buttonCopy</span> is bound to the template. Set the value of <span class="i__c">buttonCopy</span> in the class constructor so the button can display with a call to action: <span class="i__c">Click</span>.</p>
         <r-code type="javascript">
                 <span hidden>
 @Component({
@@ -299,11 +299,11 @@ constructor() {
                 </span>
         </r-code>
         <h3>Proxy</h3>
-        <p>A ES2015 Proxy listens for changes to <span class="i__c">state</span>. Readymade listens for changes to state with a Proxy and then uses the DOM TreeWalker API to crawl nodes and update DOM. Attributes that serve as ids for nodes are consequently stored in DOM.</p>
+        <p>Readymade listens for changes to state with ES2015 Proxy and then uses the DOM TreeWalker API to crawl nodes and update template.</p>
     </section>
     <section>
         <h2 id="components">Components</h2>
-        <p>Readymade comes packaged with several component classes that extend native DOM elements. These classes handle template binding and setup event listeners. Readymade takes the hassle out of remembering which DOM elements support ShadowDOM. Autonomous custom elements and customized built-in elements behave differently. Readymade takes the guess work out of implementing these Web Component patterns.</p>
+        <p>Readymade comes packaged with several component classes that are used to bootstrap web component development. Readymade takes the hassle out of remembering which DOM elements support ShadowDOM. Readymade takes the guess work out of implementing autonomous custom elements and customized built-in elements.</p>
         <h3>Basic Usage</h3>
         <p>Typically you would extend HTMLElement when coding a custom element that uses ShadowDOM.</p>
         <r-code type="javascript">
@@ -311,7 +311,7 @@ constructor() {
 class MyComponent extends HTMLElement
                 </span>
         </r-code>
-        <p>With Readymade, extend CustomElement instead. CustomElement already extends <span class="i__c">HTMLElement</span>, but also provides hooks for your component the library uses to bind template and event listeners.</p>
+        <p>With Readymade extend CustomElement instead. CustomElement extends <span class="i__c">HTMLElement</span>, but also bootstraps event listeners and state.</p>
         <r-code type="javascript">
                 <span hidden>
 import { CustomElement } from 'readymade/core';
@@ -333,15 +333,15 @@ import { InputComponent } from 'readymade/core';
 class MyInputComponent extends InputComponent
                 </span>
         </r-code>
-        <p>The basic pattern is instead of using an <span class="i__c">Element</span> suffix, use <span class="i__c">Component</span> and remove <span class="i__c">HTML</span> from the classname you wish to extend i.e. <span class="i__c">HTMLButtonElement</span> becomes <span class="i__c">ButtonComponent</span>. If you want to use ShadowDOM extend from <span class="i__c">CustomElement</span>.</p>
+        <p>Readymade provides a single interface for handling 'autonomous custom' and 'customized built-in' elements.</p>
 
     </section>
 
     <section id="why">
-            <h1>Why Another Web Component Library?</h1>
-            <p>Readymade started as an exercise to see how component based frameworks like Angular, Polymer, and Stencil could be built with just available browser API. The microlibrary that came to fruition simplifes web component development and includes some powerful features. The Component metadata decorator provides an easy interface for declaring styling and template. One way data binding allows you to forget about setting innerHTML and attributes of elements. Broadcasting events with Readymade overcomes limitations from event bubbling.</p>
+            <h1>Why Do We Need Another Web Component Library?</h1>
+            <p>Readymade started as an exercise to see how component based frameworks like Angular, Polymer, and Stencil could be built with just available browser API. The microlibrary that came to fruition simplifes web component development and includes some powerful features. The Component metadata decorator provides an easy interface for declaring styling and template. One way data binding allows you to forget about setting innerHTML and attributes of elements. Method decorators bind CustomEvent listeners and use the BroadcastChannel API to overcome limitations of event bubbling. Readymade is treeshakable, meaning you only import the code your project needs and leave the rest behind.</p>
 
-            <p>A simple 'Hello World project compiled with TypeScript and Terser minifies down to ~2Kb gzipped. This site is built with Readymade and weighs in ~7Kb. With polyfills, PrismJS for syntax highlighting, this site minifies to ~38Kb and is server-side renderable.</p>
+            <p>A simple 'Hello World' readymade project compiled with TypeScript and Terser minifies down to ~2Kb (gzipped). This site is built with Readymade and weighs in ~7Kb (gzipped). The bundle deployed to Github Pages includes minimal application logic, a small library of components, polyfills, and third party library for syntax highlighting (PrismJS)and it weighs in at ~38Kb (gzipped).</p>
 
             <p>The name of the project 'readymade' is an homage to Marcel Duchamp, an artist in the 20th century who made art with ordinary objects. Like Duchamp's readymades, this library picks up ordinary objects found in ECMAScript, repositions and joins them together to form something completely new.</p>
      </section>
