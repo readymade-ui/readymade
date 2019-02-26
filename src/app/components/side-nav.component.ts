@@ -104,16 +104,16 @@ import { Component, css, CustomElement, Emitter, html, Listen, StateChange } fro
     <nav>
       <ul class="top">
         <li>
-          <span><a href="#intro">Intro</a></span>
+          <span><a data-link="#intro">Intro</a></span>
         </li>
         <li>
-          <span><a href="#started">Getting Started</a></span>
+          <span><a data-link="#started">Getting Started</a></span>
         </li>
         <li>
-          <span><a href="#docs">Using Readymade</a></span>
+          <span><a data-link="#docs">Using Readymade</a></span>
         </li>
         <li>
-          <span><a href="#resources">Resources</a></span>
+          <span><a data-link="#resources">Resources</a></span>
         </li>
       </ul>
     </nav>
@@ -154,6 +154,7 @@ class RSideNavComponent extends CustomElement {
     this.background = this.shadowRoot.querySelector('.background');
     Array.from(this.shadowRoot.querySelectorAll('a')).forEach((a) => {
       a.addEventListener('click', (ev) => {
+        document.querySelector((<Element>ev.target).getAttribute('data-link')).scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
         this.close();
       });
     });
