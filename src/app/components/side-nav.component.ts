@@ -168,9 +168,9 @@ class RSideNavComponent extends CustomElement {
     this.player = this.animate([
       { x: 0 },
       { x: 100 },
-    ], { duration: 150, fill: 'forwards',  easing: 'steps(7, end)' });
-    setTimeout(() => { this.classList.remove('is--active'); }, 50);
-    setTimeout(() => { this.nav.classList.remove('is--active'); }, 50);
+    ], { duration: 350, fill: 'forwards',  easing: 'steps(7, end)' });
+    setTimeout(() => { this.classList.remove('is--active'); }, 250);
+    setTimeout(() => { this.nav.classList.remove('is--active'); }, 250);
     this.player.play();
     this.update();
   }
@@ -182,7 +182,7 @@ class RSideNavComponent extends CustomElement {
     this.player = this.animate([
       { x: 100 },
       { x: 0 },
-    ], { duration: 550, fill: 'forwards',  easing: 'steps(7, end)' });
+    ], { duration: 1550, fill: 'forwards',  easing: 'steps(7, end)' });
     setTimeout(() => { this.classList.add('is--active'); }, 0);
     setTimeout(() => { this.nav.classList.add('is--active'); }, 0);
     this.player.play();
