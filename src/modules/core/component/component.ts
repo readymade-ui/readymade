@@ -258,23 +258,6 @@ export class DataComponent extends HTMLDataElement {
   public bindListeners?(): void;
   public onDestroy?(): void;
 }
-export class DataListComponent extends HTMLDataListElement {
-  public emitter: EventDispatcher;
-  public elementMeta: ElementMeta;
-  constructor() {
-    super();
-    attachDOM(this);
-    attachStyle(this);
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
-  }
-  public onInit?(): void;
-  public bindEmitters?(): void;
-  public bindListeners?(): void;
-  public setState?(property: string, model: any): void;
-  public onDestroy?(): void;
-}
 export class DetailsComponent extends HTMLDetailsElement {
   public emitter: EventDispatcher;
   public elementMeta: ElementMeta;

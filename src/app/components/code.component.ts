@@ -188,15 +188,15 @@ declare let Prism: any;
     `,
 })
 class RCodeComponent extends CustomElement {
-
   public state: {
     type: string;
   };
   constructor() {
     super();
-    this.shadowRoot.querySelector('slot').addEventListener('slotchange', (event) => this.onSlotChange(event));
   }
-
+  public connectedCallback(event) {
+    this.onSlotChange();
+  }
   static get observedAttributes() {
     return ['type'];
   }
@@ -209,8 +209,7 @@ class RCodeComponent extends CustomElement {
     }
   }
 
-  public onSlotChange(ev: any) {
-    if (!((this.shadowRoot.querySelector('slot').assignedNodes() as any)[1])) return;
+  public onSlotChange() {
     const code = ((this.shadowRoot.querySelector('slot').assignedNodes() as any)[1].textContent);
     this.shadowRoot.querySelector('code').innerHTML = Prism.highlight(code, Prism.languages[this.getAttribute('type')], this.getAttribute('type'));
   }

@@ -31,7 +31,7 @@ import { Component, css, CustomElement, Emitter, html, Listen, StateChange } fro
       overflow: hidden;
     }
     nav.is--active {
-      width: 320px;
+      width: 1400px;
     }
     ul {
       margin-block-start: 0em;
@@ -183,8 +183,8 @@ class RSideNavComponent extends CustomElement {
       { x: 100 },
       { x: 0 },
     ], { duration: 1550, fill: 'forwards',  easing: 'steps(7, end)' });
-    setTimeout(() => { this.classList.add('is--active'); }, 0);
-    setTimeout(() => { this.nav.classList.add('is--active'); }, 0);
+    this.classList.add('is--active');
+    this.nav.classList.add('is--active');
     this.player.play();
     this.update();
 

@@ -8,6 +8,8 @@ import { Component, css, CustomElement, html, StateChange } from './../../module
       padding-left: 1.0em;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
+      -webkit-margin-before: 0px;
+      -webkit-margin-after: 0px;
     }
  	  h1, span {
       font-size: 1em;

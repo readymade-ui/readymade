@@ -21,6 +21,14 @@ import { Component, css, CustomElement, Emitter, html, Listen, StateChange } fro
       margin-block-start: 0em;
       margin-block-end: 0em;
       padding-inline-start: 0px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+      -webkit-margin-start: 0px;
+      -webkit-margin-end: 0px;
+      -webkit-padding-start: 0px;
+      -webkit-margin-before: 0px;
+      -webkit-margin-after: 0px;
     }
     ul li {
       display: inline-block;
@@ -35,10 +43,13 @@ import { Component, css, CustomElement, Emitter, html, Listen, StateChange } fro
       float: left;
     }
     ul.left li {
-      margin-right: 10px;
+      margin-right: 0px;
       padding: 0px;
-      width: 37px;
-      height: 58px;
+      width: 44px;
+      height: 44px;
+      position: absolute;
+      left: 4px;
+      top: 4px;
     }
     ul.left li.is--dark {
       color: #222222;
@@ -48,13 +59,13 @@ import { Component, css, CustomElement, Emitter, html, Listen, StateChange } fro
     }
     ul.right {
       float: right;
-      margin-right: 0px;
+      margin-right: 2px;
     }
     ul.right li {
       margin-left: 0px;
       padding-right: 10px;
       text-align: right;
-      transform: translateY(-5px);
+      transform: translateY(-10px);
     }
 	`,
   template: html`
