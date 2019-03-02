@@ -18,6 +18,9 @@ import { Component, css, CustomElement, Emitter, html, Listen, StateChange } fro
     :host.is--active {
       width: 320px;
     }
+    .is--hidden {
+      display: none;
+    }
     svg {
       overflow: visible;
       transform: translateX(0px);
@@ -94,9 +97,12 @@ import { Component, css, CustomElement, Emitter, html, Listen, StateChange } fro
                 attr.points="{{points}}"></polygon>
           </clipPath>
           <g stroke="none" fill="none" fill-rule="evenodd">
-              <polygon stroke="{{strokeColor}}"
-                        fill="{{fillColor}}"
-                        stroke-width="3"
+              <polygon  fill="{{shadowColor}}"
+                        stroke-width="0"
+                        class="shadow"
+                        points="7,34 22,32 24,22"></polygon>
+              <polygon  fill="{{fillColor}}"
+                        stroke-width="0"
                         class="polygon"
                         attr.points="{{points}}"></polygon>
           </g>
@@ -124,16 +130,19 @@ class RSideNavComponent extends CustomElement {
   public status: string;
   public background: Element;
   public nav: Element;
+  public shadow: Element;
   public player: any;
   public points: string;
   public currentPointValue: {
     a: number;
     b: number;
+    c: number;
   };
   public state: {
      points: string;
      strokeColor: string;
      fillColor: string;
+     shadowColor: string;
      size: string;
   };
   constructor() {
@@ -142,16 +151,19 @@ class RSideNavComponent extends CustomElement {
     this.state.size = '10000px';
     this.state.strokeColor = '#cfcfcf';
     this.state.fillColor = '#cfcfcf';
-    this.state.points = `7 9 7 34 24 34`;
+    this.state.shadowColor = '#c0c0c0';
+    this.state.points = `7,9 7,34 24,22`;
     this.currentPointValue = {
-      a: 54,
-      b: 44,
+      a: 34,
+      b: 24,
+      c: 22
     };
   }
   @Emitter('close', {}, 'sidenav')
   public connectedCallback() {
     this.nav = this.shadowRoot.querySelector('nav');
     this.background = this.shadowRoot.querySelector('.background');
+    this.shadow = this.shadowRoot.querySelector('.shadow');
     Array.from(this.shadowRoot.querySelectorAll('a')).forEach((a) => {
       a.addEventListener('click', (ev) => {
         document.querySelector((<Element>ev.target).getAttribute('data-link')).scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
@@ -170,6 +182,7 @@ class RSideNavComponent extends CustomElement {
       { x: 100 },
     ], { duration: 150, fill: 'forwards',  easing: 'steps(7, end)' });
     setTimeout(() => { this.classList.remove('is--active'); }, 50);
+    setTimeout(() => { this.shadow.classList.remove('is--hidden'); }, 100);
     setTimeout(() => { this.nav.classList.remove('is--active'); }, 50);
     this.player.play();
     this.update();
@@ -182,8 +195,9 @@ class RSideNavComponent extends CustomElement {
     this.player = this.animate([
       { x: 100 },
       { x: 0 },
-    ], { duration: 1550, fill: 'forwards',  easing: 'steps(7, end)' });
+    ], { duration: 1050, fill: 'forwards',  easing: 'steps(7, end)' });
     this.classList.add('is--active');
+    this.shadow.classList.add('is--hidden');
     this.nav.classList.add('is--active');
     this.player.play();
     this.update();
@@ -196,14 +210,16 @@ class RSideNavComponent extends CustomElement {
 
   public update() {
     if (this.direction === 'forwards') {
-      this.currentPointValue.a = this.scale(this.player.currentTime, 0, 350, 34, 2400);
-      this.currentPointValue.b = this.scale(this.player.currentTime, 0, 350, 24, 2550);
+      this.currentPointValue.a = this.scale(this.player.currentTime, 0, 350, 34, 3444);
+      this.currentPointValue.b = this.scale(this.player.currentTime, 0, 350, 24, 2444);
+      this.currentPointValue.c = this.scale(this.player.currentTime, 0, 350, 22, 2222);
     }
     if (this.direction === 'reverse') {
-      this.currentPointValue.a = this.scale(this.player.currentTime, 0, 150, 2400, 34);
-      this.currentPointValue.b = this.scale(this.player.currentTime, 0, 150, 2550, 24);
+      this.currentPointValue.a = this.scale(this.player.currentTime, 0, 150, 6444, 34);
+      this.currentPointValue.b = this.scale(this.player.currentTime, 0, 150, 4444, 24);
+      this.currentPointValue.c = this.scale(this.player.currentTime, 0, 150, 4222, 22);
     }
-    this.state.points = `7 9 7 ${this.currentPointValue.a} ${this.currentPointValue.b} ${this.currentPointValue.a}`;
+    this.state.points = `7,9 7,${this.currentPointValue.a} ${this.currentPointValue.b},${this.currentPointValue.c}`;
     window.requestAnimationFrame(this.update.bind(this));
   }
 
