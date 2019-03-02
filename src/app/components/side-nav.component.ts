@@ -94,17 +94,17 @@ import { Component, css, CustomElement, Emitter, html, Listen, StateChange } fro
           <clipPath id="c1">
                 <polygon stroke-width="3"
                 class="polygon"
-                attr.points="{{points}}"></polygon>
+                attr.points="{{triPoints}}"></polygon>
           </clipPath>
           <g stroke="none" fill="none" fill-rule="evenodd">
               <polygon  fill="{{shadowColor}}"
                         stroke-width="0"
                         class="shadow"
-                        points="7,34 22,32 24,22"></polygon>
+                        attr.points="{{shadowPoints}}"></polygon>
               <polygon  fill="{{fillColor}}"
                         stroke-width="0"
                         class="polygon"
-                        attr.points="{{points}}"></polygon>
+                        attr.points="{{triPoints}}"></polygon>
           </g>
     </svg>
     <nav>
@@ -132,14 +132,21 @@ class RSideNavComponent extends CustomElement {
   public nav: Element;
   public shadow: Element;
   public player: any;
-  public points: string;
-  public currentPointValue: {
+  public points: any;
+  public triPoints: {
     a: number;
     b: number;
     c: number;
   };
+  public shadowPoints: {
+    a: number;
+    b: number;
+    c: number;
+    d: number
+  };
   public state: {
-     points: string;
+     shadowPoints: string;
+     triPoints: string;
      strokeColor: string;
      fillColor: string;
      shadowColor: string;
@@ -152,11 +159,20 @@ class RSideNavComponent extends CustomElement {
     this.state.strokeColor = '#cfcfcf';
     this.state.fillColor = '#cfcfcf';
     this.state.shadowColor = '#c0c0c0';
-    this.state.points = `7,9 7,34 24,22`;
-    this.currentPointValue = {
-      a: 34,
-      b: 24,
-      c: 22
+    this.state.triPoints = `7,9 7,34 24,22`;
+    this.state.shadowPoints = `7,34 22,32 24,22`;
+    this.points = {
+      tri: {
+        a: 34,
+        b: 24,
+        c: 22
+      },
+      shadow: {
+        a: 34,
+        b: 24,
+        c: 22,
+        d: 32
+      }
     };
   }
   @Emitter('close', {}, 'sidenav')
@@ -180,7 +196,7 @@ class RSideNavComponent extends CustomElement {
     this.player = this.animate([
       { x: 0 },
       { x: 100 },
-    ], { duration: 150, fill: 'forwards',  easing: 'steps(7, end)' });
+    ], { duration: 150, fill: 'forwards',  easing: 'cubic-bezier(0.42, 0, 0.88, 1)' });
     setTimeout(() => { this.classList.remove('is--active'); }, 50);
     setTimeout(() => { this.shadow.classList.remove('is--hidden'); }, 100);
     setTimeout(() => { this.nav.classList.remove('is--active'); }, 50);
@@ -195,7 +211,7 @@ class RSideNavComponent extends CustomElement {
     this.player = this.animate([
       { x: 100 },
       { x: 0 },
-    ], { duration: 1050, fill: 'forwards',  easing: 'steps(7, end)' });
+    ], { duration: 1500, fill: 'forwards',  easing: 'cubic-bezier(0.42, 0, 0.88, 1)' });
     this.classList.add('is--active');
     this.shadow.classList.add('is--hidden');
     this.nav.classList.add('is--active');
@@ -209,18 +225,26 @@ class RSideNavComponent extends CustomElement {
   }
 
   public update() {
+    const time = this.player.currentTime;
     if (this.direction === 'forwards') {
-      this.currentPointValue.a = this.scale(this.player.currentTime, 0, 350, 34, 3444);
-      this.currentPointValue.b = this.scale(this.player.currentTime, 0, 350, 24, 2444);
-      this.currentPointValue.c = this.scale(this.player.currentTime, 0, 350, 22, 2222);
+      this.points.tri.a = this.scale(time, 0, 350, 34, 3444);
+      this.points.tri.b = this.scale(time, 0, 350, 24, 2444);
+      this.points.tri.c = this.scale(time, 0, 350, 22, 2222);
+      this.points.shadow.d = this.scale(time, 0, 350, 32, 3222);
     }
     if (this.direction === 'reverse') {
-      this.currentPointValue.a = this.scale(this.player.currentTime, 0, 150, 6444, 34);
-      this.currentPointValue.b = this.scale(this.player.currentTime, 0, 150, 4444, 24);
-      this.currentPointValue.c = this.scale(this.player.currentTime, 0, 150, 4222, 22);
+      this.points.tri.a = this.scale(time, 0, 150, 3444, 34);
+      this.points.tri.b = this.scale(time, 0, 150, 2444, 24);
+      this.points.tri.c = this.scale(time, 0, 150, 2222, 22);
+      this.points.shadow.d = this.scale(time, 0, 150, 3222, 32);
     }
-    this.state.points = `7,9 7,${this.currentPointValue.a} ${this.currentPointValue.b},${this.currentPointValue.c}`;
-    window.requestAnimationFrame(this.update.bind(this));
+    this.state.triPoints = `7,9 7,${this.points.tri.a} ${this.points.tri.b},${this.points.tri.c}`;
+    this.state.shadowPoints = `7,${this.points.tri.a} ${this.points.tri.c},${this.points.shadow.d} ${this.points.tri.b},${this.points.tri.c}`;
+
+    if (this.player.playState === 'running' || this.player.playState === 'pending') {
+       window.requestAnimationFrame(this.update.bind(this));
+    }
+
   }
 
 }
