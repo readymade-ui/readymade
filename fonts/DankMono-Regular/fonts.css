@@ -1,7 +1,7 @@
 @font-face {
 	font-family: 'DankMono-Regular';
 	src: url('fonts/DankMono-Regular/DankMono-Regular.eot');
-	src: url('fonts/DankMono-Regular/DankMono-Regular.svg') format('svg');
+	src: url('fonts/DankMono-Regular/DankMono-Regular.woff') format('woff'), url('fonts/DankMono-Regular/DankMono-Regular.ttf') format('truetype');
 	font-weight: normal;
 	font-style: normal;
 }
