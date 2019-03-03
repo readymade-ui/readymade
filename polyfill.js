@@ -263,4 +263,3 @@
   }(self));
 
 }((this.window = this.window || {})));
-//# sourceMappingURL=polyfill.js.map
