@@ -3,6 +3,7 @@ module.exports = ctx => ({
     'postcss-nested': {},
     'postcss-import': {},
     'postcss-mixins': {},
-    'postcss-csso': { debug: true }
+    'postcss-url': { url: 'inline' },
+    'postcss-csso': { debug: false }
   }
 })

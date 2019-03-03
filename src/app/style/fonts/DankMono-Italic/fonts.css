@@ -1,7 +1,9 @@
 @font-face {
 	font-family: 'DankMono-Italic';
-	src: url('fonts/DankMono-Italic/DankMono-Italic.eot');
-	src: local('☺'), url('fonts/DankMono-Italic/DankMono-Italic.woff') format('woff'), url('fonts/DankMono-Italic/DankMono-Italic.ttf') format('truetype'), url('fonts/DankMono-Italic/DankMono-Italic.svg') format('svg');
+	src: url('DankMono-Italic.eot');
+	src: url('DankMono-Italic.woff') format('woff'),
+			 url('DankMono-Italic.ttf') format('truetype'),
+			 url('DankMono-Italic.svg') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }

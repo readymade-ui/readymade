@@ -18,7 +18,7 @@ export default [
             name: 'window',
             file: 'dist/polyfill.js',
             format: 'iife',
-            sourcemap: true,
+            sourcemap: false,
             extend: true
         }
     },
@@ -37,7 +37,7 @@ export default [
             name: 'window',
             file: 'dist/vendor.js',
             format: 'iife',
-            sourcemap: true,
+            sourcemap: false,
             extend: true
         }
     },
@@ -62,6 +62,6 @@ export default [
             name: 'app',
             file: 'dist/app/main.js',
             format: 'iife',
-            sourcemap: true
+            sourcemap: false
         }
     }];
