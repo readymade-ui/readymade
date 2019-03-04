@@ -8,7 +8,8 @@ export default [
     {
         input: 'src/app/polyfill.js',
         plugins: [
-            resolve()
+            resolve(),
+            terser()
         ],
         onwarn: ( warning, next ) => {
             if ( warning.code === 'THIS_IS_UNDEFINED' ) return;

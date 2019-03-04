@@ -22,8 +22,9 @@ declare let Prism: any;
         white-space: pre;
         white-space: pre-wrap;
         word-wrap: normal;
-        font-family: 'DankMono-Regular', 'Courier New', monospace;
+        font-family: 'Source Code Pro', 'Courier New', monospace;
         font-size: 14px;
+        font-weight: 500;
         color: #e0e2e4;
         text-shadow: none;
     }
