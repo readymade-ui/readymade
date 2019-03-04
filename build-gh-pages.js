@@ -7,7 +7,6 @@ const path = require('path');
 (async () => {
   const input = await fs.readFileSync('dist/index.html', 'utf8');
    const result = posthtml([
-     minifier({ removeComments: true }),
      inline({ root: path.join(__dirname, 'dist')} )
   ])
   .process(input);
