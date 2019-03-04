@@ -1,5 +1,7 @@
 # readymade
 
+Find out more in our documentation portal built with Readymade on [Github Pages](https://readymade-ui.github.io/readymade/).
+
 JavaScript microlibrary for developing Web Components with Decorators that uses only native spec to provide robust features.
 
 - 🎰 Declare metadata for CSS and HTML ShadowDOM template
