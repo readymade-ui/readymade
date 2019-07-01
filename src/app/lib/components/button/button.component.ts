@@ -27,11 +27,11 @@ class MyButtonComponent extends ButtonComponent {
 
   @Emitter('bang', { bubbles: true, composed: true })
   @Listen('click')
-  public onClick(event) {
+  public onClick(event: MouseEvent) {
       this.emitter.broadcast('bang');
   }
   @Listen('keyup')
-  public onKeyUp(event) {
+  public onKeyUp(event: KeyboardEvent) {
     if (event.key === 'Enter') {
       this.emitter.broadcast('bang');
     }
