@@ -285,7 +285,8 @@ readymade does have a development server, development build scripts that build a
 ### Installation
 
 ```
-npm install
+yarn install
+yarn
 ```
 
 ### Development
@@ -293,24 +294,24 @@ npm install
 The dev build implements a watcher to compile and bundle the app on file change.
 
 ```
-npm start
+yarn start
 ```
 
 Run the development server in a separate tab. The development server currently relies on `live-server`.
 
 ```
-npm run dev
+yarn dev
 ```
 
 Optionally, build for production and use a local express server to serve the example site bundled for production. This script bundles and minifies the application for production, serving gzipped compressed.
 
 ```
-npm run build
+yarn build
 ```
 In another terminal:
 
 ```
-npm run serve
+yarn serve
 ```
 
 This combo of commands builds the example site for production and serves it minified and gzipped.
