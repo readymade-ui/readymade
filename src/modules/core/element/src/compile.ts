@@ -2,8 +2,8 @@ import { OnStateChange } from './../../component/component.js';
 import { ElementMeta } from './../../decorator/decorator.js';
 import { getChildNodes } from './util.js';
 
-const TEMPLATE_BIND_REGEX = /\{\{(\s*)(.*?)(\s*)\}\}/g;
-const BIND_SUFFIX = ' __state';
+export const TEMPLATE_BIND_REGEX = /\{\{(\s*)(.*?)(\s*)\}\}/g;
+export const BIND_SUFFIX = ' __state';
 
 interface Node {
     cloneNode(deep?: boolean): this;
@@ -125,6 +125,7 @@ class BoundNode {
 }
 
 class BoundHandler {
+  public $prop: string;
   public $parent: any;
   public onStateChange: OnStateChange;
   constructor(obj: Element) {
@@ -137,6 +138,7 @@ class BoundHandler {
         newValue: value,
       },
     };
+
     target[key] = value;
     this.$parent.$state['node' + BIND_SUFFIX].update(key, target[key]);
     if (target.onStateChange) { target.onStateChange(change); }
@@ -158,13 +160,24 @@ function compileTemplate(elementMeta: ElementMeta, target: any) {
 }
 
 function bindTemplate() {
-  this.$state = {};
-  this.$state['handler' + BIND_SUFFIX] = new BoundHandler(this);
-  this.$state['node' + BIND_SUFFIX] = new BoundNode(this.shadowRoot ? this.shadowRoot : this);
-  this.state = new Proxy(this, this.$state['handler' + BIND_SUFFIX]);
+  if (!this.bindState) {
+    this.$state = {};
+    this.$state['handler' + BIND_SUFFIX] = new BoundHandler(this);
+    this.$state['node' + BIND_SUFFIX] = new BoundNode(this.shadowRoot ? this.shadowRoot : this);
+    this.state = new Proxy(this, this.$state['handler' + BIND_SUFFIX]);
+  } else {
+    this.bindState();
+    for (const prop in this.$state) {
+      if (this.$state[prop] && !prop.includes('__state')) {
+        this.state[prop] = this.$state[prop];
+      }
+    }
+  }
 }
 
 export {
   bindTemplate,
   compileTemplate,
+  BoundHandler,
+  BoundNode,
 };

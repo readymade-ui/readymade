@@ -9,11 +9,17 @@
         "align": [true],
         "object-literal-sort-keys": false,
         "quotemark": [true, "single"],
-        "max-classes-per-file": [false],
+        "max-classes-per-file": false,
         "eofline": true,
         "max-line-length": [false],
         "interface-name": [true, "never-prefix"],
-        "no-console": [true, "log", "warn"]
+        "no-console": [true, "log", "warn"],
+        "variable-name": [
+            true,
+            "ban-keywords",
+            "check-format",
+            "allow-leading-underscore"
+        ]
     },
     "rulesDirectory": []
 }

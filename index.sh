@@ -18,6 +18,6 @@ node_modules/.bin/postcss src/app/style/main.css --output dist/style/main.css
 if [[ $NODE_ENV == 'prod' ]]; then
     node_modules/.bin/rollup -c rollup.config.prod.js
 else
-    node_modules/.bin/rollup -c rollup.config.js
-    node_modules/.bin/tsc -p tsconfig.json --watch
+    node_modules/.bin/rollup -c rollup.config.js --watch
+    # node_modules/.bin/tsc -p tsconfig.json --watch
 fi

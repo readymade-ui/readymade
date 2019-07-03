@@ -1,5 +1,7 @@
 import { compileTemplate } from './../element/element.js';
 import { EventDispatcher } from './../event/event.js';
+import { AbstractState } from 'src/app/lib/state/store.js';
+import { BIND_SUFFIX, BoundHandler, BoundNode } from '../element/src/compile.js';
 
 export type EventHandler = ()  => void;
 
@@ -29,6 +31,7 @@ const noop = () => {};
 
 // Decorators
 
+
 function Component(attributes: ElementMeta) {
   if (!attributes) {
     console.error('Component must include ElementMeta to compile');
@@ -37,6 +40,27 @@ function Component(attributes: ElementMeta) {
   return (target: any) => {
     compileTemplate(attributes, target);
     return target;
+  };
+}
+
+function State(property?: string) {
+  return function decorator(target: any, key: string | symbol, descriptor: PropertyDescriptor) {
+
+    function bindState() {
+      this.$state = this[key]();
+      this.$state['handler' + BIND_SUFFIX] = new BoundHandler(this);
+      this.$state['node' + BIND_SUFFIX] = new BoundNode(this.shadowRoot ? this.shadowRoot : this);
+      this.state = new Proxy(this, this.$state['handler' + BIND_SUFFIX]);
+      for (const prop in this.$state) {
+        if (this.$state[prop] && !prop.includes('__state')) {
+          this.state[prop] = this.$state[prop];
+        }
+      }
+    }
+
+    target.bindState = function onBind() {
+      bindState.call(this);
+    };
   };
 }
 
@@ -151,6 +175,7 @@ export {
   EventMeta,
   ElementMeta,
   Component,
+  State,
   Emitter,
   Listen,
   html,

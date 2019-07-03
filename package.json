@@ -49,6 +49,8 @@
     "live-server": "^1.2.1",
     "prismjs": "^1.15.0",
     "reflect-metadata": "^0.1.12",
+    "rxjs": "^6.5.2",
+    "systemjs": "^4.0.0",
     "web-animations-js": "^2.3.1"
   },
   "devDependencies": {

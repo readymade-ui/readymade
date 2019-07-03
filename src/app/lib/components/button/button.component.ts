@@ -1,4 +1,17 @@
-import { ButtonComponent, Component, css, Emitter, html, Listen } from '../../../../modules/core/index.js';
+import { Observable } from 'rxjs';
+import { ButtonComponent, Component, css, Emitter, html, Listen, State } from '../../../../modules/core/index.js';
+import { Store } from '../../state/store.js';
+
+class ButtonState {
+  public model: string = 'Click';
+}
+
+class ButtonStore extends Store {
+  public state$: Observable<ButtonState>;
+  constructor() {
+    super(new ButtonState());
+  }
+}
 
 @Component({
   selector: 'my-button',
@@ -16,13 +29,17 @@ import { ButtonComponent, Component, css, Emitter, html, Listen } from '../../..
 })
 class MyButtonComponent extends ButtonComponent {
 
-  public state: {
-    model: string;
-  };
-
   constructor() {
     super();
-    this.state.model = 'Click';
+  }
+
+  @State()
+  public getState() {
+    return new ButtonState();
+  }
+
+  public onStateChange(change) {
+    console.log('change', change);
   }
 
   @Emitter('bang', { bubbles: true, composed: true })
@@ -40,4 +57,4 @@ class MyButtonComponent extends ButtonComponent {
 
 customElements.define('my-button', MyButtonComponent, { extends: 'button'});
 
-export { MyButtonComponent };
+export { ButtonState, ButtonStore, MyButtonComponent };
