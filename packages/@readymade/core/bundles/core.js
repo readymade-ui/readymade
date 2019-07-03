@@ -192,7 +192,12 @@ class BoundHandler {
             },
         };
         target[key] = value;
-        this.$parent.$state['node' + BIND_SUFFIX].update(key, target[key]);
+        if (this.$parent.$state['node' + BIND_SUFFIX]) {
+            this.$parent.$state['node' + BIND_SUFFIX].update(key, target[key]);
+        }
+        else if (this.$parent.$$state['node' + BIND_SUFFIX]) {
+            this.$parent.$$state['node' + BIND_SUFFIX].update(key, target[key]);
+        }
         if (target.onStateChange) {
             target.onStateChange(change);
         }
@@ -200,7 +205,12 @@ class BoundHandler {
     }
 }
 function setState(prop, model) {
-    this.state[prop] = model;
+    if (!this.state) {
+        this.$state[prop] = model;
+    }
+    if (this.state) {
+        this.state[prop] = model;
+    }
 }
 function compileTemplate(elementMeta, target) {
     target.prototype.elementMeta = Object.assign(target.elementMeta ? target.elementMeta : {}, elementMeta);
@@ -210,10 +220,15 @@ function compileTemplate(elementMeta, target) {
     target.prototype.setState = setState;
 }
 function bindTemplate() {
-    this.$state = {};
-    this.$state['handler' + BIND_SUFFIX] = new BoundHandler(this);
-    this.$state['node' + BIND_SUFFIX] = new BoundNode(this.shadowRoot ? this.shadowRoot : this);
-    this.state = new Proxy(this, this.$state['handler' + BIND_SUFFIX]);
+    if (!this.bindState) {
+        this.$state = {};
+        this.$state['handler' + BIND_SUFFIX] = new BoundHandler(this);
+        this.$state['node' + BIND_SUFFIX] = new BoundNode(this.shadowRoot ? this.shadowRoot : this);
+        this.state = new Proxy(this, this.$state['handler' + BIND_SUFFIX]);
+    }
+    else {
+        this.bindState();
+    }
 }
 
 function getParent(el) {
@@ -268,6 +283,24 @@ function Component(attributes) {
     return (target) => {
         compileTemplate(attributes, target);
         return target;
+    };
+}
+function State(property) {
+    return function decorator(target, key, descriptor) {
+        function bindState() {
+            this.$$state = this[key]();
+            this.$$state['handler' + BIND_SUFFIX] = new BoundHandler(this);
+            this.$$state['node' + BIND_SUFFIX] = new BoundNode(this.shadowRoot ? this.shadowRoot : this);
+            this.$state = new Proxy(this, this.$$state['handler' + BIND_SUFFIX]);
+            for (const prop in this.$$state) {
+                if (this.$$state[prop] && !prop.includes('__state')) {
+                    this.$state[prop] = this.$$state[prop];
+                }
+            }
+        }
+        target.bindState = function onBind() {
+            bindState.call(this);
+        };
     };
 }
 function Emitter(eventName, options, channelName) {
@@ -555,22 +588,6 @@ class DListComponent extends HTMLDListElement {
 class DataComponent extends HTMLDataElement {
     constructor() {
         super();
-        if (this.bindEmitters) {
-            this.bindEmitters();
-        }
-        if (this.bindListeners) {
-            this.bindListeners();
-        }
-        if (this.onInit) {
-            this.onInit();
-        }
-    }
-}
-class DataListComponent extends HTMLDataListElement {
-    constructor() {
-        super();
-        attachDOM(this);
-        attachStyle(this);
         if (this.bindEmitters) {
             this.bindEmitters();
         }
@@ -1365,27 +1382,6 @@ class VideoComponent extends HTMLVideoElement {
     }
 }
 
-exports.EventDispatcher = EventDispatcher;
-exports.attachDOM = attachDOM;
-exports.attachShadow = attachShadow;
-exports.attachStyle = attachStyle;
-exports.bindTemplate = bindTemplate;
-exports.compileTemplate = compileTemplate;
-exports.getSiblings = getSiblings;
-exports.getElementIndex = getElementIndex;
-exports.getParent = getParent;
-exports.querySelector = querySelector;
-exports.querySelectorAll = querySelectorAll;
-exports.getChildNodes = getChildNodes;
-exports.Component = Component;
-exports.Emitter = Emitter;
-exports.Listen = Listen;
-exports.html = html;
-exports.css = css;
-exports.noop = noop;
-exports.StructuralElement = StructuralElement;
-exports.PseudoElement = PseudoElement;
-exports.CustomElement = CustomElement;
 exports.AllCollectionComponent = AllCollectionComponent;
 exports.AnchorComponent = AnchorComponent;
 exports.AreaComponent = AreaComponent;
@@ -1395,15 +1391,18 @@ exports.BodyComponent = BodyComponent;
 exports.ButtonComponent = ButtonComponent;
 exports.CanvasComponent = CanvasComponent;
 exports.CollectionComponent = CollectionComponent;
+exports.Component = Component;
+exports.CustomElement = CustomElement;
 exports.DListComponent = DListComponent;
 exports.DataComponent = DataComponent;
-exports.DataListComponent = DataListComponent;
 exports.DetailsComponent = DetailsComponent;
 exports.DivComponent = DivComponent;
 exports.EmbedComponent = EmbedComponent;
+exports.Emitter = Emitter;
+exports.EventDispatcher = EventDispatcher;
 exports.FieldSetComponent = FieldSetComponent;
-exports.FormControlsComponent = FormControlsComponent;
 exports.FormComponent = FormComponent;
+exports.FormControlsComponent = FormControlsComponent;
 exports.HRComponent = HRComponent;
 exports.HeadComponent = HeadComponent;
 exports.HeadingComponent = HeadingComponent;
@@ -1415,6 +1414,7 @@ exports.LIComponent = LIComponent;
 exports.LabelComponent = LabelComponent;
 exports.LegendComponent = LegendComponent;
 exports.LinkComponent = LinkComponent;
+exports.Listen = Listen;
 exports.MapComponent = MapComponent;
 exports.MediaComponent = MediaComponent;
 exports.MenuComponent = MenuComponent;
@@ -1432,12 +1432,15 @@ exports.ParamComponent = ParamComponent;
 exports.PictureComponent = PictureComponent;
 exports.PreComponent = PreComponent;
 exports.ProgressComponent = ProgressComponent;
+exports.PseudoElement = PseudoElement;
 exports.QuoteComponent = QuoteComponent;
 exports.ScriptComponent = ScriptComponent;
 exports.SelectComponent = SelectComponent;
 exports.SlotComponent = SlotComponent;
 exports.SourceComponent = SourceComponent;
 exports.SpanComponent = SpanComponent;
+exports.State = State;
+exports.StructuralElement = StructuralElement;
 exports.StyleComponent = StyleComponent;
 exports.TableCaptionComponent = TableCaptionComponent;
 exports.TableCellComponent = TableCellComponent;
@@ -1452,3 +1455,17 @@ exports.TrackComponent = TrackComponent;
 exports.UListComponent = UListComponent;
 exports.UnknownComponent = UnknownComponent;
 exports.VideoComponent = VideoComponent;
+exports.attachDOM = attachDOM;
+exports.attachShadow = attachShadow;
+exports.attachStyle = attachStyle;
+exports.bindTemplate = bindTemplate;
+exports.compileTemplate = compileTemplate;
+exports.css = css;
+exports.getChildNodes = getChildNodes;
+exports.getElementIndex = getElementIndex;
+exports.getParent = getParent;
+exports.getSiblings = getSiblings;
+exports.html = html;
+exports.noop = noop;
+exports.querySelector = querySelector;
+exports.querySelectorAll = querySelectorAll;

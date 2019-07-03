@@ -188,7 +188,12 @@ class BoundHandler {
             },
         };
         target[key] = value;
-        this.$parent.$state['node' + BIND_SUFFIX].update(key, target[key]);
+        if (this.$parent.$state['node' + BIND_SUFFIX]) {
+            this.$parent.$state['node' + BIND_SUFFIX].update(key, target[key]);
+        }
+        else if (this.$parent.$$state['node' + BIND_SUFFIX]) {
+            this.$parent.$$state['node' + BIND_SUFFIX].update(key, target[key]);
+        }
         if (target.onStateChange) {
             target.onStateChange(change);
         }
@@ -196,7 +201,12 @@ class BoundHandler {
     }
 }
 function setState(prop, model) {
-    this.state[prop] = model;
+    if (!this.state) {
+        this.$state[prop] = model;
+    }
+    if (this.state) {
+        this.state[prop] = model;
+    }
 }
 function compileTemplate(elementMeta, target) {
     target.prototype.elementMeta = Object.assign(target.elementMeta ? target.elementMeta : {}, elementMeta);
@@ -206,10 +216,15 @@ function compileTemplate(elementMeta, target) {
     target.prototype.setState = setState;
 }
 function bindTemplate() {
-    this.$state = {};
-    this.$state['handler' + BIND_SUFFIX] = new BoundHandler(this);
-    this.$state['node' + BIND_SUFFIX] = new BoundNode(this.shadowRoot ? this.shadowRoot : this);
-    this.state = new Proxy(this, this.$state['handler' + BIND_SUFFIX]);
+    if (!this.bindState) {
+        this.$state = {};
+        this.$state['handler' + BIND_SUFFIX] = new BoundHandler(this);
+        this.$state['node' + BIND_SUFFIX] = new BoundNode(this.shadowRoot ? this.shadowRoot : this);
+        this.state = new Proxy(this, this.$state['handler' + BIND_SUFFIX]);
+    }
+    else {
+        this.bindState();
+    }
 }
 
 function getParent(el) {
@@ -264,6 +279,24 @@ function Component(attributes) {
     return (target) => {
         compileTemplate(attributes, target);
         return target;
+    };
+}
+function State(property) {
+    return function decorator(target, key, descriptor) {
+        function bindState() {
+            this.$$state = this[key]();
+            this.$$state['handler' + BIND_SUFFIX] = new BoundHandler(this);
+            this.$$state['node' + BIND_SUFFIX] = new BoundNode(this.shadowRoot ? this.shadowRoot : this);
+            this.$state = new Proxy(this, this.$$state['handler' + BIND_SUFFIX]);
+            for (const prop in this.$$state) {
+                if (this.$$state[prop] && !prop.includes('__state')) {
+                    this.$state[prop] = this.$$state[prop];
+                }
+            }
+        }
+        target.bindState = function onBind() {
+            bindState.call(this);
+        };
     };
 }
 function Emitter(eventName, options, channelName) {
@@ -551,22 +584,6 @@ class DListComponent extends HTMLDListElement {
 class DataComponent extends HTMLDataElement {
     constructor() {
         super();
-        if (this.bindEmitters) {
-            this.bindEmitters();
-        }
-        if (this.bindListeners) {
-            this.bindListeners();
-        }
-        if (this.onInit) {
-            this.onInit();
-        }
-    }
-}
-class DataListComponent extends HTMLDataListElement {
-    constructor() {
-        super();
-        attachDOM(this);
-        attachStyle(this);
         if (this.bindEmitters) {
             this.bindEmitters();
         }
@@ -1361,4 +1378,4 @@ class VideoComponent extends HTMLVideoElement {
     }
 }
 
-export { EventDispatcher, attachDOM, attachShadow, attachStyle, bindTemplate, compileTemplate, getSiblings, getElementIndex, getParent, querySelector, querySelectorAll, getChildNodes, Component, Emitter, Listen, html, css, noop, StructuralElement, PseudoElement, CustomElement, AllCollectionComponent, AnchorComponent, AreaComponent, AudioComponent, BRComponent, BodyComponent, ButtonComponent, CanvasComponent, CollectionComponent, DListComponent, DataComponent, DataListComponent, DetailsComponent, DivComponent, EmbedComponent, FieldSetComponent, FormControlsComponent, FormComponent, HRComponent, HeadComponent, HeadingComponent, HtmlComponent, IFrameComponent, ImageComponent, InputComponent, LIComponent, LabelComponent, LegendComponent, LinkComponent, MapComponent, MediaComponent, MenuComponent, MetaComponent, MeterComponent, ModComponent, OListComponent, ObjectComponent, OptGroupComponent, OptionComponent, OptionsCollectionComponent, OutputComponent, ParagraphComponent, ParamComponent, PictureComponent, PreComponent, ProgressComponent, QuoteComponent, ScriptComponent, SelectComponent, SlotComponent, SourceComponent, SpanComponent, StyleComponent, TableCaptionComponent, TableCellComponent, TableColComponent, TableComponent, TableRowComponent, TableSectionComponent, TemplateComponent, TimeComponent, TitleComponent, TrackComponent, UListComponent, UnknownComponent, VideoComponent };
+export { AllCollectionComponent, AnchorComponent, AreaComponent, AudioComponent, BRComponent, BodyComponent, ButtonComponent, CanvasComponent, CollectionComponent, Component, CustomElement, DListComponent, DataComponent, DetailsComponent, DivComponent, EmbedComponent, Emitter, EventDispatcher, FieldSetComponent, FormComponent, FormControlsComponent, HRComponent, HeadComponent, HeadingComponent, HtmlComponent, IFrameComponent, ImageComponent, InputComponent, LIComponent, LabelComponent, LegendComponent, LinkComponent, Listen, MapComponent, MediaComponent, MenuComponent, MetaComponent, MeterComponent, ModComponent, OListComponent, ObjectComponent, OptGroupComponent, OptionComponent, OptionsCollectionComponent, OutputComponent, ParagraphComponent, ParamComponent, PictureComponent, PreComponent, ProgressComponent, PseudoElement, QuoteComponent, ScriptComponent, SelectComponent, SlotComponent, SourceComponent, SpanComponent, State, StructuralElement, StyleComponent, TableCaptionComponent, TableCellComponent, TableColComponent, TableComponent, TableRowComponent, TableSectionComponent, TemplateComponent, TimeComponent, TitleComponent, TrackComponent, UListComponent, UnknownComponent, VideoComponent, attachDOM, attachShadow, attachStyle, bindTemplate, compileTemplate, css, getChildNodes, getElementIndex, getParent, getSiblings, html, noop, querySelector, querySelectorAll };
