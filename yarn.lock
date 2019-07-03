@@ -132,10 +132,10 @@
   resolved "https://registry.yarnpkg.com/@nodelib/fs.stat/-/fs.stat-1.1.3.tgz#2b5a3ab3f918cca48a8c754c08168e3f03eba61b"
   integrity sha512-shAmDyaQC4H92APFoIaVDHCx5bStIocgvbwQyxPRrbUY20V1EYTbSDchWbuwlMG3V17cprZhA6+78JfB+3DTPw==
 
-"@readymade/core@^1.0.0-beta.3":
-  version "1.0.0-beta.3"
-  resolved "https://registry.yarnpkg.com/@readymade/core/-/core-1.0.0-beta.3.tgz#5bc0a6621441a2750379f7cecfc34c47c9e9eb4b"
-  integrity sha512-vPgs7G9asI23IzBR/pYMg8rYBCcnd9JWq2b+9PlimQ+aMZ7vOm8TcjEcK2Yy+uPuGXGlEzzs5kPQzibYeGh1vw==
+"@readymade/core@^1.0.0-beta.4":
+  version "1.0.0-beta.4"
+  resolved "https://registry.yarnpkg.com/@readymade/core/-/core-1.0.0-beta.4.tgz#75a052f728b442e57cc983bd8c1e68448a41ebf1"
+  integrity sha512-5zibARsmwKfpviUAWCgXogx3LBbM0eg630qJgprkNJYq6c7QMp7e0+csw7BxTRXitYeFJJqY1Vqbo1JUsnQOhg==
 
 "@types/clean-css@*":
   version "4.2.1"
