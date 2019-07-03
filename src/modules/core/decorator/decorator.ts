@@ -47,13 +47,13 @@ function State(property?: string) {
   return function decorator(target: any, key: string | symbol, descriptor: PropertyDescriptor) {
 
     function bindState() {
-      this.$state = this[key]();
-      this.$state['handler' + BIND_SUFFIX] = new BoundHandler(this);
-      this.$state['node' + BIND_SUFFIX] = new BoundNode(this.shadowRoot ? this.shadowRoot : this);
-      this.state = new Proxy(this, this.$state['handler' + BIND_SUFFIX]);
-      for (const prop in this.$state) {
-        if (this.$state[prop] && !prop.includes('__state')) {
-          this.state[prop] = this.$state[prop];
+      this.$$state = this[key]();
+      this.$$state['handler' + BIND_SUFFIX] = new BoundHandler(this);
+      this.$$state['node' + BIND_SUFFIX] = new BoundNode(this.shadowRoot ? this.shadowRoot : this);
+      this.$state = new Proxy(this, this.$$state['handler' + BIND_SUFFIX]);
+      for (const prop in this.$$state) {
+        if (this.$$state[prop] && !prop.includes('__state')) {
+          this.$state[prop] = this.$$state[prop];
         }
       }
     }

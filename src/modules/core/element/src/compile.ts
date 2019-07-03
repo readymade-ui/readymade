@@ -140,7 +140,8 @@ class BoundHandler {
     };
 
     target[key] = value;
-    this.$parent.$state['node' + BIND_SUFFIX].update(key, target[key]);
+    if (this.$parent.$state['node' + BIND_SUFFIX]) { this.$parent.$state['node' + BIND_SUFFIX].update(key, target[key]); } // DEPRECATED
+    else if (this.$parent.$$state['node' + BIND_SUFFIX]) { this.$parent.$$state['node' + BIND_SUFFIX].update(key, target[key]); }
     if (target.onStateChange) { target.onStateChange(change); }
     return true;
   }
@@ -148,7 +149,8 @@ class BoundHandler {
 
 // support setting global state for now, what about descendant properties?
 function setState(prop: string, model: any) {
-    this.state[prop] = model;
+    if (!this.state) { this.$state[prop] = model; }
+    if (this.state) { this.state[prop] = model; } // DEPRECATED
 }
 
 function compileTemplate(elementMeta: ElementMeta, target: any) {
@@ -160,18 +162,13 @@ function compileTemplate(elementMeta: ElementMeta, target: any) {
 }
 
 function bindTemplate() {
-  if (!this.bindState) {
+  if (!this.bindState) { // DEPRECATED
     this.$state = {};
     this.$state['handler' + BIND_SUFFIX] = new BoundHandler(this);
     this.$state['node' + BIND_SUFFIX] = new BoundNode(this.shadowRoot ? this.shadowRoot : this);
     this.state = new Proxy(this, this.$state['handler' + BIND_SUFFIX]);
   } else {
     this.bindState();
-    for (const prop in this.$state) {
-      if (this.$state[prop] && !prop.includes('__state')) {
-        this.state[prop] = this.$state[prop];
-      }
-    }
   }
 }
 

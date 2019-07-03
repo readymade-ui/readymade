@@ -1,6 +1,10 @@
-import { Component, css, CustomElement, html, StateChange } from './../../modules/core/index.js';
+import { Component, css, CustomElement, html, StateChange, State } from './../../modules/core/index.js';
 
 declare let Prism: any;
+
+export class CodeState {
+    public type: string;
+}
 
 @Component({
   selector: 'r-code',
@@ -189,12 +193,16 @@ declare let Prism: any;
     `,
 })
 class RCodeComponent extends CustomElement {
-  public state: {
-    type: string;
-  };
+
   constructor() {
     super();
   }
+
+  @State()
+  static get getState() {
+    return new CodeState();
+  }
+
   public connectedCallback(event) {
     this.onSlotChange();
   }

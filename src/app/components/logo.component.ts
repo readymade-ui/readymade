@@ -1,4 +1,13 @@
-import { Component, css, CustomElement, html, StateChange } from './../../modules/core/index.js';
+import { Component, css, CustomElement, html, StateChange, State } from './../../modules/core/index.js';
+
+export class LogoState {
+  public heading: string = 'R';
+  public heading2: string = 'readymade';
+  public size: string = '';
+  public sizes: string[] = ['is--small', 'is--medium', 'is--large']
+}
+
+export const _logoState = new LogoState();
 
 @Component({
   selector: 'r-logo',
@@ -14,18 +23,15 @@ import { Component, css, CustomElement, html, StateChange } from './../../module
 	`,
 })
 class RLogoComponent extends CustomElement {
-  public sizes: string[] = ['is--small', 'is--medium', 'is--large'];
-  public state: {
-    heading: string;
-    heading2: string;
-    size: string;
-  };
+
   public letters: string[];
   constructor() {
     super();
-    this.state.heading = 'R';
-    this.state.heading2 = 'readymade';
-    // setInterval(this.update.bind(this), 4000);
+  }
+
+  @State()
+  public getState() {
+    return _logoState;
   }
 
   static get observedAttributes() {
@@ -40,13 +46,9 @@ class RLogoComponent extends CustomElement {
     }
   }
   public setSize(size: string) {
-    if (this.sizes.includes(size)) {
+    if (this.getState().sizes.includes(size)) {
       this.setState('size', size);
     }
-  }
-  public update() {
-    this.state.heading = Math.round(Math.random() * 100).toString();
-    this.state.heading2 = Math.round(Math.random() * 100).toString();
   }
 }
 

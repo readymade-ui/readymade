@@ -1,4 +1,9 @@
-import { Component, css, CustomElement, Emitter, html, Listen, StateChange } from './../../modules/core/index.js';
+import { Component, css, CustomElement, Emitter, html, Listen, StateChange, State } from './../../modules/core/index.js';
+
+export class MainNavState {
+  public resourceLinkFillColor: string = '#cfcfcf';
+  public size: string = '44px';
+}
 
 @Component({
   selector: 'r-main-nav',
@@ -92,26 +97,26 @@ import { Component, css, CustomElement, Emitter, html, Listen, StateChange } fro
   `})
 class RMainNavComponent extends CustomElement {
   public isNavOpen: boolean;
-  public state: {
-    resourceLinkFillColor: string;
-    size: string;
-  };
+
   constructor() {
     super();
     this.isNavOpen = false;
   }
+  @State()
+  public getState() {
+    return new MainNavState();
+  }
+
   @Emitter('open', {}, 'sidenav')
   @Emitter('close', {}, 'sidenav')
   public connectedCallback() {
     const navLink = this.shadowRoot.querySelector('[link="side-nav"]');
     const resourceLink = this.shadowRoot.querySelector('[link="resource"]');
-    this.state.resourceLinkFillColor = '#cfcfcf';
-    this.state.size = '44px';
     resourceLink.addEventListener('mouseenter', () => {
-        this.state.resourceLinkFillColor = '#efefef';
+        this.setState('resourceLinkFillColor', '#efefef');
     });
     resourceLink.addEventListener('mouseleave', () => {
-        this.state.resourceLinkFillColor = '#cfcfcf';
+        this.setState('resourceLinkFillColor', '#cfcfcf');
     });
     navLink.addEventListener('click', () => {
       if (navLink.classList.contains('is--dark')) {

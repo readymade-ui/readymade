@@ -2,7 +2,7 @@
 // const app = new App().bootstrap();
 
 // Library Components
-export { ButtonState, ButtonStore, MyButtonComponent } from './lib/components/button/button.component.js';
+export { ButtonState, MyButtonComponent } from './lib/components/button/button.component.js';
 // export { MyInputComponent } from './lib/components/input/input.component.js';
 // export { MyItemComponent } from './lib/components/item/item.component.js';
 // export { MyListComponent } from './lib/components/list/list.component.js';

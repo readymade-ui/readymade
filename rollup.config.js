@@ -36,23 +36,5 @@ export default [
             sourcemap: true,
             extend: true
         }
-    },
-    {
-        input: 'src/app/main.ts',
-        plugins: [
-            resolve(),
-            typescript({
-                typescript: require('typescript')
-            })
-        ],
-        onwarn: ( warning, next ) => {
-            if ( warning.code === 'THIS_IS_UNDEFINED' ) return;
-            next( warning );
-        },
-        output: {
-            name: 'app',
-            file: 'dist/app/main.js',
-            format: 'iife',
-            sourcemap: false
-        }
-    }];
+    }
+    ];

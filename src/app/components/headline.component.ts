@@ -1,4 +1,9 @@
-import { Component, css, CustomElement, html, StateChange } from './../../modules/core/index.js';
+import { Component, css, CustomElement, html, StateChange, State } from './../../modules/core/index.js';
+
+export class HeadlineState {
+  public copy: string | number;
+  public copySize: string;
+}
 
 @Component({
   selector: 'r-headline',
@@ -33,18 +38,17 @@ import { Component, css, CustomElement, html, StateChange } from './../../module
 	`,
 })
 class RHeadlineComponent extends CustomElement {
-  public state: {
-    copy: string | number;
-    copySize: string;
-  };
+
   public hyperNode: any;
 
   constructor() {
     super();
-    this.state.copy = '';
-    this.state.copySize = '';
   }
 
+  @State()
+  static get getState() {
+    return new HeadlineState();
+  }
   static get observedAttributes() {
     return ['headline', 'size'];
   }

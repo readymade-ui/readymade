@@ -1,4 +1,13 @@
-import { Component, css, CustomElement, Emitter, html, Listen, StateChange } from './../../modules/core/index.js';
+import { Component, css, CustomElement, Emitter, html, Listen, StateChange, State } from './../../modules/core/index.js';
+
+export class SideNavState {
+  public shadowPoints: string = `7,34 22,32 24,22`;
+  public triPoints: string = `7,9 7,34 24,22`;
+  public strokeColor: string = '#cfcfcf';
+  public fillColor: string = '#cfcfcf';
+  public shadowColor: string = '#c0c0c0';
+  public size: string = '10000px';
+}
 
 @Component({
   selector: 'r-side-nav',
@@ -144,23 +153,10 @@ class RSideNavComponent extends CustomElement {
     c: number;
     d: number
   };
-  public state: {
-     shadowPoints: string;
-     triPoints: string;
-     strokeColor: string;
-     fillColor: string;
-     shadowColor: string;
-     size: string;
-  };
+ 
   constructor() {
     super();
     this.direction = 'forwards';
-    this.state.size = '10000px';
-    this.state.strokeColor = '#cfcfcf';
-    this.state.fillColor = '#cfcfcf';
-    this.state.shadowColor = '#c0c0c0';
-    this.state.triPoints = `7,9 7,34 24,22`;
-    this.state.shadowPoints = `7,34 22,32 24,22`;
     this.points = {
       tri: {
         a: 34,
@@ -174,6 +170,10 @@ class RSideNavComponent extends CustomElement {
         d: 32
       }
     };
+  }
+  @State()
+  public getState() {
+    return new SideNavState();
   }
   @Emitter('close', {}, 'sidenav')
   public connectedCallback() {
@@ -238,8 +238,9 @@ class RSideNavComponent extends CustomElement {
       this.points.tri.c = this.scale(time, 0, 150, 2222, 22);
       this.points.shadow.d = this.scale(time, 0, 150, 3222, 32);
     }
-    this.state.triPoints = `7,9 7,${this.points.tri.a} ${this.points.tri.b},${this.points.tri.c}`;
-    this.state.shadowPoints = `7,${this.points.tri.a} ${this.points.tri.c},${this.points.shadow.d} ${this.points.tri.b},${this.points.tri.c}`;
+
+    this.setState('triPoints', `7,9 7,${this.points.tri.a} ${this.points.tri.b},${this.points.tri.c}`);
+    this.setState('shadowPoints', `7,${this.points.tri.a} ${this.points.tri.c},${this.points.shadow.d} ${this.points.tri.b},${this.points.tri.c}`);
 
     if (this.player.playState === 'running' || this.player.playState === 'pending') {
        window.requestAnimationFrame(this.update.bind(this));

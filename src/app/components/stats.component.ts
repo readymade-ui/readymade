@@ -1,4 +1,4 @@
-import { Component, css, CustomElement, html, StateChange } from './../../modules/core/index.js';
+import { Component, css, CustomElement, html } from './../../modules/core/index.js';
 
 @Component({
   selector: 'r-stats',

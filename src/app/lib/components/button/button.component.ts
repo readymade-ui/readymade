@@ -1,16 +1,7 @@
-import { Observable } from 'rxjs';
 import { ButtonComponent, Component, css, Emitter, html, Listen, State } from '../../../../modules/core/index.js';
-import { Store } from '../../state/store.js';
 
 class ButtonState {
   public model: string = 'Click';
-}
-
-class ButtonStore extends Store {
-  public state$: Observable<ButtonState>;
-  constructor() {
-    super(new ButtonState());
-  }
 }
 
 @Component({
@@ -38,10 +29,6 @@ class MyButtonComponent extends ButtonComponent {
     return new ButtonState();
   }
 
-  public onStateChange(change) {
-    console.log('change', change);
-  }
-
   @Emitter('bang', { bubbles: true, composed: true })
   @Listen('click')
   public onClick(event: MouseEvent) {
@@ -57,4 +44,4 @@ class MyButtonComponent extends ButtonComponent {
 
 customElements.define('my-button', MyButtonComponent, { extends: 'button'});
 
-export { ButtonState, ButtonStore, MyButtonComponent };
+export { ButtonState, MyButtonComponent };
