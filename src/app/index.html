@@ -91,14 +91,15 @@ import { ButtonComponent, Component, Emitter, Listen } from '@readymade/core';
     `,
 })
 class MyButtonComponent extends ButtonComponent {
-    state: {
-        buttonCopy: string;
-    }
     constructor() {
         super();
-        this.state.buttonCopy = 'Click';
     }
-
+    @State() 
+    getState() {
+      return {
+        buttonCopy: 'Click'
+      }
+    } 
     @Emitter('bang')
     @Listen('click')
     public onClick(event) {
@@ -192,12 +193,14 @@ import { Component, CustomElement } from '@readymade/core';
         <r-code type="javascript">
                 <span hidden>
 class MyComponent extends CustomElement {
-    state: {
-        copyModel: string;
-    }
     constructor() {
         super();
-        this.state.copyModel = 'Hello World!';
+    }
+    @State() 
+    getState() {
+      return {
+        copyModel: 'Hello World!'
+      }
     }
 }
                 </span>
@@ -278,9 +281,15 @@ public onKeyUp(event) {
         <r-code type="javascript">
                 <span hidden>
 class MyComponent extends CustomElement {
-state: {
-    buttonCopy: string;
-}
+  constructor() {
+    super();
+  }
+  @State() 
+  getState() {
+    return {
+      buttonCopy: 'Click'
+    }
+  } 
                 </span>
         </r-code>
         <h3>template</h3>
@@ -293,11 +302,16 @@ state: {
     &lt;span>{{buttonCopy}}&lt;/span>
     `,
 })
-class MyButtonComponent extends CustomElement
-constructor() {
-    super();
-    this.state.buttonCopy = 'Click';
-}
+class MyComponent extends CustomElement {
+    constructor() {
+      super();
+    }
+    @State() 
+    getState() {
+      return {
+        buttonCopy: 'Click'
+      }
+    } 
                 </span>
         </r-code>
         <h3>Proxy</h3>
