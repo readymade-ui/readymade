@@ -110,20 +110,29 @@ Declaring an `Emitter` stores a CustomEvent on the element that can later be emi
 
 ## One-Way Data Binding 1️⃣
 
-A property called 'state' stores local state on the Custom Element that can be bound to the template. Under the hood, a handler bound to ES2015 `Proxy` updates the template without the need for `eval`.
+A decorator called `@State` stores local state on the Custom Element that can be bound to the template. Under the hood, a handler bound to ES2015 `Proxy` updates the template without the need for `eval`.
 
 ```js
 @Component({
   selector: 'my-button',
-  template: html`
-   {{model}}
-	`
+  template: '{{model}}'
 })
 class MyButtonComponent extends ButtonComponent {
   constructor() {
     super();
-    this.state.model = 'Click';
   }
+  @State() 
+  public getState() {
+	return {
+		model: 'Click Me';
+	}
+  }
+```
+
+Update the template by calling `setState`, passing in the property you want to update along with the new value.
+
+```js
+this.setState('model', 'Foo Bar');
 ```
 
 ### Treeshakable 🌲
