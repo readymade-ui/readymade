@@ -1,4 +1,4 @@
-function getParent(el) {
+function getParent(el: any) {
   return el.parentNode;
 }
 
@@ -34,7 +34,7 @@ function querySelectorAll(selector: string) {
   return Array.from(document.querySelectorAll(selector));
 }
 
-function getElementIndex(el) {
+function getElementIndex(el: any) {
   return getSiblings(el).indexOf(el);
 }
 

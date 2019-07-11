@@ -30,6 +30,6 @@ declare class BoundHandler {
     constructor(obj: Element);
     set(target: any, key: string, value: any): boolean;
 }
-declare function compileTemplate(elementMeta: ElementMeta, target: any): void;
 declare function bindTemplate(): void;
+declare function compileTemplate(elementMeta: ElementMeta, target: any): void;
 export { bindTemplate, compileTemplate, BoundHandler, BoundNode, };

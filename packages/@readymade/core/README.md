@@ -7,7 +7,7 @@ JavaScript microlibrary for developing Web Components with Decorators that uses 
 - 🎤 Event Emitter pattern
 - 1️⃣ One-way data binding
 - 🌲 Treeshakable
-- 🏋️‍ Weighing in ~2Kb for 'Hello World' (gzipped)
+- 🏋️‍ Weighing in ~1Kb for 'Hello World' (gzipped)
 
 
 ### Metadata Class Decorator 🎰
@@ -15,14 +15,13 @@ JavaScript microlibrary for developing Web Components with Decorators that uses 
 The below example is a button that extends HTMLButtonElement. Since this is a customized built-in elements, MyButtonComponent extends from the native HTMLButtonElement, we cannot attach Shadow DOM. attachDOM compiles the template as the my-button innerHTML and places a style tag in the `<head>` to style the Element.
 
 ```js
-import { Component, html, css, attachDOM, attachStyle, Listen } from '@readymade/core';
+import { Component, attachDOM, attachStyle, Listen } from '@readymade/core';
 
 @Component({
-	selector: 'my-button',
-	template: html`
+	template:`
 		<b>Click me!</b>
 	`,
-	style: css`
+	style:`
 		:host {
 			background: red;
 			cursor: pointer;
@@ -67,7 +66,7 @@ I can become confusing trying to handle the differences between 'autonomous cust
 We can go even further to reduce boilerplate in the above example by importing one of readymade-ui classes that already extend HTMLButtonElement.
 
 ```js
-import { Component, html, css, ButtonComponent } from '@readymade/core';
+import { Component, ButtonComponent } from '@readymade/core';
 
 class MyButtonComponent extends ButtonComponent {
 	constructor() {
@@ -81,7 +80,7 @@ Because of this level of abstraction, we longer have to figure out how to attach
 When developing an autonomous custom element just import `CustomElement` instead. The new element can now attach `ShadowDOM`.
 
 ```js
-import { Component, html, css, CustomElement } from '@readymade/core';
+import { Component, CustomElement } from '@readymade/core';
 
 class MyButtonComponent extends CustomElement {
 	constructor() {
@@ -96,11 +95,11 @@ Readymade comes packaged with an event emitter and event listener pattern in the
 
 
 ```js
-  @Emitter('bang', { bubbles: true, composed: true })
-  @Listen('click')
-  public onClick(event) {
-			this.emitter.broadcast('bang');
-  }
+@Emitter('bang', { bubbles: true, composed: true })
+@Listen('click')
+public onClick(event) {
+	this.emitter.broadcast('bang');
+}
 ```
 
 Declaring an `Emitter` stores a CustomEvent on the element that can later be emitted with `dispatchEvent` or broadcast with `BroadcastChannel API`.
@@ -108,19 +107,23 @@ Declaring an `Emitter` stores a CustomEvent on the element that can later be emi
 
 ## One-Way Data Binding 1️⃣
 
-A property called 'state' stores local state on the Custom Element that can be bound to the template. Under the hood, a handler bound to ES2015 `Proxy` updates the template without the need for `eval`.
+Use the `@State` decorator to bind properties to a readymade template. Under the hood a handler bound to ES2015 `Proxy` updates the template without the need for `eval`.
 
 ```js
 @Component({
-  selector: 'my-button',
-  template: html`
-   {{model}}
-	`
+  template:`
+   <span>{{model}}</span>
+  `
 })
 class MyButtonComponent extends ButtonComponent {
   constructor() {
     super();
-    this.state.model = 'Click';
+  }
+  @State()
+  public getState() {
+    return {
+	  model: 'Click Me'
+    }
   }
 ```
 
@@ -128,10 +131,9 @@ class MyButtonComponent extends ButtonComponent {
 
 readymade is developed with named ES2015 exports that work elegantly with build tools like Rollup.
 
-### Weighing in ~2Kb 🏋️‍
+### Weighing in ~1Kb 🏋️‍
 
-A simple `Hello World` bundle weighs around `2Kb` gzipped and `~1.7Kb` with brotli compression.
-
+A simple `Hello World` bundle weighs around `1.1Kb` gzipped.
 
 ## Getting Started
 
@@ -159,7 +161,6 @@ Here is a simple boilerplate to get started. This boilerplate will attach Shadow
 import { Component, css, html, CustomElement } from '@readymade/core';
 
 @Component({
-  selector: 'my-component',
   template: html`
 
 	`,

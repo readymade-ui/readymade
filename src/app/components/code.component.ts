@@ -1,4 +1,4 @@
-import { Component, css, CustomElement, html, StateChange, State } from './../../modules/core/index.js';
+import { Component, css, CustomElement, html, State } from './../../modules/core/index.js';
 
 declare let Prism: any;
 
@@ -7,7 +7,6 @@ export class CodeState {
 }
 
 @Component({
-  selector: 'r-code',
   style: css`
     :host {
     display: block;
@@ -199,7 +198,7 @@ class RCodeComponent extends CustomElement {
   }
 
   @State()
-  static get getState() {
+  public getState() {
     return new CodeState();
   }
 

@@ -40,7 +40,7 @@ class EventDispatcher {
         detail: (ev as CustomEvent).detail,
         timeStamp: ev.timeStamp,
         type: ev.type,
-      }; // TODO: figure out a better way to clone the event?
+      };
       (name) ? this.channels[name].postMessage(evt) : this.channels.default.postMessage(evt);
     }
     public setChannel(name: string) {

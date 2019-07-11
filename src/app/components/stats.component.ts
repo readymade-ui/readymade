@@ -1,7 +1,6 @@
 import { Component, css, CustomElement, html } from './../../modules/core/index.js';
 
 @Component({
-  selector: 'r-stats',
   style: css`
     :host {
       display: block;

@@ -1,7 +1,6 @@
+import { BIND_SUFFIX, BoundHandler, BoundNode } from '../element/src/compile.js';
 import { compileTemplate } from './../element/element.js';
 import { EventDispatcher } from './../event/event.js';
-import { AbstractState } from 'src/app/lib/state/store.js';
-import { BIND_SUFFIX, BoundHandler, BoundNode } from '../element/src/compile.js';
 
 export type EventHandler = ()  => void;
 
@@ -11,7 +10,7 @@ interface EventMeta {
 }
 
 interface ElementMeta {
-  selector: string;
+  selector?: string;
   style?: string | any[];
   template?: string | any[];
   eventMap?: { [key: string]: EventMeta };
@@ -30,7 +29,6 @@ const css = (...args) => {
 const noop = () => {};
 
 // Decorators
-
 
 function Component(attributes: ElementMeta) {
   if (!attributes) {

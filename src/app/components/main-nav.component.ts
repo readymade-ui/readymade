@@ -6,7 +6,6 @@ export class MainNavState {
 }
 
 @Component({
-  selector: 'r-main-nav',
   style: css`
 		:host {
 			display: block;

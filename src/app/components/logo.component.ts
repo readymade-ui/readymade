@@ -10,7 +10,6 @@ export class LogoState {
 export const _logoState = new LogoState();
 
 @Component({
-  selector: 'r-logo',
   style: css`
       :host {
         display: block;

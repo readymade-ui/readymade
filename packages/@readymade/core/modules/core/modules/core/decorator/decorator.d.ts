@@ -4,7 +4,7 @@ interface EventMeta {
     handler: EventHandler;
 }
 interface ElementMeta {
-    selector: string;
+    selector?: string;
     style?: string | any[];
     template?: string | any[];
     eventMap?: {

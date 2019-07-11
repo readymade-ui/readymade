@@ -1,6 +1,5 @@
 import { OnStateChange } from './../../component/component.js';
 import { ElementMeta } from './../../decorator/decorator.js';
-import { getChildNodes } from './util.js';
 
 export const TEMPLATE_BIND_REGEX = /\{\{(\s*)(.*?)(\s*)\}\}/g;
 export const BIND_SUFFIX = ' __state';
@@ -140,17 +139,18 @@ class BoundHandler {
     };
 
     target[key] = value;
-    if (this.$parent.$state['node' + BIND_SUFFIX]) { this.$parent.$state['node' + BIND_SUFFIX].update(key, target[key]); } // DEPRECATED
-    else if (this.$parent.$$state['node' + BIND_SUFFIX]) { this.$parent.$$state['node' + BIND_SUFFIX].update(key, target[key]); }
+    this.$parent.$$state['node' + BIND_SUFFIX].update(key, target[key]);
     if (target.onStateChange) { target.onStateChange(change); }
     return true;
   }
 }
 
-// support setting global state for now, what about descendant properties?
+function bindTemplate() {
+  if (this.bindState) { this.bindState(); }
+}
+
 function setState(prop: string, model: any) {
-    if (!this.state) { this.$state[prop] = model; }
-    if (this.state) { this.state[prop] = model; } // DEPRECATED
+  this.$state[prop] = model;
 }
 
 function compileTemplate(elementMeta: ElementMeta, target: any) {
@@ -159,17 +159,6 @@ function compileTemplate(elementMeta: ElementMeta, target: any) {
   target.prototype.template = `<style>${elementMeta.style}</style>${elementMeta.template}`;
   target.prototype.bindTemplate = bindTemplate;
   target.prototype.setState = setState;
-}
-
-function bindTemplate() {
-  if (!this.bindState) { // DEPRECATED
-    this.$state = {};
-    this.$state['handler' + BIND_SUFFIX] = new BoundHandler(this);
-    this.$state['node' + BIND_SUFFIX] = new BoundNode(this.shadowRoot ? this.shadowRoot : this);
-    this.state = new Proxy(this, this.$state['handler' + BIND_SUFFIX]);
-  } else {
-    this.bindState();
-  }
 }
 
 export {

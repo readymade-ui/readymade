@@ -1,12 +1,13 @@
-import { Component, css, CustomElement, html, StateChange, State } from './../../modules/core/index.js';
+import { Component, css, CustomElement, html, State } from './../../modules/core/index.js';
 
 export class HeadlineState {
-  public copy: string | number;
-  public copySize: string;
+  public model: {
+    copy: string | number;
+    copySize: string;
+  };
 }
 
 @Component({
-  selector: 'r-headline',
   style: css`
     h1 {
       font-family: 'Major Mono Display', sans-serif;
@@ -34,7 +35,7 @@ export class HeadlineState {
     }
 	`,
   template: html`
-    <h1 class="{{copySize}}">{{copy}}</h1>
+    <h1 class="{{model.copySize}}">{{model.copy}}</h1>
 	`,
 })
 class RHeadlineComponent extends CustomElement {
@@ -46,9 +47,10 @@ class RHeadlineComponent extends CustomElement {
   }
 
   @State()
-  static get getState() {
+  public getState() {
     return new HeadlineState();
   }
+
   static get observedAttributes() {
     return ['headline', 'size'];
   }
@@ -56,10 +58,10 @@ class RHeadlineComponent extends CustomElement {
 
     switch (name) {
       case 'headline':
-        this.setState('copy', newValue);
+        this.setState('model.copy', newValue);
         break;
       case 'size':
-        this.setState('copySize', newValue);
+        this.setState('model.copySize', newValue);
         break;
     }
   }

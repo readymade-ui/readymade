@@ -192,25 +192,20 @@ class BoundHandler {
             },
         };
         target[key] = value;
-        if (this.$parent.$state['node' + BIND_SUFFIX]) {
-            this.$parent.$state['node' + BIND_SUFFIX].update(key, target[key]);
-        }
-        else if (this.$parent.$$state['node' + BIND_SUFFIX]) {
-            this.$parent.$$state['node' + BIND_SUFFIX].update(key, target[key]);
-        }
+        this.$parent.$$state['node' + BIND_SUFFIX].update(key, target[key]);
         if (target.onStateChange) {
             target.onStateChange(change);
         }
         return true;
     }
 }
+function bindTemplate() {
+    if (this.bindState) {
+        this.bindState();
+    }
+}
 function setState(prop, model) {
-    if (!this.state) {
-        this.$state[prop] = model;
-    }
-    if (this.state) {
-        this.state[prop] = model;
-    }
+    this.$state[prop] = model;
 }
 function compileTemplate(elementMeta, target) {
     target.prototype.elementMeta = Object.assign(target.elementMeta ? target.elementMeta : {}, elementMeta);
@@ -218,17 +213,6 @@ function compileTemplate(elementMeta, target) {
     target.prototype.template = `<style>${elementMeta.style}</style>${elementMeta.template}`;
     target.prototype.bindTemplate = bindTemplate;
     target.prototype.setState = setState;
-}
-function bindTemplate() {
-    if (!this.bindState) {
-        this.$state = {};
-        this.$state['handler' + BIND_SUFFIX] = new BoundHandler(this);
-        this.$state['node' + BIND_SUFFIX] = new BoundNode(this.shadowRoot ? this.shadowRoot : this);
-        this.state = new Proxy(this, this.$state['handler' + BIND_SUFFIX]);
-    }
-    else {
-        this.bindState();
-    }
 }
 
 function getParent(el) {

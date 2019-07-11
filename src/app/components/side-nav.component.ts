@@ -10,7 +10,6 @@ export class SideNavState {
 }
 
 @Component({
-  selector: 'r-side-nav',
   style: css`
 		:host {
 			display: block;
@@ -168,7 +167,7 @@ class RSideNavComponent extends CustomElement {
         b: 24,
         c: 22,
         d: 32
-      }
+      },
     };
   }
   @State()
@@ -182,7 +181,7 @@ class RSideNavComponent extends CustomElement {
     this.shadow = this.shadowRoot.querySelector('.shadow');
     Array.from(this.shadowRoot.querySelectorAll('a')).forEach((a) => {
       a.addEventListener('click', (ev) => {
-        document.querySelector((<Element>ev.target).getAttribute('data-link')).scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
+        document.querySelector((ev.target as Element).getAttribute('data-link')).scrollIntoView({behavior: 'smooth', block: 'start', inline: 'nearest'});
         this.close();
       });
     });
