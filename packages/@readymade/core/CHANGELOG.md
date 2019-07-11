@@ -1,8 +1,6 @@
 # CHANGELOG
 
-## 1.0.0
-
-Initial release!
+## 1.0.0-beta.5
 
 - NEW 'Hello World' is ~1Kb, current size is 1.1Kb gzipped
 - FIX issue that caused 'selector' property to be mandatory in Component decorator
