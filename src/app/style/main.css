@@ -1,7 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Major+Mono+Display|Source Sans Pro:100,300,400');
 
 body {
-
     background: rgb(25, 25, 25);
     color:#cfcfcf;
     font-family: 'Source Sans Pro', sans-serif;
@@ -12,9 +11,8 @@ body {
     width: 100%;
     height: 100%;
     overflow-y: auto;
-    -webkit-font-smoothing: antialiased;
+    -webkit-font-smoothing: auto;
     -moz-osx-font-smoothing: grayscale;
-
 }
 
 ::selection {
