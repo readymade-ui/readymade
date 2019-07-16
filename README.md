@@ -227,9 +227,9 @@ A sample tsconfig could be as follows. Make sure `experimentalDecorators` is set
 
 This is the bare minumum needed to compile with `typescript`.
 
-## Why does readymade exist?
+## Why does Readymade exist?
 
-readymade is an experiment to see how Web Components can be developed using only parts of ECMAScript or portions of the spec still being proposed, such as Decorators.
+Readymade is an experiment to see how Web Components can be developed using Browser APIs or portions of the ECMAScript spec still being proposed, such as Decorators.
 
 The name 'readymade' is in an homage to Marcel Duchamp, an artist in the 20th century who made art with ordinary objects. Like Duchamp's readymades, this library picks up ordinary objects found in ECMAScript, repositions and joins them together to form something completely new: a set of tools that make developing Web Components easier.
 

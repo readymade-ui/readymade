@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.0.0
+
+- Initial production release 🎉
+
+
 ## 1.0.0-beta.5
 
 - NEW 'Hello World' is ~1Kb, current size is 1.1Kb gzipped
