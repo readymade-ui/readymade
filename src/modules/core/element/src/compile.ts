@@ -154,6 +154,12 @@ function setState(prop: string, model: any) {
 }
 
 function compileTemplate(elementMeta: ElementMeta, target: any) {
+  if (!elementMeta.style) {
+    elementMeta.style = '';
+  }
+  if (!elementMeta.template) {
+    elementMeta.template = '';
+  }
   target.prototype.elementMeta = Object.assign(target.elementMeta ? target.elementMeta : {}, elementMeta);
   target.prototype.elementMeta.eventMap = {};
   target.prototype.template = `<style>${elementMeta.style}</style>${elementMeta.template}`;

@@ -1,9 +1,9 @@
 function attachShadow(instance: any, options?: any) {
-    const shadowRoot: ShadowRoot = instance.attachShadow(options || {});
-    const t = document.createElement('template');
-    t.innerHTML = instance.template;
-    shadowRoot.appendChild(t.content.cloneNode(true));
-    instance.bindTemplate();
+  const shadowRoot: ShadowRoot = instance.attachShadow(options || {});
+  const t = document.createElement('template');
+  t.innerHTML = instance.template;
+  shadowRoot.appendChild(t.content.cloneNode(true));
+  instance.bindTemplate();
 }
 
 function attachDOM(instance: any, options?: any) {

@@ -1,9 +1,12 @@
 # CHANGELOG
 
+## 1.0.1
+
+- FIX issue that caused styles to display null in Dev Tools when style wasn't specified
+
 ## 1.0.0
 
 - Initial production release 🎉
-
 
 ## 1.0.0-beta.5
 

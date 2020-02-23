@@ -8,12 +8,14 @@ mkdir dist/fonts
 cp node_modules/web-animations-js/web-animations.min.js dist/lib/web-animations.min.js
 cp node_modules/web-animations-js/web-animations.min.js.map dist/lib/web-animations.min.js.map
 cp src/app/index.html dist/index.html
+cp src/app/test.html dist/test.html
 cp src/app/404.html dist/404.html
 cp src/app/favicon.ico dist/favicon.ico
 cp -R src/app/style/fonts/. dist/fonts
 cp -R src/app/assets/. dist/assets/
 
 node_modules/.bin/postcss src/app/style/main.css --output dist/style/main.css
+node_modules/.bin/postcss src/app/style/test.css --output dist/style/test.css
 
 if [[ $NODE_ENV == 'prod' ]]; then
     node_modules/.bin/rollup -c rollup.config.prod.js

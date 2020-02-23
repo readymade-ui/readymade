@@ -204,6 +204,12 @@ function setState(prop, model) {
     this.$state[prop] = model;
 }
 function compileTemplate(elementMeta, target) {
+    if (!elementMeta.style) {
+        elementMeta.style = '';
+    }
+    if (!elementMeta.template) {
+        elementMeta.template = '';
+    }
     target.prototype.elementMeta = Object.assign(target.elementMeta ? target.elementMeta : {}, elementMeta);
     target.prototype.elementMeta.eventMap = {};
     target.prototype.template = `<style>${elementMeta.style}</style>${elementMeta.template}`;
@@ -255,13 +261,13 @@ const css = (...args) => {
     return args;
 };
 const noop = () => { };
-function Component(attributes) {
-    if (!attributes) {
+function Component(meta) {
+    if (!meta) {
         console.error('Component must include ElementMeta to compile');
         return;
     }
     return (target) => {
-        compileTemplate(attributes, target);
+        compileTemplate(meta, target);
         return target;
     };
 }
