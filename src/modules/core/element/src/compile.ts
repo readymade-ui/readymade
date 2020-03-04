@@ -39,7 +39,15 @@ class NodeTree {
   public setNode(node: Node, key?: string, value?: any) {
       const id = this.$parentId + '-' + uuidv4().slice(0, 6);
       const clone = node.cloneNode(true);
+      if (!(node as Element).setAttribute) {
+        // tslint:disable-next-line: only-arrow-functions, no-empty
+        (node as Element).setAttribute = function(i: string, v: string) {};
+      }
       (node as Element).setAttribute(id, '');
+      if (!(clone as Element).setAttribute) {
+        // tslint:disable-next-line: only-arrow-functions, no-empty
+        (clone as Element).setAttribute = function(i: string, v: string) {};
+      }
       (clone as Element).setAttribute(id, '');
       if (!this.$flatMap[id]) {
         this.$flatMap[id] = {
@@ -52,23 +60,40 @@ class NodeTree {
       }
   }
   public updateNode(node: Node, key: string, value: any) {
-
+    if (this.getElementByAttribute((node as Element)).length === 0) {
+      return;
+    }
     const regex = new RegExp(`\{\{(\s*)(${key})(\s*)\}\}`, 'gi');
-    const attrId = this.getElementByAttribute((node as Element))[0].nodeName;
+    const attrId = this.getElementByAttribute((node as Element))[0].nodeName || this.getElementByAttribute((node as Element))[0].name;
     const protoNode = this.$flatMap[attrId].node;
     let attr;
     for (const attribute of protoNode.attributes) {
-      attr = attribute.nodeName;
-      if (attr.includes('attr.') && !protoNode.getAttribute(attribute.nodeName.replace('attr.', ''))) {
-        attr = attribute.nodeName.replace('attr.', '');
+      attr = attribute.nodeName || attribute.name;
+      if (attr.includes('attr.') && !protoNode.getAttribute(attr.replace('attr.', ''))) {
+        if (attribute.nodeName) {
+          attr = attribute.nodeName.replace('attr.', '');
+        } else if (attribute.name) {
+          attr = attribute.name.replace('attr.', '');
+        }
+        if (!protoNode.setAttribute) {
+          // tslint:disable-next-line: only-arrow-functions, no-empty
+          protoNode.setAttribute = function(i: string, v: string) {};
+        }
         protoNode.setAttribute(attr, attribute.nodeValue.replace(TEMPLATE_BIND_REGEX, ''));
-        (node as Element).removeAttribute(attribute.nodeName);
+        const remove = attribute.nodeName || attribute.name;
+        (node as Element).removeAttribute(remove);
       }
-      if (attribute.nodeValue.match(regex, 'gi')) {
-        (node as Element).setAttribute(attr, attribute.nodeValue.replace(regex, value));
+      const attributeValue = attribute.nodeValue || attribute.value;
+      if (attributeValue.match(regex, 'gi')) {
+        if (!(node as Element).setAttribute) {
+          // tslint:disable-next-line: only-arrow-functions, no-empty
+          (node as Element).setAttribute = function(i: string, v: string) {};
+        }
+        (node as Element).setAttribute(attr, attributeValue.replace(regex, value));
       }
-      if (attribute.nodeName.includes('attr.')) {
-        (node as Element).removeAttribute(attribute.nodeName);
+      const check = attribute.nodeName || attribute.name;
+      if (check.includes('attr.')) {
+        (node as Element).removeAttribute(check);
       }
     }
     if (protoNode.textContent.match(regex)) {
@@ -87,8 +112,11 @@ class NodeTree {
     }
   }
   public getElementByAttribute(node: Element) {
+    if (!node.attributes) {
+      return [];
+    }
     return Array.from(node.attributes).filter((attr) => {
-      return /[A-Za-z0-9]{3}-[A-Za-z0-9]{6}/gm.test(attr.nodeName);
+      return /[A-Za-z0-9]{3}-[A-Za-z0-9]{6}/gm.test(attr.nodeName || attr.name);
     });
   }
   public update(key: string, value: any) {
