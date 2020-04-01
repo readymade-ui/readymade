@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.0.2
+
+- FIX issues with server-side rendering components
+
 ## 1.0.1
 
 - FIX issue that caused styles to display null in Dev Tools when style wasn't specified
