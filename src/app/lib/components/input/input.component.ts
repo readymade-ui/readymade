@@ -2,6 +2,7 @@ import { Component, css, InputComponent, Listen } from '../../../../modules/core
 
 @Component({
   selector: 'my-input',
+  custom: { extends: 'input'},
   style: css`
 		:host {
 			background: rgba(24, 24, 24, 1);
@@ -20,6 +21,6 @@ class MyInputComponent extends InputComponent {
   }
 }
 
-customElements.define('my-input', MyInputComponent, { extends: 'input'});
+// customElements.define('my-input', MyInputComponent, { extends: 'input'});
 
 export { MyInputComponent };

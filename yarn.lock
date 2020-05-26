@@ -119,6 +119,11 @@
     lodash "^4.17.11"
     to-fast-properties "^2.0.0"
 
+"@corpuscule/custom-builtin-elements@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@corpuscule/custom-builtin-elements/-/custom-builtin-elements-0.3.0.tgz#caccf10e9735f9127775858223f90a88d251fe8f"
+  integrity sha512-hVE+3splyYXhp8aamO0PWO5AYVNDanQ2Bmt9tq4gBMx/kUisSxK/dU6WlhOnLzhr3H2BDnH4oBdExZRC2o+2Yw==
+
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"
@@ -609,6 +614,11 @@ braces@^2.3.1, braces@^2.3.2:
     snapdragon-node "^2.0.1"
     split-string "^3.0.2"
     to-regex "^3.0.1"
+
+broadcastchannel-polyfill@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/broadcastchannel-polyfill/-/broadcastchannel-polyfill-1.0.1.tgz#7596b3d78526b3919e76562aff00cd1278a205ea"
+  integrity sha512-iooPAN913j4xfrIu5o+mDaks9UUDOBfgjn8SsuzysfXr/X+f8m9y5t8c5rAbW6P0LdUXBJx33zwN4Cs6b9BGRw==
 
 browser-process-hrtime@^0.1.2:
   version "0.1.3"

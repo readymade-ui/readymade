@@ -44,6 +44,6 @@ class NodeComponent extends PseudoElement {
   }
 }
 
-customElements.define('x-node', NodeComponent);
+// customElements.define('x-node', NodeComponent);
 
 export { NodeComponent };

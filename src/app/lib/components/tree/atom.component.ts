@@ -44,6 +44,6 @@ class AtomComponent extends CustomElement {
   }
 }
 
-customElements.define('x-atom', AtomComponent);
+// customElements.define('x-atom', AtomComponent);
 
 export { AtomComponent };

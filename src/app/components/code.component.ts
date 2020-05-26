@@ -7,6 +7,7 @@ export class CodeState {
 }
 
 @Component({
+  selector: 'r-code',
   style: css`
     :host {
     display: block;
@@ -223,6 +224,6 @@ class RCodeComponent extends CustomElement {
   }
 }
 
-customElements.define('r-code', RCodeComponent);
+// customElements.define('r-code', RCodeComponent);
 
 export { RCodeComponent };

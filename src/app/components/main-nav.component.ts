@@ -6,6 +6,7 @@ export class MainNavState {
 }
 
 @Component({
+  selector: 'r-main-nav',
   style: css`
 		:host {
 			display: block;
@@ -134,6 +135,6 @@ class RMainNavComponent extends CustomElement {
   }
 }
 
-customElements.define('r-main-nav', RMainNavComponent);
+// customElements.define('r-main-nav', RMainNavComponent);
 
 export { RMainNavComponent };

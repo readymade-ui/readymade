@@ -70,6 +70,6 @@ class TreeComponent extends CustomElement {
   }
 }
 
-customElements.define('x-tree', TreeComponent);
+// customElements.define('x-tree', TreeComponent);
 
 export { TreeComponent };

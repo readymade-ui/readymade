@@ -10,6 +10,7 @@ export class LogoState {
 export const _logoState = new LogoState();
 
 @Component({
+  selector: 'r-logo',
   style: css`
       :host {
         display: block;
@@ -51,6 +52,6 @@ class RLogoComponent extends CustomElement {
   }
 }
 
-customElements.define('r-logo', RLogoComponent);
+// customElements.define('r-logo', RLogoComponent);
 
 export { RLogoComponent };

@@ -10,6 +10,7 @@ export class SideNavState {
 }
 
 @Component({
+  selector: 'r-side-nav',
   style: css`
 		:host {
 			display: block;
@@ -249,6 +250,6 @@ class RSideNavComponent extends CustomElement {
 
 }
 
-customElements.define('r-side-nav', RSideNavComponent);
+// customElements.define('r-side-nav', RSideNavComponent);
 
 export { RSideNavComponent };

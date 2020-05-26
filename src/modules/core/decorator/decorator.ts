@@ -10,11 +10,14 @@ interface EventMeta {
 }
 
 interface ElementMeta {
-  selector?: string;
+  selector: string;
   style?: string | any[];
   template?: string | any[];
   eventMap?: { [key: string]: EventMeta };
   boundState?: any;
+  custom?: {
+    extends: string;
+  };
 }
 
 const html = (...args) => {
@@ -37,6 +40,12 @@ function Component(meta: ElementMeta) {
   }
   return (target: any) => {
     compileTemplate(meta, target);
+    if (meta.selector && !meta.custom) {
+      customElements.define(meta.selector, target);
+    }
+    if (meta.selector && meta.custom) {
+      customElements.define(meta.selector, target, meta.custom);
+    }
     return target;
   };
 }
