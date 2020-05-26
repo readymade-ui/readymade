@@ -1,4 +1,4 @@
-import { Component, css, CustomElement, html, StateChange, State } from './../../modules/core/index.js';
+import { Component, css, CustomElement, html, State } from './../../modules/core/index.js';
 
 export class LogoState {
   public heading: string = 'R';

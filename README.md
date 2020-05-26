@@ -271,3 +271,23 @@ This can result in inconsistant approaches as different engineers work on the li
 ### Solution
 
 Provide a set of reusable functions that reduce duplicate code and provide some convenience methods. This project specifically uses a special kind of higher order Function called a Decorator. Decorators are currently a proposed feature in ECMAScript. We can start using them now with TypeScript. Decorators are used by libraries like Angular and Stencil. By utilizing Decorators, we gain a consistent interface for coding and generating UI components.
+
+
+### Development
+
+This repo includes a very simple development server.
+
+Fork and clone the repo. Install dependencies.
+
+```
+yarn install
+```
+
+To develop, first run `yarn seed` then the bash script `./index.sh`. This will copy over necessary files to the `dist` directory.
+
+View changes in the browser with `yarn serve` running in another Terminal.
+
+
+### Production
+
+To build the library for production, i.e. to use as a dependency in anothe rproject run `yarn build:lib`.

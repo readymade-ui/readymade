@@ -8,6 +8,34 @@ interface Node {
     cloneNode(deep?: boolean): this;
 }
 
+const findValueByString = function(o: any, s: string) {
+  s = s.replace(/\[(\w+)\]/g, '.$1');
+  s = s.replace(/^\./, '');
+  const a = s.split('.');
+  for (let i = 0, n = a.length; i < n; ++i) {
+      const k = a[i];
+      if (k in o) {
+          o = o[k];
+      } else {
+          return;
+      }
+  }
+  return o;
+};
+
+function setValueByString(obj: any, path: string, value: any) {
+  const pList = path.split('.');
+  const len = pList.length;
+  for (let i = 0; i < len - 1; i++) {
+      const elem = pList[i];
+      if ( !obj[elem] ) {
+        obj[elem] = {};
+      }
+      obj = obj[elem];
+  }
+  obj[pList[len - 1]] = value;
+}
+
 function templateId() {
   let str = '';
   const alphabet = 'abcdefghijklmnopqrstuvwxyz';
@@ -159,14 +187,22 @@ class BoundHandler {
     this.$parent = obj;
   }
   public set(target: any, key: string, value: any) {
+    const ex = new RegExp(TEMPLATE_BIND_REGEX).exec(value);
+    const capturedGroup = (ex && ex[2]) ? ex[2] : false;
     const change = {
       [key]: {
         previousValue : target[key],
         newValue: value,
       },
     };
+    if (capturedGroup && target.parentNode && target.parentNode.host && target.parentNode.mode === 'open') {
+      target[key] = findValueByString(target.parentNode.host, capturedGroup);
+    } else if (capturedGroup && target.parentNode) {
+      target[key] = findValueByString(target.parentNode, capturedGroup);
+    } else {
+      target[key] = value;
+    }
 
-    target[key] = value;
     this.$parent.$$state['node' + BIND_SUFFIX].update(key, target[key]);
     if (target.onStateChange) { target.onStateChange(change); }
     return true;
@@ -178,7 +214,7 @@ function bindTemplate() {
 }
 
 function setState(prop: string, model: any) {
-  this.$state[prop] = model;
+  setValueByString(this.$state, prop, model);
 }
 
 function compileTemplate(elementMeta: ElementMeta, target: any) {
