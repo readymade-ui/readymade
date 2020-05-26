@@ -52,6 +52,7 @@ function State(property?: string) {
       for (const prop in this.$$state) {
         if (this.$$state[prop] && !prop.includes('__state')) {
           this.$state[prop] = this.$$state[prop];
+          // console.log(prop, this.$$state[prop]);
         }
       }
     }

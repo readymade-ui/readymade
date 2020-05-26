@@ -1,4 +1,4 @@
-import { Component, css, CustomElement, Emitter, html, Listen, StateChange, State } from './../../modules/core/index.js';
+import { Component, css, CustomElement, Emitter, html, Listen, State } from './../../modules/core/index.js';
 
 export class MainNavState {
   public resourceLinkFillColor: string = '#cfcfcf';

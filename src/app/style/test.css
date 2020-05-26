@@ -210,3 +210,8 @@ footer r-logo {
   border: 0;
   color: #fff;
 }
+
+.testbed {
+  display: flex;
+  justify-content: space-evenly;
+}
