@@ -112,9 +112,7 @@ class NodeTree {
         (node as Element).removeAttribute(remove);
       }
       const attributeValue = attribute.nodeValue || attribute.value;
-      // console.log('BEFORE', key, value, node, attributeValue, attributeValue.replace(regex, value));
       if (attributeValue.match(regex, 'gi')) {
-       // console.log('MATCH', key, value, node, attributeValue, attributeValue.replace(regex, value));
         if (!(node as Element).setAttribute) {
           // tslint:disable-next-line: only-arrow-functions, no-empty
           (node as Element).setAttribute = function(i: string, v: string) {};
