@@ -29,7 +29,7 @@ const css = (...args) => {
 };
 
 // tslint:disable-next-line
-const noop = () => { };
+const noop = () => {};
 
 // Decorators
 
@@ -42,9 +42,10 @@ function Component(meta: ElementMeta) {
     compileTemplate(meta, target);
     if (meta.selector && !meta.custom) {
       customElements.define(meta.selector, target);
-    }
-    if (meta.selector && meta.custom) {
+    } else if (meta.selector && meta.custom) {
       customElements.define(meta.selector, target, meta.custom);
+    } else {
+      customElements.define(meta.selector, target);
     }
     return target;
   };
