@@ -48,6 +48,8 @@
         <r-code type="javascript">
                 <span hidden>
 @Component({
+    selector: 'my-button',
+    custom: { extends: 'button' },
     template:`
     &lt;span>{{buttonCopy}}&lt;/span>
     `,
@@ -75,6 +77,8 @@
 import { ButtonComponent, Component, Emitter, Listen } from '@readymade/core';
 
 @Component({
+    selector: 'my-button',
+    custom: { extends: 'button' },
     template:`
     &lt;span>{{buttonCopy}}&lt;/span>
     `,
@@ -171,6 +175,7 @@ import { Component, CustomElement } from '@readymade/core';
         <r-code type="javascript">
                 <span hidden>
 @Component({
+    selector: 'my-component',
     template:`
     &lt;span>{{copyModel}}&lt;/span>
         `,
@@ -221,6 +226,8 @@ class MyComponent extends CustomElement {
         <r-code type="javascript">
                 <span hidden>
 @Component({
+    selector: 'my-button',
+    custom: { extends: 'button' },
     template:`
     &lt;span>{{buttonCopy}}&lt;/span>
     `,
