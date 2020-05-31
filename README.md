@@ -18,6 +18,8 @@ The below example is a button that extends HTMLButtonElement. Since this is a cu
 import { Component, attachDOM, attachStyle, Listen } from '@readymade/core';
 
 @Component({
+	selector: 'my-button',
+	custom: { extends: 'button' },
 	template:`
 		<b>Click me!</b>
 	`,
@@ -45,8 +47,6 @@ class MyButtonComponent extends HTMLButtonElement {
 		console.log(this, event);
 	}
 }
-
-customElements.define('my-button', MyButtonComponent, { extends: 'button' });
 ```
 
 In a template somewhere...
@@ -161,6 +161,7 @@ Here is a simple boilerplate to get started. This boilerplate will attach Shadow
 import { Component, css, html, CustomElement } from '@readymade/core';
 
 @Component({
+	selector: 'my-component',
   template: html`
 
 	`,
@@ -173,8 +174,6 @@ class MyComponent extends CustomElement {
     super();
   }
 }
-
-customElements.define('my-component', MyComponent);
 
 export { MyComponent };
 ```

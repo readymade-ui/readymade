@@ -224,6 +224,4 @@ class RCodeComponent extends CustomElement {
   }
 }
 
-// customElements.define('r-code', RCodeComponent);
-
 export { RCodeComponent };

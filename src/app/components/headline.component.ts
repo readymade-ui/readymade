@@ -72,6 +72,4 @@ class RHeadlineComponent extends CustomElement {
   }
 }
 
-// customElements.define('r-headline', RHeadlineComponent);
-
 export { RHeadlineComponent };

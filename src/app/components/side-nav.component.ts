@@ -250,6 +250,4 @@ class RSideNavComponent extends CustomElement {
 
 }
 
-// customElements.define('r-side-nav', RSideNavComponent);
-
 export { RSideNavComponent };

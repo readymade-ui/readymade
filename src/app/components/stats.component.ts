@@ -42,6 +42,5 @@ class RStatsComponent extends CustomElement {
   }
 }
 
-// customElements.define('r-stats', RStatsComponent);
 
 export { RStatsComponent };

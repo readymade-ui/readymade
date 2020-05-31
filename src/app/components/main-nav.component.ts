@@ -135,6 +135,4 @@ class RMainNavComponent extends CustomElement {
   }
 }
 
-// customElements.define('r-main-nav', RMainNavComponent);
-
 export { RMainNavComponent };

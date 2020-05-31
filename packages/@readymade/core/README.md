@@ -46,7 +46,6 @@ class MyButtonComponent extends HTMLButtonElement {
 	}
 }
 
-customElements.define('my-button', MyButtonComponent, { extends: 'button' });
 ```
 
 In a template somewhere...
@@ -173,8 +172,6 @@ class MyComponent extends CustomElement {
     super();
   }
 }
-
-customElements.define('my-component', MyComponent);
 
 export { MyComponent };
 ```
