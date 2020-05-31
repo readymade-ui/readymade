@@ -12,7 +12,7 @@ JavaScript microlibrary for developing Web Components with Decorators that uses 
 
 ### Metadata Class Decorator 🎰
 
-The below example is a button that extends HTMLButtonElement. Since this is a customized built-in elements, MyButtonComponent extends from the native HTMLButtonElement, we cannot attach Shadow DOM. attachDOM compiles the template as the my-button innerHTML and places a style tag in the `<head>` to style the Element.
+The below example is a button that extends HTMLButtonElement. Since this is a customized built-in elements, MyButtonComponent extends from the native HTMLButtonElement, we cannot attach Shadow DOM. attachDOM compiles the template as the my-button innerHTML and places a style tag in the `<head>` to style the Element. To use customized built-in elements, also implement the `custom` property in your decorator which is used internally by Readymade when calling `customElements.define`.
 
 ```js
 import { Component, attachDOM, attachStyle, Listen } from '@readymade/core';
