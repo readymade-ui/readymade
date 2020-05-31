@@ -18,6 +18,8 @@ The below example is a button that extends HTMLButtonElement. Since this is a cu
 import { Component, attachDOM, attachStyle, Listen } from '@readymade/core';
 
 @Component({
+	selector: 'my-button',
+	custom: { extends: 'button' },
 	template:`
 		<b>Click me!</b>
 	`,
