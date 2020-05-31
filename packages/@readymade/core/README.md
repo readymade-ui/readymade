@@ -160,6 +160,7 @@ Here is a simple boilerplate to get started. This boilerplate will attach Shadow
 import { Component, css, html, CustomElement } from '@readymade/core';
 
 @Component({
+  selector: 'my-component',
   template: html`
 
 	`,
