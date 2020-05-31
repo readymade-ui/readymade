@@ -15,6 +15,7 @@
         "interface-name": [true, "never-prefix"],
         "no-console": [true, "log", "warn"],
         "no-eval": true,
+        "trailing-comma": false,
         "only-arrow-functions": false,
         "variable-name": [
             true,

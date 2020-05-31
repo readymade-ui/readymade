@@ -6,6 +6,7 @@ class ButtonState {
 
 @Component({
   selector: 'my-button',
+  custom: { extends: 'button'},
   style: css`
 		:host {
 			background: rgba(24, 24, 24, 1);
@@ -42,6 +43,5 @@ class MyButtonComponent extends ButtonComponent {
   }
 }
 
-customElements.define('my-button', MyButtonComponent, { extends: 'button'});
 
 export { ButtonState, MyButtonComponent };

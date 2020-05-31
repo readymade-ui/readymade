@@ -6,6 +6,7 @@ export class MainNavState {
 }
 
 @Component({
+  selector: 'r-main-nav',
   style: css`
 		:host {
 			display: block;
@@ -133,7 +134,5 @@ class RMainNavComponent extends CustomElement {
     this.shadowRoot.querySelector('[link="side-nav"]').classList.remove('is--dark');
   }
 }
-
-customElements.define('r-main-nav', RMainNavComponent);
 
 export { RMainNavComponent };

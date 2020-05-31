@@ -7,6 +7,7 @@ export class CodeState {
 }
 
 @Component({
+  selector: 'r-code',
   style: css`
     :host {
     display: block;
@@ -222,7 +223,5 @@ class RCodeComponent extends CustomElement {
     this.shadowRoot.querySelector('code').innerHTML = Prism.highlight(code, Prism.languages[this.getAttribute('type')], this.getAttribute('type'));
   }
 }
-
-customElements.define('r-code', RCodeComponent);
 
 export { RCodeComponent };

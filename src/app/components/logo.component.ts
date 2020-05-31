@@ -4,12 +4,13 @@ export class LogoState {
   public heading: string = 'R';
   public heading2: string = 'readymade';
   public size: string = '';
-  public sizes: string[] = ['is--small', 'is--medium', 'is--large']
+  public sizes: string[] = ['is--small', 'is--medium', 'is--large'];
 }
 
 export const _logoState = new LogoState();
 
 @Component({
+  selector: 'r-logo',
   style: css`
       :host {
         display: block;
@@ -45,12 +46,8 @@ class RLogoComponent extends CustomElement {
     }
   }
   public setSize(size: string) {
-    if (this.getState().sizes.includes(size)) {
-      this.setState('size', size);
-    }
+    this.setState('size', size);
   }
 }
-
-customElements.define('r-logo', RLogoComponent);
 
 export { RLogoComponent };

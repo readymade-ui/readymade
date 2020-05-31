@@ -1,5 +1,109 @@
 # CHANGELOG
 
+## 1.1.0
+
+### BREAKING CHANGES
+
+This release introduces improvements to the Component interface and internal state. These changes may effect your usage of Readymade. Please read the following to understand how to update components built with Readymade.
+
+- ADD automatic call to `customElements.define` in Component decorator
+- ADD `setState` now accepts string using dot, braket syntax to update deep values
+- FIX issues when updating state that is an Object
+- FIX issues with updating state
+
+Manual calls to `customElements.define` are no longer required. Readymade will automatically call `customElements.define` using the `selector` property in the `@Component` decorator.
+
+To update to `1.1.0`:
+
+`npm install @readymade/core@^1.1.0`
+`yarn upgrade @readymade/core@^1.1.0`
+
+For autonomous custom elements:
+
+1. Ensure the element has a `selector` defined in the `@Component` decorator.
+2. Remove any call to `customElements.define` in your code.
+
+```typescript
+@Component({
+  selector: 'x-atom',
+  style: css`
+      :host {
+        display: flex;
+      }
+	`,
+  template: html`
+    <span>{{state}}</span>
+	`,
+})
+class AtomComponent extends CustomElement {
+```
+
+For customized built-in elements:
+
+1. Ensure the element has a `selector` defined in the `@Component` decorator.
+2. Ensure the element has a `custom` property defined in the `@Component` decorator.
+3. Remove any call to `customElements.define` in your code.
+
+```typescript
+@Component({
+  selector: 'my-button',
+  custom: { extends: 'button'},
+  style: css`
+		:host {
+			cursor: pointer;
+		}
+	`,
+  template: html`
+   <span>{{model}}</span>
+	`,
+})
+class MyButtonComponent extends ButtonComponent {
+```
+
+### IMPROVEMENTS
+
+This release also fixes several issues when working with internal state.
+
+Now its possible to define properties on state as Objects and Arrays.
+
+```typescript
+export class TreeState {
+  public arrayModel = ['Node 1', 'Node 2', 'Node 3', 'Node 4', 'Node 5', 'Node 6', 'Node 7'];
+  public objectModel = {
+    foo: {
+      bar: {
+        baz: 'bbb',
+      },
+    },
+  };
+}
+```
+
+After binding to state with the `@State` decorator...
+
+```typescript
+@State()
+public getState() {
+  return new TreeState();
+}
+```
+
+reference objects and arrays in the component's template
+
+```html
+<x-node model="{{objectModel.foo.bar.baz}}"></x-node>
+<x-node model="{{arrayModel[0]}}"></x-node>
+```
+
+and update deeply nested objects with `setState`.
+
+```typescript
+ this.setState('objectModel.foo.bar', { baz: 'foo' } );
+```
+
+This represents a substantial improvement over the state mechanisms introduced in 1.0.0.
+
+
 ## 1.0.2
 
 - FIX issues with server-side rendering components

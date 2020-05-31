@@ -4,13 +4,16 @@ interface EventMeta {
     handler: EventHandler;
 }
 interface ElementMeta {
-    selector?: string;
+    selector: string;
     style?: string | any[];
     template?: string | any[];
     eventMap?: {
         [key: string]: EventMeta;
     };
     boundState?: any;
+    custom?: {
+        extends: string;
+    };
 }
 declare const html: (...args: any[]) => any[];
 declare const css: (...args: any[]) => any[];

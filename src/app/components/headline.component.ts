@@ -1,13 +1,8 @@
 import { Component, css, CustomElement, html, State } from './../../modules/core/index.js';
 
-export class HeadlineState {
-  public model: {
-    copy: string | number;
-    copySize: string;
-  };
-}
 
 @Component({
+  selector: 'r-headline',
   style: css`
     h1 {
       font-family: 'Major Mono Display', sans-serif;
@@ -35,12 +30,16 @@ export class HeadlineState {
     }
 	`,
   template: html`
-    <h1 class="{{model.copySize}}">{{model.copy}}</h1>
+    <h1 class="{{model.size}}">{{model.copy}}</h1>
 	`,
 })
 class RHeadlineComponent extends CustomElement {
 
   public hyperNode: any;
+  public model: {
+    copy?: string | number;
+    size?: string;
+  };
 
   constructor() {
     super();
@@ -48,25 +47,29 @@ class RHeadlineComponent extends CustomElement {
 
   @State()
   public getState() {
-    return new HeadlineState();
+    return {
+      model: {
+        size: '',
+        copy: '',
+      }
+    };
   }
 
   static get observedAttributes() {
     return ['headline', 'size'];
   }
   public attributeChangedCallback(name, oldValue, newValue) {
-
     switch (name) {
       case 'headline':
-        this.setState('model.copy', newValue);
+        this.model.copy  = newValue;
+        this.setState('model', this.model);
         break;
       case 'size':
-        this.setState('model.copySize', newValue);
+        this.model.size  = newValue;
+        this.setState('model', this.model);
         break;
     }
   }
 }
-
-customElements.define('r-headline', RHeadlineComponent);
 
 export { RHeadlineComponent };

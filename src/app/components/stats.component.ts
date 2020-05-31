@@ -1,6 +1,7 @@
 import { Component, css, CustomElement, html } from './../../modules/core/index.js';
 
 @Component({
+  selector: 'r-stats',
   style: css`
     :host {
       display: block;
@@ -41,6 +42,5 @@ class RStatsComponent extends CustomElement {
   }
 }
 
-customElements.define('r-stats', RStatsComponent);
 
 export { RStatsComponent };

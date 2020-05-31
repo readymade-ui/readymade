@@ -29,6 +29,4 @@ class MyItemComponent extends CustomElement {
   }
 }
 
-customElements.define('my-item', MyItemComponent);
-
 export { MyItemComponent };

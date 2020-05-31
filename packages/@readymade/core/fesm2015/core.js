@@ -80,6 +80,39 @@ function attachStyle(instance, options) {
 
 const TEMPLATE_BIND_REGEX = /\{\{(\s*)(.*?)(\s*)\}\}/g;
 const BIND_SUFFIX = ' __state';
+const isObject = function (val) {
+    if (val === null) {
+        return false;
+    }
+    return ((typeof val === 'function') || (typeof val === 'object'));
+};
+const findValueByString = function (o, s) {
+    s = s.replace(/\[(\w+)\]/g, '.$1');
+    s = s.replace(/^\./, '');
+    const a = s.split('.');
+    for (let i = 0, n = a.length; i < n; ++i) {
+        const k = a[i];
+        if (k in o) {
+            o = o[k];
+        }
+        else {
+            return;
+        }
+    }
+    return o;
+};
+function setValueByString(obj, path, value) {
+    const pList = path.split('.');
+    const len = pList.length;
+    for (let i = 0; i < len - 1; i++) {
+        const elem = pList[i];
+        if (!obj[elem]) {
+            obj[elem] = {};
+        }
+        obj = obj[elem];
+    }
+    obj[pList[len - 1]] = value;
+}
 function templateId() {
     let str = '';
     const alphabet = 'abcdefghijklmnopqrstuvwxyz';
@@ -123,10 +156,7 @@ class NodeTree {
             }
         }
     }
-    updateNode(node, key, value) {
-        if (this.getElementByAttribute(node).length === 0) {
-            return;
-        }
+    changeNode(node, key, value) {
         const regex = new RegExp(`\{\{(\s*)(${key})(\s*)\}\}`, 'gi');
         const attrId = this.getElementByAttribute(node)[0].nodeName || this.getElementByAttribute(node)[0].name;
         const protoNode = this.$flatMap[attrId].node;
@@ -161,6 +191,21 @@ class NodeTree {
         }
         if (protoNode.textContent.match(regex)) {
             node.textContent = protoNode.textContent.replace(regex, value);
+        }
+    }
+    updateNode(node, key, value) {
+        if (this.getElementByAttribute(node).length === 0) {
+            return;
+        }
+        if (isObject(value)) {
+            for (const prop in value) {
+                if (value.hasOwnProperty(prop)) {
+                    this.changeNode(node, `${key}.${prop}`, value[prop]);
+                }
+            }
+        }
+        else {
+            this.changeNode(node, key, value);
         }
     }
     create() {
@@ -207,13 +252,23 @@ class BoundHandler {
         this.$parent = obj;
     }
     set(target, key, value) {
+        const ex = new RegExp(TEMPLATE_BIND_REGEX).exec(value);
+        const capturedGroup = (ex && ex[2]) ? ex[2] : false;
         const change = {
             [key]: {
                 previousValue: target[key],
                 newValue: value,
             },
         };
-        target[key] = value;
+        if (capturedGroup && target.parentNode && target.parentNode.host && target.parentNode.mode === 'open') {
+            target[key] = findValueByString(target.parentNode.host, capturedGroup);
+        }
+        else if (capturedGroup && target.parentNode) {
+            target[key] = findValueByString(target.parentNode, capturedGroup);
+        }
+        else {
+            target[key] = value;
+        }
         this.$parent.$$state['node' + BIND_SUFFIX].update(key, target[key]);
         if (target.onStateChange) {
             target.onStateChange(change);
@@ -227,7 +282,7 @@ function bindTemplate() {
     }
 }
 function setState(prop, model) {
-    this.$state[prop] = model;
+    setValueByString(this.$state, prop, model);
 }
 function compileTemplate(elementMeta, target) {
     if (!elementMeta.style) {
@@ -294,6 +349,15 @@ function Component(meta) {
     }
     return (target) => {
         compileTemplate(meta, target);
+        if (meta.selector && !meta.custom) {
+            customElements.define(meta.selector, target);
+        }
+        else if (meta.selector && meta.custom) {
+            customElements.define(meta.selector, target, meta.custom);
+        }
+        else {
+            customElements.define(meta.selector, target);
+        }
         return target;
     };
 }

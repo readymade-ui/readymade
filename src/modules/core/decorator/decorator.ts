@@ -10,11 +10,14 @@ interface EventMeta {
 }
 
 interface ElementMeta {
-  selector?: string;
+  selector: string;
   style?: string | any[];
   template?: string | any[];
   eventMap?: { [key: string]: EventMeta };
   boundState?: any;
+  custom?: {
+    extends: string;
+  };
 }
 
 const html = (...args) => {
@@ -26,7 +29,7 @@ const css = (...args) => {
 };
 
 // tslint:disable-next-line
-const noop = () => { };
+const noop = () => {};
 
 // Decorators
 
@@ -37,6 +40,13 @@ function Component(meta: ElementMeta) {
   }
   return (target: any) => {
     compileTemplate(meta, target);
+    if (meta.selector && !meta.custom) {
+      customElements.define(meta.selector, target);
+    } else if (meta.selector && meta.custom) {
+      customElements.define(meta.selector, target, meta.custom);
+    } else {
+      customElements.define(meta.selector, target);
+    }
     return target;
   };
 }

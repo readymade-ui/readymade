@@ -16,7 +16,6 @@
     <script src="polyfill.js"></script>
     <script src="vendor.js"></script>
 
-            
 </head>
 
 <body>
@@ -111,8 +110,6 @@ class MyButtonComponent extends ButtonComponent {
     }
 }
 
-customElements.define('my-button', MyButtonComponent, { extends: 'button'});
-
 export { MyButtonComponent };
             </span>
         </r-code>
@@ -200,12 +197,6 @@ class MyComponent extends CustomElement {
       }
     }
 }
-                </span>
-        </r-code>
-        <p>Use the CustomElements API to define a new HTML element called <span class="i__c">my-component</span>. </p>
-        <r-code type="javascript">
-                <span hidden>
-customElements.define('my-component', MyComponent);
                 </span>
         </r-code>
         <p>Use the new component in your template.</p>

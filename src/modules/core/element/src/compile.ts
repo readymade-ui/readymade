@@ -8,6 +8,11 @@ interface Node {
     cloneNode(deep?: boolean): this;
 }
 
+const isObject = function(val) {
+  if (val === null) { return false;}
+  return ( (typeof val === 'function') || (typeof val === 'object') );
+};
+
 const findValueByString = function(o: any, s: string) {
   s = s.replace(/\[(\w+)\]/g, '.$1');
   s = s.replace(/^\./, '');
@@ -87,10 +92,7 @@ class NodeTree {
         }
       }
   }
-  public updateNode(node: Node, key: string, value: any) {
-    if (this.getElementByAttribute((node as Element)).length === 0) {
-      return;
-    }
+  public changeNode(node: Node, key: string, value: any) {
     const regex = new RegExp(`\{\{(\s*)(${key})(\s*)\}\}`, 'gi');
     const attrId = this.getElementByAttribute((node as Element))[0].nodeName || this.getElementByAttribute((node as Element))[0].name;
     const protoNode = this.$flatMap[attrId].node;
@@ -128,6 +130,20 @@ class NodeTree {
       (node as Element).textContent = protoNode.textContent.replace(regex, value);
     }
   }
+  public updateNode(node: Node, key: string, value: any) {
+    if (this.getElementByAttribute((node as Element)).length === 0) {
+      return;
+    }
+    if (isObject(value)) {
+      for (const prop in value) {
+          if (value.hasOwnProperty(prop)) {
+            this.changeNode(node, `${key}.${prop}`, value[prop]);
+          }
+      }
+    } else {
+      this.changeNode(node, key, value);
+    }
+  }
   public create() {
     const walk = document.createTreeWalker(
       this.$parent,
@@ -154,6 +170,7 @@ class NodeTree {
       { acceptNode(node) { return NodeFilter.FILTER_ACCEPT; } },
       false,
     );
+
     while (walk.nextNode()) {
       if (this.getElementByAttribute((walk.currentNode as Element)).length > 0) {
          this.updateNode(walk.currentNode, key, value);
@@ -187,6 +204,7 @@ class BoundHandler {
     this.$parent = obj;
   }
   public set(target: any, key: string, value: any) {
+
     const ex = new RegExp(TEMPLATE_BIND_REGEX).exec(value);
     const capturedGroup = (ex && ex[2]) ? ex[2] : false;
     const change = {
@@ -195,6 +213,7 @@ class BoundHandler {
         newValue: value,
       },
     };
+
     if (capturedGroup && target.parentNode && target.parentNode.host && target.parentNode.mode === 'open') {
       target[key] = findValueByString(target.parentNode.host, capturedGroup);
     } else if (capturedGroup && target.parentNode) {
@@ -204,8 +223,13 @@ class BoundHandler {
     }
 
     this.$parent.$$state['node' + BIND_SUFFIX].update(key, target[key]);
-    if (target.onStateChange) { target.onStateChange(change); }
+
+    if (target.onStateChange) {
+      target.onStateChange(change);
+    }
+
     return true;
+
   }
 }
 
