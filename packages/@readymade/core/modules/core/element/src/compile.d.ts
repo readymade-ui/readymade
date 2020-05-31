@@ -11,6 +11,7 @@ declare class NodeTree {
     $flatMap: any;
     constructor(parentNode?: any);
     setNode(node: Node, key?: string, value?: any): void;
+    changeNode(node: Node, key: string, value: any): void;
     updateNode(node: Node, key: string, value: any): void;
     create(): void;
     getElementByAttribute(node: Element): Attr[];
