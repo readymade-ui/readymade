@@ -17,7 +17,7 @@ export { RHeadlineComponent } from './components/headline.component.js';
 export { RLogoComponent } from './components/logo.component.js';
 export { RStatsComponent } from './components/stats.component.js';
 export { RCodeComponent } from './components/code.component.js';
-
+// export { RGridComponent } from './components/grid.component.js';
 // View Components
 // export { HomeView } from './view/home.view';
 // export { ChapterOneView } from './view/chapter1.view';

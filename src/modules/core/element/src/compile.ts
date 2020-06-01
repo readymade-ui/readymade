@@ -93,9 +93,19 @@ class NodeTree {
       }
   }
   public changeNode(node: Node, key: string, value: any) {
+    const bracketStartRegex = new RegExp(`\\[`, 'gi');
+    const bracketEndRegex =  new RegExp('\\]', 'gi');
+    key = key.replace(bracketStartRegex, `\\[`);
+    key = key.replace(bracketEndRegex, `\\]`);
     const regex = new RegExp(`\{\{(\s*)(${key})(\s*)\}\}`, 'gi');
     const attrId = this.getElementByAttribute((node as Element))[0].nodeName || this.getElementByAttribute((node as Element))[0].name;
     const protoNode = this.$flatMap[attrId].node;
+    if (protoNode.textContent.match(regex)) {
+      (node as Element).textContent = protoNode.textContent.replace(regex, value);
+    }
+    if (protoNode.hasAttribute('no-attr')) {
+      return;
+    }
     let attr;
     for (const attribute of protoNode.attributes) {
       attr = attribute.nodeName || attribute.name;
@@ -126,19 +136,20 @@ class NodeTree {
         (node as Element).removeAttribute(check);
       }
     }
-    if (protoNode.textContent.match(regex)) {
-      (node as Element).textContent = protoNode.textContent.replace(regex, value);
-    }
   }
   public updateNode(node: Node, key: string, value: any) {
     if (this.getElementByAttribute((node as Element)).length === 0) {
       return;
     }
-    if (isObject(value)) {
+    if (Array.isArray(value)) {
+      for (let index = 0; index < value.length; index++) {
+        this.changeNode(node, `${key}[${index}]`, value[index]);
+      }
+    } else if (isObject(value)) {
       for (const prop in value) {
-          if (value.hasOwnProperty(prop)) {
-            this.changeNode(node, `${key}.${prop}`, value[prop]);
-          }
+        if (value.hasOwnProperty(prop)) {
+          this.changeNode(node, `${key}.${prop}`, value[prop]);
+        }
       }
     } else {
       this.changeNode(node, key, value);
@@ -170,7 +181,6 @@ class NodeTree {
       { acceptNode(node) { return NodeFilter.FILTER_ACCEPT; } },
       false,
     );
-
     while (walk.nextNode()) {
       if (this.getElementByAttribute((walk.currentNode as Element)).length > 0) {
          this.updateNode(walk.currentNode, key, value);
