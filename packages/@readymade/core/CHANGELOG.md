@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 1.1.1
+
+- FIX issue that caused array values to not correctly update in some use cases
+- ADD check for `no-attr` attribute on Elements to forego expensive change detection on attributes where not applicable
+
+
 ## 1.1.0
 
 ### BREAKING CHANGES

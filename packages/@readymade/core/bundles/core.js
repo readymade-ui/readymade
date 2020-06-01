@@ -161,9 +161,19 @@ class NodeTree {
         }
     }
     changeNode(node, key, value) {
+        const bracketStartRegex = new RegExp(`\\[`, 'gi');
+        const bracketEndRegex = new RegExp('\\]', 'gi');
+        key = key.replace(bracketStartRegex, `\\[`);
+        key = key.replace(bracketEndRegex, `\\]`);
         const regex = new RegExp(`\{\{(\s*)(${key})(\s*)\}\}`, 'gi');
         const attrId = this.getElementByAttribute(node)[0].nodeName || this.getElementByAttribute(node)[0].name;
         const protoNode = this.$flatMap[attrId].node;
+        if (protoNode.textContent.match(regex)) {
+            node.textContent = protoNode.textContent.replace(regex, value);
+        }
+        if (protoNode.hasAttribute('no-attr')) {
+            return;
+        }
         let attr;
         for (const attribute of protoNode.attributes) {
             attr = attribute.nodeName || attribute.name;
@@ -193,15 +203,17 @@ class NodeTree {
                 node.removeAttribute(check);
             }
         }
-        if (protoNode.textContent.match(regex)) {
-            node.textContent = protoNode.textContent.replace(regex, value);
-        }
     }
     updateNode(node, key, value) {
         if (this.getElementByAttribute(node).length === 0) {
             return;
         }
-        if (isObject(value)) {
+        if (Array.isArray(value)) {
+            for (let index = 0; index < value.length; index++) {
+                this.changeNode(node, `${key}[${index}]`, value[index]);
+            }
+        }
+        else if (isObject(value)) {
             for (const prop in value) {
                 if (value.hasOwnProperty(prop)) {
                     this.changeNode(node, `${key}.${prop}`, value[prop]);
