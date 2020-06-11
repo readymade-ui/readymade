@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.1.2
+
+- FIX automatic call to `customElements.define` should be opt out
+
+
 ## 1.1.1
 
 - FIX issue that caused array values to not correctly update in some use cases
