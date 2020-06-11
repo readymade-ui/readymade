@@ -26,6 +26,7 @@ export const _treeState = new TreeState();
 
 @Component({
   selector: 'x-tree',
+  autoDefine: false,
   style: css`
       :host {
         display: grid;
@@ -69,5 +70,5 @@ class TreeComponent extends CustomElement {
     this.setState('state.foo', model);
   }
 }
-
+customElements.define('x-tree', TreeComponent);
 export { TreeComponent };
