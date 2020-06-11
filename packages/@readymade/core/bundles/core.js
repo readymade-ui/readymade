@@ -365,14 +365,19 @@ function Component(meta) {
     }
     return (target) => {
         compileTemplate(meta, target);
-        if (meta.selector && !meta.custom) {
-            customElements.define(meta.selector, target);
+        if (meta.autoDefine === undefined) {
+            meta.autoDefine = true;
         }
-        else if (meta.selector && meta.custom) {
-            customElements.define(meta.selector, target, meta.custom);
-        }
-        else {
-            customElements.define(meta.selector, target);
+        if (meta.autoDefine === true) {
+            if (meta.selector && !meta.custom) {
+                customElements.define(meta.selector, target);
+            }
+            else if (meta.selector && meta.custom) {
+                customElements.define(meta.selector, target, meta.custom);
+            }
+            else {
+                customElements.define(meta.selector, target);
+            }
         }
         return target;
     };

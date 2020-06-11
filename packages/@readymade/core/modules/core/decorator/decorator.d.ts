@@ -14,6 +14,7 @@ interface ElementMeta {
     custom?: {
         extends: string;
     };
+    autoDefine?: boolean;
 }
 declare const html: (...args: any[]) => any[];
 declare const css: (...args: any[]) => any[];

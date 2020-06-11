@@ -1,6 +1,6 @@
 {
   "name": "@readymade/core",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "JavaScript microlibrary for developing Web Components with TypeScript and Decorators",
   "umd": "./bundles/core.js",
   "main": "./fesm2015/core.js",
