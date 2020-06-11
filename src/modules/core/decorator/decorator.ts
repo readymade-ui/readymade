@@ -18,6 +18,7 @@ interface ElementMeta {
   custom?: {
     extends: string;
   };
+  autoDefine?: boolean;
 }
 
 const html = (...args) => {
@@ -40,12 +41,17 @@ function Component(meta: ElementMeta) {
   }
   return (target: any) => {
     compileTemplate(meta, target);
-    if (meta.selector && !meta.custom) {
-      customElements.define(meta.selector, target);
-    } else if (meta.selector && meta.custom) {
-      customElements.define(meta.selector, target, meta.custom);
-    } else {
-      customElements.define(meta.selector, target);
+    if (meta.autoDefine === undefined) {
+      meta.autoDefine = true;
+    }
+    if (meta.autoDefine === true) {
+      if (meta.selector && !meta.custom) {
+        customElements.define(meta.selector, target);
+      } else if (meta.selector && meta.custom) {
+        customElements.define(meta.selector, target, meta.custom);
+      } else {
+        customElements.define(meta.selector, target);
+      }
     }
     return target;
   };
