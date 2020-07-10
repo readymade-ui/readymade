@@ -21,5 +21,4 @@ class MyInputComponent extends InputComponent {
   }
 }
 
-
 export { MyInputComponent };
