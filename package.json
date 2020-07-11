@@ -4,7 +4,7 @@
   "description": "JavaScript microlibrary for developing Web Components with Decorators",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "cypress run",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "seed": "mkdir dist && mkdir dist/style",
     "start": "node index.js",
@@ -61,6 +61,7 @@
     "chokidar": "^2.0.4",
     "cssesc": "^3.0.0",
     "cssnano": "^4.1.10",
+    "cypress": "^4.10.0",
     "findup": "^0.1.5",
     "gh-pages": "^2.0.1",
     "htmlnano": "^0.2.3",

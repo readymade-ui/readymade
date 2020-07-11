@@ -95,5 +95,4 @@ class MyListComponent extends CustomElement {
   }
 }
 
-
 export { MyListComponent };
