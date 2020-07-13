@@ -266,8 +266,14 @@ function compileTemplate(elementMeta: ElementMeta, target: any) {
 }
 
 export {
+  isObject, 
+  findValueByString,
+  setValueByString,
+  templateId,
+  uuidv4,
   bindTemplate,
   compileTemplate,
+  setState,
   BoundHandler,
   BoundNode,
 };

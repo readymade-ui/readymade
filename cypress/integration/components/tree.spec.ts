@@ -1,5 +1,5 @@
 
-describe('MyTreeComponent Test', () => {
+describe('TreeComponent Test', () => {
 
   beforeEach(() => {
     cy.visit('/test.html');
