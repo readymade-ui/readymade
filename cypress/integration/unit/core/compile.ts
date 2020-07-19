@@ -1,11 +1,12 @@
 /// <reference types="cypress" />
-import { isObject, findValueByString, setValueByString, uuidv4, templateId } from '../../../../src/modules/core/element/src/compile';
+import { isObject, findValueByString, setValueByString, uuidv4, templateId, compileTemplate } from '../../../../src/modules/core/element/src/compile';
 import { ElementMeta } from './../../../../src/modules/core/decorator/decorator';
 
 interface ReadymadeElement extends HTMLElement {
-    bindTemplate?: () => void;
-    template?: string;
-    elementMeta?: ElementMeta;
+  template?: string;
+  elementMeta?: ElementMeta;
+  bindTemplate?: () => void;
+  setState?: () => void;
 }
 
 let element: ReadymadeElement;
@@ -65,17 +66,29 @@ describe('Compile Test', () => {
     expect(findValueByString(obj, 'foo.bar.baz')).equal('zulu');
   });
 
-  it('creates uuid', () => {
-    const id = uuidv4();
-    const regex = /[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/;
-    expect(regex.test(id)).equal(true);
-  });
-
   it('creates template id', () => {
     const id = templateId();
     const regex = /([a-z]{3})/;
     console.log(id);
     expect(regex.test(id)).equal(true);
   });
+
+  it('creates uuid', () => {
+    const id = uuidv4();
+    const regex = /[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/;
+    expect(regex.test(id)).equal(true);
+  });
+
+  it('compileTemplate adds methods to element', () => {
+    class Element {};
+    compileTemplate({ selector: 'x-element' }, Element);
+    const compiled: ReadymadeElement = new Element() as ReadymadeElement;
+    expect(compiled.elementMeta.selector).equal('x-element');
+    expect(compiled.elementMeta.eventMap).does.not.equal(undefined);
+    expect(compiled.template).does.not.equal(undefined);
+    expect(compiled.bindTemplate).does.not.equal(undefined);
+    expect(compiled.setState).does.not.equal(undefined);
+  });
+
 
 });
