@@ -53,9 +53,4 @@ describe('EventDispatcher Test', () => {
     expect(broadcaster.target).equals(uniElement);
   });
 
-  it('broadcaster has default channel name', () => {
-    expect(broadcaster.channels.default.name).equals('default');
-    expect(broadcaster.channels['channel-one']).equals(undefined);
-  });
-
 });
