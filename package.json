@@ -51,7 +51,7 @@
     "compression": "^1.7.3",
     "express": "^4.16.4",
     "live-server": "^1.2.1",
-    "prismjs": "^1.15.0",
+    "prismjs": "^1.21.0",
     "reflect-metadata": "^0.1.12",
     "rxjs": "^6.5.2",
     "systemjs": "^4.0.0",
