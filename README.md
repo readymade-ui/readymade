@@ -55,7 +55,7 @@ In a template somewhere...
 <button is="my-button"></button>
 ```
 
-Wa la! A Custom Element that retains all the behaviors of a button, yet extends button to do other things. In this nieve implementation all that is changed is the style of the button. Creating a customized built in element like this will retain all the behaviors of the element that is extended.
+Voilà! A Custom Element that retains all the behaviors of a button, yet extends button to do other things. In this nieve implementation all that is changed is the style of the button. Creating a customized built in element like this will retain all the behaviors of the element that is extended.
 
 
 ### Single Interface ☕️
