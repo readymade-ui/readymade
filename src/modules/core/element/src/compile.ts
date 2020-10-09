@@ -1,9 +1,9 @@
 import { OnStateChange } from './../../component/component.js';
 import { ElementMeta } from './../../decorator/decorator.js';
 
-export const TEMPLATE_BIND_REGEX = /\{\{(\s*)(.*?)(\s*)\}\}/g;
+export const TEMPLATE_BIND_REGEX = new RegExp(`\{\{(\s*)(.*?)(\s*)\}\}`, 'g');
 export const BRACKET_START_REGEX = new RegExp(`\\[`, 'gi');
-export const BRACKET_END_REGEX =  new RegExp('\\]', 'gi');
+export const BRACKET_END_REGEX =  new RegExp(`\\]`, 'gi');
 export const BIND_SUFFIX = ' __state';
 
 interface Node {
