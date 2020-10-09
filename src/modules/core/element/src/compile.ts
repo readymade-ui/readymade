@@ -165,9 +165,6 @@ class NodeTree {
         return [node.attributes[i]];
       }
     }
-    // return Array.from(node.attributes).filter((attr) => {
-    //   return /[A-Za-z0-9]{3}-[A-Za-z0-9]{6}/gm.test(attr.nodeName || attr.name);
-    // });
   }
   public update(key: string, value: any) {
     const walk = document.createTreeWalker(
