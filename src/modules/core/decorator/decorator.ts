@@ -66,12 +66,7 @@ function State(property?: string) {
       this.$$state = this[key]();
       this.$$state[HANDLER_KEY] = new BoundHandler(this);
       this.$$state[NODE_KEY] = new BoundNode(this.shadowRoot ? this.shadowRoot : this);
-      this.$state = new Proxy(this, this.$$state[HANDLER_KEY]);
-      for (const prop in this.$$state) {
-        if (this.$$state[prop] && !prop.includes(BIND_SUFFIX)) {
-          this.$state[prop] = this.$$state[prop];
-        }
-      }
+      this.$state = Object.assign(new Proxy(this, this.$$state[HANDLER_KEY]), this[key]());
     }
 
     target.bindState = function onBind() {
