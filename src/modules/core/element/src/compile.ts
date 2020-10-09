@@ -7,6 +7,8 @@ export const TEMPLATE_BIND_REGEX = /\{\{(\s*)(.*?)(\s*)\}\}/g;
 export const BRACKET_START_REGEX = new RegExp(`\\[`, 'gi');
 export const BRACKET_END_REGEX =  new RegExp(`\\]`, 'gi');
 export const BIND_SUFFIX = ' __state';
+export const NODE_KEY = 'node' + BIND_SUFFIX;
+export const HANDLER_KEY = 'handler' + BIND_SUFFIX;
 
 interface Node {
     cloneNode(deep?: boolean): this;
@@ -226,7 +228,7 @@ class BoundHandler {
       target[key] = value;
     }
 
-    this.$parent.$$state['node' + BIND_SUFFIX].update(key, target[key]);
+    this.$parent.$$state[NODE_KEY].update(key, target[key]);
 
     if (target.onStateChange) {
       target.onStateChange(change);

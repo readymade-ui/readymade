@@ -1,4 +1,4 @@
-import { ElementMeta } from './../decorator/decorator.js';
+import { ElementMeta, EMIT_KEY, LISTEN_KEY } from './../decorator/decorator.js';
 import { attachDOM, attachShadow, attachStyle } from './../element/element.js';
 import { EventDispatcher } from './../event/event.js';
 
@@ -19,7 +19,7 @@ export type OnDestroy = ()  => void;
 
 function bindListeners(target: any) {
   for (const prop in target) {
-    if (prop.includes('$listen')) {
+    if (prop.includes(LISTEN_KEY)) {
       this[prop].onListener.call(this);
     }
   }
@@ -27,7 +27,7 @@ function bindListeners(target: any) {
 
 function bindEmitters(target: any) {
   for (const prop in target) {
-    if (prop.includes('$emit')) {
+    if (prop.includes(EMIT_KEY)) {
       target[prop].call(target);
     }
   }
