@@ -1,6 +1,8 @@
 import { OnStateChange } from './../../component/component.js';
 import { ElementMeta } from './../../decorator/decorator.js';
 
+export const STRING_VALUE_REGEX = /\[(\w+)\]/g;
+export const STRING_DOT_REGEX = /^\./;
 export const TEMPLATE_BIND_REGEX = /\{\{(\s*)(.*?)(\s*)\}\}/g;
 export const BRACKET_START_REGEX = new RegExp(`\\[`, 'gi');
 export const BRACKET_END_REGEX =  new RegExp(`\\]`, 'gi');
@@ -17,8 +19,8 @@ const isObject = function(val) {
 };
 
 const findValueByString = function(o: any, s: string) {
-  s = s.replace(/\[(\w+)\]/g, '.$1');
-  s = s.replace(/^\./, '');
+  s = s.replace(STRING_VALUE_REGEX, '.$1');
+  s = s.replace(STRING_DOT_REGEX, '');
   const a = s.split('.');
   for (let i = 0, n = a.length; i < n; ++i) {
       const k = a[i];
@@ -66,7 +68,7 @@ class NodeTree {
   public $parent: any;
   public $parentId: string;
   public $flatMap: any = {};
-  constructor(parentNode?: any) {
+  constructor(parentNode?: Node) {
     this.$parent = parentNode;
     this.$flatMap = {};
     this.$parentId = templateId();
@@ -104,7 +106,7 @@ class NodeTree {
     if (protoNode.textContent.match(regex)) {
       (node as Element).textContent = protoNode.textContent.replace(regex, value);
     }
-    if (protoNode.hasAttribute('no-attr')) {
+    if (protoNode.attributes.length === 1) {
       return;
     }
     let attr;
