@@ -92,6 +92,7 @@
     "rollup-plugin-typescript2": "^0.19.2",
     "rollup-plugin-uglify": "^6.0.0",
     "rollup-typescript": "^1.2.0",
+    "tachometer": "^0.5.5",
     "terser": "^3.11.0",
     "tslib": "^1.9.3",
     "tslint": "^5.12.0",

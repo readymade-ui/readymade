@@ -2,10 +2,13 @@ import { OnStateChange } from './../../component/component.js';
 import { ElementMeta } from './../../decorator/decorator.js';
 
 export const TEMPLATE_BIND_REGEX = /\{\{(\s*)(.*?)(\s*)\}\}/g;
+export const BRACKET_START_REGEX = new RegExp(`\\[`, 'gi');
+export const BRACKET_END_REGEX =  new RegExp('\\]', 'gi');
 export const BIND_SUFFIX = ' __state';
 
 interface Node {
     cloneNode(deep?: boolean): this;
+    $init?: boolean;
 }
 
 const isObject = function(val) {
@@ -67,7 +70,6 @@ class NodeTree {
     this.$parent = parentNode;
     this.$flatMap = {};
     this.$parentId = templateId();
-    this.create();
   }
   public setNode(node: Node, key?: string, value?: any) {
       const id = this.$parentId + '-' + uuidv4().slice(0, 6);
@@ -91,12 +93,11 @@ class NodeTree {
           this.updateNode(node, key, value);
         }
       }
+      node.$init = true;
   }
   public changeNode(node: Node, key: string, value: any) {
-    const bracketStartRegex = new RegExp(`\\[`, 'gi');
-    const bracketEndRegex =  new RegExp('\\]', 'gi');
-    key = key.replace(bracketStartRegex, `\\[`);
-    key = key.replace(bracketEndRegex, `\\]`);
+    key = key.replace(BRACKET_START_REGEX, `\\[`);
+    key = key.replace(BRACKET_END_REGEX, `\\]`);
     const regex = new RegExp(`\{\{(\s*)(${key})(\s*)\}\}`, 'gi');
     const attrId = this.getElementByAttribute((node as Element))[0].nodeName || this.getElementByAttribute((node as Element))[0].name;
     const protoNode = this.$flatMap[attrId].node;
@@ -155,24 +156,18 @@ class NodeTree {
       this.changeNode(node, key, value);
     }
   }
-  public create() {
-    const walk = document.createTreeWalker(
-      this.$parent,
-      NodeFilter.SHOW_ELEMENT,
-      { acceptNode(node) { return NodeFilter.FILTER_ACCEPT; } },
-      false,
-    );
-    while (walk.nextNode()) {
-      this.setNode(walk.currentNode);
-    }
-  }
   public getElementByAttribute(node: Element) {
     if (!node.attributes) {
       return [];
     }
-    return Array.from(node.attributes).filter((attr) => {
-      return /[A-Za-z0-9]{3}-[A-Za-z0-9]{6}/gm.test(attr.nodeName || attr.name);
-    });
+    for (let i=0; i < node.attributes.length; i++) {
+      if (/[A-Za-z0-9]{3}-[A-Za-z0-9]{6}/gm.test(node.attributes[i].nodeName || node.attributes[i].name)) {
+        return [node.attributes[i]];
+      }
+    }
+    // return Array.from(node.attributes).filter((attr) => {
+    //   return /[A-Za-z0-9]{3}-[A-Za-z0-9]{6}/gm.test(attr.nodeName || attr.name);
+    // });
   }
   public update(key: string, value: any) {
     const walk = document.createTreeWalker(
@@ -182,7 +177,7 @@ class NodeTree {
       false,
     );
     while (walk.nextNode()) {
-      if (this.getElementByAttribute((walk.currentNode as Element)).length > 0) {
+      if ((walk.currentNode as Node).$init === true) {
          this.updateNode(walk.currentNode, key, value);
       } else {
          this.setNode(walk.currentNode, key, value);
