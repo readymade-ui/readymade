@@ -82,8 +82,14 @@ function attachStyle(instance, options) {
     }
 }
 
+const STRING_VALUE_REGEX = /\[(\w+)\]/g;
+const STRING_DOT_REGEX = /^\./;
 const TEMPLATE_BIND_REGEX = /\{\{(\s*)(.*?)(\s*)\}\}/g;
+const BRACKET_START_REGEX = new RegExp(`\\[`, 'gi');
+const BRACKET_END_REGEX = new RegExp(`\\]`, 'gi');
 const BIND_SUFFIX = ' __state';
+const NODE_KEY = 'node' + BIND_SUFFIX;
+const HANDLER_KEY = 'handler' + BIND_SUFFIX;
 const isObject = function (val) {
     if (val === null) {
         return false;
@@ -91,8 +97,8 @@ const isObject = function (val) {
     return ((typeof val === 'function') || (typeof val === 'object'));
 };
 const findValueByString = function (o, s) {
-    s = s.replace(/\[(\w+)\]/g, '.$1');
-    s = s.replace(/^\./, '');
+    s = s.replace(STRING_VALUE_REGEX, '.$1');
+    s = s.replace(STRING_DOT_REGEX, '');
     const a = s.split('.');
     for (let i = 0, n = a.length; i < n; ++i) {
         const k = a[i];
@@ -137,7 +143,6 @@ class NodeTree {
         this.$parent = parentNode;
         this.$flatMap = {};
         this.$parentId = templateId();
-        this.create();
     }
     setNode(node, key, value) {
         const id = this.$parentId + '-' + uuidv4().slice(0, 6);
@@ -159,19 +164,18 @@ class NodeTree {
                 this.updateNode(node, key, value);
             }
         }
+        node.$init = true;
     }
     changeNode(node, key, value) {
-        const bracketStartRegex = new RegExp(`\\[`, 'gi');
-        const bracketEndRegex = new RegExp('\\]', 'gi');
-        key = key.replace(bracketStartRegex, `\\[`);
-        key = key.replace(bracketEndRegex, `\\]`);
+        key = key.replace(BRACKET_START_REGEX, `\\[`);
+        key = key.replace(BRACKET_END_REGEX, `\\]`);
         const regex = new RegExp(`\{\{(\s*)(${key})(\s*)\}\}`, 'gi');
         const attrId = this.getElementByAttribute(node)[0].nodeName || this.getElementByAttribute(node)[0].name;
         const protoNode = this.$flatMap[attrId].node;
         if (protoNode.textContent.match(regex)) {
             node.textContent = protoNode.textContent.replace(regex, value);
         }
-        if (protoNode.hasAttribute('no-attr')) {
+        if (protoNode.attributes.length === 1) {
             return;
         }
         let attr;
@@ -224,24 +228,20 @@ class NodeTree {
             this.changeNode(node, key, value);
         }
     }
-    create() {
-        const walk = document.createTreeWalker(this.$parent, NodeFilter.SHOW_ELEMENT, { acceptNode(node) { return NodeFilter.FILTER_ACCEPT; } }, false);
-        while (walk.nextNode()) {
-            this.setNode(walk.currentNode);
-        }
-    }
     getElementByAttribute(node) {
         if (!node.attributes) {
             return [];
         }
-        return Array.from(node.attributes).filter((attr) => {
-            return /[A-Za-z0-9]{3}-[A-Za-z0-9]{6}/gm.test(attr.nodeName || attr.name);
-        });
+        for (let i = 0; i < node.attributes.length; i++) {
+            if (/[A-Za-z0-9]{3}-[A-Za-z0-9]{6}/gm.test(node.attributes[i].nodeName || node.attributes[i].name)) {
+                return [node.attributes[i]];
+            }
+        }
     }
     update(key, value) {
         const walk = document.createTreeWalker(this.$parent, NodeFilter.SHOW_ELEMENT, { acceptNode(node) { return NodeFilter.FILTER_ACCEPT; } }, false);
         while (walk.nextNode()) {
-            if (this.getElementByAttribute(walk.currentNode).length > 0) {
+            if (walk.currentNode.$init === true) {
                 this.updateNode(walk.currentNode, key, value);
             }
             else {
@@ -285,7 +285,7 @@ class BoundHandler {
         else {
             target[key] = value;
         }
-        this.$parent.$$state['node' + BIND_SUFFIX].update(key, target[key]);
+        this.$parent.$$state[NODE_KEY].update(key, target[key]);
         if (target.onStateChange) {
             target.onStateChange(change);
         }
@@ -351,6 +351,8 @@ function getElementIndex(el) {
     return getSiblings(el).indexOf(el);
 }
 
+const EMIT_KEY = '$emit';
+const LISTEN_KEY = '$listen';
 const html = (...args) => {
     return args;
 };
@@ -386,14 +388,9 @@ function State(property) {
     return function decorator(target, key, descriptor) {
         function bindState() {
             this.$$state = this[key]();
-            this.$$state['handler' + BIND_SUFFIX] = new BoundHandler(this);
-            this.$$state['node' + BIND_SUFFIX] = new BoundNode(this.shadowRoot ? this.shadowRoot : this);
-            this.$state = new Proxy(this, this.$$state['handler' + BIND_SUFFIX]);
-            for (const prop in this.$$state) {
-                if (this.$$state[prop] && !prop.includes('__state')) {
-                    this.$state[prop] = this.$$state[prop];
-                }
-            }
+            this.$$state[HANDLER_KEY] = new BoundHandler(this);
+            this.$$state[NODE_KEY] = new BoundNode(this.shadowRoot ? this.shadowRoot : this);
+            this.$state = Object.assign(new Proxy(this, this.$$state[HANDLER_KEY]), this[key]());
         }
         target.bindState = function onBind() {
             bindState.call(this);
@@ -405,10 +402,10 @@ function Emitter(eventName, options, channelName) {
         const channel = channelName ? channelName : 'default';
         let prop = '';
         if (eventName) {
-            prop = '$emit' + channel + eventName;
+            prop = EMIT_KEY + channel + eventName;
         }
         else {
-            prop = '$emit' + channel;
+            prop = EMIT_KEY + channel;
         }
         function addEvent(name, chan) {
             if (!this.emitter) {
@@ -423,7 +420,7 @@ function Emitter(eventName, options, channelName) {
         }
         function bindEmitters() {
             for (const property in this) {
-                if (property.includes('$emit')) {
+                if (property.includes(EMIT_KEY)) {
                     this[property].call(this);
                 }
             }
@@ -443,10 +440,10 @@ function Listen(eventName, channelName) {
         const symbolHandler = Symbol(key);
         let prop = '';
         if (channelName) {
-            prop = '$listen' + eventName + channelName;
+            prop = LISTEN_KEY + eventName + channelName;
         }
         else {
-            prop = '$listen' + eventName;
+            prop = LISTEN_KEY + eventName;
         }
         function addListener(name, chan) {
             const handler = this[symbolHandler] = (...args) => {
@@ -466,7 +463,7 @@ function Listen(eventName, channelName) {
         }
         function addListeners() {
             for (const property in this) {
-                if (property.includes('$listen')) {
+                if (property.includes(LISTEN_KEY)) {
                     this[property].onListener.call(this);
                 }
             }
@@ -1494,6 +1491,7 @@ exports.DListComponent = DListComponent;
 exports.DataComponent = DataComponent;
 exports.DetailsComponent = DetailsComponent;
 exports.DivComponent = DivComponent;
+exports.EMIT_KEY = EMIT_KEY;
 exports.EmbedComponent = EmbedComponent;
 exports.Emitter = Emitter;
 exports.EventDispatcher = EventDispatcher;
@@ -1508,6 +1506,7 @@ exports.IFrameComponent = IFrameComponent;
 exports.ImageComponent = ImageComponent;
 exports.InputComponent = InputComponent;
 exports.LIComponent = LIComponent;
+exports.LISTEN_KEY = LISTEN_KEY;
 exports.LabelComponent = LabelComponent;
 exports.LegendComponent = LegendComponent;
 exports.LinkComponent = LinkComponent;

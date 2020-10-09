@@ -1,8 +1,10 @@
-import { BIND_SUFFIX, BoundHandler, BoundNode } from '../element/src/compile.js';
+import { BIND_SUFFIX, NODE_KEY, HANDLER_KEY, BoundHandler, BoundNode } from '../element/src/compile.js';
 import { compileTemplate } from './../element/element.js';
 import { EventDispatcher } from './../event/event.js';
 
 export type EventHandler = () => void;
+export const EMIT_KEY = '$emit';
+export const LISTEN_KEY = '$listen';
 
 interface EventMeta {
   key: string;
@@ -62,14 +64,9 @@ function State(property?: string) {
 
     function bindState() {
       this.$$state = this[key]();
-      this.$$state['handler' + BIND_SUFFIX] = new BoundHandler(this);
-      this.$$state['node' + BIND_SUFFIX] = new BoundNode(this.shadowRoot ? this.shadowRoot : this);
-      this.$state = new Proxy(this, this.$$state['handler' + BIND_SUFFIX]);
-      for (const prop in this.$$state) {
-        if (this.$$state[prop] && !prop.includes('__state')) {
-          this.$state[prop] = this.$$state[prop];
-        }
-      }
+      this.$$state[HANDLER_KEY] = new BoundHandler(this);
+      this.$$state[NODE_KEY] = new BoundNode(this.shadowRoot ? this.shadowRoot : this);
+      this.$state = Object.assign(new Proxy(this, this.$$state[HANDLER_KEY]), this[key]());
     }
 
     target.bindState = function onBind() {
@@ -85,9 +82,9 @@ function Emitter(eventName?: string, options?: any, channelName?: string) {
     let prop: string = '';
 
     if (eventName) {
-      prop = '$emit' + channel + eventName;
+      prop = EMIT_KEY + channel + eventName;
     } else {
-      prop = '$emit' + channel;
+      prop = EMIT_KEY + channel;
     }
 
     function addEvent(name?: string, chan?: string) {
@@ -104,7 +101,7 @@ function Emitter(eventName?: string, options?: any, channelName?: string) {
 
     function bindEmitters() {
       for (const property in this) {
-        if (property.includes('$emit')) {
+        if (property.includes(EMIT_KEY)) {
           this[property].call(this);
         }
       }
@@ -131,9 +128,9 @@ function Listen(eventName: string, channelName?: string) {
     let prop: string = '';
 
     if (channelName) {
-      prop = '$listen' + eventName + channelName;
+      prop = LISTEN_KEY + eventName + channelName;
     } else {
-      prop = '$listen' + eventName;
+      prop = LISTEN_KEY + eventName;
     }
 
     function addListener(name: string, chan: string) {
@@ -161,7 +158,7 @@ function Listen(eventName: string, channelName?: string) {
 
     function addListeners() {
       for (const property in this) {
-        if (property.includes('$listen')) {
+        if (property.includes(LISTEN_KEY)) {
           this[property].onListener.call(this);
         }
       }

@@ -1,11 +1,18 @@
 import { OnStateChange } from './../../component/component.js';
 import { ElementMeta } from './../../decorator/decorator.js';
 
+export const STRING_VALUE_REGEX = /\[(\w+)\]/g;
+export const STRING_DOT_REGEX = /^\./;
 export const TEMPLATE_BIND_REGEX = /\{\{(\s*)(.*?)(\s*)\}\}/g;
+export const BRACKET_START_REGEX = new RegExp(`\\[`, 'gi');
+export const BRACKET_END_REGEX =  new RegExp(`\\]`, 'gi');
 export const BIND_SUFFIX = ' __state';
+export const NODE_KEY = 'node' + BIND_SUFFIX;
+export const HANDLER_KEY = 'handler' + BIND_SUFFIX;
 
 interface Node {
     cloneNode(deep?: boolean): this;
+    $init?: boolean;
 }
 
 const isObject = function(val) {
@@ -14,8 +21,8 @@ const isObject = function(val) {
 };
 
 const findValueByString = function(o: any, s: string) {
-  s = s.replace(/\[(\w+)\]/g, '.$1');
-  s = s.replace(/^\./, '');
+  s = s.replace(STRING_VALUE_REGEX, '.$1');
+  s = s.replace(STRING_DOT_REGEX, '');
   const a = s.split('.');
   for (let i = 0, n = a.length; i < n; ++i) {
       const k = a[i];
@@ -63,11 +70,10 @@ class NodeTree {
   public $parent: any;
   public $parentId: string;
   public $flatMap: any = {};
-  constructor(parentNode?: any) {
+  constructor(parentNode?: Node) {
     this.$parent = parentNode;
     this.$flatMap = {};
     this.$parentId = templateId();
-    this.create();
   }
   public setNode(node: Node, key?: string, value?: any) {
       const id = this.$parentId + '-' + uuidv4().slice(0, 6);
@@ -91,19 +97,18 @@ class NodeTree {
           this.updateNode(node, key, value);
         }
       }
+      node.$init = true;
   }
   public changeNode(node: Node, key: string, value: any) {
-    const bracketStartRegex = new RegExp(`\\[`, 'gi');
-    const bracketEndRegex =  new RegExp('\\]', 'gi');
-    key = key.replace(bracketStartRegex, `\\[`);
-    key = key.replace(bracketEndRegex, `\\]`);
+    key = key.replace(BRACKET_START_REGEX, `\\[`);
+    key = key.replace(BRACKET_END_REGEX, `\\]`);
     const regex = new RegExp(`\{\{(\s*)(${key})(\s*)\}\}`, 'gi');
     const attrId = this.getElementByAttribute((node as Element))[0].nodeName || this.getElementByAttribute((node as Element))[0].name;
     const protoNode = this.$flatMap[attrId].node;
     if (protoNode.textContent.match(regex)) {
       (node as Element).textContent = protoNode.textContent.replace(regex, value);
     }
-    if (protoNode.hasAttribute('no-attr')) {
+    if (protoNode.attributes.length === 1) {
       return;
     }
     let attr;
@@ -155,24 +160,15 @@ class NodeTree {
       this.changeNode(node, key, value);
     }
   }
-  public create() {
-    const walk = document.createTreeWalker(
-      this.$parent,
-      NodeFilter.SHOW_ELEMENT,
-      { acceptNode(node) { return NodeFilter.FILTER_ACCEPT; } },
-      false,
-    );
-    while (walk.nextNode()) {
-      this.setNode(walk.currentNode);
-    }
-  }
   public getElementByAttribute(node: Element) {
     if (!node.attributes) {
       return [];
     }
-    return Array.from(node.attributes).filter((attr) => {
-      return /[A-Za-z0-9]{3}-[A-Za-z0-9]{6}/gm.test(attr.nodeName || attr.name);
-    });
+    for (let i=0; i < node.attributes.length; i++) {
+      if (/[A-Za-z0-9]{3}-[A-Za-z0-9]{6}/gm.test(node.attributes[i].nodeName || node.attributes[i].name)) {
+        return [node.attributes[i]];
+      }
+    }
   }
   public update(key: string, value: any) {
     const walk = document.createTreeWalker(
@@ -182,7 +178,7 @@ class NodeTree {
       false,
     );
     while (walk.nextNode()) {
-      if (this.getElementByAttribute((walk.currentNode as Element)).length > 0) {
+      if ((walk.currentNode as Node).$init === true) {
          this.updateNode(walk.currentNode, key, value);
       } else {
          this.setNode(walk.currentNode, key, value);
@@ -232,7 +228,7 @@ class BoundHandler {
       target[key] = value;
     }
 
-    this.$parent.$$state['node' + BIND_SUFFIX].update(key, target[key]);
+    this.$parent.$$state[NODE_KEY].update(key, target[key]);
 
     if (target.onStateChange) {
       target.onStateChange(change);

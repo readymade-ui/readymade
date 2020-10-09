@@ -1,4 +1,6 @@
 export declare type EventHandler = () => void;
+export declare const EMIT_KEY = "$emit";
+export declare const LISTEN_KEY = "$listen";
 interface EventMeta {
     key: string;
     handler: EventHandler;
