@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 1.2.0
+
+- FIX performance improvements
+- REMOVE check for `no-attr` attribute, make check automatic for non applicable attributes during change detection
+
+
 ## 1.1.2
 
 - FIX automatic call to `customElements.define` should be opt out
