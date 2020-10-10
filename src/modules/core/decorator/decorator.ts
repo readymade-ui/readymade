@@ -1,6 +1,6 @@
-import { BIND_SUFFIX, NODE_KEY, HANDLER_KEY, BoundHandler, BoundNode } from '../element/src/compile.js';
-import { compileTemplate } from './../element/element.js';
-import { EventDispatcher } from './../event/event.js';
+import { BIND_SUFFIX, NODE_KEY, HANDLER_KEY, BoundHandler, BoundNode } from '../element/src/compile';
+import { compileTemplate } from './../element/element';
+import { EventDispatcher } from './../event/event';
 
 export type EventHandler = () => void;
 export const EMIT_KEY = '$emit';

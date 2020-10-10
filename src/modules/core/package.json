@@ -1,0 +1,30 @@
+{
+  "name": "@readymade/core",
+  "version": "1.2.0",
+  "description": "JavaScript microlibrary for developing Web Components with TypeScript and Decorators",
+  "umd": "./bundles/core.js",
+  "main": "./fesm2015/core.js",
+  "es2015": "./fesm2015/core.js",
+  "fesm2015": "./fesm2015/core.js",
+  "types": "./modules/core/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/readymade-ui/readymade.git"
+  },
+  "keywords": [
+    "customelements",
+    "webcomponents",
+    "typescript",
+    "decorators",
+    "javascript"
+  ],
+  "author": "Steve Belovarich",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/readymade-ui/readymade/issues"
+  },
+  "homepage": "https://github.com/readymade-ui/readymade#readme"
+}

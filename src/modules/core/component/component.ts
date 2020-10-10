@@ -1,6 +1,6 @@
-import { ElementMeta, EMIT_KEY, LISTEN_KEY } from './../decorator/decorator.js';
-import { attachDOM, attachShadow, attachStyle } from './../element/element.js';
-import { EventDispatcher } from './../event/event.js';
+import { ElementMeta, EMIT_KEY, LISTEN_KEY } from './../decorator/decorator';
+import { attachDOM, attachShadow, attachStyle } from './../element/element';
+import { EventDispatcher } from './../event/event';
 
 export type OnInit = ()  => void;
 

@@ -5,4 +5,9 @@
 .vscode
 node_modules
 dist/
+out-tsc/
+src/client/index.js
+src/server/config.js
+src/server/view/index.js
+src/client/asset
 cypress/videos

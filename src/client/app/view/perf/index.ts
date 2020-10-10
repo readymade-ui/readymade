@@ -1,0 +1,2 @@
+
+export { PerformanceTestComponent } from './perf';

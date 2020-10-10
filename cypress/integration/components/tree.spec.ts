@@ -2,12 +2,12 @@
 describe('TreeComponent Test', () => {
 
   beforeEach(() => {
-    cy.visit('/test.html');
+    cy.visit('/test');
     cy.wait(1);
   });
 
   it('Displays TreeComponent', () => {
-    cy.get('x-tree').should('exist');
+    cy.get('app-testbed').shadow().find('x-tree').should('exist');
   });
 
 });

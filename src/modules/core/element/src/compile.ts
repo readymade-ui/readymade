@@ -1,5 +1,5 @@
-import { OnStateChange } from './../../component/component.js';
-import { ElementMeta } from './../../decorator/decorator.js';
+import { OnStateChange } from './../../component/component';
+import { ElementMeta } from './../../decorator/decorator';
 
 export const STRING_VALUE_REGEX = /\[(\w+)\]/g;
 export const STRING_DOT_REGEX = /^\./;
@@ -108,9 +108,9 @@ class NodeTree {
     if (protoNode.textContent.match(regex)) {
       (node as Element).textContent = protoNode.textContent.replace(regex, value);
     }
-    if (protoNode.attributes.length === 1) {
-      return;
-    }
+    // if (protoNode.attributes.length === 1) {
+    //   return;
+    // }
     let attr;
     for (const attribute of protoNode.attributes) {
       attr = attribute.nodeName || attribute.name;

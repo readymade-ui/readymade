@@ -1,0 +1,2 @@
+
+export { HomeComponent } from './home';
