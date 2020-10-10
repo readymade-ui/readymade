@@ -11,6 +11,7 @@
     "serve:dev": "NODE_ENV=development node dist/server",
     "serve": "NODE_ENV=production node dist/server",
     "clean:dist": "rimraf dist",
+    "build": "yarn dev",
     "build:prod": "npm run prod:ssr && npm run prod:index && concurrently \"npm run prod:client\" \"npm run prod:server\"",
     "prod:client": "parcel build src/client/prod.html -d dist/client --no-source-maps --out-file=index.html",
     "prod:server": "npm run serve:config && parcel build src/server/index.ts -d dist/server --public-url /dist --target=node --no-source-maps",
