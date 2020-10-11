@@ -296,4 +296,4 @@ Use `yarn test:open` to open a GUI and run tests interactively.
 
 ### Production
 
-To build the library for production, i.e. to use as a dependency in anothe rproject run `yarn build:lib`.
+To build the library for production, i.e. to use as a local dependency in another project run `yarn build:lib`.
