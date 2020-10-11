@@ -59,7 +59,6 @@ class RdRouter {
         const component = document.createElement(route.component);
         this.rootElement.innerHTML = '';
         this.rootElement.appendChild(component);
-        console.log('bang');
     }
 
     private isHashChange() {

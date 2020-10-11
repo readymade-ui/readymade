@@ -182,7 +182,9 @@ class RSideNavComponent extends CustomElement {
     this.shadow = this.shadowRoot.querySelector('.shadow');
     Array.from(this.shadowRoot.querySelectorAll('a')).forEach((a) => {
       a.addEventListener('click', (ev) => {
-        document.querySelector((ev.target as Element).getAttribute('data-link')).scrollIntoView({behavior: 'smooth', block: 'start', inline: 'nearest'});
+        document.querySelector('app-home').shadowRoot
+                .querySelector((ev.target as Element)
+                .getAttribute('data-link')).scrollIntoView({behavior: 'smooth', block: 'start', inline: 'nearest'});
         this.close();
       });
     });
