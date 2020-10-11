@@ -5,16 +5,16 @@ import postcss from 'rollup-plugin-postcss';
 import html from 'rollup-plugin-string-html';
 
 export default [{
-    input: 'src/client/index.ts',
+    input: 'src/client/server.ts',
     treeshake: true,
+    external: ['path', 'html-minifier-terser'],
     output: {
-        file: 'src/client/index.js',
+        file: 'src/server/view/index.js',
         format: 'esm'
     },
     plugins: [
         nodeResolve({
-            mainFields: ['module', 'jsnext'],
-            extensions: ['.ts', '.js']
+            mainFields: ['module', 'jsnext']
         }),
         postcss({
             extract: false,
@@ -24,14 +24,17 @@ export default [{
                     includePaths: ['src/client/style']
                 }]
             ],
-            minimize: true
+            minimize: true,
+            extensions: ['.scss','.css']
         }),
         html({
             include: ["**/*.html"],
             exclude: ["**/index.html"],
             minifier: {}
         }),
-        typescript(),
+        typescript({
+            experimentalDecorators: true
+        }),
         commonjsResolve()
     ],
     onwarn: function (message) {

@@ -1,4 +1,4 @@
-import { Component, State, CustomElement } from "@readymade/core";
+import { Component, State, CustomElement } from "./../../../modules/core";
 
 @Component({
   selector: "my-counter",

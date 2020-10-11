@@ -1,5 +1,5 @@
-import typescript from 'rollup-plugin-typescript2';
-import resolve from 'rollup-plugin-node-resolve';
+import typescript from '@rollup/plugin-typescript';
+import resolve from '@rollup/plugin-node-resolve';
 import cleanup from 'rollup-plugin-cleanup';
 import { terser } from 'rollup-plugin-terser';
 
@@ -12,9 +12,7 @@ export default [{
     input: 'src/modules/core/index.ts',
     plugins: [
         resolve(),
-        typescript({
-            typescript: require('typescript')
-        }),
+        typescript(),
         cleanup(clean)
     ],
     onwarn: ( warning, next ) => {
@@ -32,7 +30,7 @@ export default [{
     plugins: [
         resolve(),
         typescript({
-            typescript: require('typescript')
+            sourceMap: true
         }),
         cleanup(clean),
         terser()
@@ -51,9 +49,7 @@ export default [{
     input: 'src/modules/core/index.ts',
     plugins: [
         resolve(),
-        typescript({
-            typescript: require('typescript')
-        }),
+        typescript(),
         cleanup(clean)
     ],
     onwarn: ( warning, next ) => {
@@ -71,7 +67,7 @@ export default [{
     plugins: [
         resolve(),
         typescript({
-            typescript: require('typescript')
+            sourceMap: true
         }),
         cleanup(clean),
         terser()

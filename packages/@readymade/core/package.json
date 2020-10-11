@@ -6,7 +6,7 @@
   "main": "./fesm2015/core.js",
   "es2015": "./fesm2015/core.js",
   "fesm2015": "./fesm2015/core.js",
-  "types": "./modules/core/index.d.ts",
+  "types": "./types/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

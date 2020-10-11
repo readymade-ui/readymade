@@ -1,4 +1,4 @@
-import { CustomElement, Component } from '@readymade/core';
+import { CustomElement, Component } from './../../../../modules/core';
 
 import style from './test.scss';
 import template from './test.html';

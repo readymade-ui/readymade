@@ -1,4 +1,4 @@
-import { Component, css, CustomElement, html, Listen } from '@readymade/core';
+import { Component, css, CustomElement, html, Listen } from './../../../modules/core';
 
 @Component({
   selector: 'my-item',

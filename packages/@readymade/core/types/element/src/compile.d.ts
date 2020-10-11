@@ -1,5 +1,5 @@
-import { OnStateChange } from './../../component/component.js';
-import { ElementMeta } from './../../decorator/decorator.js';
+import { OnStateChange } from './../../component/component';
+import { ElementMeta } from './../../decorator/decorator';
 export declare const STRING_VALUE_REGEX: RegExp;
 export declare const STRING_DOT_REGEX: RegExp;
 export declare const TEMPLATE_BIND_REGEX: RegExp;

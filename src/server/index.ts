@@ -45,12 +45,14 @@ app.use(errorHandler);
 if (env === "production") {
   app.use(compression());
   app.use(express.static(path.resolve(process.cwd(), 'dist', 'client'), staticOptions));
-  // app.use(express.static(path.resolve(process.cwd(), 'dist',  'client', 'asset')));
+  app.use(express.static(path.resolve(process.cwd(), 'dist',  'client', 'asset')));
   // commented out code enables non ssr server
-  // app.get("/*", (req, res) => {
-  //   res.sendFile(path.resolve(process.cwd(), "dist", "client", "index.html"));
-  // });
-  app.get("/*", ssr);
+  app.get("/*", (req, res) => {
+    res.sendFile(path.resolve(process.cwd(), "dist", "client", "index.html"));
+  });
+  // app.get("/", ssr);
+  // app.get("/test", ssr);
+  // app.get("/perf", ssr);
 }
 
 

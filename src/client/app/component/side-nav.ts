@@ -1,4 +1,4 @@
-import { Component, css, CustomElement, Emitter, html, Listen, State } from '@readymade/core';
+import { Component, css, CustomElement, Emitter, html, Listen, State } from './../../../modules/core';
 
 export class SideNavState {
   public shadowPoints: string = `7,34 22,32 24,22`;

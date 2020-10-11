@@ -1,4 +1,4 @@
-import { Component, css, CustomElement, html } from '@readymade/core';
+import { Component, css, CustomElement, html } from './../../../modules/core';
 
 @Component({
   selector: 'r-stats',

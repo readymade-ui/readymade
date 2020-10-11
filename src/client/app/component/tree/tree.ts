@@ -1,4 +1,4 @@
-import { Component, css, CustomElement, html, State } from '@readymade/core';
+import { Component, css, CustomElement, html, State } from './../../../../modules/core';
 
 export class TreeState {
   public arrayModel = ['aaa', 'Node 1', 'Node 2', 'Node 3', 'Node 4', 'Node 5', 'Node 6', 'Node 7'];

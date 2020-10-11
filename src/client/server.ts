@@ -3,9 +3,9 @@ import { HomeComponent } from './app/view/home';
 import { TestBedComponent } from './app/view/test';
 import { PerformanceTestComponent } from './app/view/perf';
 
-// mock BroadcastChannel for SSR
-function BroadcastChannel(channel) { }
-global['BroadcastChannel'] = BroadcastChannel as any;
+function BroadcastChannel(channel: any) {}
+// @ts-ignore
+global['BroadcastChannel'] = BroadcastChannel;
 global['observer$'] = {
   observe: () => {}
 };

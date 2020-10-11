@@ -1,4 +1,4 @@
-import { Component, css, CustomElement, Emitter, html, Listen, State } from '@readymade/core';
+import { Component, css, CustomElement, Emitter, html, Listen, State } from './../../../modules/core';
 
 export class MainNavState {
   public resourceLinkFillColor: string = '#cfcfcf';

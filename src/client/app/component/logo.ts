@@ -1,4 +1,4 @@
-import { Component, css, CustomElement, html, State } from '@readymade/core';
+import { Component, css, CustomElement, html, State } from './../../../modules/core';
 
 export class LogoState {
   public heading: string = 'R';

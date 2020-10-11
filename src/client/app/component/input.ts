@@ -1,4 +1,4 @@
-import { Component, css, InputComponent, Listen } from '@readymade/core';
+import { Component, css, InputComponent, Listen } from './../../../modules/core';
 
 @Component({
   selector: 'my-input',

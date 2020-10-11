@@ -1,5 +1,5 @@
-import { ElementMeta } from './../decorator/decorator.js';
-import { EventDispatcher } from './../event/event.js';
+import { ElementMeta } from './../decorator/decorator';
+import { EventDispatcher } from './../event/event';
 export declare type OnInit = () => void;
 export interface StateChange {
     [key: string]: {

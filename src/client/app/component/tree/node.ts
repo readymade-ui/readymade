@@ -1,4 +1,4 @@
-import { Component, css, html, PseudoElement, State } from '@readymade/core';
+import { Component, css, html, PseudoElement, State } from './../../../../modules/core';
 
 export class NodeState {
   public state;
