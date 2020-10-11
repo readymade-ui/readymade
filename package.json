@@ -23,7 +23,7 @@
     "test": "cypress run",
     "test:chrome": "cypress run --browser chrome",
     "test:open": "cypress open --browser chrome",
-    "deploy:gh-pages": "gh-pages -d dist --branch gh-pages"
+    "deploy:gh-pages": "gh-pages -d dist/client --branch gh-pages"
   },
   "repository": {
     "type": "git",
