@@ -285,7 +285,9 @@ Fork and clone the repo. Install dependencies with yarn.
 yarn install
 ```
 
-To develop, run `yarn dev`. This will spin up a local Parcel development server.
+To develop, run `yarn dev`. This will spin up a local Parcel development server at http://localhost:4444.
+
+Available routes are specified in src/client/app/router.ts.
 
 For unit and e2e tests, run `yarn build` then `yarn test`.
 
