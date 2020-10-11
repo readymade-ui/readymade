@@ -10,12 +10,15 @@ const { routes } = require('./../view/index.js');
 const indexPath = path.join(process.cwd(), 'dist', 'client', 'index.html');
 const dom = fs.readFileSync(indexPath).toString();
 
-function generateIndex(template, route, dom){
+function generateIndex(template, route, dom) {
   let index = dom
-  .replace(`<div id="root"></div>`, `<div id="root">${template}</div>`)
-  .replace(/__ssr\(\)/g, '');
+    .replace(`<div id="root"></div>`, `<div id="root">${template}</div>`)
+    .replace(/__ssr\(\)/g, '');
   if (route.schema) {
-    index = index.replace(`<script type="application/ld+json"></script>`, `<script type="application/ld+json">${route.schema}</script>`);
+    index = index.replace(
+      `<script type="application/ld+json"></script>`,
+      `<script type="application/ld+json">${route.schema}</script>`
+    );
   } else {
     index = index.replace(`<script type="application/ld+json"></script>`, ``);
   }
@@ -26,7 +29,7 @@ function generateIndex(template, route, dom){
   return index;
 }
 
-export default async(req, res, next) => {
+export default async (req, res, next) => {
   let component: any = class {};
   const route = routes.find(rt => rt.path === url.parse(req.url).pathname);
   if (route == undefined) {
@@ -40,7 +43,7 @@ export default async(req, res, next) => {
     if (preRender.getModel) {
       try {
         await preRender.getModel();
-      } catch(e) {
+      } catch (e) {
         next(e);
       }
     }
@@ -49,4 +52,4 @@ export default async(req, res, next) => {
   } else {
     res.send(dom);
   }
-}
+};

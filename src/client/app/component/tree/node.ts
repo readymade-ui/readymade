@@ -1,4 +1,10 @@
-import { Component, css, html, PseudoElement, State } from './../../../../modules/core';
+import {
+  Component,
+  css,
+  html,
+  PseudoElement,
+  State
+} from './../../../../modules/core';
 
 export class NodeState {
   public state;
@@ -9,16 +15,15 @@ export const _nodeState = new NodeState();
 @Component({
   selector: 'x-node',
   style: css`
-      :host {
-        display: flex;
-      }
-	`,
+    :host {
+      display: flex;
+    }
+  `,
   template: html`
     <x-atom model="{{state}}"></x-atom>
-	`,
+  `
 })
 class NodeComponent extends PseudoElement {
-
   constructor() {
     super();
   }

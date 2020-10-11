@@ -5,19 +5,21 @@ export const STRING_VALUE_REGEX = /\[(\w+)\]/g;
 export const STRING_DOT_REGEX = /^\./;
 export const TEMPLATE_BIND_REGEX = /\{\{(\s*)(.*?)(\s*)\}\}/g;
 export const BRACKET_START_REGEX = new RegExp(`\\[`, 'gi');
-export const BRACKET_END_REGEX =  new RegExp(`\\]`, 'gi');
+export const BRACKET_END_REGEX = new RegExp(`\\]`, 'gi');
 export const BIND_SUFFIX = ' __state';
 export const NODE_KEY = 'node' + BIND_SUFFIX;
 export const HANDLER_KEY = 'handler' + BIND_SUFFIX;
 
 interface Node {
-    cloneNode(deep?: boolean): this;
-    $init?: boolean;
+  cloneNode(deep?: boolean): this;
+  $init?: boolean;
 }
 
 const isObject = function(val) {
-  if (val === null) { return false;}
-  return ( (typeof val === 'function') || (typeof val === 'object') );
+  if (val === null) {
+    return false;
+  }
+  return typeof val === 'function' || typeof val === 'object';
 };
 
 const findValueByString = function(o: any, s: string) {
@@ -25,12 +27,12 @@ const findValueByString = function(o: any, s: string) {
   s = s.replace(STRING_DOT_REGEX, '');
   const a = s.split('.');
   for (let i = 0, n = a.length; i < n; ++i) {
-      const k = a[i];
-      if (k in o) {
-          o = o[k];
-      } else {
-          return;
-      }
+    const k = a[i];
+    if (k in o) {
+      o = o[k];
+    } else {
+      return;
+    }
   }
   return o;
 };
@@ -39,11 +41,11 @@ function setValueByString(obj: any, path: string, value: any) {
   const pList = path.split('.');
   const len = pList.length;
   for (let i = 0; i < len - 1; i++) {
-      const elem = pList[i];
-      if ( !obj[elem] ) {
-        obj[elem] = {};
-      }
-      obj = obj[elem];
+    const elem = pList[i];
+    if (!obj[elem]) {
+      obj[elem] = {};
+    }
+    obj = obj[elem];
   }
   obj[pList[len - 1]] = value;
 }
@@ -60,7 +62,8 @@ function templateId() {
 /* tslint:disable */
 function uuidv4() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    const r = (Math.random() * 16) | 0,
+      v = c == 'x' ? r : (r & 0x3) | 0x8;
     return v.toString(24);
   });
 }
@@ -76,37 +79,42 @@ class NodeTree {
     this.$parentId = templateId();
   }
   public setNode(node: Node, key?: string, value?: any) {
-      const id = this.$parentId + '-' + uuidv4().slice(0, 6);
-      const clone = node.cloneNode(true);
-      if (!(node as Element).setAttribute) {
-        // tslint:disable-next-line: only-arrow-functions, no-empty
-        (node as Element).setAttribute = function(i: string, v: string) {};
+    const id = this.$parentId + '-' + uuidv4().slice(0, 6);
+    const clone = node.cloneNode(true);
+    if (!(node as Element).setAttribute) {
+      // tslint:disable-next-line: only-arrow-functions, no-empty
+      (node as Element).setAttribute = function(i: string, v: string) {};
+    }
+    (node as Element).setAttribute(id, '');
+    if (!(clone as Element).setAttribute) {
+      // tslint:disable-next-line: only-arrow-functions, no-empty
+      (clone as Element).setAttribute = function(i: string, v: string) {};
+    }
+    (clone as Element).setAttribute(id, '');
+    if (!this.$flatMap[id]) {
+      this.$flatMap[id] = {
+        id,
+        node: clone
+      };
+      if (key && value) {
+        this.updateNode(node, key, value);
       }
-      (node as Element).setAttribute(id, '');
-      if (!(clone as Element).setAttribute) {
-        // tslint:disable-next-line: only-arrow-functions, no-empty
-        (clone as Element).setAttribute = function(i: string, v: string) {};
-      }
-      (clone as Element).setAttribute(id, '');
-      if (!this.$flatMap[id]) {
-        this.$flatMap[id] = {
-          id,
-          node: clone,
-        };
-        if (key && value) {
-          this.updateNode(node, key, value);
-        }
-      }
-      node.$init = true;
+    }
+    node.$init = true;
   }
   public changeNode(node: Node, key: string, value: any) {
     key = key.replace(BRACKET_START_REGEX, `\\[`);
     key = key.replace(BRACKET_END_REGEX, `\\]`);
     const regex = new RegExp(`\{\{(\s*)(${key})(\s*)\}\}`, 'gi');
-    const attrId = this.getElementByAttribute((node as Element))[0].nodeName || this.getElementByAttribute((node as Element))[0].name;
+    const attrId =
+      this.getElementByAttribute(node as Element)[0].nodeName ||
+      this.getElementByAttribute(node as Element)[0].name;
     const protoNode = this.$flatMap[attrId].node;
     if (protoNode.textContent.match(regex)) {
-      (node as Element).textContent = protoNode.textContent.replace(regex, value);
+      (node as Element).textContent = protoNode.textContent.replace(
+        regex,
+        value
+      );
     }
     if (protoNode.attributes.length === 1) {
       return;
@@ -114,7 +122,10 @@ class NodeTree {
     let attr;
     for (const attribute of protoNode.attributes) {
       attr = attribute.nodeName || attribute.name;
-      if (attr.includes('attr.') && !protoNode.getAttribute(attr.replace('attr.', ''))) {
+      if (
+        attr.includes('attr.') &&
+        !protoNode.getAttribute(attr.replace('attr.', ''))
+      ) {
         if (attribute.nodeName) {
           attr = attribute.nodeName.replace('attr.', '');
         } else if (attribute.name) {
@@ -124,7 +135,10 @@ class NodeTree {
           // tslint:disable-next-line: only-arrow-functions, no-empty
           protoNode.setAttribute = function(i: string, v: string) {};
         }
-        protoNode.setAttribute(attr, attribute.nodeValue.replace(TEMPLATE_BIND_REGEX, ''));
+        protoNode.setAttribute(
+          attr,
+          attribute.nodeValue.replace(TEMPLATE_BIND_REGEX, '')
+        );
         const remove = attribute.nodeName || attribute.name;
         (node as Element).removeAttribute(remove);
       }
@@ -134,7 +148,10 @@ class NodeTree {
           // tslint:disable-next-line: only-arrow-functions, no-empty
           (node as Element).setAttribute = function(i: string, v: string) {};
         }
-        (node as Element).setAttribute(attr, attributeValue.replace(regex, value));
+        (node as Element).setAttribute(
+          attr,
+          attributeValue.replace(regex, value)
+        );
       }
       const check = attribute.nodeName || attribute.name;
       if (check.includes('attr.')) {
@@ -143,7 +160,7 @@ class NodeTree {
     }
   }
   public updateNode(node: Node, key: string, value: any) {
-    if (this.getElementByAttribute((node as Element)).length === 0) {
+    if (this.getElementByAttribute(node as Element).length === 0) {
       return;
     }
     if (Array.isArray(value)) {
@@ -164,8 +181,12 @@ class NodeTree {
     if (!node.attributes) {
       return [];
     }
-    for (let i=0; i < node.attributes.length; i++) {
-      if (/[A-Za-z0-9]{3}-[A-Za-z0-9]{6}/gm.test(node.attributes[i].nodeName || node.attributes[i].name)) {
+    for (let i = 0; i < node.attributes.length; i++) {
+      if (
+        /[A-Za-z0-9]{3}-[A-Za-z0-9]{6}/gm.test(
+          node.attributes[i].nodeName || node.attributes[i].name
+        )
+      ) {
         return [node.attributes[i]];
       }
     }
@@ -174,14 +195,18 @@ class NodeTree {
     const walk = document.createTreeWalker(
       this.$parent,
       NodeFilter.SHOW_ELEMENT,
-      { acceptNode(node) { return NodeFilter.FILTER_ACCEPT; } },
-      false,
+      {
+        acceptNode(node) {
+          return NodeFilter.FILTER_ACCEPT;
+        }
+      },
+      false
     );
     while (walk.nextNode()) {
       if ((walk.currentNode as Node).$init === true) {
-         this.updateNode(walk.currentNode, key, value);
+        this.updateNode(walk.currentNode, key, value);
       } else {
-         this.setNode(walk.currentNode, key, value);
+        this.setNode(walk.currentNode, key, value);
       }
     }
     return this.$parent;
@@ -198,7 +223,9 @@ class BoundNode {
   }
   public update(key: string, value: any) {
     this.$tree.update(key, value);
-    if (this.$parent.onUpdate) { this.$parent.onUpdate(); }
+    if (this.$parent.onUpdate) {
+      this.$parent.onUpdate();
+    }
   }
 }
 
@@ -210,17 +237,21 @@ class BoundHandler {
     this.$parent = obj;
   }
   public set(target: any, key: string, value: any) {
-
     const ex = new RegExp(TEMPLATE_BIND_REGEX).exec(value);
-    const capturedGroup = (ex && ex[2]) ? ex[2] : false;
+    const capturedGroup = ex && ex[2] ? ex[2] : false;
     const change = {
       [key]: {
-        previousValue : target[key],
-        newValue: value,
-      },
+        previousValue: target[key],
+        newValue: value
+      }
     };
 
-    if (capturedGroup && target.parentNode && target.parentNode.host && target.parentNode.mode === 'open') {
+    if (
+      capturedGroup &&
+      target.parentNode &&
+      target.parentNode.host &&
+      target.parentNode.mode === 'open'
+    ) {
       target[key] = findValueByString(target.parentNode.host, capturedGroup);
     } else if (capturedGroup && target.parentNode) {
       target[key] = findValueByString(target.parentNode, capturedGroup);
@@ -235,12 +266,13 @@ class BoundHandler {
     }
 
     return true;
-
   }
 }
 
 function bindTemplate() {
-  if (this.bindState) { this.bindState(); }
+  if (this.bindState) {
+    this.bindState();
+  }
 }
 
 function setState(prop: string, model: any) {
@@ -254,7 +286,10 @@ function compileTemplate(elementMeta: ElementMeta, target: any) {
   if (!elementMeta.template) {
     elementMeta.template = '';
   }
-  target.prototype.elementMeta = Object.assign(target.elementMeta ? target.elementMeta : {}, elementMeta);
+  target.prototype.elementMeta = Object.assign(
+    target.elementMeta ? target.elementMeta : {},
+    elementMeta
+  );
   target.prototype.elementMeta.eventMap = {};
   target.prototype.template = `<style>${elementMeta.style}</style>${elementMeta.template}`;
   target.prototype.bindTemplate = bindTemplate;
@@ -262,7 +297,7 @@ function compileTemplate(elementMeta: ElementMeta, target: any) {
 }
 
 export {
-  isObject, 
+  isObject,
   findValueByString,
   setValueByString,
   templateId,
@@ -271,5 +306,5 @@ export {
   compileTemplate,
   setState,
   BoundHandler,
-  BoundNode,
+  BoundNode
 };

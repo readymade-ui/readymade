@@ -1,4 +1,12 @@
-import { ButtonComponent, Component, css, Emitter, html, Listen, State } from './../../../modules/core';
+import {
+  ButtonComponent,
+  Component,
+  css,
+  Emitter,
+  html,
+  Listen,
+  State
+} from './../../../modules/core';
 
 class ButtonState {
   public model: string = 'Click';
@@ -6,21 +14,20 @@ class ButtonState {
 
 @Component({
   selector: 'my-button',
-  custom: { extends: 'button'},
+  custom: { extends: 'button' },
   style: css`
-		:host {
-			background: rgba(24, 24, 24, 1);
-			cursor: pointer;
-			color: white;
-			font-weight: 400;
-		}
-	`,
+    :host {
+      background: rgba(24, 24, 24, 1);
+      cursor: pointer;
+      color: white;
+      font-weight: 400;
+    }
+  `,
   template: html`
-   <span>{{model}}</span>
-	`,
+    <span>{{model}}</span>
+  `
 })
 class MyButtonComponent extends ButtonComponent {
-
   constructor() {
     super();
   }
@@ -33,7 +40,7 @@ class MyButtonComponent extends ButtonComponent {
   @Emitter('bang', { bubbles: true, composed: true })
   @Listen('click')
   public onClick(event: MouseEvent) {
-      this.emitter.broadcast('bang');
+    this.emitter.broadcast('bang');
   }
   @Listen('keyup')
   public onKeyUp(event: KeyboardEvent) {
@@ -42,6 +49,5 @@ class MyButtonComponent extends ButtonComponent {
     }
   }
 }
-
 
 export { ButtonState, MyButtonComponent };

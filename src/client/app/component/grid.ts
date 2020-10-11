@@ -1,4 +1,10 @@
-import { Component, css, CustomElement, html, State } from './../../../modules/core';
+import {
+  Component,
+  css,
+  CustomElement,
+  html,
+  State
+} from './../../../modules/core';
 
 export class GridState {
   public grid: string[] = [];
@@ -16,7 +22,7 @@ export const _gridState = new GridState();
       column-gap: 10px;
       row-gap: 10px;
     }
-	`,
+  `,
   template: html`
     <div no-attr>{{grid[0]}}</div>
     <div no-attr>{{grid[1]}}</div>
@@ -146,10 +152,9 @@ export const _gridState = new GridState();
     <div no-attr>{{grid[125]}}</div>
     <div no-attr>{{grid[126]}}</div>
     <div no-attr>{{grid[127]}}</div>
-	`,
+  `
 })
 class RGridComponent extends CustomElement {
-
   constructor() {
     super();
   }
@@ -162,7 +167,7 @@ class RGridComponent extends CustomElement {
   public refreshGrid() {
     const grid = [];
     for (let i = 0; i < 128; i++) {
-      grid[i] = (Math.floor(Math.random() * 128) + 1);
+      grid[i] = Math.floor(Math.random() * 128) + 1;
     }
     this.setState('grid', grid);
   }
@@ -175,8 +180,6 @@ class RGridComponent extends CustomElement {
   public connectedCallback() {
     this.animateGrid();
   }
-
 }
-
 
 export { RGridComponent };

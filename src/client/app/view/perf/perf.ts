@@ -4,15 +4,14 @@ import style from './perf.scss';
 import template from './perf.html';
 
 @Component({
-    selector: 'app-perftest',
-    style: style,
-    template: template,
+  selector: 'app-perftest',
+  style: style,
+  template: template
 })
 class PerformanceTestComponent extends CustomElement {
-
-    constructor() {
-        super();
-    }
+  constructor() {
+    super();
+  }
 }
 
 export { PerformanceTestComponent };

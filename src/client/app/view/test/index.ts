@@ -1,2 +1,1 @@
-
 export { TestBedComponent } from './test';

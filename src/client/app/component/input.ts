@@ -1,15 +1,20 @@
-import { Component, css, InputComponent, Listen } from './../../../modules/core';
+import {
+  Component,
+  css,
+  InputComponent,
+  Listen
+} from './../../../modules/core';
 
 @Component({
   selector: 'my-input',
-  custom: { extends: 'input'},
+  custom: { extends: 'input' },
   style: css`
-		:host {
-			background: rgba(24, 24, 24, 1);
-			border: 0px none;
-			color: white;
-		}
-	`,
+    :host {
+      background: rgba(24, 24, 24, 1);
+      border: 0px none;
+      color: white;
+    }
+  `
 })
 class MyInputComponent extends InputComponent {
   constructor() {

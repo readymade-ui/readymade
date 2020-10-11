@@ -24,8 +24,4 @@ function attachStyle(instance: any, options?: any) {
   }
 }
 
-export {
-  attachDOM,
-  attachStyle,
-  attachShadow,
-};
+export { attachDOM, attachStyle, attachShadow };

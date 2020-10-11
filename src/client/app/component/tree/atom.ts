@@ -1,4 +1,10 @@
-import { Component, css, CustomElement, html, State } from './../../../../modules/core';
+import {
+  Component,
+  css,
+  CustomElement,
+  html,
+  State
+} from './../../../../modules/core';
 
 export class NodeState {
   public state;
@@ -9,16 +15,15 @@ export const _nodeState = new NodeState();
 @Component({
   selector: 'x-atom',
   style: css`
-      :host {
-        display: flex;
-      }
-	`,
+    :host {
+      display: flex;
+    }
+  `,
   template: html`
     <span>{{state}}</span>
-	`,
+  `
 })
 class AtomComponent extends CustomElement {
-
   constructor() {
     super();
   }

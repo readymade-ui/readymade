@@ -1,10 +1,10 @@
-@import url("https://fonts.googleapis.com/css?family=Major+Mono+Display|Source Sans Pro:100,300,400");
+@import url('https://fonts.googleapis.com/css?family=Major+Mono+Display|Source Sans Pro:100,300,400');
 
 :host {
   display: block;
   background: #cfcfcf;
   color: rgb(25, 25, 25);
-  font-family: "Source Sans Pro", sans-serif;
+  font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
   font-size: 16px;
   padding: 20px;
@@ -104,7 +104,7 @@ a:visited:hover {
 }
 
 h1 {
-  font-family: "Major Mono Display", serif;
+  font-family: 'Major Mono Display', serif;
   line-height: 1.5em;
 }
 
@@ -113,7 +113,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: "Source Sans Pro", serif;
+  font-family: 'Source Sans Pro', serif;
   font-weight: 400;
   line-height: 1.5em;
 }
@@ -127,7 +127,7 @@ h6 {
 }
 
 p {
-  font-family: "Source Sans Pro", serif;
+  font-family: 'Source Sans Pro', serif;
   font-size: 1em;
   line-height: 1.5em;
 }
@@ -152,7 +152,7 @@ header h4 {
 section h1 {
   padding-top: 3em;
   margin-bottom: 1em;
-  font-family: "Source Sans Pro";
+  font-family: 'Source Sans Pro';
 }
 
 section h2 {
@@ -193,7 +193,7 @@ footer {
 }
 
 footer p {
-  font-family: "Major Mono Display", sans-sarif;
+  font-family: 'Major Mono Display', sans-sarif;
   font-size: 0.8em;
 }
 
@@ -201,13 +201,13 @@ footer r-logo {
   padding-bottom: 4em;
 }
 
-[is="my-button"] {
+[is='my-button'] {
   background: #181818;
   cursor: pointer;
   color: #fff;
   font-weight: 400;
 }
-[is="my-input"] {
+[is='my-input'] {
   background: #181818;
   border: 0;
   color: #fff;

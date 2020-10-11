@@ -1,10 +1,10 @@
-import { Component, State, CustomElement } from "./../../../modules/core";
+import { Component, State, CustomElement } from './../../../modules/core';
 
 @Component({
-  selector: "my-counter",
+  selector: 'my-counter',
   template: `
     <button id="dec">-</button>
-    <span>{{c}}</span>
+    <span>{{ c }}</span>
     <button id="inc">+</button>
   `,
   style: `
@@ -27,17 +27,17 @@ import { Component, State, CustomElement } from "./../../../modules/core";
 		background-color: seagreen;
 		color: white;
 	}
-	`,
+	`
 })
 export class MyCounter extends CustomElement {
-  private c: string = "0";
+  private c: string = '0';
   connectedCallback() {
     this.shadowRoot
-      .querySelector("#inc")
-      .addEventListener("click", this.inc.bind(this));
+      .querySelector('#inc')
+      .addEventListener('click', this.inc.bind(this));
     this.shadowRoot
-      .querySelector("#dec")
-      .addEventListener("click", this.dec.bind(this));
+      .querySelector('#dec')
+      .addEventListener('click', this.dec.bind(this));
   }
 
   get count() {
@@ -45,15 +45,15 @@ export class MyCounter extends CustomElement {
   }
 
   inc() {
-    this.setState("c", this.count + 1);
+    this.setState('c', this.count + 1);
   }
 
   dec() {
-    this.setState("c", this.count - 1);
+    this.setState('c', this.count - 1);
   }
 
   @State()
   public getState() {
-    return { c: this.c || "0" };
+    return { c: this.c || '0' };
   }
 }

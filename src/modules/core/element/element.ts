@@ -1,13 +1,6 @@
-export {
-  attachDOM,
-  attachShadow,
-  attachStyle,
-} from './src/attach';
+export { attachDOM, attachShadow, attachStyle } from './src/attach';
 
-export {
-  bindTemplate,
-  compileTemplate,
-} from './src/compile';
+export { bindTemplate, compileTemplate } from './src/compile';
 
 export {
   getSiblings,
@@ -15,5 +8,5 @@ export {
   getParent,
   querySelector,
   querySelectorAll,
-  getChildNodes,
+  getChildNodes
 } from './src/util';

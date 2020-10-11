@@ -1,4 +1,10 @@
-import { Component, css, CustomElement, html, State } from './../../../modules/core';
+import {
+  Component,
+  css,
+  CustomElement,
+  html,
+  State
+} from './../../../modules/core';
 
 export class LogoState {
   public heading: string = 'R';
@@ -12,18 +18,17 @@ export const _logoState = new LogoState();
 @Component({
   selector: 'r-logo',
   style: css`
-      :host {
-        display: block;
-        user-select: none;
-      }
-	`,
+    :host {
+      display: block;
+      user-select: none;
+    }
+  `,
   template: html`
     <r-headline headline="{{heading}}" size="{{size}}"></r-headline>
     <r-headline headline="{{heading2}}"></r-headline>
-	`,
+  `
 })
 class RLogoComponent extends CustomElement {
-
   public letters: string[];
   constructor() {
     super();

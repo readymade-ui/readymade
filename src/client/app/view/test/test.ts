@@ -4,15 +4,14 @@ import style from './test.scss';
 import template from './test.html';
 
 @Component({
-    selector: 'app-testbed',
-    style: style,
-    template: template,
+  selector: 'app-testbed',
+  style: style,
+  template: template
 })
 class TestBedComponent extends CustomElement {
-
-    constructor() {
-        super();
-    }
+  constructor() {
+    super();
+  }
 }
 
 export { TestBedComponent };

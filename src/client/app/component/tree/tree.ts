@@ -1,13 +1,28 @@
-import { Component, css, CustomElement, html, State } from './../../../../modules/core';
+import {
+  Component,
+  css,
+  CustomElement,
+  html,
+  State
+} from './../../../../modules/core';
 
 export class TreeState {
-  public arrayModel = ['aaa', 'Node 1', 'Node 2', 'Node 3', 'Node 4', 'Node 5', 'Node 6', 'Node 7'];
+  public arrayModel = [
+    'aaa',
+    'Node 1',
+    'Node 2',
+    'Node 3',
+    'Node 4',
+    'Node 5',
+    'Node 6',
+    'Node 7'
+  ];
   public objectModel = {
     foo: {
       bar: {
-        baz: 'bbb',
-      },
-    },
+        baz: 'bbb'
+      }
+    }
   };
   public a = 'aaa';
   public b = 'bbb';
@@ -18,7 +33,7 @@ export class TreeState {
   public g = 'ggg';
   public h = 'hhh';
   public state: {
-    foo: 'foo',
+    foo: 'foo';
   };
 }
 
@@ -28,10 +43,10 @@ export const _treeState = new TreeState();
   selector: 'x-tree',
   autoDefine: false,
   style: css`
-      :host {
-        display: grid;
-      }
-	`,
+    :host {
+      display: grid;
+    }
+  `,
   template: html`
     <x-node model="{{arrayModel[0]}}"></x-node>
     <x-node model="{{objectModel.foo.bar.baz}}"></x-node>
@@ -42,10 +57,9 @@ export const _treeState = new TreeState();
     <x-node model="{{g}}"></x-node>
     <x-node model="{{h}}"></x-node>
     <x-node model="{{state.foo}}"></x-node>
-	`,
+  `
 })
 class TreeComponent extends CustomElement {
-
   constructor() {
     super();
   }

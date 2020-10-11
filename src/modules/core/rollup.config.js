@@ -4,81 +4,75 @@ import cleanup from 'rollup-plugin-cleanup';
 import { terser } from 'rollup-plugin-terser';
 
 const clean = {
-    comments: ['none'],
-    extensions: ['ts', 'js']
+  comments: ['none'],
+  extensions: ['ts', 'js']
 };
 
-export default [{
+export default [
+  {
     input: 'src/modules/core/index.ts',
-    plugins: [
-        resolve(),
-        typescript(),
-        cleanup(clean)
-    ],
-    onwarn: ( warning, next ) => {
-        if ( warning.code === 'THIS_IS_UNDEFINED' ) return;
-        next( warning );
+    plugins: [resolve(), typescript(), cleanup(clean)],
+    onwarn: (warning, next) => {
+      if (warning.code === 'THIS_IS_UNDEFINED') return;
+      next(warning);
     },
     output: {
-        file: 'packages/@readymade/core/fesm2015/core.js',
-        format: 'esm',
-        sourcemap: false
+      file: 'packages/@readymade/core/fesm2015/core.js',
+      format: 'esm',
+      sourcemap: false
     }
-},
-{
+  },
+  {
     input: 'src/modules/core/index.ts',
     plugins: [
-        resolve(),
-        typescript({
-            sourceMap: true
-        }),
-        cleanup(clean),
-        terser()
+      resolve(),
+      typescript({
+        sourceMap: true
+      }),
+      cleanup(clean),
+      terser()
     ],
-    onwarn: ( warning, next ) => {
-        if ( warning.code === 'THIS_IS_UNDEFINED' ) return;
-        next( warning );
+    onwarn: (warning, next) => {
+      if (warning.code === 'THIS_IS_UNDEFINED') return;
+      next(warning);
     },
     output: {
-        file: 'packages/@readymade/core/fesm2015/core.min.js',
-        format: 'esm',
-        sourcemap: true
+      file: 'packages/@readymade/core/fesm2015/core.min.js',
+      format: 'esm',
+      sourcemap: true
     }
-},
-{
+  },
+  {
+    input: 'src/modules/core/index.ts',
+    plugins: [resolve(), typescript(), cleanup(clean)],
+    onwarn: (warning, next) => {
+      if (warning.code === 'THIS_IS_UNDEFINED') return;
+      next(warning);
+    },
+    output: {
+      file: 'packages/@readymade/core/bundles/core.js',
+      format: 'cjs',
+      sourcemap: false
+    }
+  },
+  {
     input: 'src/modules/core/index.ts',
     plugins: [
-        resolve(),
-        typescript(),
-        cleanup(clean)
+      resolve(),
+      typescript({
+        sourceMap: true
+      }),
+      cleanup(clean),
+      terser()
     ],
-    onwarn: ( warning, next ) => {
-        if ( warning.code === 'THIS_IS_UNDEFINED' ) return;
-        next( warning );
+    onwarn: (warning, next) => {
+      if (warning.code === 'THIS_IS_UNDEFINED') return;
+      next(warning);
     },
     output: {
-        file: 'packages/@readymade/core/bundles/core.js',
-        format: 'cjs',
-        sourcemap: false
+      file: 'packages/@readymade/core/bundles/core.min.js',
+      format: 'cjs',
+      sourcemap: true
     }
-},
-{
-    input: 'src/modules/core/index.ts',
-    plugins: [
-        resolve(),
-        typescript({
-            sourceMap: true
-        }),
-        cleanup(clean),
-        terser()
-    ],
-    onwarn: ( warning, next ) => {
-        if ( warning.code === 'THIS_IS_UNDEFINED' ) return;
-        next( warning );
-    },
-    output: {
-        file: 'packages/@readymade/core/bundles/core.min.js',
-        format: 'cjs',
-        sourcemap: true
-    }
-}];
+  }
+];

@@ -1,4 +1,12 @@
-import { Component, css, CustomElement, Emitter, html, Listen, State } from './../../../modules/core';
+import {
+  Component,
+  css,
+  CustomElement,
+  Emitter,
+  html,
+  Listen,
+  State
+} from './../../../modules/core';
 
 export class SideNavState {
   public shadowPoints: string = `7,34 22,32 24,22`;
@@ -12,8 +20,8 @@ export class SideNavState {
 @Component({
   selector: 'r-side-nav',
   style: css`
-		:host {
-			display: block;
+    :host {
+      display: block;
       position: fixed;
       top: 0px;
       left: 0px;
@@ -23,7 +31,7 @@ export class SideNavState {
       z-index: 8888;
       color: #000;
       overflow: visible;
-		}
+    }
     :host.is--active {
       width: 320px;
     }
@@ -74,14 +82,16 @@ export class SideNavState {
       padding-left: 0px;
       padding-right: 0px;
     }
-    ul li a:link, ul li a:visited {
+    ul li a:link,
+    ul li a:visited {
       opacity: 0.8;
       color: #000000;
       text-decoration: none;
     }
-    ul li:hover a:link, ul li:hover a:visited {
-      opacity: 1.0;
-      color: #FFFFFF;
+    ul li:hover a:link,
+    ul li:hover a:visited {
+      opacity: 1;
+      color: #ffffff;
     }
     ul.top {
       position: absolute;
@@ -95,26 +105,30 @@ export class SideNavState {
     ul.bottom li {
       margin-bottom: 10px;
     }
-	`,
+  `,
   template: html`
-    <svg class="background"
-      width="54px"
-      height="60px">
-          <clipPath id="c1">
-                <polygon stroke-width="3"
-                class="polygon"
-                attr.points="{{triPoints}}"></polygon>
-          </clipPath>
-          <g stroke="none" fill="none" fill-rule="evenodd">
-              <polygon  fill="{{shadowColor}}"
-                        stroke-width="0"
-                        class="shadow"
-                        attr.points="{{shadowPoints}}"></polygon>
-              <polygon  fill="{{fillColor}}"
-                        stroke-width="0"
-                        class="polygon"
-                        attr.points="{{triPoints}}"></polygon>
-          </g>
+    <svg class="background" width="54px" height="60px">
+      <clipPath id="c1">
+        <polygon
+          stroke-width="3"
+          class="polygon"
+          attr.points="{{triPoints}}"
+        ></polygon>
+      </clipPath>
+      <g stroke="none" fill="none" fill-rule="evenodd">
+        <polygon
+          fill="{{shadowColor}}"
+          stroke-width="0"
+          class="shadow"
+          attr.points="{{shadowPoints}}"
+        ></polygon>
+        <polygon
+          fill="{{fillColor}}"
+          stroke-width="0"
+          class="polygon"
+          attr.points="{{triPoints}}"
+        ></polygon>
+      </g>
     </svg>
     <nav>
       <ul class="top">
@@ -132,7 +146,7 @@ export class SideNavState {
         </li>
       </ul>
     </nav>
-  `,
+  `
 })
 class RSideNavComponent extends CustomElement {
   public direction: string;
@@ -151,9 +165,9 @@ class RSideNavComponent extends CustomElement {
     a: number;
     b: number;
     c: number;
-    d: number
+    d: number;
   };
- 
+
   constructor() {
     super();
     this.direction = 'forwards';
@@ -168,7 +182,7 @@ class RSideNavComponent extends CustomElement {
         b: 24,
         c: 22,
         d: 32
-      },
+      }
     };
   }
   @State()
@@ -180,49 +194,73 @@ class RSideNavComponent extends CustomElement {
     this.nav = this.shadowRoot.querySelector('nav');
     this.background = this.shadowRoot.querySelector('.background');
     this.shadow = this.shadowRoot.querySelector('.shadow');
-    Array.from(this.shadowRoot.querySelectorAll('a')).forEach((a) => {
-      a.addEventListener('click', (ev) => {
-        document.querySelector('app-home').shadowRoot
-                .querySelector((ev.target as Element)
-                .getAttribute('data-link')).scrollIntoView({behavior: 'smooth', block: 'start', inline: 'nearest'});
+    Array.from(this.shadowRoot.querySelectorAll('a')).forEach(a => {
+      a.addEventListener('click', ev => {
+        document
+          .querySelector('app-home')
+          .shadowRoot.querySelector(
+            (ev.target as Element).getAttribute('data-link')
+          )
+          .scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+            inline: 'nearest'
+          });
         this.close();
       });
     });
   }
   @Listen('close', 'sidenav')
   public close() {
-    if (this.status === 'is--inactive') { return; }
+    if (this.status === 'is--inactive') {
+      return;
+    }
     this.status = 'is--inactive';
     this.direction = 'reverse';
     this.emitter.broadcast('close', 'sidenav');
-    this.player = this.animate([
-      { x: 0 },
-      { x: 100 },
-    ], { duration: 150, fill: 'forwards',  easing: 'cubic-bezier(0.42, 0, 0.88, 1)' });
-    setTimeout(() => { this.classList.remove('is--active'); }, 50);
-    setTimeout(() => { this.shadow.classList.remove('is--hidden'); }, 100);
-    setTimeout(() => { this.nav.classList.remove('is--active'); }, 50);
+    this.player = this.animate([{ x: 0 }, { x: 100 }], {
+      duration: 150,
+      fill: 'forwards',
+      easing: 'cubic-bezier(0.42, 0, 0.88, 1)'
+    });
+    setTimeout(() => {
+      this.classList.remove('is--active');
+    }, 50);
+    setTimeout(() => {
+      this.shadow.classList.remove('is--hidden');
+    }, 100);
+    setTimeout(() => {
+      this.nav.classList.remove('is--active');
+    }, 50);
     this.player.play();
     this.update();
   }
   @Listen('open', 'sidenav')
   public open(ev) {
-    if (this.status === 'is--active') { return; }
+    if (this.status === 'is--active') {
+      return;
+    }
     this.direction = 'forwards';
     this.status = 'is--active';
-    this.player = this.animate([
-      { x: 100 },
-      { x: 0 },
-    ], { duration: 1500, fill: 'forwards',  easing: 'cubic-bezier(0.42, 0, 0.88, 1)' });
+    this.player = this.animate([{ x: 100 }, { x: 0 }], {
+      duration: 1500,
+      fill: 'forwards',
+      easing: 'cubic-bezier(0.42, 0, 0.88, 1)'
+    });
     this.classList.add('is--active');
     this.shadow.classList.add('is--hidden');
     this.nav.classList.add('is--active');
     this.player.play();
     this.update();
-
   }
 
-  public scale(v: number, min: number, max: number, gmin: number, gmax: number) {
+  public scale(
+    v: number,
+    min: number,
+    max: number,
+    gmin: number,
+    gmax: number
+  ) {
     return ((v - min) / (max - min)) * (gmax - gmin) + gmin;
   }
 
@@ -241,15 +279,22 @@ class RSideNavComponent extends CustomElement {
       this.points.shadow.d = this.scale(time, 0, 150, 3222, 32);
     }
 
-    this.setState('triPoints', `7,9 7,${this.points.tri.a} ${this.points.tri.b},${this.points.tri.c}`);
-    this.setState('shadowPoints', `7,${this.points.tri.a} ${this.points.tri.c},${this.points.shadow.d} ${this.points.tri.b},${this.points.tri.c}`);
+    this.setState(
+      'triPoints',
+      `7,9 7,${this.points.tri.a} ${this.points.tri.b},${this.points.tri.c}`
+    );
+    this.setState(
+      'shadowPoints',
+      `7,${this.points.tri.a} ${this.points.tri.c},${this.points.shadow.d} ${this.points.tri.b},${this.points.tri.c}`
+    );
 
-    if (this.player.playState === 'running' || this.player.playState === 'pending') {
-       window.requestAnimationFrame(this.update.bind(this));
+    if (
+      this.player.playState === 'running' ||
+      this.player.playState === 'pending'
+    ) {
+      window.requestAnimationFrame(this.update.bind(this));
     }
-
   }
-
 }
 
 export { RSideNavComponent };

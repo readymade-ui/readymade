@@ -1,4 +1,3 @@
-
 import { HomeComponent } from './app/view/home';
 import { TestBedComponent } from './app/view/test';
 import { PerformanceTestComponent } from './app/view/perf';
@@ -11,9 +10,9 @@ global['observer$'] = {
 };
 
 const routes = [
-    { path: '/', component: HomeComponent },
-    { path: '/test', component: TestBedComponent },
-    { path: '/perf', component: PerformanceTestComponent }
+  { path: '/', component: HomeComponent },
+  { path: '/test', component: TestBedComponent },
+  { path: '/perf', component: PerformanceTestComponent }
 ];
 
 export { routes };
