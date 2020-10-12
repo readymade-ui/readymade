@@ -2,383 +2,344 @@
 <r-main-nav></r-main-nav>
 
 <header>
-  <r-logo size="is--large"></r-logo>
-  <h4>TypeScript Decorators for Web Components</h4>
+    <r-logo size="is--large"></r-logo>
+    <h4>TypeScript Decorators for Web Components</h4>
 </header>
 
 <section>
-  <r-stats>
-    <ul>
-      <li>🎰 Declare metadata for CSS and HTML ShadowDOM template</li>
-      <li>
-        ☕️ Single interface for 'autonomous custom' and 'customized built-in'
-        elements
-      </li>
-      <li>
-        🏋️‍ Weighing in ~1Kb for 'Hello World'
-        <span class="hint">(gzipped)</span>
-      </li>
-      <li>1️⃣ One-way data binding</li>
-      <li>🎤 Event Emitter pattern</li>
-      <li>🌲 Treeshakable</li>
-    </ul>
-  </r-stats>
+    <r-stats>
+        <ul>
+            <li> 🎰 Declare metadata for CSS and HTML ShadowDOM template</li>
+            <li> ☕️ Single interface for 'autonomous custom' and 'customized built-in' elements </li>
+            <li> 🏋️‍ Weighing in ~1Kb for 'Hello World' <span class="hint">(gzipped)</span> </li>
+            <li> 1️⃣ One-way data binding </li>
+            <li> 🎤 Event Emitter pattern </li>
+            <li> 🌲 Treeshakable </li>
+        </ul>
+    </r-stats>
 </section>
 
 <section id="intro">
-  <h1>Introducing @readymade/core</h1>
-  <p>
-    Readymade is a JavaScript library for composing user interfaces with Web
-    Components. <span class="i__c">@readymade/core</span> provides an interface
-    for bootstrapping new custom elements.
-  </p>
-  <h2 id="whatis">What is Readymade?</h2>
-  <p>
-    Readymade simplifies handling template and styling for Web Components via an
-    interface similar to Angular and makes heavy use of TypeScript and
-    Decorators.
-  </p>
-  <r-code type="javascript">
-    <span hidden>
-      @Component({ selector: 'my-button', custom: { extends: 'button' },
-      template:` &lt;span>{{buttonCopy}}&lt;/span> `, style:` :host {
-      background: rgba(24, 24, 24, 1); cursor: pointer; color: white;
-      font-weight: 400; } `, })
-    </span>
-  </r-code>
+    <h1>Introducing @readymade/core</h1>
+    <p>Readymade is a JavaScript library for composing user interfaces with Web Components. <span class="i__c">@readymade/core</span> provides an interface for bootstrapping new custom elements.</p>
+    <h2 id="whatis">What is Readymade?</h2>
+    <p>Readymade simplifies handling template and styling for Web Components via an interface similar to Angular and makes heavy use of TypeScript and Decorators.</p>
+    <r-code type="javascript">
+            <span hidden>
+@Component({
+selector: 'my-button',
+custom: { extends: 'button' },
+template:`
+&lt;span>{{buttonCopy}}&lt;/span>
+`,
+style:`
+    :host {
+        background: rgba(24, 24, 24, 1);
+        cursor: pointer;
+        color: white;
+        font-weight: 400;
+    }
+`,
+})
+            </span>
+    </r-code>
 </section>
 
 <section>
-  <h2>Example</h2>
+    <h2>Example</h2>
 
-  <p>
-    In this example, a class named
-    <span class="i__c">MyButtonComponent </span> includes a template and styling
-    for a button. A call to action is bound to the template through the
-    <span class="i__c">state</span> property. MyButtonComponent includes
-    decorators and methods for handling when the user clicks. The button
-    component broadcasts a 'bang' event when the user clicks on it. Readymade
-    components are stateful, enabling one-way data binding with a template.
-    Emitters broadcast events with the BroadcastChannel API, meaning Readymade
-    components can emit events where they otherwise can't bubble and even to
-    other browsing contexts like a ServiceWorker.
-  </p>
+    <p>In this example, a class named <span class="i__c">MyButtonComponent
+        </span> includes a template and styling for a button. A call to action is bound to the template through the <span class="i__c">state</span> property. MyButtonComponent includes decorators and methods for handling when the user clicks. The button component broadcasts a 'bang' event when the user clicks on it. Readymade components are stateful, enabling one-way data binding with a template. Emitters broadcast events with the BroadcastChannel API, meaning Readymade components can emit events where they otherwise can't bubble and even to other browsing contexts like a ServiceWorker.</p>
 
-  <r-code type="typescript">
-    <span hidden>
-      import { ButtonComponent, Component, Emitter, Listen } from
-      '@readymade/core'; @Component({ selector: 'my-button', custom: { extends:
-      'button' }, template:` &lt;span>{{buttonCopy}}&lt;/span> `, style:` :host
-      { background: rgba(24, 24, 24, 1); cursor: pointer; color: white;
-      font-weight: 400; } `, }) class MyButtonComponent extends ButtonComponent
-      { constructor() { super(); } @State() getState() { return { buttonCopy:
-      'Click' } } @Emitter('bang') @Listen('click') public onClick(event) {
-      this.emitter.broadcast('bang'); } @Listen('keyup') public onKeyUp(event) {
-      if (event.key === 'Enter') { this.emitter.broadcast('bang'); } } } export
-      { MyButtonComponent };
-    </span>
-  </r-code>
+    <r-code type="typescript">
+        <span hidden>
+import { ButtonComponent, Component, Emitter, Listen } from '@readymade/core';
+
+@Component({
+selector: 'my-button',
+custom: { extends: 'button' },
+template:`
+&lt;span>{{buttonCopy}}&lt;/span>
+`,
+style:`
+    :host {
+        background: rgba(24, 24, 24, 1);
+        cursor: pointer;
+        color: white;
+        font-weight: 400;
+    }
+`,
+})
+class MyButtonComponent extends ButtonComponent {
+constructor() {
+    super();
+}
+@State() 
+getState() {
+  return {
+    buttonCopy: 'Click'
+  }
+} 
+@Emitter('bang')
+@Listen('click')
+public onClick(event) {
+    this.emitter.broadcast('bang');
+}
+@Listen('keyup')
+public onKeyUp(event) {
+    if (event.key === 'Enter') {
+        this.emitter.broadcast('bang');
+    }
+}
+}
+
+export { MyButtonComponent };
+        </span>
+    </r-code>
 </section>
+
 
 <section id="started">
-  <h1>Getting Started</h1>
-  <h2 id="install">Install</h2>
-  <p>Install readymade/core via npm or yarn.</p>
-  <r-code type="javascript">
-    <span hidden>
-      npm i @readymade/core --save
-    </span>
-  </r-code>
+    <h1>Getting Started</h1>
+    <h2 id="install">Install</h2>
+    <p>Install readymade/core via npm or yarn.</p>
+    <r-code type="javascript">
+            <span hidden>
+npm i @readymade/core --save
+            </span>
+    </r-code>
 
-  <p>If typescript is not already part of your project, install it too.</p>
+    <p>If typescript is not already part of your project, install it too.</p>
 
-  <r-code type="javascript">
-    <span hidden>
-      npm i typescript --save
-    </span>
-  </r-code>
+    <r-code type="javascript">
+            <span hidden>
+npm i typescript --save
+            </span>
+    </r-code>
 
-  <p>
-    Readymade requires <span class="i__c">experimentalDecorators</span> to be
-    set to true in your <span class="i__c">tsconfig.json</span>. A sample
-    minimal recommended configuration is below.
-  </p>
-  <r-code type="javascript">
-    <span hidden>
-      { "compilerOptions": { "experimentalDecorators": true, "moduleResolution":
-      "node", "typeRoots": ["node_modules/@types"], "lib": ["es2017", "dom",
-      "dom.iterable"], }, "include": [ "./src/**/*.ts" ] }
-    </span>
-  </r-code>
-  <p>Readymade is compiled with Typescript.</p>
-  <r-code type="javascript">
-    <span hidden>
-      tsc -p tsconfig.json --watch
-    </span>
-  </r-code>
-  <h2 id="myfirst">First Component</h2>
-  <p>
-    Code your component. First, import all the necessary Decorators and classes
-    for a component that implements ShadowDOM.
-  </p>
-  <ul class="definition__list">
-    <li>
-      <span class="definition__title">Component</span> metadata class decorator
-      for defining template and styling
-    </li>
-    <li>
-      <span class="definition__title">CustomElement</span> class that extends
-      HTMLElement and provides hooks for Readymade to implement one-way data
-      binding and event handlers.
-    </li>
-  </ul>
-  <r-code type="javascript">
-    <span hidden>
-      import { Component, CustomElement } from '@readymade/core';
-    </span>
-  </r-code>
-  <p>Declare a html template and styling using the Component decorator.</p>
-  <r-code type="javascript">
-    <span hidden>
-      @Component({ selector: 'my-component', template:`
-      &lt;span>{{copyModel}}&lt;/span> `, style:` :host { border: 2px solid
-      #FF0000; padding: 4px; } `, })
-    </span>
-  </r-code>
-  <p>Declare a new custom element.</p>
-  <r-code type="javascript">
-    <span hidden>
-      class MyComponent extends CustomElement { constructor() { super(); }
-      @State() getState() { return { copyModel: 'Hello World!' } } }
-    </span>
-  </r-code>
-  <p>Use the new component in your template.</p>
-  <r-code type="markup">
-    <span hidden>
-      &lt;my-component>&lt;/my-component>
-    </span>
-  </r-code>
+    <p>Readymade requires <span class="i__c">experimentalDecorators</span> to be set to true in your <span class="i__c">tsconfig.json</span>. A sample minimal recommended configuration is below.</p>
+    <r-code type="javascript">
+            <span hidden>
+{
+"compilerOptions": {
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "typeRoots": ["node_modules/@types"],
+    "lib": ["es2017", "dom", "dom.iterable"],
+},
+"include": [
+    "./src/**/*.ts"
+]
+}
+            </span>
+    </r-code>
+    <p>Readymade is compiled with Typescript.</p>
+    <r-code type="javascript">
+            <span hidden>
+tsc -p tsconfig.json --watch
+            </span>
+    </r-code>
+    <h2 id="myfirst">First Component</h2>
+    <p>Code your component. First, import all the necessary Decorators and classes for a component that implements ShadowDOM.</p>
+    <ul class="definition__list">
+        <li><span class="definition__title">Component</span> metadata class decorator for defining template and styling</li>
+        <li><span class="definition__title">CustomElement</span> class that extends HTMLElement and provides hooks for Readymade to implement one-way data binding and event handlers.</li>
+    </ul>
+    <r-code type="javascript">
+            <span hidden>
+import { Component, CustomElement } from '@readymade/core';
+            </span>
+    </r-code>
+    <p>Declare a html template and styling using the Component decorator.</p>
+    <r-code type="javascript">
+            <span hidden>
+@Component({
+selector: 'my-component',
+template:`
+&lt;span>{{copyModel}}&lt;/span>
+    `,
+style:`
+    :host {
+        border: 2px solid #FF0000;
+        padding: 4px;
+    }
+    `,
+})
+            </span>
+    </r-code>
+    <p>Declare a new custom element.</p>
+    <r-code type="javascript">
+            <span hidden>
+class MyComponent extends CustomElement {
+constructor() {
+    super();
+}
+@State() 
+getState() {
+  return {
+    copyModel: 'Hello World!'
+  }
+}
+}
+            </span>
+    </r-code>
+    <p>Use the new component in your template.</p>
+    <r-code type="markup">
+            <span hidden>
+&lt;my-component>&lt;/my-component>
+            </span>
+    </r-code>
 </section>
 <section id="docs">
-  <h1>Using Readymade</h1>
-  <h2 id="decorators">Decorators</h2>
-  <p>
-    Readymade implements UI components using a decorator pattern. Decorators are
-    currently in stage 2 proposal for the ECMAScript Internationalization API
-    Specification. Readymade implements decorators with TypeScript. A class
-    decorator called Component allows you to declare styling and template for
-    custom elements. The Emitter decorator provides a way to declare
-    CustomEvents that can be emitted or broadcasted to other elements. The
-    Listen decorator binds a method to the callback of an event listener.
-  </p>
-  <h3>Types of Readymade Decorators</h3>
-  <ul class="definition__list">
-    <li>
-      <span class="definition__title">@Component</span> metadata class decorator
-      for defining template and styling
-    </li>
-    <li>
-      <span class="definition__title">@Listen</span> method decorator that binds
-      a method to an Event
-    </li>
-    <li>
-      <span class="definition__title">@Emitter</span> method decorator that
-      declares a CustomEvent that can be emitted by the component
-    </li>
-  </ul>
-  <h3>@Component</h3>
-  <p>
-    The Component decorator modifies the class it decorates by providing
-    metadata needed for Readymade to compile the template and styling defined
-    within it.
-  </p>
-  <r-code type="javascript">
-    <span hidden>
-      @Component({ selector: 'my-button', custom: { extends: 'button' },
-      template:` &lt;span>{{buttonCopy}}&lt;/span> `, style:` :host {
-      background: rgba(24, 24, 24, 1); cursor: pointer; color: white;
-      font-weight: 400; } `, }) class MyButtonComponent extends CustomElement
-    </span>
-  </r-code>
-  <h3>@Listen</h3>
-  <p>
-    The Listen sets up <span class="i__c">addEventListener</span> for Events.
-    This example listens for <span class="i__c">keyup</span> events and emits a
-    CustomEvent when the user presses <span class="i__c">Enter</span>. This
-    method decorator takes the event name in it's first argument. When listening
-    for broadcasted events over the BroadcastChannel API, a channel name can be
-    specified in the second argument.
-  </p>
-  <r-code type="javascript">
-    <span hidden>
-      @Listen('keyup') public onKeyUp(event) { if (event.key === 'Enter') {
-      this.emitter.broadcast('bang'); } }
-    </span>
-  </r-code>
-  <h3>@Emitter</h3>
-  <p>
-    The Emitter decorator defines CustomEvent the component can emit. This
-    decorator takes the CustomEvent type as a first arugment and options for the
-    CustomEvent in the second argument. If you want to broadcast Event with this
-    Emitter, a channel name can be specified in the third argument.
-  </p>
-  <r-code type="javascript">
-    <span hidden>
-      @Emitter('bang', options)
-    </span>
-  </r-code>
-  <p>
-    Emitters are stored on the component instance with the property
-    <span class="i__c">emitter</span>. There are two methods for Emitters:
-    <span class="i__c">emit</span> and <span class="i__c">broadcast</span>.
-  </p>
-  <ul class="definition__list">
-    <li>
-      <span class="definition__title">emit</span> calls
-      <span class="i__c">dispatchEvent</span> internally.
-    </li>
-    <li>
-      <span class="definition__title">broadcast</span> uses
-      <span class="i__c">BroadcastChannel API</span> to broadcast events even to
-      other browser contexts.
-    </li>
-  </ul>
+    <h1>Using Readymade</h1>
+    <h2 id="decorators">Decorators</h2>
+    <p>Readymade implements UI components using a decorator pattern. Decorators are currently in stage 2 proposal for the ECMAScript Internationalization API Specification. Readymade implements decorators with TypeScript. A class decorator called Component allows you to declare styling and template for custom elements. The Emitter decorator provides a way to declare CustomEvents that can be emitted or broadcasted to other elements. The Listen decorator binds a method to the callback of an event listener.</p>
+    <h3>Types of Readymade Decorators</h3>
+    <ul class="definition__list">
+        <li><span class="definition__title">@Component</span> metadata class decorator for defining template and styling</li>
+        <li><span class="definition__title">@Listen</span> method decorator that binds a method to an Event</li>
+        <li><span class="definition__title">@Emitter</span> method decorator that declares a CustomEvent that can be emitted by the component</li>
+    </ul>
+    <h3>@Component</h3>
+    <p>The Component decorator modifies the class it decorates by providing metadata needed for Readymade to compile the template and styling defined within it.</p>
+    <r-code type="javascript">
+            <span hidden>
+@Component({
+selector: 'my-button',
+custom: { extends: 'button' },
+template:`
+&lt;span>{{buttonCopy}}&lt;/span>
+`,
+style:`
+    :host {
+        background: rgba(24, 24, 24, 1);
+        cursor: pointer;
+        color: white;
+        font-weight: 400;
+    }
+`,
+})
+class MyButtonComponent extends CustomElement
+            </span>
+    </r-code>
+    <h3>@Listen</h3>
+    <p>The Listen sets up <span class="i__c">addEventListener</span> for Events. This example listens for <span class="i__c">keyup</span> events and emits a CustomEvent when the user presses <span class="i__c">Enter</span>. This method decorator takes the event name in it's first argument. When listening for broadcasted events over the BroadcastChannel API, a channel name can be specified in the second argument.</p>
+    <r-code type="javascript">
+            <span hidden>
+@Listen('keyup')
+public onKeyUp(event) {
+if (event.key === 'Enter') {
+    this.emitter.broadcast('bang');
+}
+}
+            </span>
+    </r-code>
+    <h3>@Emitter</h3>
+    <p>The Emitter decorator defines CustomEvent the component can emit. This decorator takes the CustomEvent type as a first arugment and options for the CustomEvent in the second argument. If you want to broadcast Event with this Emitter, a channel name can be specified in the third argument.</p>
+    <r-code type="javascript">
+            <span hidden>
+@Emitter('bang', options)
+            </span>
+    </r-code>
+    <p>Emitters are stored on the component instance with the property <span class="i__c">emitter</span>. There are two methods for Emitters: <span class="i__c">emit</span> and <span class="i__c">broadcast</span>. </p>
+    <ul class="definition__list">
+            <li><span class="definition__title">emit</span> calls <span class="i__c">dispatchEvent</span> internally.</li>
+            <li><span class="definition__title">broadcast</span> uses <span class="i__c">BroadcastChannel API</span> to broadcast events even to other browser contexts.</li>
+    </ul>
 </section>
 <section>
-  <h2 id="databinding">Data Binding</h2>
-  <p>Readymade includes state used for one-way data binding with templates.</p>
-  <p>
-    In the example below state is declared with a property called
-    <span class="i__c">buttonCopy</span>.
-  </p>
-  <r-code type="javascript">
-    <span hidden>
-      class MyComponent extends CustomElement { constructor() { super(); }
-      @State() getState() { return { buttonCopy: 'Click' } }
-    </span>
-  </r-code>
-  <h3>template</h3>
-  <p>
-    <span class="i__c">buttonCopy</span> is bound to the template. Set the value
-    of <span class="i__c">buttonCopy</span> in the class constructor so the
-    button can display with a call to action: <span class="i__c">Click</span>.
-  </p>
-  <r-code type="javascript">
-    <span hidden>
-      @Component({ template:` &lt;span>{{buttonCopy}}&lt;/span> `, }) class
-      MyComponent extends CustomElement { constructor() { super(); } @State()
-      getState() { return { buttonCopy: 'Click' } }
-    </span>
-  </r-code>
-  <h3>Proxy</h3>
-  <p>
-    Readymade listens for changes to state with ES2015 Proxy and then uses the
-    DOM TreeWalker API to crawl nodes and update template.
-  </p>
+    <h2 id="databinding">Data Binding</h2>
+    <p>Readymade includes state used for one-way data binding with templates.</p>
+    <p>In the example below state is declared with a property called <span class="i__c">buttonCopy</span>.</p>
+    <r-code type="javascript">
+            <span hidden>
+class MyComponent extends CustomElement {
+constructor() {
+super();
+}
+@State() 
+getState() {
+return {
+  buttonCopy: 'Click'
+}
+} 
+            </span>
+    </r-code>
+    <h3>template</h3>
+    <p><span class="i__c">buttonCopy</span> is bound to the template. Set the value of <span class="i__c">buttonCopy</span> in the class constructor so the button can display with a call to action: <span class="i__c">Click</span>.</p>
+    <r-code type="javascript">
+            <span hidden>
+@Component({
+template:`
+&lt;span>{{buttonCopy}}&lt;/span>
+`,
+})
+class MyComponent extends CustomElement {
+constructor() {
+  super();
+}
+@State() 
+getState() {
+  return {
+    buttonCopy: 'Click'
+  }
+} 
+            </span>
+    </r-code>
+    <h3>Proxy</h3>
+    <p>Readymade listens for changes to state with ES2015 Proxy and then uses the DOM TreeWalker API to crawl nodes and update template.</p>
 </section>
 <section>
-  <h2 id="components">Components</h2>
-  <p>
-    Readymade comes packaged with several component classes that are used to
-    bootstrap web component development. Readymade takes the hassle out of
-    remembering which DOM elements support ShadowDOM. Readymade takes the guess
-    work out of implementing autonomous custom elements and customized built-in
-    elements.
-  </p>
-  <h3>Basic Usage</h3>
-  <p>
-    Typically you would extend HTMLElement when coding a custom element that
-    uses ShadowDOM.
-  </p>
-  <r-code type="javascript">
-    <span hidden>
-      class MyComponent extends HTMLElement
-    </span>
-  </r-code>
-  <p>
-    With Readymade extend CustomElement instead. CustomElement extends
-    <span class="i__c">HTMLElement</span>, but also bootstraps event listeners
-    and state.
-  </p>
-  <r-code type="javascript">
-    <span hidden>
-      import { CustomElement } from 'readymade/core'; class MyComponent extends
-      CustomElement
-    </span>
-  </r-code>
-  <p>
-    Sometimes you need to extend other elements to retain Web Accessibility
-    features or other user experience paradigms.
-  </p>
-  <r-code type="javascript">
-    <span hidden>
-      class MyInputComponent extends HTMLInputElement
-    </span>
-  </r-code>
-  <p>
-    This is called a customized built-in element. Readymade handles styling
-    differently for customized built-in elements by passing styles into the
-    <span class="i__c">&lt;head></span> due to the lack of ShadowDOM.
-  </p>
-  <r-code type="javascript">
-    <span hidden>
-      import { InputComponent } from 'readymade/core'; class MyInputComponent
-      extends InputComponent
-    </span>
-  </r-code>
-  <p>
-    Readymade provides a single interface for handling 'autonomous custom' and
-    'customized built-in' elements.
-  </p>
+    <h2 id="components">Components</h2>
+    <p>Readymade comes packaged with several component classes that are used to bootstrap web component development. Readymade takes the hassle out of remembering which DOM elements support ShadowDOM. Readymade takes the guess work out of implementing autonomous custom elements and customized built-in elements.</p>
+    <h3>Basic Usage</h3>
+    <p>Typically you would extend HTMLElement when coding a custom element that uses ShadowDOM.</p>
+    <r-code type="javascript">
+            <span hidden>
+class MyComponent extends HTMLElement
+            </span>
+    </r-code>
+    <p>With Readymade extend CustomElement instead. CustomElement extends <span class="i__c">HTMLElement</span>, but also bootstraps event listeners and state.</p>
+    <r-code type="javascript">
+            <span hidden>
+import { CustomElement } from 'readymade/core';
+
+class MyComponent extends CustomElement
+            </span>
+    </r-code>
+    <p>Sometimes you need to extend other elements to retain Web Accessibility features or other user experience paradigms.</p>
+    <r-code type="javascript">
+            <span hidden>
+class MyInputComponent extends HTMLInputElement
+            </span>
+    </r-code>
+    <p>This is called a customized built-in element. Readymade handles styling differently for customized built-in elements by passing styles into the <span class="i__c">&lt;head></span> due to the lack of ShadowDOM. </p>
+    <r-code type="javascript">
+            <span hidden>
+import { InputComponent } from 'readymade/core';
+
+class MyInputComponent extends InputComponent
+            </span>
+    </r-code>
+    <p>Readymade provides a single interface for handling 'autonomous custom' and 'customized built-in' elements.</p>
+
 </section>
 
 <section id="why">
-  <h1>Why Do We Need Another Web Component Library?</h1>
-  <p>
-    Readymade started as an exercise to see how component based frameworks like
-    Angular, Polymer, and Stencil could be built with just available browser
-    API. The microlibrary that came to fruition simplifes web component
-    development and includes some powerful features. The Component metadata
-    decorator provides an easy interface for declaring styling and template. One
-    way data binding allows you to forget about setting innerHTML and attributes
-    of elements. Method decorators bind CustomEvent listeners and use the
-    BroadcastChannel API to overcome limitations of event bubbling. Readymade is
-    treeshakable, meaning you only import the code your project needs and leave
-    the rest behind.
-  </p>
-  <p>
-    A simple 'Hello World' readymade project compiled with TypeScript and Terser
-    minifies down to ~1Kb (gzipped). This site is built with Readymade and
-    weighs in ~7Kb (gzipped). The bundle deployed to Github Pages includes
-    minimal application logic, a small library of components, polyfills, and
-    third party library for syntax highlighting (PrismJS)and it weighs in at
-    ~38Kb (gzipped).
-  </p>
-  <p>
-    The name of the project 'readymade' is an homage to Marcel Duchamp, an
-    artist in the 20th century who made art with ordinary objects. Like
-    Duchamp's readymades, this library picks up ordinary objects found in
-    ECMAScript, repositions and joins them together to form something completely
-    new.
-  </p>
-</section>
+        <h1>Why Do We Need Another Web Component Library?</h1>
+        <p>Readymade started as an exercise to see how component based frameworks like Angular, Polymer, and Stencil could be built with just available browser API. The microlibrary that came to fruition simplifes web component development and includes some powerful features. The Component metadata decorator provides an easy interface for declaring styling and template. One way data binding allows you to forget about setting innerHTML and attributes of elements. Method decorators bind CustomEvent listeners and use the BroadcastChannel API to overcome limitations of event bubbling. Readymade is treeshakable, meaning you only import the code your project needs and leave the rest behind.</p>
+        <p>A simple 'Hello World' readymade project compiled with TypeScript and Terser minifies down to ~1Kb (gzipped). This site is built with Readymade and weighs in ~7Kb (gzipped). The bundle deployed to Github Pages includes minimal application logic, a small library of components, polyfills, and third party library for syntax highlighting (PrismJS)and it weighs in at ~38Kb (gzipped).</p>
+        <p>The name of the project 'readymade' is an homage to Marcel Duchamp, an artist in the 20th century who made art with ordinary objects. Like Duchamp's readymades, this library picks up ordinary objects found in ECMAScript, repositions and joins them together to form something completely new.</p>
+ </section>
 
-<section id="resources">
-  <h1>Resources</h1>
-  <ul>
-    <li>
-      <a target="_blank" href="https://www.npmjs.com/package/@readymade/core"
-        >npm</a
-      >
-    </li>
-    <li>
-      <a target="_blank" href="https://github.com/readymade-ui/readymade"
-        >Github</a
-      >
-    </li>
-  </ul>
-</section>
+ <section id="resources">
+    <h1>Resources</h1>
+    <ul>
+        <li><a target="_blank" href="https://www.npmjs.com/package/@readymade/core">npm</a></li>
+        <li><a target="_blank" href="https://github.com/readymade-ui/readymade">Github</a></li>
+    </ul>
+ </section>
 
 <footer>
-  <r-logo size="is--large" no--subtitle></r-logo>
+    <r-logo size="is--large" no--subtitle ></r-logo>
 </footer>
