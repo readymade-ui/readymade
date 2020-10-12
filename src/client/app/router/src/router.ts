@@ -55,7 +55,6 @@ class RdRouter {
   }
 
   resolve(route: RdRoute) {
-    console.log(route, this.rootElement);
     const component = document.createElement(route.component);
     this.rootElement.innerHTML = '';
     this.rootElement.appendChild(component);
