@@ -29,7 +29,7 @@ class RStatsComponent extends CustomElement {
     this.animateIn();
   }
   public animateIn() {
-    const ul = this.shadowRoot.querySelector('slot').assignedNodes()[0];
+    const ul = this.shadowRoot.querySelector('slot').assignedNodes()[1];
     Array.from((ul as Element).children).forEach((li: Element, index) => {
       li.animate(
         [

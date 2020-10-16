@@ -1019,6 +1019,13 @@
     magic-string "^0.25.2"
     resolve "^1.11.0"
 
+"@rollup/plugin-json@^4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@rollup/plugin-json/-/plugin-json-4.1.0.tgz#54e09867ae6963c593844d8bd7a9c718294496f3"
+  integrity sha512-yfLbTdNS6amI/2OpmbiBoW12vngr5NW2jCJVZSBEz+H5KfUJZ2M7sDjk0U6GOOdCWFVScShte29o9NezJ53TPw==
+  dependencies:
+    "@rollup/pluginutils" "^3.0.8"
+
 "@rollup/plugin-node-resolve@^7.1.3":
   version "7.1.3"
   resolved "https://registry.yarnpkg.com/@rollup/plugin-node-resolve/-/plugin-node-resolve-7.1.3.tgz#80de384edfbd7bfc9101164910f86078151a3eca"
@@ -6492,7 +6499,12 @@ mute-stream@0.0.8:
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.8.tgz#1630c42b2251ff81e2a283de96a5497ea92e5e0d"
   integrity sha512-nnbWWOkoWyUsTjKrhgD0dcz22mdkSnpYqbEjIm2nhwhuxlSkpywJmBo8h0ZqJdkp73mb90SssHkN4rsRaBAfAA==
 
-nan@^2.12.1, nan@^2.13.2:
+nan@^2.12.1:
+  version "2.14.2"
+  resolved "https://registry.yarnpkg.com/nan/-/nan-2.14.2.tgz#f5376400695168f4cc694ac9393d0c9585eeea19"
+  integrity sha512-M2ufzIiINKCuDfBSAUr1vWQ+vuVcA9kqx8JJUsbQi6yf1uGRyb7HfpdfUr5qLXf3B/t8dPvcjhKMmlfnP47EzQ==
+
+nan@^2.13.2:
   version "2.14.1"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.14.1.tgz#d7be34dfa3105b91494c3147089315eff8874b01"
   integrity sha512-isWHgVjnFjh2x2yuJ/tj3JbwoHu3UC2dX5G/88Cm24yB6YopVgxvBObDY7n5xW6ExmFhJpSEQqFPvq9zaXc8Jw==
@@ -7141,10 +7153,10 @@ parcel-plugin-css-as-string@^1.0.1:
   resolved "https://registry.yarnpkg.com/parcel-plugin-css-as-string/-/parcel-plugin-css-as-string-1.0.1.tgz#f5aa5c19455078cc9c0c1a80343030313f47b7aa"
   integrity sha512-wt6/364VvJPatfWg24Efkh3iLDtO0WCpsj4j+alN0dg4B3Zq+sXCnbhnPjKuDENM9m+zTCa4RdmlZXoxdj1qcQ==
 
-parcel-plugin-externals@^0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/parcel-plugin-externals/-/parcel-plugin-externals-0.4.0.tgz#2d16d847b132ed2b53b1cc89cb71e8a4c649bef0"
-  integrity sha512-Qr1JK+9HxTFayIhT0M7NmTWzjkVlzLW32rFg/9YfIJe0rSAc3+wiE6YS2cuoqH0UPoTVEiC0oEJ3bTcW/awi+Q==
+parcel-plugin-externals@^0.5.1:
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/parcel-plugin-externals/-/parcel-plugin-externals-0.5.1.tgz#c8489247e006c609093a0dfd8f1d7fa29c663b0e"
+  integrity sha512-tXvpZ4Hwj7hkCA51hyt8ThFhr/0HwYPRkb3ln3XThYnRGzOZD5rC/qVjQ8k6+bniTDWpYpSyDscZ7gbTKDG/+w==
 
 parcel-plugin-inliner@^1.0.14:
   version "1.0.14"
@@ -8885,6 +8897,7 @@ source-map@^0.5.0, source-map@^0.5.6, source-map@^0.5.7:
   integrity sha1-igOdLRAh0i0eoUyA2OpGi6LvP8w=
 
 source-map@~0.7.2:
+  name source-map-fast
   version "0.7.3"
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.7.3.tgz#5302f8169031735226544092e64981f751750383"
   integrity sha512-CkCj6giN3S+n9qrYiBTX5gystlENnRW5jZeNLHpe6aue+SrHcG5VYwujhW9s4dY31mEGsxBDrHR6oI69fTXsaQ==

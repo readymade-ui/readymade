@@ -7,7 +7,7 @@ import {
 } from './../../../../modules/core';
 
 export class NodeState {
-  public state;
+  public astate;
 }
 
 export const _nodeState = new NodeState();
@@ -20,7 +20,7 @@ export const _nodeState = new NodeState();
     }
   `,
   template: html`
-    <span>{{state}}</span>
+    <span>{{astate}}</span>
   `
 })
 class AtomComponent extends CustomElement {
@@ -45,7 +45,7 @@ class AtomComponent extends CustomElement {
     }
   }
   public setModel(model: string) {
-    this.setState('state', model);
+    this.setState('astate', model);
   }
 }
 

@@ -7,7 +7,7 @@ import {
 } from './../../../../modules/core';
 
 export class NodeState {
-  public state;
+  public xnode;
 }
 
 export const _nodeState = new NodeState();
@@ -20,7 +20,7 @@ export const _nodeState = new NodeState();
     }
   `,
   template: html`
-    <x-atom model="{{state}}"></x-atom>
+    <x-atom model="{{xnode}}"></x-atom>
   `
 })
 class NodeComponent extends PseudoElement {
@@ -45,7 +45,7 @@ class NodeComponent extends PseudoElement {
     }
   }
   public setModel(model: string) {
-    this.setState('state', model);
+    this.setState('xnode', model);
   }
 }
 

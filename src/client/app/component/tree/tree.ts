@@ -15,25 +15,38 @@ export class TreeState {
     'Node 4',
     'Node 5',
     'Node 6',
-    'Node 7'
+    'Node 7',
+    ['far', 'fiz', 'faz', 'fuz']
   ];
   public objectModel = {
     foo: {
       bar: {
         baz: 'bbb'
+      },
+      far: {
+        fiz: {
+          faz: {
+            fuz: 'fuz'
+          }
+        }
+      },
+      mar: {
+        maz: 'mmm'
       }
     }
   };
-  public a = 'aaa';
-  public b = 'bbb';
-  public c = 'ccc';
-  public d = 'ddd';
-  public e = 'eee';
-  public f = 'fff';
-  public g = 'ggg';
-  public h = 'hhh';
+  public ax = 'aaa';
+  public bx = 'bbb';
+  public cx = 'ccc';
+  public dx = 'ddd';
+  public ex = 'eee';
+  public fx = 'fff';
+  public gx = 'ggg';
+  public hx = 'hhh';
   public state: {
-    foo: 'foo';
+    foo:  {
+      bar: 'deep'
+    }
   };
 }
 
@@ -41,7 +54,7 @@ export const _treeState = new TreeState();
 
 @Component({
   selector: 'x-tree',
-  autoDefine: false,
+  autoDefine: true,
   style: css`
     :host {
       display: grid;
@@ -50,13 +63,13 @@ export const _treeState = new TreeState();
   template: html`
     <x-node model="{{arrayModel[0]}}"></x-node>
     <x-node model="{{objectModel.foo.bar.baz}}"></x-node>
-    <x-node model="{{c}}"></x-node>
-    <x-node model="{{d}}"></x-node>
-    <x-node model="{{e}}"></x-node>
-    <x-node model="{{f}}"></x-node>
-    <x-node model="{{g}}"></x-node>
-    <x-node model="{{h}}"></x-node>
-    <x-node model="{{state.foo}}"></x-node>
+    <x-node model="{{cx}}"></x-node>
+    <x-node model="{{dx}}"></x-node>
+    <x-node model="{{ex}}"></x-node>
+    <x-node model="{{fx}}"></x-node>
+    <x-node model="{{gx}}"></x-node>
+    <x-node model="{{hx}}"></x-node>
+    <x-node model="{{state.foo.bar}}"></x-node>
   `
 })
 class TreeComponent extends CustomElement {
@@ -66,7 +79,7 @@ class TreeComponent extends CustomElement {
 
   @State()
   public getState() {
-    return _treeState;
+    return new TreeState();
   }
 
   static get observedAttributes() {
@@ -81,8 +94,10 @@ class TreeComponent extends CustomElement {
     }
   }
   public setModel(model: string) {
-    this.setState('state.foo', model);
+    this.setState('state.foo.bar', model);
   }
 }
+
 customElements.define('x-tree', TreeComponent);
+
 export { TreeComponent };

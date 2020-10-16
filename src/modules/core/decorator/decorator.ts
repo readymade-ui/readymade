@@ -71,16 +71,17 @@ function State(property?: string) {
     key: string | symbol,
     descriptor: PropertyDescriptor
   ) {
-    function bindState() {
-      this.$$state = this[key]();
-      this.$$state[HANDLER_KEY] = new BoundHandler(this);
-      this.$$state[NODE_KEY] = new BoundNode(
+    async function bindState() {
+      this.$state = this[key]();
+      this.ɵɵstate = {};
+      this.ɵɵstate[HANDLER_KEY] = new BoundHandler(this);
+      this.ɵɵstate[NODE_KEY] = new BoundNode(
         this.shadowRoot ? this.shadowRoot : this
       );
-      this.$state = Object.assign(
-        new Proxy(this, this.$$state[HANDLER_KEY]),
-        this[key]()
-      );
+      this.ɵstate = new Proxy(this.$state, this.ɵɵstate['handler' + BIND_SUFFIX]);
+      for (const prop in this.$state) {
+        this.ɵstate[prop] = this.$state[prop];
+      }
     }
 
     target.bindState = function onBind() {

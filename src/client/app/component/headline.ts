@@ -69,12 +69,10 @@ class RHeadlineComponent extends CustomElement {
   public attributeChangedCallback(name, oldValue, newValue) {
     switch (name) {
       case 'headline':
-        this.model.copy = newValue;
-        this.setState('model', this.model);
+        this.setState('model.copy', newValue);
         break;
       case 'size':
-        this.model.size = newValue;
-        this.setState('model', this.model);
+        this.setState('model.size', newValue);
         break;
     }
   }

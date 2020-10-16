@@ -6,6 +6,4 @@ const routing = [
   { path: '/perf', component: 'app-perftest' }
 ];
 
-const rdrouter = new RdRouter('#root', routing);
-
-export { rdrouter };
+export { RdRouter, routing };

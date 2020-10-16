@@ -30,7 +30,9 @@ import { Component, State, CustomElement } from './../../../modules/core';
 	`
 })
 export class MyCounter extends CustomElement {
-  private c: string = '0';
+  private $state: {
+    c: '0';
+  }
   connectedCallback() {
     this.shadowRoot
       .querySelector('#inc')
@@ -41,7 +43,7 @@ export class MyCounter extends CustomElement {
   }
 
   get count() {
-    return Number.parseInt(this.c);
+    return Number.parseInt(this.$state.c);
   }
 
   inc() {
@@ -54,6 +56,6 @@ export class MyCounter extends CustomElement {
 
   @State()
   public getState() {
-    return { c: this.c || '0' };
+    return { c: '0' };
   }
 }

@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
+    "baseUrl": "./",
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
@@ -11,7 +11,8 @@
     "lib": ["es2017", "dom", "dom.iterable"],
     "paths": {
       "@readymade/core": ["src/modules/core"]
-    }
+    },
+    "types": ["@types/node"]
   },
   "include": [
     "./src/**/*.ts"

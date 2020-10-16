@@ -1,5 +1,6 @@
 .idea
 .cache
+.parcel-cache
 .DS_Store
 .rpt2_cache
 .vscode

@@ -1,9 +1,12 @@
+import { ElementMeta } from './../../decorator/decorator';
+
 function attachShadow(instance: any, options?: any) {
   const shadowRoot: ShadowRoot = instance.attachShadow(options || {});
   const t = document.createElement('template');
   t.innerHTML = instance.template;
   shadowRoot.appendChild(t.content.cloneNode(true));
   instance.bindTemplate();
+  define(instance, instance.elementMeta);
 }
 
 function attachDOM(instance: any, options?: any) {
@@ -11,6 +14,7 @@ function attachDOM(instance: any, options?: any) {
   t.innerHTML = instance.elementMeta.template;
   instance.appendChild(t.content.cloneNode(true));
   instance.bindTemplate();
+  define(instance, instance.elementMeta);
 }
 
 function attachStyle(instance: any, options?: any) {
@@ -24,4 +28,17 @@ function attachStyle(instance: any, options?: any) {
   }
 }
 
-export { attachDOM, attachStyle, attachShadow };
+function define(instance: any, meta: ElementMeta) {
+  if (meta.autoDefine === true) {
+    if (meta.selector && !meta.custom) {
+      customElements.define(meta.selector, instance.contructor);
+    } else if (meta.selector && meta.custom) {
+      customElements.define(meta.selector, instance.contructor, meta.custom);
+    } else {
+      console.log(meta.selector, instance.constructor);
+      customElements.define(meta.selector, instance.contructor);
+    }
+  }
+}
+
+export { attachDOM, attachStyle, attachShadow, define };

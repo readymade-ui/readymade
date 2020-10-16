@@ -3,6 +3,7 @@ import commonjsResolve from '@rollup/plugin-commonjs';
 import typescript from '@rollup/plugin-typescript';
 import postcss from 'rollup-plugin-postcss';
 import html from 'rollup-plugin-string-html';
+import json from '@rollup/plugin-json';
 
 export default [{
     input: 'src/client/server.ts',
@@ -16,6 +17,7 @@ export default [{
         nodeResolve({
             mainFields: ['module', 'jsnext']
         }),
+        json(),
         postcss({
             extract: false,
             modules: false,

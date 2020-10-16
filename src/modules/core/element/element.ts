@@ -1,4 +1,4 @@
-export { attachDOM, attachShadow, attachStyle } from './src/attach';
+export { attachDOM, attachShadow, attachStyle, define } from './src/attach';
 
 export { bindTemplate, compileTemplate } from './src/compile';
 
