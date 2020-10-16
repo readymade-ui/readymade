@@ -187,7 +187,6 @@ class NodeTree {
         for (let index = 0; index < templateStrings.length; index++) {
           templateStrings[index] = stripTemplateString(templateStrings[index]);
           if (templateStrings[index].startsWith(key)) {
-            console.log(node, templateStrings[index], findValueByString(value,templateStrings[index].substring(templateStrings[index].indexOf(".") + 1)), protoNode);
             this.changeNode(node, templateStrings[index], findValueByString(value,templateStrings[index].substring(templateStrings[index].indexOf(".") + 1)), protoNode);
           }
         }

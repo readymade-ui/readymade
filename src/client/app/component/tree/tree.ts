@@ -54,7 +54,7 @@ export const _treeState = new TreeState();
 
 @Component({
   selector: 'x-tree',
-  autoDefine: true,
+  autoDefine: false,
   style: css`
     :host {
       display: grid;

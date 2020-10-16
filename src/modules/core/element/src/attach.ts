@@ -6,7 +6,6 @@ function attachShadow(instance: any, options?: any) {
   t.innerHTML = instance.template;
   shadowRoot.appendChild(t.content.cloneNode(true));
   instance.bindTemplate();
-  define(instance, instance.elementMeta);
 }
 
 function attachDOM(instance: any, options?: any) {
@@ -14,7 +13,6 @@ function attachDOM(instance: any, options?: any) {
   t.innerHTML = instance.elementMeta.template;
   instance.appendChild(t.content.cloneNode(true));
   instance.bindTemplate();
-  define(instance, instance.elementMeta);
 }
 
 function attachStyle(instance: any, options?: any) {
