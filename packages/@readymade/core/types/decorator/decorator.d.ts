@@ -25,4 +25,4 @@ declare function Component(meta: ElementMeta): (target: any) => any;
 declare function State(property?: string): (target: any, key: string | symbol, descriptor: PropertyDescriptor) => void;
 declare function Emitter(eventName?: string, options?: any, channelName?: string): (target: any, key: string | symbol, descriptor: PropertyDescriptor) => void;
 declare function Listen(eventName: string, channelName?: string): (target: any, key: string | number, descriptor: PropertyDescriptor) => void;
-export { EventMeta, ElementMeta, Component, State, Emitter, Listen, html, css, noop, };
+export { EventMeta, ElementMeta, Component, State, Emitter, Listen, html, css, noop };

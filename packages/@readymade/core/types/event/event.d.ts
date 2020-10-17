@@ -14,4 +14,4 @@ declare class EventDispatcher {
     setChannel(name: string): void;
     removeChannel(name: string): void;
 }
-export { EventDispatcher, };
+export { EventDispatcher };

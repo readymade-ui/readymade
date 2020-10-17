@@ -18,6 +18,7 @@ export declare class StructuralElement extends HTMLElement {
     bindEmitters?(): void;
     bindListeners?(): void;
     bindState?(): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class PseudoElement extends HTMLElement {
@@ -29,6 +30,7 @@ export declare class PseudoElement extends HTMLElement {
     bindListeners?(): void;
     bindState?(): void;
     setState?(property: string, model: any): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class CustomElement extends HTMLElement {
@@ -40,6 +42,7 @@ export declare class CustomElement extends HTMLElement {
     bindListeners?(): void;
     bindState?(): void;
     setState?(property: string, model: any): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class AllCollectionComponent extends HTMLAllCollection {
@@ -51,6 +54,7 @@ export declare class AllCollectionComponent extends HTMLAllCollection {
     bindListeners?(): void;
     bindState?(): void;
     setState?(property: string, model: any): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class AnchorComponent extends HTMLAnchorElement {
@@ -62,6 +66,7 @@ export declare class AnchorComponent extends HTMLAnchorElement {
     bindListeners?(): void;
     bindState?(): void;
     setState?(property: string, model: any): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class AreaComponent extends HTMLAreaElement {
@@ -73,6 +78,7 @@ export declare class AreaComponent extends HTMLAreaElement {
     bindListeners?(): void;
     bindState?(): void;
     setState?(property: string, model: any): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class AudioComponent extends HTMLAudioElement {
@@ -84,6 +90,7 @@ export declare class AudioComponent extends HTMLAudioElement {
     bindListeners?(): void;
     bindState?(): void;
     setState?(property: string, model: any): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class BRComponent extends HTMLBRElement {
@@ -95,6 +102,7 @@ export declare class BRComponent extends HTMLBRElement {
     bindListeners?(): void;
     bindState?(): void;
     setState?(property: string, model: any): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class BodyComponent extends HTMLBodyElement {
@@ -106,6 +114,7 @@ export declare class BodyComponent extends HTMLBodyElement {
     bindListeners?(): void;
     bindState?(): void;
     setState?(property: string, model: any): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class ButtonComponent extends HTMLButtonElement {
@@ -117,6 +126,7 @@ export declare class ButtonComponent extends HTMLButtonElement {
     bindListeners?(): void;
     bindState?(): void;
     setState?(property: string, model: any): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class CanvasComponent extends HTMLCanvasElement {
@@ -128,6 +138,7 @@ export declare class CanvasComponent extends HTMLCanvasElement {
     bindListeners?(): void;
     bindState?(): void;
     setState?(property: string, model: any): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class CollectionComponent extends HTMLCollection {
@@ -138,6 +149,7 @@ export declare class CollectionComponent extends HTMLCollection {
     bindEmitters?(): void;
     bindListeners?(): void;
     bindState?(): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class DListComponent extends HTMLDListElement {
@@ -149,6 +161,7 @@ export declare class DListComponent extends HTMLDListElement {
     bindListeners?(): void;
     bindState?(): void;
     setState?(property: string, model: any): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class DataComponent extends HTMLDataElement {
@@ -159,6 +172,7 @@ export declare class DataComponent extends HTMLDataElement {
     bindEmitters?(): void;
     bindListeners?(): void;
     bindState?(): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class DetailsComponent extends HTMLDetailsElement {
@@ -170,6 +184,7 @@ export declare class DetailsComponent extends HTMLDetailsElement {
     bindListeners?(): void;
     bindState?(): void;
     setState?(property: string, model: any): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class DivComponent extends HTMLDivElement {
@@ -181,6 +196,7 @@ export declare class DivComponent extends HTMLDivElement {
     bindListeners?(): void;
     bindState?(): void;
     setState?(property: string, model: any): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class EmbedComponent extends HTMLEmbedElement {
@@ -192,6 +208,7 @@ export declare class EmbedComponent extends HTMLEmbedElement {
     bindListeners?(): void;
     bindState?(): void;
     setState?(property: string, model: any): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class FieldSetComponent extends HTMLFieldSetElement {
@@ -203,6 +220,7 @@ export declare class FieldSetComponent extends HTMLFieldSetElement {
     bindListeners?(): void;
     bindState?(): void;
     setState?(property: string, model: any): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class FormControlsComponent extends HTMLFormControlsCollection {
@@ -213,6 +231,7 @@ export declare class FormControlsComponent extends HTMLFormControlsCollection {
     bindEmitters?(): void;
     bindListeners?(): void;
     bindState?(): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class FormComponent extends HTMLFormElement {
@@ -224,6 +243,7 @@ export declare class FormComponent extends HTMLFormElement {
     bindListeners?(): void;
     bindState?(): void;
     setState?(property: string, model: any): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class HRComponent extends HTMLHRElement {
@@ -235,6 +255,7 @@ export declare class HRComponent extends HTMLHRElement {
     bindListeners?(): void;
     bindState?(): void;
     setState?(property: string, model: any): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class HeadComponent extends HTMLHeadElement {
@@ -242,6 +263,7 @@ export declare class HeadComponent extends HTMLHeadElement {
     elementMeta: ElementMeta;
     constructor();
     onInit?(): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class HeadingComponent extends HTMLHeadingElement {
@@ -253,6 +275,7 @@ export declare class HeadingComponent extends HTMLHeadingElement {
     bindListeners?(): void;
     bindState?(): void;
     setState?(property: string, model: any): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class HtmlComponent extends HTMLHtmlElement {
@@ -261,6 +284,7 @@ export declare class HtmlComponent extends HTMLHtmlElement {
     constructor();
     onInit?(): void;
     setState?(property: string, model: any): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class IFrameComponent extends HTMLIFrameElement {
@@ -272,6 +296,7 @@ export declare class IFrameComponent extends HTMLIFrameElement {
     bindListeners?(): void;
     bindState?(): void;
     setState?(property: string, model: any): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class ImageComponent extends HTMLImageElement {
@@ -283,6 +308,7 @@ export declare class ImageComponent extends HTMLImageElement {
     bindListeners?(): void;
     bindState?(): void;
     setState?(property: string, model: any): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class InputComponent extends HTMLInputElement {
@@ -294,6 +320,7 @@ export declare class InputComponent extends HTMLInputElement {
     bindListeners?(): void;
     bindState?(): void;
     setState?(property: string, model: any): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class LIComponent extends HTMLLIElement {
@@ -305,6 +332,7 @@ export declare class LIComponent extends HTMLLIElement {
     bindListeners?(): void;
     bindState?(): void;
     setState?(property: string, model: any): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class LabelComponent extends HTMLLabelElement {
@@ -316,6 +344,7 @@ export declare class LabelComponent extends HTMLLabelElement {
     bindListeners?(): void;
     bindState?(): void;
     setState?(property: string, model: any): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class LegendComponent extends HTMLLegendElement {
@@ -327,6 +356,7 @@ export declare class LegendComponent extends HTMLLegendElement {
     bindListeners?(): void;
     bindState?(): void;
     setState?(property: string, model: any): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class LinkComponent extends HTMLLinkElement {
@@ -338,6 +368,7 @@ export declare class LinkComponent extends HTMLLinkElement {
     bindListeners?(): void;
     bindState?(): void;
     setState?(property: string, model: any): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class MapComponent extends HTMLMapElement {
@@ -349,6 +380,7 @@ export declare class MapComponent extends HTMLMapElement {
     bindListeners?(): void;
     bindState?(): void;
     setState?(property: string, model: any): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class MediaComponent extends HTMLMediaElement {
@@ -359,6 +391,7 @@ export declare class MediaComponent extends HTMLMediaElement {
     bindEmitters?(): void;
     bindListeners?(): void;
     bindState?(): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class MenuComponent extends HTMLMenuElement {
@@ -369,6 +402,7 @@ export declare class MenuComponent extends HTMLMenuElement {
     bindEmitters?(): void;
     bindListeners?(): void;
     bindState?(): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class MetaComponent extends HTMLMetaElement {
@@ -379,6 +413,7 @@ export declare class MetaComponent extends HTMLMetaElement {
     bindEmitters?(): void;
     bindListeners?(): void;
     bindState?(): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class MeterComponent extends HTMLMeterElement {
@@ -390,6 +425,7 @@ export declare class MeterComponent extends HTMLMeterElement {
     bindListeners?(): void;
     bindState?(): void;
     setState?(property: string, model: any): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class ModComponent extends HTMLModElement {
@@ -400,6 +436,7 @@ export declare class ModComponent extends HTMLModElement {
     bindEmitters?(): void;
     bindListeners?(): void;
     bindState?(): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class OListComponent extends HTMLOListElement {
@@ -411,6 +448,7 @@ export declare class OListComponent extends HTMLOListElement {
     bindListeners?(): void;
     bindState?(): void;
     setState?(property: string, model: any): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class ObjectComponent extends HTMLObjectElement {
@@ -422,6 +460,7 @@ export declare class ObjectComponent extends HTMLObjectElement {
     bindListeners?(): void;
     bindState?(): void;
     setState?(property: string, model: any): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class OptGroupComponent extends HTMLOptGroupElement {
@@ -432,6 +471,7 @@ export declare class OptGroupComponent extends HTMLOptGroupElement {
     bindEmitters?(): void;
     bindListeners?(): void;
     bindState?(): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class OptionComponent extends HTMLOptionElement {
@@ -442,6 +482,7 @@ export declare class OptionComponent extends HTMLOptionElement {
     bindEmitters?(): void;
     bindListeners?(): void;
     bindState?(): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class OptionsCollectionComponent extends HTMLOptionsCollection {
@@ -452,6 +493,7 @@ export declare class OptionsCollectionComponent extends HTMLOptionsCollection {
     bindEmitters?(): void;
     bindListeners?(): void;
     bindState?(): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class OutputComponent extends HTMLOutputElement {
@@ -463,6 +505,7 @@ export declare class OutputComponent extends HTMLOutputElement {
     bindListeners?(): void;
     bindState?(): void;
     setState?(property: string, model: any): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class ParagraphComponent extends HTMLParagraphElement {
@@ -474,6 +517,7 @@ export declare class ParagraphComponent extends HTMLParagraphElement {
     bindListeners?(): void;
     bindState?(): void;
     setState?(property: string, model: any): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class ParamComponent extends HTMLParamElement {
@@ -484,6 +528,7 @@ export declare class ParamComponent extends HTMLParamElement {
     bindEmitters?(): void;
     bindListeners?(): void;
     bindState?(): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class PictureComponent extends HTMLPictureElement {
@@ -494,6 +539,7 @@ export declare class PictureComponent extends HTMLPictureElement {
     bindEmitters?(): void;
     bindListeners?(): void;
     bindState?(): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class PreComponent extends HTMLPreElement {
@@ -505,6 +551,7 @@ export declare class PreComponent extends HTMLPreElement {
     bindListeners?(): void;
     bindState?(): void;
     setState?(property: string, model: any): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class ProgressComponent extends HTMLProgressElement {
@@ -515,6 +562,7 @@ export declare class ProgressComponent extends HTMLProgressElement {
     bindEmitters?(): void;
     bindListeners?(): void;
     bindState?(): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class QuoteComponent extends HTMLQuoteElement {
@@ -525,6 +573,7 @@ export declare class QuoteComponent extends HTMLQuoteElement {
     bindEmitters?(): void;
     bindListeners?(): void;
     bindState?(): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class ScriptComponent extends HTMLScriptElement {
@@ -535,6 +584,7 @@ export declare class ScriptComponent extends HTMLScriptElement {
     bindEmitters?(): void;
     bindListeners?(): void;
     bindState?(): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class SelectComponent extends HTMLSelectElement {
@@ -545,6 +595,7 @@ export declare class SelectComponent extends HTMLSelectElement {
     bindEmitters?(): void;
     bindListeners?(): void;
     bindState?(): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class SlotComponent extends HTMLSlotElement {
@@ -555,6 +606,7 @@ export declare class SlotComponent extends HTMLSlotElement {
     bindEmitters?(): void;
     bindListeners?(): void;
     bindState?(): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class SourceComponent extends HTMLSourceElement {
@@ -565,6 +617,7 @@ export declare class SourceComponent extends HTMLSourceElement {
     bindEmitters?(): void;
     bindListeners?(): void;
     bindState?(): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class SpanComponent extends HTMLSpanElement {
@@ -576,6 +629,7 @@ export declare class SpanComponent extends HTMLSpanElement {
     bindListeners?(): void;
     bindState?(): void;
     setState?(property: string, model: any): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class StyleComponent extends HTMLStyleElement {
@@ -586,6 +640,7 @@ export declare class StyleComponent extends HTMLStyleElement {
     bindEmitters?(): void;
     bindListeners?(): void;
     bindState?(): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class TableCaptionComponent extends HTMLTableCaptionElement {
@@ -596,6 +651,7 @@ export declare class TableCaptionComponent extends HTMLTableCaptionElement {
     bindEmitters?(): void;
     bindListeners?(): void;
     bindState?(): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class TableCellComponent extends HTMLTableCellElement {
@@ -606,6 +662,7 @@ export declare class TableCellComponent extends HTMLTableCellElement {
     bindEmitters?(): void;
     bindListeners?(): void;
     bindState?(): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class TableColComponent extends HTMLTableColElement {
@@ -616,6 +673,7 @@ export declare class TableColComponent extends HTMLTableColElement {
     bindEmitters?(): void;
     bindListeners?(): void;
     bindState?(): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class TableComponent extends HTMLTableElement {
@@ -627,6 +685,7 @@ export declare class TableComponent extends HTMLTableElement {
     bindListeners?(): void;
     bindState?(): void;
     setState?(property: string, model: any): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class TableRowComponent extends HTMLTableRowElement {
@@ -638,6 +697,7 @@ export declare class TableRowComponent extends HTMLTableRowElement {
     bindListeners?(): void;
     bindState?(): void;
     setState?(property: string, model: any): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class TableSectionComponent extends HTMLTableSectionElement {
@@ -649,6 +709,7 @@ export declare class TableSectionComponent extends HTMLTableSectionElement {
     bindListeners?(): void;
     bindState?(): void;
     setState?(property: string, model: any): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class TemplateComponent extends HTMLTemplateElement {
@@ -659,6 +720,7 @@ export declare class TemplateComponent extends HTMLTemplateElement {
     bindEmitters?(): void;
     bindListeners?(): void;
     bindState?(): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class TimeComponent extends HTMLTimeElement {
@@ -670,6 +732,7 @@ export declare class TimeComponent extends HTMLTimeElement {
     bindListeners?(): void;
     bindState?(): void;
     setState?(property: string, model: any): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class TitleComponent extends HTMLTitleElement {
@@ -680,6 +743,7 @@ export declare class TitleComponent extends HTMLTitleElement {
     bindEmitters?(): void;
     bindListeners?(): void;
     bindState?(): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class TrackComponent extends HTMLTrackElement {
@@ -690,6 +754,7 @@ export declare class TrackComponent extends HTMLTrackElement {
     bindEmitters?(): void;
     bindListeners?(): void;
     bindState?(): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class UListComponent extends HTMLUListElement {
@@ -701,6 +766,7 @@ export declare class UListComponent extends HTMLUListElement {
     bindListeners?(): void;
     bindState?(): void;
     setState?(property: string, model: any): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class UnknownComponent extends HTMLUnknownElement {
@@ -711,6 +777,7 @@ export declare class UnknownComponent extends HTMLUnknownElement {
     bindEmitters?(): void;
     bindListeners?(): void;
     bindState?(): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
 export declare class VideoComponent extends HTMLVideoElement {
@@ -722,5 +789,6 @@ export declare class VideoComponent extends HTMLVideoElement {
     bindListeners?(): void;
     bindState?(): void;
     setState?(property: string, model: any): void;
+    onUpdate?(): void;
     onDestroy?(): void;
 }
