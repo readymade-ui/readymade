@@ -17,16 +17,20 @@ describe('attachShadow Test', () => {
     element.bindTemplate = () => {};
     element.template = `
     <div>Readymade Test</div>
-    `
+    `;
+    element.elementMeta = {
+      selector: 'x-test',
+      mode: 'open'
+    };
   });
 
   it('binds shadow root to element', () => {
-     attachShadow(element, { mode: 'open' });
+     attachShadow(element, { mode: element.elementMeta.mode });
      expect(element.shadowRoot).does.not.equal(null);
   });
 
   it('has a shadow dom template', () => {
-    attachShadow(element, { mode: 'open' });
+    attachShadow(element, { mode: element.elementMeta.mode });
     expect(element.shadowRoot.querySelector('div').innerText).equals('Readymade Test');
   });
 
