@@ -2,14 +2,17 @@
   "compilerOptions": {
     "baseUrl": "./",
     "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
     "module": "ES2015",
-    "outDir": "./dist",
     "target": "ES2015",
     "sourceMap": false,
     "typeRoots": ["node_modules/@types"],
     "lib": ["es2017", "dom", "dom.iterable"],
-    "declaration": false
+    "paths": {
+      "@readymade/core": ["src/modules/core"]
+    },
+    "types": ["@types/node"]
   },
   "include": [
     "./src/**/*.ts"

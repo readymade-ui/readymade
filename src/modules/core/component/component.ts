@@ -1,21 +1,21 @@
-import { ElementMeta, EMIT_KEY, LISTEN_KEY } from './../decorator/decorator.js';
-import { attachDOM, attachShadow, attachStyle } from './../element/element.js';
-import { EventDispatcher } from './../event/event.js';
+import { ElementMeta, EMIT_KEY, LISTEN_KEY } from './../decorator/decorator';
+import { attachDOM, attachShadow, attachStyle } from './../element/element';
+import { EventDispatcher } from './../event/event';
 
-export type OnInit = ()  => void;
+export type OnInit = () => void;
 
 export interface StateChange {
   [key: string]: {
-    previousValue: any,
-    newValue: any,
+    previousValue: any;
+    newValue: any;
   };
 }
 
-export type OnStateChange = (change: StateChange)  => void;
+export type OnStateChange = (change: StateChange) => void;
 
-export type SetState = (property: string, model: any)  => void;
+export type SetState = (property: string, model: any) => void;
 
-export type OnDestroy = ()  => void;
+export type OnDestroy = () => void;
 
 function bindListeners(target: any) {
   for (const prop in target) {
@@ -38,14 +38,21 @@ export class StructuralElement extends HTMLElement {
   public elementMeta: ElementMeta;
   constructor() {
     super();
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 
@@ -56,15 +63,22 @@ export class PseudoElement extends HTMLElement {
     super();
     attachDOM(this);
     attachStyle(this);
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
   public setState?(property: string, model: any): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 
@@ -74,15 +88,22 @@ export class CustomElement extends HTMLElement {
   constructor() {
     super();
     attachShadow(this, { mode: 'open' });
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
   public setState?(property: string, model: any): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 
@@ -91,15 +112,22 @@ export class AllCollectionComponent extends HTMLAllCollection {
   public elementMeta: ElementMeta;
   constructor() {
     super();
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
   public setState?(property: string, model: any): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class AnchorComponent extends HTMLAnchorElement {
@@ -109,15 +137,22 @@ export class AnchorComponent extends HTMLAnchorElement {
     super();
     attachDOM(this);
     attachStyle(this);
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
   public setState?(property: string, model: any): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class AreaComponent extends HTMLAreaElement {
@@ -126,15 +161,22 @@ export class AreaComponent extends HTMLAreaElement {
   constructor() {
     super();
     attachStyle(this);
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
   public setState?(property: string, model: any): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class AudioComponent extends HTMLAudioElement {
@@ -143,15 +185,22 @@ export class AudioComponent extends HTMLAudioElement {
   constructor() {
     super();
     attachStyle(this);
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
   public setState?(property: string, model: any): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class BRComponent extends HTMLBRElement {
@@ -160,15 +209,22 @@ export class BRComponent extends HTMLBRElement {
   constructor() {
     super();
     attachStyle(this);
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
   public setState?(property: string, model: any): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class BodyComponent extends HTMLBodyElement {
@@ -177,15 +233,22 @@ export class BodyComponent extends HTMLBodyElement {
   constructor() {
     super();
     attachShadow(this, { mode: 'open' });
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
   public setState?(property: string, model: any): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class ButtonComponent extends HTMLButtonElement {
@@ -195,15 +258,22 @@ export class ButtonComponent extends HTMLButtonElement {
     super();
     attachDOM(this);
     attachStyle(this);
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
   public setState?(property: string, model: any): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class CanvasComponent extends HTMLCanvasElement {
@@ -212,15 +282,22 @@ export class CanvasComponent extends HTMLCanvasElement {
   constructor() {
     super();
     attachStyle(this);
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
   public setState?(property: string, model: any): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class CollectionComponent extends HTMLCollection {
@@ -228,14 +305,21 @@ export class CollectionComponent extends HTMLCollection {
   public elementMeta: ElementMeta;
   constructor() {
     super();
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 
@@ -246,15 +330,22 @@ export class DListComponent extends HTMLDListElement {
     super();
     attachDOM(this);
     attachStyle(this);
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
   public setState?(property: string, model: any): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class DataComponent extends HTMLDataElement {
@@ -262,14 +353,21 @@ export class DataComponent extends HTMLDataElement {
   public elementMeta: ElementMeta;
   constructor() {
     super();
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class DetailsComponent extends HTMLDetailsElement {
@@ -279,15 +377,22 @@ export class DetailsComponent extends HTMLDetailsElement {
     super();
     attachDOM(this);
     attachStyle(this);
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
   public setState?(property: string, model: any): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 
@@ -297,15 +402,22 @@ export class DivComponent extends HTMLDivElement {
   constructor() {
     super();
     attachShadow(this, { mode: 'open' });
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
   public setState?(property: string, model: any): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 
@@ -315,15 +427,22 @@ export class EmbedComponent extends HTMLEmbedElement {
   constructor() {
     super();
     attachStyle(this);
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
   public setState?(property: string, model: any): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class FieldSetComponent extends HTMLFieldSetElement {
@@ -332,15 +451,22 @@ export class FieldSetComponent extends HTMLFieldSetElement {
   constructor() {
     super();
     attachStyle(this);
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
   public setState?(property: string, model: any): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class FormControlsComponent extends HTMLFormControlsCollection {
@@ -348,14 +474,21 @@ export class FormControlsComponent extends HTMLFormControlsCollection {
   public elementMeta: ElementMeta;
   constructor() {
     super();
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class FormComponent extends HTMLFormElement {
@@ -364,15 +497,22 @@ export class FormComponent extends HTMLFormElement {
   constructor() {
     super();
     attachStyle(this);
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
   public setState?(property: string, model: any): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class HRComponent extends HTMLHRElement {
@@ -381,15 +521,22 @@ export class HRComponent extends HTMLHRElement {
   constructor() {
     super();
     attachStyle(this);
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
   public setState?(property: string, model: any): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class HeadComponent extends HTMLHeadElement {
@@ -397,9 +544,12 @@ export class HeadComponent extends HTMLHeadElement {
   public elementMeta: ElementMeta;
   constructor() {
     super();
-    if (this.onInit) { this.onInit(); }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class HeadingComponent extends HTMLHeadingElement {
@@ -408,15 +558,22 @@ export class HeadingComponent extends HTMLHeadingElement {
   constructor() {
     super();
     attachShadow(this, { mode: 'open' });
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
   public setState?(property: string, model: any): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class HtmlComponent extends HTMLHtmlElement {
@@ -424,10 +581,13 @@ export class HtmlComponent extends HTMLHtmlElement {
   public elementMeta: ElementMeta;
   constructor() {
     super();
-    if (this.onInit) { this.onInit(); }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public setState?(property: string, model: any): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class IFrameComponent extends HTMLIFrameElement {
@@ -436,15 +596,22 @@ export class IFrameComponent extends HTMLIFrameElement {
   constructor() {
     super();
     attachStyle(this);
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
   public setState?(property: string, model: any): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class ImageComponent extends HTMLImageElement {
@@ -453,15 +620,22 @@ export class ImageComponent extends HTMLImageElement {
   constructor() {
     super();
     attachStyle(this);
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
   public setState?(property: string, model: any): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class InputComponent extends HTMLInputElement {
@@ -470,15 +644,22 @@ export class InputComponent extends HTMLInputElement {
   constructor() {
     super();
     attachStyle(this);
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
   public setState?(property: string, model: any): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class LIComponent extends HTMLLIElement {
@@ -488,15 +669,22 @@ export class LIComponent extends HTMLLIElement {
     super();
     attachDOM(this);
     attachStyle(this);
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
   public setState?(property: string, model: any): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class LabelComponent extends HTMLLabelElement {
@@ -506,15 +694,22 @@ export class LabelComponent extends HTMLLabelElement {
     super();
     attachDOM(this);
     attachStyle(this);
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
   public setState?(property: string, model: any): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class LegendComponent extends HTMLLegendElement {
@@ -523,15 +718,22 @@ export class LegendComponent extends HTMLLegendElement {
   constructor() {
     super();
     attachStyle(this);
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
   public setState?(property: string, model: any): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class LinkComponent extends HTMLLinkElement {
@@ -540,15 +742,22 @@ export class LinkComponent extends HTMLLinkElement {
   constructor() {
     super();
     attachStyle(this);
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
   public setState?(property: string, model: any): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class MapComponent extends HTMLMapElement {
@@ -558,15 +767,22 @@ export class MapComponent extends HTMLMapElement {
     super();
     attachDOM(this);
     attachStyle(this);
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
   public setState?(property: string, model: any): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 
@@ -575,14 +791,21 @@ export class MediaComponent extends HTMLMediaElement {
   public elementMeta: ElementMeta;
   constructor() {
     super();
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class MenuComponent extends HTMLMenuElement {
@@ -590,14 +813,21 @@ export class MenuComponent extends HTMLMenuElement {
   public elementMeta: ElementMeta;
   constructor() {
     super();
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class MetaComponent extends HTMLMetaElement {
@@ -605,14 +835,21 @@ export class MetaComponent extends HTMLMetaElement {
   public elementMeta: ElementMeta;
   constructor() {
     super();
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class MeterComponent extends HTMLMeterElement {
@@ -621,15 +858,22 @@ export class MeterComponent extends HTMLMeterElement {
   constructor() {
     super();
     attachStyle(this);
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
   public setState?(property: string, model: any): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class ModComponent extends HTMLModElement {
@@ -637,14 +881,21 @@ export class ModComponent extends HTMLModElement {
   public elementMeta: ElementMeta;
   constructor() {
     super();
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class OListComponent extends HTMLOListElement {
@@ -654,15 +905,22 @@ export class OListComponent extends HTMLOListElement {
     super();
     attachDOM(this);
     attachStyle(this);
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
   public setState?(property: string, model: any): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class ObjectComponent extends HTMLObjectElement {
@@ -671,15 +929,22 @@ export class ObjectComponent extends HTMLObjectElement {
   constructor() {
     super();
     attachStyle(this);
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
   public setState?(property: string, model: any): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class OptGroupComponent extends HTMLOptGroupElement {
@@ -687,14 +952,21 @@ export class OptGroupComponent extends HTMLOptGroupElement {
   public elementMeta: ElementMeta;
   constructor() {
     super();
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class OptionComponent extends HTMLOptionElement {
@@ -702,14 +974,21 @@ export class OptionComponent extends HTMLOptionElement {
   public elementMeta: ElementMeta;
   constructor() {
     super();
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class OptionsCollectionComponent extends HTMLOptionsCollection {
@@ -717,14 +996,21 @@ export class OptionsCollectionComponent extends HTMLOptionsCollection {
   public elementMeta: ElementMeta;
   constructor() {
     super();
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class OutputComponent extends HTMLOutputElement {
@@ -733,15 +1019,22 @@ export class OutputComponent extends HTMLOutputElement {
   constructor() {
     super();
     attachStyle(this);
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
   public setState?(property: string, model: any): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class ParagraphComponent extends HTMLParagraphElement {
@@ -750,15 +1043,22 @@ export class ParagraphComponent extends HTMLParagraphElement {
   constructor() {
     super();
     attachShadow(this, { mode: 'open' });
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
   public setState?(property: string, model: any): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class ParamComponent extends HTMLParamElement {
@@ -766,14 +1066,21 @@ export class ParamComponent extends HTMLParamElement {
   public elementMeta: ElementMeta;
   constructor() {
     super();
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class PictureComponent extends HTMLPictureElement {
@@ -781,14 +1088,21 @@ export class PictureComponent extends HTMLPictureElement {
   public elementMeta: ElementMeta;
   constructor() {
     super();
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class PreComponent extends HTMLPreElement {
@@ -798,15 +1112,22 @@ export class PreComponent extends HTMLPreElement {
     super();
     attachDOM(this);
     attachStyle(this);
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
   public setState?(property: string, model: any): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class ProgressComponent extends HTMLProgressElement {
@@ -814,14 +1135,21 @@ export class ProgressComponent extends HTMLProgressElement {
   public elementMeta: ElementMeta;
   constructor() {
     super();
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class QuoteComponent extends HTMLQuoteElement {
@@ -829,14 +1157,21 @@ export class QuoteComponent extends HTMLQuoteElement {
   public elementMeta: ElementMeta;
   constructor() {
     super();
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class ScriptComponent extends HTMLScriptElement {
@@ -844,14 +1179,21 @@ export class ScriptComponent extends HTMLScriptElement {
   public elementMeta: ElementMeta;
   constructor() {
     super();
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class SelectComponent extends HTMLSelectElement {
@@ -859,14 +1201,21 @@ export class SelectComponent extends HTMLSelectElement {
   public elementMeta: ElementMeta;
   constructor() {
     super();
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 
@@ -875,14 +1224,21 @@ export class SlotComponent extends HTMLSlotElement {
   public elementMeta: ElementMeta;
   constructor() {
     super();
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class SourceComponent extends HTMLSourceElement {
@@ -890,14 +1246,21 @@ export class SourceComponent extends HTMLSourceElement {
   public elementMeta: ElementMeta;
   constructor() {
     super();
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class SpanComponent extends HTMLSpanElement {
@@ -906,15 +1269,22 @@ export class SpanComponent extends HTMLSpanElement {
   constructor() {
     super();
     attachShadow(this, { mode: 'open' });
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
   public setState?(property: string, model: any): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class StyleComponent extends HTMLStyleElement {
@@ -922,14 +1292,21 @@ export class StyleComponent extends HTMLStyleElement {
   public elementMeta: ElementMeta;
   constructor() {
     super();
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class TableCaptionComponent extends HTMLTableCaptionElement {
@@ -937,14 +1314,21 @@ export class TableCaptionComponent extends HTMLTableCaptionElement {
   public elementMeta: ElementMeta;
   constructor() {
     super();
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class TableCellComponent extends HTMLTableCellElement {
@@ -952,14 +1336,21 @@ export class TableCellComponent extends HTMLTableCellElement {
   public elementMeta: ElementMeta;
   constructor() {
     super();
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class TableColComponent extends HTMLTableColElement {
@@ -967,14 +1358,21 @@ export class TableColComponent extends HTMLTableColElement {
   public elementMeta: ElementMeta;
   constructor() {
     super();
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class TableComponent extends HTMLTableElement {
@@ -984,15 +1382,22 @@ export class TableComponent extends HTMLTableElement {
     super();
     attachDOM(this);
     attachStyle(this);
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
   public setState?(property: string, model: any): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 
@@ -1003,15 +1408,22 @@ export class TableRowComponent extends HTMLTableRowElement {
     super();
     attachDOM(this);
     attachStyle(this);
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
   public setState?(property: string, model: any): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class TableSectionComponent extends HTMLTableSectionElement {
@@ -1021,15 +1433,22 @@ export class TableSectionComponent extends HTMLTableSectionElement {
     super();
     attachDOM(this);
     attachStyle(this);
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
   public setState?(property: string, model: any): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class TemplateComponent extends HTMLTemplateElement {
@@ -1037,14 +1456,21 @@ export class TemplateComponent extends HTMLTemplateElement {
   public elementMeta: ElementMeta;
   constructor() {
     super();
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 
@@ -1054,15 +1480,22 @@ export class TimeComponent extends HTMLTimeElement {
   constructor() {
     super();
     attachStyle(this);
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
   public setState?(property: string, model: any): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class TitleComponent extends HTMLTitleElement {
@@ -1070,14 +1503,21 @@ export class TitleComponent extends HTMLTitleElement {
   public elementMeta: ElementMeta;
   constructor() {
     super();
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class TrackComponent extends HTMLTrackElement {
@@ -1085,14 +1525,21 @@ export class TrackComponent extends HTMLTrackElement {
   public elementMeta: ElementMeta;
   constructor() {
     super();
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class UListComponent extends HTMLUListElement {
@@ -1102,15 +1549,22 @@ export class UListComponent extends HTMLUListElement {
     super();
     attachDOM(this);
     attachStyle(this);
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
   public setState?(property: string, model: any): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 export class UnknownComponent extends HTMLUnknownElement {
@@ -1118,14 +1572,21 @@ export class UnknownComponent extends HTMLUnknownElement {
   public elementMeta: ElementMeta;
   constructor() {
     super();
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }
 
@@ -1135,14 +1596,21 @@ export class VideoComponent extends HTMLVideoElement {
   constructor() {
     super();
     attachStyle(this);
-    if (this.bindEmitters) { this.bindEmitters(); }
-    if (this.bindListeners) { this.bindListeners(); }
-    if (this.onInit) { this.onInit(); }
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
   }
   public onInit?(): void;
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
   public setState?(property: string, model: any): void;
+  public onUpdate?(): void;
   public onDestroy?(): void;
 }

@@ -1,51 +1,68 @@
-import { OnStateChange } from './../../component/component.js';
-import { ElementMeta } from './../../decorator/decorator.js';
+import { CustomElement, OnStateChange } from './../../component/component';
+import { ElementMeta } from './../../decorator/decorator';
 
 export const STRING_VALUE_REGEX = /\[(\w+)\]/g;
 export const STRING_DOT_REGEX = /^\./;
+export const ARRAY_REGEX = /(?<=\[)(.*)(\])/;
+export const DOT_BRACKET_NOTATION_REGEX = /\.|\[[0-9]*\]/g
 export const TEMPLATE_BIND_REGEX = /\{\{(\s*)(.*?)(\s*)\}\}/g;
 export const BRACKET_START_REGEX = new RegExp(`\\[`, 'gi');
-export const BRACKET_END_REGEX =  new RegExp(`\\]`, 'gi');
-export const BIND_SUFFIX = ' __state';
+export const BRACKET_END_REGEX = new RegExp(`\\]`, 'gi');
+export const TEMPLATE_START_REGEX = new RegExp(`{{`);
+export const TEMPLATE_END_REGEX = new RegExp(`}}`);
+export const BIND_SUFFIX = '__state';
 export const NODE_KEY = 'node' + BIND_SUFFIX;
 export const HANDLER_KEY = 'handler' + BIND_SUFFIX;
 
 interface Node {
-    cloneNode(deep?: boolean): this;
-    $init?: boolean;
+  cloneNode(deep?: boolean): this;
+  $init?: boolean;
 }
 
 const isObject = function(val) {
-  if (val === null) { return false;}
-  return ( (typeof val === 'function') || (typeof val === 'object') );
+  if (val === null) {
+    return false;
+  }
+  return typeof val === 'function' || typeof val === 'object';
 };
 
 const findValueByString = function(o: any, s: string) {
   s = s.replace(STRING_VALUE_REGEX, '.$1');
   s = s.replace(STRING_DOT_REGEX, '');
-  const a = s.split('.');
+  const a = s.split(DOT_BRACKET_NOTATION_REGEX);
   for (let i = 0, n = a.length; i < n; ++i) {
-      const k = a[i];
-      if (k in o) {
-          o = o[k];
-      } else {
-          return;
-      }
+    const k = a[i];
+    if (k in o) {
+      o = o[k];
+    } else {
+      return;
+    }
   }
   return o;
 };
 
+function filter(fn: any, a: Array<any>){
+  const f = [];
+  for (let i = 0; i < a.length; i++) {
+    if (fn(a[i])) {
+      f.push(a[i]);
+    }
+  }
+  return f;
+};
+
 function setValueByString(obj: any, path: string, value: any) {
-  const pList = path.split('.');
+  const pList = path.split(DOT_BRACKET_NOTATION_REGEX);
   const len = pList.length;
   for (let i = 0; i < len - 1; i++) {
-      const elem = pList[i];
-      if ( !obj[elem] ) {
-        obj[elem] = {};
-      }
-      obj = obj[elem];
+    const elem = pList[i];
+    if (!obj[elem]) {
+      obj[elem] = {};
+    }
+    obj = obj[elem];
   }
   obj[pList[len - 1]] = value;
+  return obj;
 }
 
 function templateId() {
@@ -60,14 +77,28 @@ function templateId() {
 /* tslint:disable */
 function uuidv4() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    const r = (Math.random() * 16) | 0,
+      v = c == 'x' ? r : (r & 0x3) | 0x8;
     return v.toString(24);
   });
 }
 /* tslint:enable */
 
+function stripKey(key: string) {
+  key = key.replace(BRACKET_START_REGEX, `\\[`);
+  key = key.replace(BRACKET_END_REGEX, `\\]`);
+  return key;
+}
+
+
+function stripTemplateString(key: string) {
+  key = key.replace(TEMPLATE_START_REGEX, ``);
+  key = key.replace(TEMPLATE_END_REGEX, ``);
+  return key;
+}
+
 class NodeTree {
-  public $parent: any;
+  public $parent: Node;
   public $parentId: string;
   public $flatMap: any = {};
   constructor(parentNode?: Node) {
@@ -75,38 +106,40 @@ class NodeTree {
     this.$flatMap = {};
     this.$parentId = templateId();
   }
-  public setNode(node: Node, key?: string, value?: any) {
-      const id = this.$parentId + '-' + uuidv4().slice(0, 6);
-      const clone = node.cloneNode(true);
-      if (!(node as Element).setAttribute) {
-        // tslint:disable-next-line: only-arrow-functions, no-empty
-        (node as Element).setAttribute = function(i: string, v: string) {};
-      }
-      (node as Element).setAttribute(id, '');
-      if (!(clone as Element).setAttribute) {
-        // tslint:disable-next-line: only-arrow-functions, no-empty
-        (clone as Element).setAttribute = function(i: string, v: string) {};
-      }
-      (clone as Element).setAttribute(id, '');
-      if (!this.$flatMap[id]) {
-        this.$flatMap[id] = {
-          id,
-          node: clone,
-        };
-        if (key && value) {
-          this.updateNode(node, key, value);
-        }
-      }
-      node.$init = true;
+  public setNode(node: Node, key?: string, value?: any, attrID?: string) {
+    if (this.$flatMap[attrID]) {
+      return this.$flatMap[attrID];
+    }
+    const id = attrID ? attrID : this.$parentId + '-' + uuidv4().slice(0, 6);
+    const clone = node.cloneNode(true);
+    if (!(node as Element).setAttribute) {
+      // tslint:disable-next-line: only-arrow-functions, no-empty
+      (node as Element).setAttribute = function(i: string, v: string) {};
+    }
+    (node as Element).setAttribute(id, '');
+    if (!(clone as Element).setAttribute) {
+      // tslint:disable-next-line: only-arrow-functions, no-empty
+      (clone as Element).setAttribute = function(i: string, v: string) {};
+    }
+    (clone as Element).setAttribute(id, '');
+    this.$flatMap[id] = {
+      id,
+      node: clone
+    };
+    if (key && value) {
+      this.updateNode(node, key, value);
+    }
+    node.$init = true;
+    return this.$flatMap[id];
   }
-  public changeNode(node: Node, key: string, value: any) {
-    key = key.replace(BRACKET_START_REGEX, `\\[`);
-    key = key.replace(BRACKET_END_REGEX, `\\]`);
+  public changeNode(node: Node, key: string, value: any, protoNode: any) {
+    key = stripKey(key);
     const regex = new RegExp(`\{\{(\s*)(${key})(\s*)\}\}`, 'gi');
-    const attrId = this.getElementByAttribute((node as Element))[0].nodeName || this.getElementByAttribute((node as Element))[0].name;
-    const protoNode = this.$flatMap[attrId].node;
-    if (protoNode.textContent.match(regex)) {
-      (node as Element).textContent = protoNode.textContent.replace(regex, value);
+    if (protoNode.textContent.match(regex) && (node as Element).textContent !== value) {
+      (node as Element).textContent = protoNode.textContent.replace(
+        regex,
+        value
+      );
     }
     if (protoNode.attributes.length === 1) {
       return;
@@ -114,27 +147,37 @@ class NodeTree {
     let attr;
     for (const attribute of protoNode.attributes) {
       attr = attribute.nodeName || attribute.name;
-      if (attr.includes('attr.') && !protoNode.getAttribute(attr.replace('attr.', ''))) {
-        if (attribute.nodeName) {
-          attr = attribute.nodeName.replace('attr.', '');
-        } else if (attribute.name) {
-          attr = attribute.name.replace('attr.', '');
+      if (attr.includes('attr.')) {
+        if (!protoNode.getAttribute(attr.replace('attr.', ''))) {
+          if (attribute.nodeName) {
+            attr = attribute.nodeName.replace('attr.', '');
+          } else if (attribute.name) {
+            attr = attribute.name.replace('attr.', '');
+          }
+          if (!protoNode.setAttribute) {
+            // tslint:disable-next-line: only-arrow-functions, no-empty
+            protoNode.setAttribute = function(i: string, v: string) {};
+          }
+          protoNode.setAttribute(
+            attr,
+            attribute.nodeValue.replace(TEMPLATE_BIND_REGEX, '')
+          );
+          const remove = attribute.nodeName || attribute.name;
+          (node as Element).removeAttribute(remove);
         }
-        if (!protoNode.setAttribute) {
-          // tslint:disable-next-line: only-arrow-functions, no-empty
-          protoNode.setAttribute = function(i: string, v: string) {};
-        }
-        protoNode.setAttribute(attr, attribute.nodeValue.replace(TEMPLATE_BIND_REGEX, ''));
-        const remove = attribute.nodeName || attribute.name;
-        (node as Element).removeAttribute(remove);
       }
       const attributeValue = attribute.nodeValue || attribute.value;
       if (attributeValue.match(regex, 'gi')) {
-        if (!(node as Element).setAttribute) {
-          // tslint:disable-next-line: only-arrow-functions, no-empty
-          (node as Element).setAttribute = function(i: string, v: string) {};
+        if ((node as Element).getAttribute(attr) !== value) {
+          if (!(node as Element).setAttribute) {
+            // tslint:disable-next-line: only-arrow-functions, no-empty
+            (node as Element).setAttribute = function(i: string, v: string) {};
+          }
+          (node as Element).setAttribute(
+            attr,
+            attributeValue.replace(regex, value)
+          );
         }
-        (node as Element).setAttribute(attr, attributeValue.replace(regex, value));
       }
       const check = attribute.nodeName || attribute.name;
       if (check.includes('attr.')) {
@@ -142,63 +185,80 @@ class NodeTree {
       }
     }
   }
-  public updateNode(node: Node, key: string, value: any) {
-    if (this.getElementByAttribute((node as Element)).length === 0) {
+  public updateNode(node: Node | Element, key: string, value: any) {
+    const attr = this.getElementByAttribute(node as Element)[0];
+    const attrId = attr ? attr.nodeName || attr.name : null;
+    let entry = this.setNode(node, key, value, attrId);
+    let protoNode = entry.node;
+    let templateStrings = protoNode.outerHTML.toString().match(TEMPLATE_BIND_REGEX);
+    if (templateStrings == null) {
       return;
     }
-    if (Array.isArray(value)) {
-      for (let index = 0; index < value.length; index++) {
-        this.changeNode(node, `${key}[${index}]`, value[index]);
-      }
-    } else if (isObject(value)) {
-      for (const prop in value) {
-        if (value.hasOwnProperty(prop)) {
-          this.changeNode(node, `${key}.${prop}`, value[prop]);
-        }
+    for (let index = 0; index < templateStrings.length; index++) {
+      templateStrings[index] = stripTemplateString(templateStrings[index]);
+    }
+    let matches = filter(str => str.startsWith(key), templateStrings);
+    if (matches.length === 0) {
+      return;
+    }
+    if (isObject(value) || Array.isArray(value)) {
+      for (let index = 0; index < matches.length; index++) {
+        this.changeNode(node, templateStrings[index], findValueByString(value,templateStrings[index].substring(templateStrings[index].search(DOT_BRACKET_NOTATION_REGEX))), protoNode);
       }
     } else {
-      this.changeNode(node, key, value);
+      this.changeNode(node, key, value, protoNode);
     }
   }
   public getElementByAttribute(node: Element) {
     if (!node.attributes) {
       return [];
     }
-    for (let i=0; i < node.attributes.length; i++) {
-      if (/[A-Za-z0-9]{3}-[A-Za-z0-9]{6}/gm.test(node.attributes[i].nodeName || node.attributes[i].name)) {
-        return [node.attributes[i]];
+    let matches = [];
+    for (let i = 0; i < node.attributes.length; i++) {
+      if (
+        /[A-Za-z0-9]{3}-[A-Za-z0-9]{6}/gm.test(
+          node.attributes[i].nodeName || node.attributes[i].name
+        )
+      ) {
+        matches.push(node.attributes[i]);
       }
     }
+    return matches;
   }
   public update(key: string, value: any) {
     const walk = document.createTreeWalker(
-      this.$parent,
+      (this.$parent as Element),
       NodeFilter.SHOW_ELEMENT,
-      { acceptNode(node) { return NodeFilter.FILTER_ACCEPT; } },
-      false,
+      {
+        acceptNode(node) {
+          return NodeFilter.FILTER_ACCEPT;
+        }
+      },
+      false
     );
     while (walk.nextNode()) {
-      if ((walk.currentNode as Node).$init === true) {
-         this.updateNode(walk.currentNode, key, value);
-      } else {
-         this.setNode(walk.currentNode, key, value);
-      }
+      this.updateNode(walk.currentNode, key, value);
     }
     return this.$parent;
   }
 }
 
 class BoundNode {
-  public $parent: any;
+  public $elem: CustomElement | Element;
   public $tree: NodeTree;
   public templateTree: NodeTree;
-  constructor(parent) {
-    this.$parent = parent;
-    this.$tree = new NodeTree(this.$parent);
+  constructor(elem: Element) {
+    this.$elem = elem;
+    this.$tree = new NodeTree(this.$elem);
   }
   public update(key: string, value: any) {
+    if (value == undefined) {
+      return;
+    }
     this.$tree.update(key, value);
-    if (this.$parent.onUpdate) { this.$parent.onUpdate(); }
+    if ((this.$elem as CustomElement).onUpdate) {
+      (this.$elem as CustomElement).onUpdate();
+    }
   }
 }
 
@@ -211,40 +271,50 @@ class BoundHandler {
   }
   public set(target: any, key: string, value: any) {
 
+    if (value === 'undefined') {
+      return true;
+    }
+
     const ex = new RegExp(TEMPLATE_BIND_REGEX).exec(value);
-    const capturedGroup = (ex && ex[2]) ? ex[2] : false;
+    const capturedGroup = ex && ex[2] ? ex[2] : false;
     const change = {
       [key]: {
-        previousValue : target[key],
-        newValue: value,
-      },
+        previousValue: target[key],
+        newValue: value
+      }
     };
 
-    if (capturedGroup && target.parentNode && target.parentNode.host && target.parentNode.mode === 'open') {
-      target[key] = findValueByString(target.parentNode.host, capturedGroup);
-    } else if (capturedGroup && target.parentNode) {
-      target[key] = findValueByString(target.parentNode, capturedGroup);
+    if (capturedGroup) {
+      if (target.parentNode &&
+          target.parentNode.host &&
+          target.parentNode.mode === 'open') {
+            target[key] = findValueByString(target.parentNode.host, capturedGroup);
+          } else if (capturedGroup && target.parentNode) {
+            target[key] = findValueByString(target.parentNode, capturedGroup);
+          }
     } else {
       target[key] = value;
     }
 
-    this.$parent.$$state[NODE_KEY].update(key, target[key]);
+    this.$parent.ɵɵstate[NODE_KEY].update(key, target[key]);
 
     if (target.onStateChange) {
       target.onStateChange(change);
     }
 
     return true;
-
   }
 }
 
 function bindTemplate() {
-  if (this.bindState) { this.bindState(); }
+  if (this.bindState) {
+    this.bindState();
+  }
 }
 
 function setState(prop: string, model: any) {
-  setValueByString(this.$state, prop, model);
+  setValueByString(this.ɵstate, prop, model);
+  this.ɵɵstate[NODE_KEY].update(prop, model);
 }
 
 function compileTemplate(elementMeta: ElementMeta, target: any) {
@@ -254,7 +324,10 @@ function compileTemplate(elementMeta: ElementMeta, target: any) {
   if (!elementMeta.template) {
     elementMeta.template = '';
   }
-  target.prototype.elementMeta = Object.assign(target.elementMeta ? target.elementMeta : {}, elementMeta);
+  target.prototype.elementMeta = Object.assign(
+    target.elementMeta ? target.elementMeta : {},
+    elementMeta
+  );
   target.prototype.elementMeta.eventMap = {};
   target.prototype.template = `<style>${elementMeta.style}</style>${elementMeta.template}`;
   target.prototype.bindTemplate = bindTemplate;
@@ -262,7 +335,7 @@ function compileTemplate(elementMeta: ElementMeta, target: any) {
 }
 
 export {
-  isObject, 
+  isObject,
   findValueByString,
   setValueByString,
   templateId,
@@ -271,5 +344,5 @@ export {
   compileTemplate,
   setState,
   BoundHandler,
-  BoundNode,
+  BoundNode
 };

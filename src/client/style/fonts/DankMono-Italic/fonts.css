@@ -1,0 +1,9 @@
+@font-face {
+  font-family: 'DankMono-Italic';
+  src: url('DankMono-Italic.eot');
+  src: url('DankMono-Italic.woff') format('woff'),
+    url('DankMono-Italic.ttf') format('truetype'),
+    url('DankMono-Italic.svg') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}

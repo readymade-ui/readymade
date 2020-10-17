@@ -277,19 +277,23 @@ Provide a set of reusable functions that reduce duplicate code and provide some 
 
 ### Development
 
-This repo includes a very simple development server.
+This repo includes a development server built with Parcel.
 
-Fork and clone the repo. Install dependencies.
+Fork and clone the repo. Install dependencies with yarn.
 
 ```
 yarn install
 ```
 
-To develop, first run `yarn seed` then the bash script `./index.sh`. This will copy over necessary files to the `dist` directory.
+To develop, run `yarn dev`. This will spin up a local Parcel development server at http://localhost:4444.
 
-View changes in the browser with `yarn serve` running in another Terminal.
+Available routes are specified in src/client/app/router.ts.
+
+For unit and e2e tests, run `yarn build` then `yarn test`.
+
+Use `yarn test:open` to open a GUI and run tests interactively.
 
 
 ### Production
 
-To build the library for production, i.e. to use as a dependency in anothe rproject run `yarn build:lib`.
+To build the library for production, i.e. to use as a local dependency in another project run `yarn build:lib`.

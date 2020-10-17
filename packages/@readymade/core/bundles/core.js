@@ -6,7 +6,7 @@ class EventDispatcher {
     constructor(context, channelName) {
         this.target = context;
         this.channels = {
-            default: new BroadcastChannel('default'),
+            default: new BroadcastChannel('default')
         };
         if (channelName) {
             this.setChannel(channelName);
@@ -38,13 +38,15 @@ class EventDispatcher {
             defaultPrevented: ev.defaultPrevented,
             detail: ev.detail,
             timeStamp: ev.timeStamp,
-            type: ev.type,
+            type: ev.type
         };
-        (name) ? this.channels[name].postMessage(evt) : this.channels.default.postMessage(evt);
+        name
+            ? this.channels[name].postMessage(evt)
+            : this.channels.default.postMessage(evt);
     }
     setChannel(name) {
         this.channels[name] = new BroadcastChannel(name);
-        this.channels[name].onmessage = (ev) => {
+        this.channels[name].onmessage = ev => {
             for (const prop in this.target.elementMeta.eventMap) {
                 if (prop.includes(name) && prop.includes(ev.data.type)) {
                     this.target[this.target.elementMeta.eventMap[prop].handler](ev.data);
@@ -81,20 +83,36 @@ function attachStyle(instance, options) {
         document.head.appendChild(t);
     }
 }
+function define(instance, meta) {
+    if (meta.autoDefine === true) {
+        if (meta.selector && !meta.custom) {
+            customElements.define(meta.selector, instance.contructor);
+        }
+        else if (meta.selector && meta.custom) {
+            customElements.define(meta.selector, instance.contructor, meta.custom);
+        }
+        else {
+            console.log(meta.selector, instance.constructor);
+            customElements.define(meta.selector, instance.contructor);
+        }
+    }
+}
 
 const STRING_VALUE_REGEX = /\[(\w+)\]/g;
 const STRING_DOT_REGEX = /^\./;
 const TEMPLATE_BIND_REGEX = /\{\{(\s*)(.*?)(\s*)\}\}/g;
 const BRACKET_START_REGEX = new RegExp(`\\[`, 'gi');
 const BRACKET_END_REGEX = new RegExp(`\\]`, 'gi');
-const BIND_SUFFIX = ' __state';
+const TEMPLATE_START_REGEX = new RegExp(`{{`);
+const TEMPLATE_END_REGEX = new RegExp(`}}`);
+const BIND_SUFFIX = '__state';
 const NODE_KEY = 'node' + BIND_SUFFIX;
 const HANDLER_KEY = 'handler' + BIND_SUFFIX;
 const isObject = function (val) {
     if (val === null) {
         return false;
     }
-    return ((typeof val === 'function') || (typeof val === 'object'));
+    return typeof val === 'function' || typeof val === 'object';
 };
 const findValueByString = function (o, s) {
     s = s.replace(STRING_VALUE_REGEX, '.$1');
@@ -122,6 +140,7 @@ function setValueByString(obj, path, value) {
         obj = obj[elem];
     }
     obj[pList[len - 1]] = value;
+    return obj;
 }
 function templateId() {
     let str = '';
@@ -133,9 +152,19 @@ function templateId() {
 }
 function uuidv4() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-        const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        const r = (Math.random() * 16) | 0, v = c == 'x' ? r : (r & 0x3) | 0x8;
         return v.toString(24);
     });
+}
+function stripKey(key) {
+    key = key.replace(BRACKET_START_REGEX, `\\[`);
+    key = key.replace(BRACKET_END_REGEX, `\\]`);
+    return key;
+}
+function stripTemplateString(key) {
+    key = key.replace(TEMPLATE_START_REGEX, ``);
+    key = key.replace(TEMPLATE_END_REGEX, ``);
+    return key;
 }
 class NodeTree {
     constructor(parentNode) {
@@ -144,8 +173,11 @@ class NodeTree {
         this.$flatMap = {};
         this.$parentId = templateId();
     }
-    setNode(node, key, value) {
-        const id = this.$parentId + '-' + uuidv4().slice(0, 6);
+    setNode(node, key, value, attrID) {
+        if (this.$flatMap[attrID]) {
+            return this.$flatMap[attrID];
+        }
+        const id = attrID ? attrID : this.$parentId + '-' + uuidv4().slice(0, 6);
         const clone = node.cloneNode(true);
         if (!node.setAttribute) {
             node.setAttribute = function (i, v) { };
@@ -155,23 +187,19 @@ class NodeTree {
             clone.setAttribute = function (i, v) { };
         }
         clone.setAttribute(id, '');
-        if (!this.$flatMap[id]) {
-            this.$flatMap[id] = {
-                id,
-                node: clone,
-            };
-            if (key && value) {
-                this.updateNode(node, key, value);
-            }
+        this.$flatMap[id] = {
+            id,
+            node: clone
+        };
+        if (key && value) {
+            this.updateNode(node, key, value);
         }
         node.$init = true;
+        return this.$flatMap[id];
     }
-    changeNode(node, key, value) {
-        key = key.replace(BRACKET_START_REGEX, `\\[`);
-        key = key.replace(BRACKET_END_REGEX, `\\]`);
+    changeNode(node, key, value, protoNode) {
+        key = stripKey(key);
         const regex = new RegExp(`\{\{(\s*)(${key})(\s*)\}\}`, 'gi');
-        const attrId = this.getElementByAttribute(node)[0].nodeName || this.getElementByAttribute(node)[0].name;
-        const protoNode = this.$flatMap[attrId].node;
         if (protoNode.textContent.match(regex)) {
             node.textContent = protoNode.textContent.replace(regex, value);
         }
@@ -181,7 +209,8 @@ class NodeTree {
         let attr;
         for (const attribute of protoNode.attributes) {
             attr = attribute.nodeName || attribute.name;
-            if (attr.includes('attr.') && !protoNode.getAttribute(attr.replace('attr.', ''))) {
+            if (attr.includes('attr.') &&
+                !protoNode.getAttribute(attr.replace('attr.', ''))) {
                 if (attribute.nodeName) {
                     attr = attribute.nodeName.replace('attr.', '');
                 }
@@ -209,57 +238,66 @@ class NodeTree {
         }
     }
     updateNode(node, key, value) {
-        if (this.getElementByAttribute(node).length === 0) {
-            return;
-        }
+        const attr = this.getElementByAttribute(node)[0];
+        const attrId = attr ? attr.nodeName || attr.name : null;
+        let entry = this.setNode(node, key, value, attrId);
+        const protoNode = entry.node;
         if (Array.isArray(value)) {
             for (let index = 0; index < value.length; index++) {
-                this.changeNode(node, `${key}[${index}]`, value[index]);
+                this.changeNode(node, `${key}[${index}]`, value[index], protoNode);
             }
         }
         else if (isObject(value)) {
-            for (const prop in value) {
-                if (value.hasOwnProperty(prop)) {
-                    this.changeNode(node, `${key}.${prop}`, value[prop]);
+            const templateStrings = protoNode.outerHTML.toString().match(TEMPLATE_BIND_REGEX);
+            if (templateStrings) {
+                for (let index = 0; index < templateStrings.length; index++) {
+                    templateStrings[index] = stripTemplateString(templateStrings[index]);
+                    if (templateStrings[index].startsWith(key)) {
+                        this.changeNode(node, templateStrings[index], findValueByString(value, templateStrings[index].substring(templateStrings[index].indexOf(".") + 1)), protoNode);
+                    }
                 }
             }
         }
         else {
-            this.changeNode(node, key, value);
+            this.changeNode(node, key, value, protoNode);
         }
     }
     getElementByAttribute(node) {
         if (!node.attributes) {
             return [];
         }
+        let matches = [];
         for (let i = 0; i < node.attributes.length; i++) {
             if (/[A-Za-z0-9]{3}-[A-Za-z0-9]{6}/gm.test(node.attributes[i].nodeName || node.attributes[i].name)) {
-                return [node.attributes[i]];
+                matches.push(node.attributes[i]);
             }
         }
+        return matches;
     }
     update(key, value) {
-        const walk = document.createTreeWalker(this.$parent, NodeFilter.SHOW_ELEMENT, { acceptNode(node) { return NodeFilter.FILTER_ACCEPT; } }, false);
+        const walk = document.createTreeWalker(this.$parent, NodeFilter.SHOW_ELEMENT, {
+            acceptNode(node) {
+                return NodeFilter.FILTER_ACCEPT;
+            }
+        }, false);
         while (walk.nextNode()) {
-            if (walk.currentNode.$init === true) {
-                this.updateNode(walk.currentNode, key, value);
-            }
-            else {
-                this.setNode(walk.currentNode, key, value);
-            }
+            this.updateNode(walk.currentNode, key, value);
         }
         return this.$parent;
     }
 }
 class BoundNode {
-    constructor(parent) {
-        this.$parent = parent;
-        this.$tree = new NodeTree(this.$parent);
+    constructor(elem) {
+        this.$elem = elem;
+        this.$tree = new NodeTree(this.$elem);
     }
     update(key, value) {
+        if (value == undefined) {
+            return;
+        }
         this.$tree.update(key, value);
-        if (this.$parent.onUpdate) {
-            this.$parent.onUpdate();
+        if (this.$elem.onUpdate) {
+            this.$elem.onUpdate();
         }
     }
 }
@@ -269,14 +307,17 @@ class BoundHandler {
     }
     set(target, key, value) {
         const ex = new RegExp(TEMPLATE_BIND_REGEX).exec(value);
-        const capturedGroup = (ex && ex[2]) ? ex[2] : false;
+        const capturedGroup = ex && ex[2] ? ex[2] : false;
         const change = {
             [key]: {
                 previousValue: target[key],
-                newValue: value,
-            },
+                newValue: value
+            }
         };
-        if (capturedGroup && target.parentNode && target.parentNode.host && target.parentNode.mode === 'open') {
+        if (capturedGroup &&
+            target.parentNode &&
+            target.parentNode.host &&
+            target.parentNode.mode === 'open') {
             target[key] = findValueByString(target.parentNode.host, capturedGroup);
         }
         else if (capturedGroup && target.parentNode) {
@@ -285,7 +326,7 @@ class BoundHandler {
         else {
             target[key] = value;
         }
-        this.$parent.$$state[NODE_KEY].update(key, target[key]);
+        this.$parent.ɵɵstate[NODE_KEY].update(key, target[key]);
         if (target.onStateChange) {
             target.onStateChange(change);
         }
@@ -298,7 +339,8 @@ function bindTemplate() {
     }
 }
 function setState(prop, model) {
-    setValueByString(this.$state, prop, model);
+    setValueByString(this.ɵstate, prop, model);
+    this.ɵɵstate[NODE_KEY].update(prop, model);
 }
 function compileTemplate(elementMeta, target) {
     if (!elementMeta.style) {
@@ -351,6 +393,16 @@ function getElementIndex(el) {
     return getSiblings(el).indexOf(el);
 }
 
+function __awaiter(thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+}
+
 const EMIT_KEY = '$emit';
 const LISTEN_KEY = '$listen';
 const html = (...args) => {
@@ -387,10 +439,16 @@ function Component(meta) {
 function State(property) {
     return function decorator(target, key, descriptor) {
         function bindState() {
-            this.$$state = this[key]();
-            this.$$state[HANDLER_KEY] = new BoundHandler(this);
-            this.$$state[NODE_KEY] = new BoundNode(this.shadowRoot ? this.shadowRoot : this);
-            this.$state = Object.assign(new Proxy(this, this.$$state[HANDLER_KEY]), this[key]());
+            return __awaiter(this, void 0, void 0, function* () {
+                this.$state = this[key]();
+                this.ɵɵstate = {};
+                this.ɵɵstate[HANDLER_KEY] = new BoundHandler(this);
+                this.ɵɵstate[NODE_KEY] = new BoundNode(this.shadowRoot ? this.shadowRoot : this);
+                this.ɵstate = new Proxy(this.$state, this.ɵɵstate['handler' + BIND_SUFFIX]);
+                for (const prop in this.$state) {
+                    this.ɵstate[prop] = this.$state[prop];
+                }
+            });
         }
         target.bindState = function onBind() {
             bindState.call(this);
@@ -446,15 +504,15 @@ function Listen(eventName, channelName) {
             prop = LISTEN_KEY + eventName;
         }
         function addListener(name, chan) {
-            const handler = this[symbolHandler] = (...args) => {
+            const handler = (this[symbolHandler] = (...args) => {
                 descriptor.value.apply(this, args);
-            };
+            });
             if (!this.emitter) {
                 this.emitter = new EventDispatcher(this, chan ? chan : null);
             }
             this.elementMeta.eventMap[prop] = {
                 key: name,
-                handler: key,
+                handler: key
             };
             this.addEventListener(name, handler);
         }
@@ -1557,6 +1615,7 @@ exports.attachStyle = attachStyle;
 exports.bindTemplate = bindTemplate;
 exports.compileTemplate = compileTemplate;
 exports.css = css;
+exports.define = define;
 exports.getChildNodes = getChildNodes;
 exports.getElementIndex = getElementIndex;
 exports.getParent = getParent;

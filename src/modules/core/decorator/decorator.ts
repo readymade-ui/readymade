@@ -1,6 +1,12 @@
-import { BIND_SUFFIX, NODE_KEY, HANDLER_KEY, BoundHandler, BoundNode } from '../element/src/compile.js';
-import { compileTemplate } from './../element/element.js';
-import { EventDispatcher } from './../event/event.js';
+import {
+  BIND_SUFFIX,
+  NODE_KEY,
+  HANDLER_KEY,
+  BoundHandler,
+  BoundNode
+} from '../element/src/compile';
+import { compileTemplate } from './../element/element';
+import { EventDispatcher } from './../event/event';
 
 export type EventHandler = () => void;
 export const EMIT_KEY = '$emit';
@@ -60,13 +66,22 @@ function Component(meta: ElementMeta) {
 }
 
 function State(property?: string) {
-  return function decorator(target: any, key: string | symbol, descriptor: PropertyDescriptor) {
-
-    function bindState() {
-      this.$$state = this[key]();
-      this.$$state[HANDLER_KEY] = new BoundHandler(this);
-      this.$$state[NODE_KEY] = new BoundNode(this.shadowRoot ? this.shadowRoot : this);
-      this.$state = Object.assign(new Proxy(this, this.$$state[HANDLER_KEY]), this[key]());
+  return function decorator(
+    target: any,
+    key: string | symbol,
+    descriptor: PropertyDescriptor
+  ) {
+    async function bindState() {
+      this.$state = this[key]();
+      this.ɵɵstate = {};
+      this.ɵɵstate[HANDLER_KEY] = new BoundHandler(this);
+      this.ɵɵstate[NODE_KEY] = new BoundNode(
+        this.shadowRoot ? this.shadowRoot : this
+      );
+      this.ɵstate = new Proxy(this.$state, this.ɵɵstate['handler' + BIND_SUFFIX]);
+      for (const prop in this.$state) {
+        this.ɵstate[prop] = this.$state[prop];
+      }
     }
 
     target.bindState = function onBind() {
@@ -76,8 +91,11 @@ function State(property?: string) {
 }
 
 function Emitter(eventName?: string, options?: any, channelName?: string) {
-  return function decorator(target: any, key: string | symbol, descriptor: PropertyDescriptor) {
-
+  return function decorator(
+    target: any,
+    key: string | symbol,
+    descriptor: PropertyDescriptor
+  ) {
     const channel = channelName ? channelName : 'default';
     let prop: string = '';
 
@@ -108,7 +126,7 @@ function Emitter(eventName?: string, options?: any, channelName?: string) {
     }
 
     if (!target[prop]) {
-      target[prop] = function () {
+      target[prop] = function() {
         addEvent.call(this, eventName, channelName);
       };
     }
@@ -116,13 +134,15 @@ function Emitter(eventName?: string, options?: any, channelName?: string) {
     target.bindEmitters = function onEmitterInit() {
       bindEmitters.call(this);
     };
-
   };
 }
 
 function Listen(eventName: string, channelName?: string) {
-  return function decorator(target: any, key: string | number, descriptor: PropertyDescriptor) {
-
+  return function decorator(
+    target: any,
+    key: string | number,
+    descriptor: PropertyDescriptor
+  ) {
     const symbolHandler = Symbol(key);
 
     let prop: string = '';
@@ -134,10 +154,9 @@ function Listen(eventName: string, channelName?: string) {
     }
 
     function addListener(name: string, chan: string) {
-
-      const handler = this[symbolHandler] = (...args) => {
+      const handler = (this[symbolHandler] = (...args) => {
         descriptor.value.apply(this, args);
-      };
+      });
 
       if (!this.emitter) {
         this.emitter = new EventDispatcher(this, chan ? chan : null);
@@ -145,11 +164,10 @@ function Listen(eventName: string, channelName?: string) {
 
       this.elementMeta.eventMap[prop] = {
         key: name,
-        handler: key,
+        handler: key
       };
 
       this.addEventListener(name, handler);
-
     }
 
     function removeListener() {
@@ -165,7 +183,6 @@ function Listen(eventName: string, channelName?: string) {
     }
 
     if (!target[prop]) {
-
       target[prop] = {};
       target[prop].onListener = function onInitWrapper() {
         addListener.call(this, eventName, channelName);
@@ -173,7 +190,6 @@ function Listen(eventName: string, channelName?: string) {
       target[prop].onDestroyListener = function onDestroyWrapper() {
         removeListener.call(this, eventName, channelName);
       };
-
     }
 
     target.bindListeners = function onListenerInit() {
@@ -191,5 +207,5 @@ export {
   Listen,
   html,
   css,
-  noop,
+  noop
 };

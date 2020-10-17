@@ -1,13 +1,6 @@
-export {
-  attachDOM,
-  attachShadow,
-  attachStyle,
-} from './src/attach.js';
+export { attachDOM, attachShadow, attachStyle, define } from './src/attach';
 
-export {
-  bindTemplate,
-  compileTemplate,
-} from './src/compile.js';
+export { bindTemplate, compileTemplate } from './src/compile';
 
 export {
   getSiblings,
@@ -15,5 +8,5 @@ export {
   getParent,
   querySelector,
   querySelectorAll,
-  getChildNodes,
-} from './src/util.js';
+  getChildNodes
+} from './src/util';
