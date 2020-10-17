@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## 2.0.0-beta.0
+
+- NEW `$state` property exposes component state, use `getState()` (or whatever method is bound to `State`) as a best practice
+- NEW development and testing environment 
+- FIX performance issues
+- FIX issues with state when custom elements are dynamically added to DOM
+
+
+BREAKING CHANGES
+
+State will no longer automatically update after changing properties on the Component class. While this approach was convenient, it is much more performant not to track instances of the class but rather instances of state. State is now exposed as this.$state or by the getter used when declaring the @State decorator.
+
+Several internal APIs were shifted around. Private APIs are prexied with `ɵ`. Public APIs are exposed with `$`. 
+
 ## 1.2.0
 
 - FIX performance improvements
