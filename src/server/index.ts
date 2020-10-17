@@ -55,6 +55,12 @@ if (env === 'production') {
   app.get('/*', (req, res) => {
     res.sendFile(path.resolve(process.cwd(), 'dist', 'client', 'index.html'));
   });
+  app.get('/static.html', (req, res) => {
+    res.sendFile(path.resolve(process.cwd(), 'dist', 'client', 'static.html'));
+  });
+  app.get('/performance.html', (req, res) => {
+    res.sendFile(path.resolve(process.cwd(), 'dist', 'client', 'performance.html'));
+  });
   // app.get("/", ssr);
   // app.get("/test", ssr);
   // app.get("/perf", ssr);

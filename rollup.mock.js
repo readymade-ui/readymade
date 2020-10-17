@@ -46,7 +46,7 @@ export default [{
     input: 'src/client/app/component/counter.ts',
     output: {
         name: 'counter',
-        file: 'mock/paint/index.js',
+        file: 'dist/client/counter.js',
         format: 'iife'
     },
     treeshake: true,
