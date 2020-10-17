@@ -87,7 +87,7 @@ export class CustomElement extends HTMLElement {
   public elementMeta: ElementMeta;
   constructor() {
     super();
-    attachShadow(this, { mode: 'open' });
+    attachShadow(this, { mode: this.elementMeta.mode || 'open'  });
     if (this.bindEmitters) {
       this.bindEmitters();
     }
@@ -232,7 +232,7 @@ export class BodyComponent extends HTMLBodyElement {
   public elementMeta: ElementMeta;
   constructor() {
     super();
-    attachShadow(this, { mode: 'open' });
+    attachShadow(this, { mode: this.elementMeta.mode || 'open'  });
     if (this.bindEmitters) {
       this.bindEmitters();
     }
@@ -401,7 +401,7 @@ export class DivComponent extends HTMLDivElement {
   public elementMeta: ElementMeta;
   constructor() {
     super();
-    attachShadow(this, { mode: 'open' });
+    attachShadow(this, { mode: this.elementMeta.mode || 'open'  });
     if (this.bindEmitters) {
       this.bindEmitters();
     }
@@ -557,7 +557,7 @@ export class HeadingComponent extends HTMLHeadingElement {
   public elementMeta: ElementMeta;
   constructor() {
     super();
-    attachShadow(this, { mode: 'open' });
+    attachShadow(this, { mode: this.elementMeta.mode || 'open'  });
     if (this.bindEmitters) {
       this.bindEmitters();
     }
@@ -1042,7 +1042,7 @@ export class ParagraphComponent extends HTMLParagraphElement {
   public elementMeta: ElementMeta;
   constructor() {
     super();
-    attachShadow(this, { mode: 'open' });
+    attachShadow(this, { mode: this.elementMeta.mode || 'open'  });
     if (this.bindEmitters) {
       this.bindEmitters();
     }
@@ -1268,7 +1268,7 @@ export class SpanComponent extends HTMLSpanElement {
   public elementMeta: ElementMeta;
   constructor() {
     super();
-    attachShadow(this, { mode: 'open' });
+    attachShadow(this, { mode: this.elementMeta.mode || 'open'  });
     if (this.bindEmitters) {
       this.bindEmitters();
     }

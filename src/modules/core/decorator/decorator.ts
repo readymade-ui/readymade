@@ -18,15 +18,16 @@ interface EventMeta {
 }
 
 interface ElementMeta {
-  selector: string;
-  style?: string | any[];
-  template?: string | any[];
-  eventMap?: { [key: string]: EventMeta };
+  autoDefine?: boolean;
   boundState?: any;
   custom?: {
     extends: string;
   };
-  autoDefine?: boolean;
+  eventMap?: { [key: string]: EventMeta };
+  mode?: 'closed' | 'open';
+  selector: string;
+  style?: string | any[];
+  template?: string | any[];
 }
 
 const html = (...args) => {
