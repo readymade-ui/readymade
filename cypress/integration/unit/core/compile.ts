@@ -1,5 +1,5 @@
 /// <reference types="cypress" />
-import { isObject, findValueByString, setValueByString, uuidv4, templateId, compileTemplate } from '../../../../src/modules/core/element/src/compile';
+import { isObject, findValueByString, setValueByString, uuidv4, templateId, compileTemplate, DOT_BRACKET_NOTATION_REGEX } from '../../../../src/modules/core/element/src/compile';
 import { ElementMeta } from './../../../../src/modules/core/decorator/decorator';
 
 interface ReadymadeElement extends HTMLElement {
@@ -52,6 +52,28 @@ describe('Compile Test', () => {
       }
     }
     expect(findValueByString(obj, 'foo.bar.baz')).equal('bravo');
+  });
+
+  it('finds a value in mixed object', () => {
+    let obj = {
+      foo: {
+        bar: [{
+          baz: 'bravo'
+        }]
+      }
+    }
+    expect(findValueByString(obj, 'foo.bar[0].baz')).equal('bravo');
+  });
+
+  it('finds a value in nested array', () => {
+    let arr = [
+      [
+       {
+         baz: 'bravo'
+       }
+      ]
+    ]
+    expect(findValueByString(arr, '[0][0].baz')).equal('bravo');
   });
 
   it('creates a uuid', () => {
