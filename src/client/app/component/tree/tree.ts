@@ -58,10 +58,12 @@ export const _treeState = new TreeState();
   style: css`
     :host {
       display: grid;
+      font-size: 2em;
     }
   `,
   template: html`
     <x-node model="{{arrayModel[0]}}"></x-node>
+    <x-node model="{{arrayModel[8][1]}}"></x-node>
     <x-node model="{{objectModel.foo.bar.baz}}"></x-node>
     <x-node model="{{cx}}"></x-node>
     <x-node model="{{dx}}"></x-node>
