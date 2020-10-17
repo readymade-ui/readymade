@@ -88,8 +88,9 @@ export class MainNavState {
       </ul>
       <ul class="right">
         <li link="resource">
-          <a href="https://github.com/readymade-ui/readymade" target="_blank">
+          <a href="https://github.com/readymade-ui/readymade" target="_blank" rel="noreferrer">
             <svg width="25px" height="25px" viewBox="0 0 25 25">
+              <title>Stephen Belovarich Github Profile</title>
               <defs></defs>
               <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                 <g

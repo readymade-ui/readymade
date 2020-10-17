@@ -8,6 +8,8 @@ import {
 
 declare let Prism: any;
 
+const env = process.env.NODE_ENV || 'development';
+
 export class CodeState {
   public type: string;
 }
@@ -226,7 +228,7 @@ class RCodeComponent extends CustomElement {
   public onSlotChange() {
     const code = (this.shadowRoot
       .querySelector('slot')
-      .assignedNodes() as any)[1].textContent;
+      .assignedNodes() as any)[env ==='production' ? 0 : 1].textContent;
     this.shadowRoot.querySelector('code').innerHTML = Prism.highlight(
       code,
       Prism.languages[this.getAttribute('type')],

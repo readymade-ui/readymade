@@ -1,5 +1,7 @@
 import { Component, css, CustomElement, html } from './../../../modules/core';
 
+const env = process.env.NODE_ENV || 'development';
+
 @Component({
   selector: 'r-stats',
   style: css`
@@ -29,7 +31,7 @@ class RStatsComponent extends CustomElement {
     this.animateIn();
   }
   public animateIn() {
-    const ul = this.shadowRoot.querySelector('slot').assignedNodes()[1];
+    const ul = this.shadowRoot.querySelector('slot').assignedNodes()[env === 'production' ? 0 : 1];
     Array.from((ul as Element).children).forEach((li: Element, index) => {
       li.animate(
         [
