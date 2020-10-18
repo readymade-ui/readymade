@@ -45,7 +45,7 @@ export class TreeState {
   public hx = 'hhh';
   public state: {
     foo:  {
-      bar: 'deep'
+      bar: 'x'
     }
   };
 }
