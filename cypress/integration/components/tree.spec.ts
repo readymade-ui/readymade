@@ -28,10 +28,16 @@ describe('TreeComponent Test', () => {
                          .find('x-atom').shadow().contains('bbb');
   });
 
-  it('Displays text set by shallow property', () => {
+  it('Displays text set by bracket notation', () => {
     cy.get('app-testbed').shadow().find('x-tree')
                          .shadow().find('x-node').eq(3)
-                         .find('x-atom').shadow().contains('ccc');
+                         .find('x-atom').shadow().contains('fuz');
+  });
+
+  it('Displays text set by shallow property', () => {
+    cy.get('app-testbed').shadow().find('x-tree')
+                         .shadow().find('x-node').eq(4)
+                         .find('x-atom').shadow().contains('ddd');
   });
 
   it('Displays text set by string in setState()', () => {
