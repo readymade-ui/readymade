@@ -29,7 +29,7 @@ const isObject = function(val) {
 const findValueByString = function(o: any, s: string) {
   s = s.replace(STRING_VALUE_REGEX, '.$1');
   s = s.replace(STRING_DOT_REGEX, '');
-  let a = s.split(DOT_BRACKET_NOTATION_REGEX).filter(s => s.length > 0);
+  const a = s.split(DOT_BRACKET_NOTATION_REGEX).filter(s => s.length > 0);
   for (let i = 0, n = a.length; i < n; ++i) {
     const k = a[i];
     if (k in o) {
