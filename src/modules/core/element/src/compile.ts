@@ -4,7 +4,7 @@ import { ElementMeta } from './../../decorator/decorator';
 export const STRING_VALUE_REGEX = /\[(\w+)\]/g;
 export const STRING_DOT_REGEX = /^\./;
 export const ARRAY_REGEX = /(?<=\[)(.*)(\])/;
-export const DOT_BRACKET_NOTATION_REGEX = /\.|\[[0-9]*\]/g
+export const DOT_BRACKET_NOTATION_REGEX = /\.|\[[0-9]*\]|(?:\['|'\])/g
 export const TEMPLATE_BIND_REGEX = /\{\{(\s*)(.*?)(\s*)\}\}/g;
 export const BRACKET_START_REGEX = new RegExp(`\\[`, 'gi');
 export const BRACKET_END_REGEX = new RegExp(`\\]`, 'gi');
@@ -29,7 +29,7 @@ const isObject = function(val) {
 const findValueByString = function(o: any, s: string) {
   s = s.replace(STRING_VALUE_REGEX, '.$1');
   s = s.replace(STRING_DOT_REGEX, '');
-  const a = s.split(DOT_BRACKET_NOTATION_REGEX);
+  const a = s.split(DOT_BRACKET_NOTATION_REGEX).filter(s => s.length > 0);
   for (let i = 0, n = a.length; i < n; ++i) {
     const k = a[i];
     if (k in o) {
@@ -39,16 +39,6 @@ const findValueByString = function(o: any, s: string) {
     }
   }
   return o;
-};
-
-function filter(fn: any, a: Array<any>){
-  const f = [];
-  for (let i = 0; i < a.length; i++) {
-    if (fn(a[i])) {
-      f.push(a[i]);
-    }
-  }
-  return f;
 };
 
 function setValueByString(obj: any, path: string, value: any) {
@@ -64,6 +54,16 @@ function setValueByString(obj: any, path: string, value: any) {
   obj[pList[len - 1]] = value;
   return obj;
 }
+
+function filter(fn: any, a: Array<any>){
+  const f = [];
+  for (let i = 0; i < a.length; i++) {
+    if (fn(a[i])) {
+      f.push(a[i]);
+    }
+  }
+  return f;
+};
 
 function templateId() {
   let str = '';
@@ -313,7 +313,6 @@ function bindTemplate() {
 }
 
 function setState(prop: string, model: any) {
-  setValueByString(this.ɵstate, prop, model);
   this.ɵɵstate[NODE_KEY].update(prop, model);
 }
 

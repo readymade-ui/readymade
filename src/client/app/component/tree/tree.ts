@@ -45,7 +45,7 @@ export class TreeState {
   public hx = 'hhh';
   public state: {
     foo:  {
-      bar: 'deep'
+      bar: 'x'
     }
   };
 }
@@ -65,7 +65,7 @@ export const _treeState = new TreeState();
     <x-node model="{{arrayModel[0]}}"></x-node>
     <x-node model="{{arrayModel[8][1]}}"></x-node>
     <x-node model="{{objectModel.foo.bar.baz}}"></x-node>
-    <x-node model="{{cx}}"></x-node>
+    <x-node model="{{objectModel['foo']['far'].fiz['faz'].fuz}}"></x-node>
     <x-node model="{{dx}}"></x-node>
     <x-node model="{{ex}}"></x-node>
     <x-node model="{{fx}}"></x-node>
