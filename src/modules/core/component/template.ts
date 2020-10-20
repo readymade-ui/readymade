@@ -77,7 +77,6 @@ export class Repeater extends TemplateComponent {
             // tslint:disable-next-line: only-arrow-functions, no-empty
             node.setAttribute = function (i: string, v: string) { };
           }
-          console.log(regex);
           node.setAttribute(
             attr,
             attributeValue.replace(regex, value)
