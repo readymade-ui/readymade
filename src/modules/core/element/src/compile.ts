@@ -6,8 +6,8 @@ export const STRING_DOT_REGEX = /^\./;
 export const ARRAY_REGEX = /(?<=\[)(.*)(\])/;
 export const DOT_BRACKET_NOTATION_REGEX = /\.|\[[0-9]*\]|(?:\['|'\])/g
 export const TEMPLATE_BIND_REGEX = /\{\{(\s*)(.*?)(\s*)\}\}/g;
-export const BRACKET_START_REGEX = new RegExp(`\\[`, 'gi');
-export const BRACKET_END_REGEX = new RegExp(`\\]`, 'gi');
+export const BRACKET_START_REGEX = new RegExp(`\\[`, 'g');
+export const BRACKET_END_REGEX = new RegExp(`\\]`, 'g');
 export const TEMPLATE_START_REGEX = new RegExp(`{{`);
 export const TEMPLATE_END_REGEX = new RegExp(`}}`);
 export const BIND_SUFFIX = '__state';
@@ -97,6 +97,10 @@ function stripTemplateString(key: string) {
   return key;
 }
 
+function templateRegExp(key: string) {
+  return new RegExp(`\{\{(\b*)(${key})(\b*)\}\}`, 'g')
+}
+
 class NodeTree {
   public $parent: Node;
   public $parentId: string;
@@ -134,7 +138,7 @@ class NodeTree {
   }
   public changeNode(node: Node, key: string, value: any, protoNode: any) {
     key = stripKey(key);
-    const regex = new RegExp(`\{\{(\s*)(${key})(\s*)\}\}`, 'gi');
+    const regex = templateRegExp(key);
     if (protoNode.textContent.match(regex) && (node as Element).textContent !== value) {
       (node as Element).textContent = protoNode.textContent.replace(
         regex,
@@ -313,6 +317,7 @@ function bindTemplate() {
 }
 
 function setState(prop: string, model: any) {
+  setValueByString(this.ɵstate, prop, model);
   this.ɵɵstate[NODE_KEY].update(prop, model);
 }
 
@@ -339,6 +344,9 @@ export {
   setValueByString,
   templateId,
   uuidv4,
+  stripKey,
+  stripTemplateString,
+  templateRegExp,
   bindTemplate,
   compileTemplate,
   setState,

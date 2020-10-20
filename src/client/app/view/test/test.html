@@ -25,4 +25,11 @@
   <div>
     <x-tree model="deep"></x-tree>
   </div>
+  <div>
+      <template is="r-repeater" items="item of {{items}}">
+        <ul>
+          <li repeat="item" foo="{{item}}">{{item}}</li>
+        </ul>
+      </template>
+  </div>
 </div>
