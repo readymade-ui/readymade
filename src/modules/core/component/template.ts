@@ -1,6 +1,6 @@
 import { TemplateComponent } from './component';
 import { Component } from './../decorator/decorator';
-import { templateRegExp } from './../element/src/compile';
+import { isObject, stripTemplateString, findValueByString, templateRegExp, DOT_BRACKET_NOTATION_REGEX } from './../element/src/compile';
 
 @Component({
   selector: 'r-repeater',
@@ -25,16 +25,18 @@ export class Repeater extends TemplateComponent {
         break;
     }
   }
-  public changeNode(protoNode: Element, regex: RegExp, value: any) {
+  public changeNode(protoNode: Element, key: string, regex: RegExp, value: any, index?: number) {
     const node = document.importNode(protoNode, true);
     let attr: string = '';
 
     node.removeAttribute('repeat');
 
-    if (protoNode.textContent.match(regex)) {
+    if (protoNode.textContent.startsWith(`{{${key}`)) {
+      const path = stripTemplateString(protoNode.textContent);
+      const template = path.substring(path.search(DOT_BRACKET_NOTATION_REGEX));
       node.textContent = protoNode.textContent.replace(
-        regex,
-        value
+        protoNode.textContent,
+        isObject(value) ? findValueByString(value, template) : value
       )
     }
 
@@ -52,23 +54,31 @@ export class Repeater extends TemplateComponent {
               // tslint:disable-next-line: only-arrow-functions, no-empty
               protoNode.setAttribute = function (i: string, v: string) { };
             }
+            const path = stripTemplateString(attribute.nodeValue);
+            const template = path.substring(path.search(DOT_BRACKET_NOTATION_REGEX));
             protoNode.setAttribute(
               attr,
-              attribute.nodeValue.replace(regex, '')
+              isObject(value) ? findValueByString(value, template) : value
             );
             const remove = attribute.nodeName || attribute.name;
             node.removeAttribute(remove);
           }
         }
         const attributeValue = attribute.nodeValue || attribute.value;
-        if (attributeValue.match(regex)) {
+
+        if (attributeValue.startsWith(`{{${key}`)) {
           if (!node.setAttribute) {
             // tslint:disable-next-line: only-arrow-functions, no-empty
             node.setAttribute = function (i: string, v: string) { };
           }
+          const path = stripTemplateString(attributeValue);
+          const template = path.substring(path.search(DOT_BRACKET_NOTATION_REGEX));
           node.setAttribute(
             attr,
-            attributeValue.replace(regex, value)
+            attributeValue.replace(
+              attributeValue,
+              isObject(value) ? findValueByString(value, template) : value
+            )
           );
         }
         const check = attribute.nodeName || attribute.name;
@@ -81,25 +91,26 @@ export class Repeater extends TemplateComponent {
   }
   public render(items: string): void {
 
+    const bound = items.match(/(\w*)(?:\s)(?:of)(?:\s)(?:\{\{(?:\s*)(.*?)(?:\s*)\}\})/);
+
+    if (bound && bound.length) {
+      return;
+    }
+
     if (!this.parentNode) {
       return;
     }
 
-    const parsed = items.split(/\s/g);
-    const key = parsed[0];
+    const key = items.split('of')[0].trim();
+    const model = JSON.parse(items.split('of')[1].trim());
+    const regex = templateRegExp(key);
 
-    if (parsed[2].startsWith('{{')) {
-      return;
-    }
-
-    const model = JSON.parse(parsed[2]);
     const clone = this.content.cloneNode(true);
     const protoNode = (clone as Element).querySelector(`[repeat="${key}"]`);
-    const regex = templateRegExp(key);
 
     if (Array.isArray(model)) {
       for (let index = 0; index < model.length; index++) {
-        this.changeNode(protoNode, regex, model[index]);
+        this.changeNode(protoNode, key, regex, model[index], index);
       }
     }
 

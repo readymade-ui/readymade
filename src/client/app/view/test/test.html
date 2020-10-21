@@ -29,7 +29,7 @@
   <div>
       <template is="r-repeater" items="item of {{items}}">
         <ul class="is--large">
-          <li repeat="item" foo="{{item}}">{{item}}</li>
+          <li repeat="item" foo="{{item.index}}">{{item.title}}</li>
         </ul>
       </template>
       <footer>{{message}}</footer>
