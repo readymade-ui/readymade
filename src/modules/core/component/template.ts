@@ -1,5 +1,5 @@
 import { TemplateComponent } from './component';
-import { Component, State } from './../decorator/decorator';
+import { Component } from './../decorator/decorator';
 import { templateRegExp } from './../element/src/compile';
 
 @Component({
@@ -8,9 +8,7 @@ import { templateRegExp } from './../element/src/compile';
   template: '<slot></slot>'
 })
 export class Repeater extends TemplateComponent {
-  private $state: {
-    items: any[];
-  }
+
   constructor() {
     super();
     this.bindTemplate();
@@ -29,7 +27,7 @@ export class Repeater extends TemplateComponent {
   }
   public changeNode(protoNode: Element, regex: RegExp, value: any) {
     const node = document.importNode(protoNode, true);
-    let attr;
+    let attr: string = '';
 
     node.removeAttribute('repeat');
 
@@ -41,34 +39,25 @@ export class Repeater extends TemplateComponent {
     }
 
     for (const attribute of protoNode.attributes) {
-
       attr = attribute.nodeName || attribute.name;
-
       if (attr !== 'repeat') {
-
         if (attr.includes('attr.')) {
-
           if (!protoNode.getAttribute(attr.replace('attr.', ''))) {
-
             if (attribute.nodeName) {
               attr = attribute.nodeName.replace('attr.', '');
             } else if (attribute.name) {
               attr = attribute.name.replace('attr.', '');
             }
-
             if (!protoNode.setAttribute) {
               // tslint:disable-next-line: only-arrow-functions, no-empty
               protoNode.setAttribute = function (i: string, v: string) { };
             }
-
             protoNode.setAttribute(
               attr,
               attribute.nodeValue.replace(regex, '')
             );
-            
             const remove = attribute.nodeName || attribute.name;
             node.removeAttribute(remove);
-
           }
         }
         const attributeValue = attribute.nodeValue || attribute.value;
@@ -96,7 +85,6 @@ export class Repeater extends TemplateComponent {
       return;
     }
 
-    const clone = this.content.cloneNode(true);
     const parsed = items.split(/\s/g);
     const key = parsed[0];
 
@@ -105,6 +93,7 @@ export class Repeater extends TemplateComponent {
     }
 
     const model = JSON.parse(parsed[2]);
+    const clone = this.content.cloneNode(true);
     const protoNode = (clone as Element).querySelector(`[repeat="${key}"]`);
     const regex = templateRegExp(key);
 
@@ -116,12 +105,7 @@ export class Repeater extends TemplateComponent {
 
     protoNode.parentNode.removeChild(protoNode);
     this.parentNode.appendChild(clone);
-    this.setState('items', items);
-  }
 
-  @State()
-  public getState() {
-    return { items: [] };
   }
 
   public bindTemplate?(): void;

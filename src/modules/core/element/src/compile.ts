@@ -75,7 +75,7 @@ function templateId() {
 }
 
 /* tslint:disable */
-function uuidv4() {
+function uuidv4(): string {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
     const r = (Math.random() * 16) | 0,
       v = c == 'x' ? r : (r & 0x3) | 0x8;
@@ -84,20 +84,20 @@ function uuidv4() {
 }
 /* tslint:enable */
 
-function stripKey(key: string) {
+function stripKey(key: string): string {
   key = key.replace(BRACKET_START_REGEX, `\\[`);
   key = key.replace(BRACKET_END_REGEX, `\\]`);
   return key;
 }
 
 
-function stripTemplateString(key: string) {
+function stripTemplateString(key: string): string {
   key = key.replace(TEMPLATE_START_REGEX, ``);
   key = key.replace(TEMPLATE_END_REGEX, ``);
   return key;
 }
 
-function templateRegExp(key: string) {
+function templateRegExp(key: string): RegExp {
   return new RegExp(`\{\{(\b*)(${key})(\b*)\}\}`, 'g')
 }
 
@@ -139,7 +139,9 @@ class NodeTree {
   public changeNode(node: Node, key: string, value: any, protoNode: any) {
     key = stripKey(key);
     const regex = templateRegExp(key);
-    if (protoNode.textContent.match(regex) && (node as Element).textContent !== value) {
+    if (protoNode.textContent.match(regex) &&
+        protoNode.textContent === `{{${key}}}` &&
+        (node as Element).textContent !== value) {
       (node as Element).textContent = protoNode.textContent.replace(
         regex,
         value
@@ -148,7 +150,7 @@ class NodeTree {
     if (protoNode.attributes.length === 1) {
       return;
     }
-    let attr;
+    let attr: string = '';
     for (const attribute of protoNode.attributes) {
       attr = attribute.nodeName || attribute.name;
       if (attr.includes('attr.')) {

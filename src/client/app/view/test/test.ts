@@ -15,7 +15,8 @@ class TestBedComponent extends CustomElement {
 
   @State()
   public getState() {
-    return { items: JSON.stringify([1, 2, 3, 4, 5])};
+    return { items: JSON.stringify([1, 2, 3, 4, 5]),
+             message: 'message' };
   }
 
 }

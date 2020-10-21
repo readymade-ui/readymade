@@ -24,6 +24,10 @@
   background: #ff7de9; /* Gecko Browsers */
 }
 
+r-logo {
+  margin-bottom: 40px;
+}
+
 header,
 section,
 footer {
@@ -60,7 +64,11 @@ ul {
   -webkit-padding-start: 0px;
   -webkit-margin-before: 0px;
   -webkit-margin-after: 0px;
+  &.is--large {
+    font-size: 2em;
+  }
 }
+
 
 ul li {
   margin-left: 10px;
@@ -190,6 +198,7 @@ footer {
   text-align: center;
   margin-top: 60px;
   margin-bottom: 60px;
+  font-size: 2em;
 }
 
 footer p {

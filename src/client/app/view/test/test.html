@@ -1,5 +1,6 @@
 <div class="testbed">
   <div>
+    <r-logo size="is--large"></r-logo>
     <my-list>
       <ul slot="menu">
         <li>
@@ -27,9 +28,10 @@
   </div>
   <div>
       <template is="r-repeater" items="item of {{items}}">
-        <ul>
+        <ul class="is--large">
           <li repeat="item" foo="{{item}}">{{item}}</li>
         </ul>
       </template>
+      <footer>{{message}}</footer>
   </div>
 </div>
