@@ -1,4 +1,4 @@
-import { CustomElement, PseudoElement, TemplateComponent } from './component';
+import { PseudoElement, TemplateComponent } from './component';
 import { Component } from './../decorator/decorator';
 import { isObject, stripTemplateString, findValueByString, templateRegExp, DOT_BRACKET_NOTATION_REGEX } from './../element/src/compile';
 
