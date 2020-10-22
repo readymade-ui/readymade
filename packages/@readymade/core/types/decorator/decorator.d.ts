@@ -6,17 +6,18 @@ interface EventMeta {
     handler: EventHandler;
 }
 interface ElementMeta {
-    selector: string;
-    style?: string | any[];
-    template?: string | any[];
-    eventMap?: {
-        [key: string]: EventMeta;
-    };
+    autoDefine?: boolean;
     boundState?: any;
     custom?: {
         extends: string;
     };
-    autoDefine?: boolean;
+    eventMap?: {
+        [key: string]: EventMeta;
+    };
+    mode?: 'closed' | 'open';
+    selector: string;
+    style?: string | any[];
+    template?: string | any[];
 }
 declare const html: (...args: any[]) => any[];
 declare const css: (...args: any[]) => any[];

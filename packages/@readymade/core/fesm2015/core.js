@@ -96,9 +96,10 @@ function define(instance, meta) {
 
 const STRING_VALUE_REGEX = /\[(\w+)\]/g;
 const STRING_DOT_REGEX = /^\./;
+const DOT_BRACKET_NOTATION_REGEX = /\.|\[[0-9]*\]|(?:\['|'\])/g;
 const TEMPLATE_BIND_REGEX = /\{\{(\s*)(.*?)(\s*)\}\}/g;
-const BRACKET_START_REGEX = new RegExp(`\\[`, 'gi');
-const BRACKET_END_REGEX = new RegExp(`\\]`, 'gi');
+const BRACKET_START_REGEX = new RegExp(`\\[`, 'g');
+const BRACKET_END_REGEX = new RegExp(`\\]`, 'g');
 const TEMPLATE_START_REGEX = new RegExp(`{{`);
 const TEMPLATE_END_REGEX = new RegExp(`}}`);
 const BIND_SUFFIX = '__state';
@@ -113,7 +114,7 @@ const isObject = function (val) {
 const findValueByString = function (o, s) {
     s = s.replace(STRING_VALUE_REGEX, '.$1');
     s = s.replace(STRING_DOT_REGEX, '');
-    const a = s.split('.');
+    const a = s.split(DOT_BRACKET_NOTATION_REGEX).filter(s => s.length > 0);
     for (let i = 0, n = a.length; i < n; ++i) {
         const k = a[i];
         if (k in o) {
@@ -126,7 +127,7 @@ const findValueByString = function (o, s) {
     return o;
 };
 function setValueByString(obj, path, value) {
-    const pList = path.split('.');
+    const pList = path.split(DOT_BRACKET_NOTATION_REGEX);
     const len = pList.length;
     for (let i = 0; i < len - 1; i++) {
         const elem = pList[i];
@@ -137,6 +138,15 @@ function setValueByString(obj, path, value) {
     }
     obj[pList[len - 1]] = value;
     return obj;
+}
+function filter(fn, a) {
+    const f = [];
+    for (let i = 0; i < a.length; i++) {
+        if (fn(a[i])) {
+            f.push(a[i]);
+        }
+    }
+    return f;
 }
 function templateId() {
     let str = '';
@@ -161,6 +171,9 @@ function stripTemplateString(key) {
     key = key.replace(TEMPLATE_START_REGEX, ``);
     key = key.replace(TEMPLATE_END_REGEX, ``);
     return key;
+}
+function templateRegExp(key) {
+    return new RegExp(`\{\{(\b*)(${key})(\b*)\}\}`, 'g');
 }
 class NodeTree {
     constructor(parentNode) {
@@ -195,37 +208,42 @@ class NodeTree {
     }
     changeNode(node, key, value, protoNode) {
         key = stripKey(key);
-        const regex = new RegExp(`\{\{(\s*)(${key})(\s*)\}\}`, 'gi');
-        if (protoNode.textContent.match(regex)) {
+        const regex = templateRegExp(key);
+        if (protoNode.textContent.match(regex) &&
+            protoNode.textContent === `{{${key}}}` &&
+            node.textContent !== value) {
             node.textContent = protoNode.textContent.replace(regex, value);
         }
         if (protoNode.attributes.length === 1) {
             return;
         }
-        let attr;
+        let attr = '';
         for (const attribute of protoNode.attributes) {
             attr = attribute.nodeName || attribute.name;
-            if (attr.includes('attr.') &&
-                !protoNode.getAttribute(attr.replace('attr.', ''))) {
-                if (attribute.nodeName) {
-                    attr = attribute.nodeName.replace('attr.', '');
+            if (attr.includes('attr.')) {
+                if (!protoNode.getAttribute(attr.replace('attr.', ''))) {
+                    if (attribute.nodeName) {
+                        attr = attribute.nodeName.replace('attr.', '');
+                    }
+                    else if (attribute.name) {
+                        attr = attribute.name.replace('attr.', '');
+                    }
+                    if (!protoNode.setAttribute) {
+                        protoNode.setAttribute = function (i, v) { };
+                    }
+                    protoNode.setAttribute(attr, attribute.nodeValue.replace(TEMPLATE_BIND_REGEX, ''));
+                    const remove = attribute.nodeName || attribute.name;
+                    node.removeAttribute(remove);
                 }
-                else if (attribute.name) {
-                    attr = attribute.name.replace('attr.', '');
-                }
-                if (!protoNode.setAttribute) {
-                    protoNode.setAttribute = function (i, v) { };
-                }
-                protoNode.setAttribute(attr, attribute.nodeValue.replace(TEMPLATE_BIND_REGEX, ''));
-                const remove = attribute.nodeName || attribute.name;
-                node.removeAttribute(remove);
             }
             const attributeValue = attribute.nodeValue || attribute.value;
             if (attributeValue.match(regex, 'gi')) {
-                if (!node.setAttribute) {
-                    node.setAttribute = function (i, v) { };
+                if (node.getAttribute(attr) !== value) {
+                    if (!node.setAttribute) {
+                        node.setAttribute = function (i, v) { };
+                    }
+                    node.setAttribute(attr, attributeValue.replace(regex, value));
                 }
-                node.setAttribute(attr, attributeValue.replace(regex, value));
             }
             const check = attribute.nodeName || attribute.name;
             if (check.includes('attr.')) {
@@ -237,21 +255,21 @@ class NodeTree {
         const attr = this.getElementByAttribute(node)[0];
         const attrId = attr ? attr.nodeName || attr.name : null;
         let entry = this.setNode(node, key, value, attrId);
-        const protoNode = entry.node;
-        if (Array.isArray(value)) {
-            for (let index = 0; index < value.length; index++) {
-                this.changeNode(node, `${key}[${index}]`, value[index], protoNode);
-            }
+        let protoNode = entry.node;
+        let templateStrings = protoNode.outerHTML.toString().match(TEMPLATE_BIND_REGEX);
+        if (templateStrings == null) {
+            return;
         }
-        else if (isObject(value)) {
-            const templateStrings = protoNode.outerHTML.toString().match(TEMPLATE_BIND_REGEX);
-            if (templateStrings) {
-                for (let index = 0; index < templateStrings.length; index++) {
-                    templateStrings[index] = stripTemplateString(templateStrings[index]);
-                    if (templateStrings[index].startsWith(key)) {
-                        this.changeNode(node, templateStrings[index], findValueByString(value, templateStrings[index].substring(templateStrings[index].indexOf(".") + 1)), protoNode);
-                    }
-                }
+        for (let index = 0; index < templateStrings.length; index++) {
+            templateStrings[index] = stripTemplateString(templateStrings[index]);
+        }
+        let matches = filter(str => str.startsWith(key), templateStrings);
+        if (matches.length === 0) {
+            return;
+        }
+        if (isObject(value) || Array.isArray(value)) {
+            for (let index = 0; index < matches.length; index++) {
+                this.changeNode(node, templateStrings[index], findValueByString(value, templateStrings[index].substring(templateStrings[index].search(DOT_BRACKET_NOTATION_REGEX))), protoNode);
             }
         }
         else {
@@ -302,6 +320,9 @@ class BoundHandler {
         this.$parent = obj;
     }
     set(target, key, value) {
+        if (value === 'undefined') {
+            return true;
+        }
         const ex = new RegExp(TEMPLATE_BIND_REGEX).exec(value);
         const capturedGroup = ex && ex[2] ? ex[2] : false;
         const change = {
@@ -310,14 +331,15 @@ class BoundHandler {
                 newValue: value
             }
         };
-        if (capturedGroup &&
-            target.parentNode &&
-            target.parentNode.host &&
-            target.parentNode.mode === 'open') {
-            target[key] = findValueByString(target.parentNode.host, capturedGroup);
-        }
-        else if (capturedGroup && target.parentNode) {
-            target[key] = findValueByString(target.parentNode, capturedGroup);
+        if (capturedGroup) {
+            if (target.parentNode &&
+                target.parentNode.host &&
+                target.parentNode.mode === 'open') {
+                target[key] = findValueByString(target.parentNode.host, capturedGroup);
+            }
+            else if (capturedGroup && target.parentNode) {
+                target[key] = findValueByString(target.parentNode, capturedGroup);
+            }
         }
         else {
             target[key] = value;
@@ -389,6 +411,12 @@ function getElementIndex(el) {
     return getSiblings(el).indexOf(el);
 }
 
+function __decorate(decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+}
 function __awaiter(thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -570,7 +598,7 @@ class PseudoElement extends HTMLElement {
 class CustomElement extends HTMLElement {
     constructor() {
         super();
-        attachShadow(this, { mode: 'open' });
+        attachShadow(this, { mode: this.elementMeta.mode || 'open' });
         if (this.bindEmitters) {
             this.bindEmitters();
         }
@@ -660,7 +688,7 @@ class BRComponent extends HTMLBRElement {
 class BodyComponent extends HTMLBodyElement {
     constructor() {
         super();
-        attachShadow(this, { mode: 'open' });
+        attachShadow(this, { mode: this.elementMeta.mode || 'open' });
         if (this.bindEmitters) {
             this.bindEmitters();
         }
@@ -766,7 +794,7 @@ class DetailsComponent extends HTMLDetailsElement {
 class DivComponent extends HTMLDivElement {
     constructor() {
         super();
-        attachShadow(this, { mode: 'open' });
+        attachShadow(this, { mode: this.elementMeta.mode || 'open' });
         if (this.bindEmitters) {
             this.bindEmitters();
         }
@@ -863,7 +891,7 @@ class HeadComponent extends HTMLHeadElement {
 class HeadingComponent extends HTMLHeadingElement {
     constructor() {
         super();
-        attachShadow(this, { mode: 'open' });
+        attachShadow(this, { mode: this.elementMeta.mode || 'open' });
         if (this.bindEmitters) {
             this.bindEmitters();
         }
@@ -1168,7 +1196,7 @@ class OutputComponent extends HTMLOutputElement {
 class ParagraphComponent extends HTMLParagraphElement {
     constructor() {
         super();
-        attachShadow(this, { mode: 'open' });
+        attachShadow(this, { mode: this.elementMeta.mode || 'open' });
         if (this.bindEmitters) {
             this.bindEmitters();
         }
@@ -1311,7 +1339,7 @@ class SourceComponent extends HTMLSourceElement {
 class SpanComponent extends HTMLSpanElement {
     constructor() {
         super();
-        attachShadow(this, { mode: 'open' });
+        attachShadow(this, { mode: this.elementMeta.mode || 'open' });
         if (this.bindEmitters) {
             this.bindEmitters();
         }
@@ -1530,4 +1558,140 @@ class VideoComponent extends HTMLVideoElement {
     }
 }
 
-export { AllCollectionComponent, AnchorComponent, AreaComponent, AudioComponent, BRComponent, BodyComponent, ButtonComponent, CanvasComponent, CollectionComponent, Component, CustomElement, DListComponent, DataComponent, DetailsComponent, DivComponent, EMIT_KEY, EmbedComponent, Emitter, EventDispatcher, FieldSetComponent, FormComponent, FormControlsComponent, HRComponent, HeadComponent, HeadingComponent, HtmlComponent, IFrameComponent, ImageComponent, InputComponent, LIComponent, LISTEN_KEY, LabelComponent, LegendComponent, LinkComponent, Listen, MapComponent, MediaComponent, MenuComponent, MetaComponent, MeterComponent, ModComponent, OListComponent, ObjectComponent, OptGroupComponent, OptionComponent, OptionsCollectionComponent, OutputComponent, ParagraphComponent, ParamComponent, PictureComponent, PreComponent, ProgressComponent, PseudoElement, QuoteComponent, ScriptComponent, SelectComponent, SlotComponent, SourceComponent, SpanComponent, State, StructuralElement, StyleComponent, TableCaptionComponent, TableCellComponent, TableColComponent, TableComponent, TableRowComponent, TableSectionComponent, TemplateComponent, TimeComponent, TitleComponent, TrackComponent, UListComponent, UnknownComponent, VideoComponent, attachDOM, attachShadow, attachStyle, bindTemplate, compileTemplate, css, define, getChildNodes, getElementIndex, getParent, getSiblings, html, noop, querySelector, querySelectorAll };
+function changeNode(protoNode, key, regex, value, index) {
+    const node = document.importNode(protoNode, true);
+    let attr = '';
+    node.removeAttribute('repeat');
+    if (protoNode.textContent.startsWith(`{{${key}`)) {
+        const path = stripTemplateString(protoNode.textContent);
+        const template = path.substring(path.search(DOT_BRACKET_NOTATION_REGEX));
+        node.textContent = protoNode.textContent.replace(protoNode.textContent, isObject(value) ? findValueByString(value, template) : value);
+    }
+    for (const attribute of protoNode.attributes) {
+        attr = attribute.nodeName || attribute.name;
+        if (attr !== 'repeat') {
+            if (attr.includes('attr.')) {
+                if (!protoNode.getAttribute(attr.replace('attr.', ''))) {
+                    if (attribute.nodeName) {
+                        attr = attribute.nodeName.replace('attr.', '');
+                    }
+                    else if (attribute.name) {
+                        attr = attribute.name.replace('attr.', '');
+                    }
+                    if (!protoNode.setAttribute) {
+                        protoNode.setAttribute = function (i, v) { };
+                    }
+                    const path = stripTemplateString(attribute.nodeValue);
+                    const template = path.substring(path.search(DOT_BRACKET_NOTATION_REGEX));
+                    protoNode.setAttribute(attr, isObject(value) ? findValueByString(value, template) : value);
+                    const remove = attribute.nodeName || attribute.name;
+                    node.removeAttribute(remove);
+                }
+            }
+            const attributeValue = attribute.nodeValue || attribute.value;
+            if (attributeValue.startsWith(`{{${key}`)) {
+                if (!node.setAttribute) {
+                    node.setAttribute = function (i, v) { };
+                }
+                const path = stripTemplateString(attributeValue);
+                const template = path.substring(path.search(DOT_BRACKET_NOTATION_REGEX));
+                node.setAttribute(attr, attributeValue.replace(attributeValue, isObject(value) ? findValueByString(value, template) : value));
+            }
+            const check = attribute.nodeName || attribute.name;
+            if (check.includes('attr.')) {
+                node.removeAttribute(check);
+            }
+        }
+    }
+    protoNode.parentNode.appendChild(node);
+}
+function renderTemplate(elem, template, items) {
+    const bound = items.match(/(\w*)(?:\s)(?:of)(?:\s)(?:\{\{(?:\s*)(.*?)(?:\s*)\}\})/);
+    if (bound && bound.length) {
+        return;
+    }
+    if (!elem.parentNode) {
+        return;
+    }
+    const key = items.split('of')[0].trim();
+    const model = JSON.parse(items.split('of')[1].trim());
+    const regex = templateRegExp(key);
+    const clone = template.content.cloneNode(true);
+    const protoNode = clone.querySelector(`[repeat="${key}"]`);
+    if (Array.isArray(model)) {
+        for (let index = 0; index < model.length; index++) {
+            changeNode(protoNode, key, regex, model[index]);
+        }
+    }
+    protoNode.parentNode.removeChild(protoNode);
+    if (elem instanceof TemplateRepeater) {
+        elem.appendChild(clone);
+    }
+    else {
+        elem.parentNode.appendChild(clone);
+    }
+}
+let Repeater = class Repeater extends TemplateComponent {
+    constructor() {
+        super();
+        this.bindTemplate();
+    }
+    static get observedAttributes() {
+        return ['items'];
+    }
+    attributeChangedCallback(name, prev, next) {
+        switch (name) {
+            case 'items':
+                this.render(next);
+                break;
+        }
+    }
+    render(items) {
+        renderTemplate(this, this, items);
+    }
+};
+Repeater = __decorate([
+    Component({
+        selector: 'r-repeat',
+        custom: { extends: 'template' }
+    })
+], Repeater);
+let TemplateRepeater = class TemplateRepeater extends PseudoElement {
+    constructor() {
+        super();
+    }
+    static get observedAttributes() {
+        return ['items', 'template'];
+    }
+    attributeChangedCallback(name, prev, next) {
+        switch (name) {
+            case 'template':
+                this.setTemplate(next);
+                break;
+            case 'items':
+                this.setItems(next);
+                break;
+        }
+    }
+    setItems(items) {
+        this.$items = items;
+        this.render();
+    }
+    render() {
+        const template = document.querySelector(`[id="${this.$templateId}"]`);
+        if (template && this.$items) {
+            renderTemplate(this, template, this.$items);
+        }
+    }
+    setTemplate(id) {
+        this.$templateId = id;
+        this.render();
+    }
+};
+TemplateRepeater = __decorate([
+    Component({
+        selector: 'r-repeatr'
+    })
+], TemplateRepeater);
+
+export { AllCollectionComponent, AnchorComponent, AreaComponent, AudioComponent, BRComponent, BodyComponent, ButtonComponent, CanvasComponent, CollectionComponent, Component, CustomElement, DListComponent, DataComponent, DetailsComponent, DivComponent, EMIT_KEY, EmbedComponent, Emitter, EventDispatcher, FieldSetComponent, FormComponent, FormControlsComponent, HRComponent, HeadComponent, HeadingComponent, HtmlComponent, IFrameComponent, ImageComponent, InputComponent, LIComponent, LISTEN_KEY, LabelComponent, LegendComponent, LinkComponent, Listen, MapComponent, MediaComponent, MenuComponent, MetaComponent, MeterComponent, ModComponent, OListComponent, ObjectComponent, OptGroupComponent, OptionComponent, OptionsCollectionComponent, OutputComponent, ParagraphComponent, ParamComponent, PictureComponent, PreComponent, ProgressComponent, PseudoElement, QuoteComponent, Repeater, ScriptComponent, SelectComponent, SlotComponent, SourceComponent, SpanComponent, State, StructuralElement, StyleComponent, TableCaptionComponent, TableCellComponent, TableColComponent, TableComponent, TableRowComponent, TableSectionComponent, TemplateComponent, TemplateRepeater, TimeComponent, TitleComponent, TrackComponent, UListComponent, UnknownComponent, VideoComponent, attachDOM, attachShadow, attachStyle, bindTemplate, compileTemplate, css, define, getChildNodes, getElementIndex, getParent, getSiblings, html, noop, querySelector, querySelectorAll };
