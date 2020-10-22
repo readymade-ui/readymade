@@ -100,7 +100,7 @@ function renderTemplate(elem: Repeater | TemplateRepeater, template: HTMLTemplat
 }
 
 @Component({
-  selector: 'r-repeater',
+  selector: 'r-repeat',
   custom: { extends: 'template' },
   template: '<slot></slot>'
 })
@@ -132,7 +132,7 @@ export class Repeater extends TemplateComponent {
 }
 
 @Component({
-  selector: 'r-template',
+  selector: 'r-repeatr',
   template: '<slot></slot>'
 })
 export class TemplateRepeater extends CustomElement {
