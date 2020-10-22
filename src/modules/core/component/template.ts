@@ -1,4 +1,4 @@
-import { CustomElement, TemplateComponent } from './component';
+import { CustomElement, PseudoElement, TemplateComponent } from './component';
 import { Component } from './../decorator/decorator';
 import { isObject, stripTemplateString, findValueByString, templateRegExp, DOT_BRACKET_NOTATION_REGEX } from './../element/src/compile';
 
@@ -95,14 +95,18 @@ function renderTemplate(elem: Repeater | TemplateRepeater, template: HTMLTemplat
   }
 
   protoNode.parentNode.removeChild(protoNode);
-  elem.parentNode.appendChild(clone);
+
+  if (elem instanceof TemplateRepeater) {
+    elem.appendChild(clone);
+  } else {
+    elem.parentNode.appendChild(clone);
+  }
 
 }
 
 @Component({
   selector: 'r-repeat',
-  custom: { extends: 'template' },
-  template: '<slot></slot>'
+  custom: { extends: 'template' }
 })
 export class Repeater extends TemplateComponent {
 
@@ -132,10 +136,9 @@ export class Repeater extends TemplateComponent {
 }
 
 @Component({
-  selector: 'r-repeatr',
-  template: '<slot></slot>'
+  selector: 'r-repeatr'
 })
-export class TemplateRepeater extends CustomElement {
+export class TemplateRepeater extends PseudoElement {
 
   $templateId: string;
   $items: string;
