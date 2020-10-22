@@ -39,6 +39,7 @@ class TestBedComponent extends CustomElement {
   @State()
   public getState() {
     return { items: JSON.stringify(objectModel),
+             subitems: JSON.stringify(arrayModel),
              message: 'message' };
   }
 

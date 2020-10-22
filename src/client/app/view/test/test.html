@@ -32,6 +32,13 @@
           <li repeat="item" foo="{{item.index}}">{{item.title}}</li>
         </ul>
       </template>
+      <template is="r-repeater" items="sub of {{subitems}}">
+        <ul class="is--large">
+          <li repeat="sub" foo="{{sub}}">{{sub}}</li>
+        </ul>
+      </template>
+      <r-template template="object-repeater" items="item of {{items}}"></r-template>
+      <r-template template="array-repeater" items="sub of {{subitems}}"></r-template>
       <footer>{{message}}</footer>
   </div>
 </div>
