@@ -130,9 +130,6 @@ class NodeTree {
       id,
       node: clone
     };
-    if (key && value) {
-      this.updateNode(node, key, value);
-    }
     node.$init = true;
     return this.$flatMap[id];
   }
@@ -196,7 +193,15 @@ class NodeTree {
     const attrId = attr ? attr.nodeName || attr.name : null;
     let entry = this.setNode(node, key, value, attrId);
     let protoNode = entry.node;
-    let templateStrings = protoNode.outerHTML.toString().match(TEMPLATE_BIND_REGEX);
+    let templateStrings = null;
+
+    if ( protoNode.outerHTML ) {
+      templateStrings = protoNode.outerHTML.toString().match(TEMPLATE_BIND_REGEX);
+    }
+    if ( protoNode._nodeValue ) {
+      templateStrings = protoNode._nodeValue.match(TEMPLATE_BIND_REGEX);
+    }
+
     if (templateStrings == null) {
       return;
     }

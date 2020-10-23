@@ -260,7 +260,13 @@ class NodeTree {
         const attrId = attr ? attr.nodeName || attr.name : null;
         let entry = this.setNode(node, key, value, attrId);
         let protoNode = entry.node;
-        let templateStrings = protoNode.outerHTML.toString().match(TEMPLATE_BIND_REGEX);
+        let templateStrings = null;
+        if (protoNode.outerHTML) {
+            templateStrings = protoNode.outerHTML.toString().match(TEMPLATE_BIND_REGEX);
+        }
+        if (protoNode._nodeValue) {
+            templateStrings = protoNode._nodeValue.match(TEMPLATE_BIND_REGEX);
+        }
         if (templateStrings == null) {
             return;
         }

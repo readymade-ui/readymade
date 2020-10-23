@@ -2,9 +2,8 @@
 
 ## 2.0.0-beta.0
 
-- NEW `r-repeat` and `r-repeatr` allows looping over a data model with a `<template>`
 - NEW set Shadow DOM mode to 'open' or 'closed' in Component Decorator
-- NEW `$state` property exposes component state, use `getState()` (or whatever method is bound to `State` decorator) as a best practice
+- NEW `$state` property exposes component state, use `getState()` (or whatever method is bound to `State`) as a best practice
 - NEW development and testing environment 
 - FIX performance issues
 - FIX issues with state when custom elements are dynamically added to DOM
