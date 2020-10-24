@@ -5,8 +5,8 @@ import {
   BoundHandler,
   BoundNode
 } from '../element/src/compile';
-import { compileTemplate } from './../element/element';
-import { EventDispatcher } from './../event/event';
+import { compileTemplate } from './../element';
+import { EventDispatcher } from './../event';
 
 export type EventHandler = () => void;
 export const EMIT_KEY = '$emit';

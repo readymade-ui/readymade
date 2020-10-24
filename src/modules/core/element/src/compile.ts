@@ -1,5 +1,5 @@
-import { CustomElement, OnStateChange } from './../../component/component';
-import { ElementMeta } from './../../decorator/decorator';
+import { CustomElement, OnStateChange } from './../../component';
+import { ElementMeta } from './../../decorator';
 
 export const STRING_VALUE_REGEX = /\[(\w+)\]/g;
 export const STRING_DOT_REGEX = /^\./;

@@ -1,7 +1,6 @@
-import { PseudoElement, TemplateComponent } from './component';
-import { Component } from './../decorator/decorator';
-import { isObject, stripTemplateString, findValueByString, templateRegExp, DOT_BRACKET_NOTATION_REGEX } from './../element/src/compile';
-
+import { Component, PseudoElement } from '../../core';
+import { TemplateComponent } from '../custom';
+import { isObject, stripTemplateString, findValueByString, templateRegExp, DOT_BRACKET_NOTATION_REGEX } from '../../core/element/src/compile';
 
 function changeNode(protoNode: Element, key: string, regex: RegExp, value: any, index?: number) {
   const node = document.importNode(protoNode, true);

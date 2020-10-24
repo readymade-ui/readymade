@@ -1,5 +1,5 @@
-import { CustomElement, OnStateChange } from './../../component/component';
-import { ElementMeta } from './../../decorator/decorator';
+import { CustomElement, OnStateChange } from './../../component';
+import { ElementMeta } from './../../decorator';
 export declare const STRING_VALUE_REGEX: RegExp;
 export declare const STRING_DOT_REGEX: RegExp;
 export declare const ARRAY_REGEX: RegExp;

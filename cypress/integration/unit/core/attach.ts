@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 import { attachShadow, attachDOM, attachStyle } from '../../../../src/modules/core/element/src/attach';
-import { ElementMeta } from './../../../../src/modules/core/decorator/decorator';
+import { ElementMeta } from './../../../../src/modules/core/decorator';
 
 interface ReadymadeElement extends HTMLElement {
     bindTemplate?: () => void;

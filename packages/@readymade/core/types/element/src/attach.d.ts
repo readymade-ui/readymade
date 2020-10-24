@@ -1,4 +1,4 @@
-import { ElementMeta } from './../../decorator/decorator';
+import { ElementMeta } from './../../decorator';
 declare function attachShadow(instance: any, options?: any): void;
 declare function attachDOM(instance: any, options?: any): void;
 declare function attachStyle(instance: any, options?: any): void;

@@ -1,5 +1,4 @@
 import {
-  ButtonComponent,
   Component,
   css,
   Emitter,
@@ -7,6 +6,10 @@ import {
   Listen,
   State
 } from './../../../modules/core';
+
+import {
+  ButtonComponent
+} from './../../../modules/dom';
 
 class ButtonState {
   public model: string = 'Click';

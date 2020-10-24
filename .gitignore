@@ -13,3 +13,4 @@ src/server/view/index.js
 src/client/asset
 cypress/videos
 cypress/screenshots
+packages/
