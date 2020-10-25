@@ -1,6 +1,6 @@
-import { RdRouter, routing } from './app/routing';
+import { Router, routing } from './app/routing';
 
-window['clientRouter'] = new RdRouter('#root', routing);
+window['clientRouter'] = new Router('#root', routing);
 
 export { Repeater, TemplateRepeater } from './../modules/dom/repeatr';
 export * from './app';
