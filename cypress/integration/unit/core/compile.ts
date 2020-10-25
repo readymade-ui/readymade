@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 import { isObject, findValueByString, setValueByString, uuidv4, templateId, compileTemplate, DOT_BRACKET_NOTATION_REGEX } from '../../../../src/modules/core/element/src/compile';
-import { ElementMeta } from './../../../../src/modules/core/decorator/decorator';
+import { ElementMeta } from './../../../../src/modules/core/decorator';
 
 interface ReadymadeElement extends HTMLElement {
   template?: string;

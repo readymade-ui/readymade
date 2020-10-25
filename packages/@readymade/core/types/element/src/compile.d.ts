@@ -1,7 +1,9 @@
-import { CustomElement, OnStateChange } from './../../component/component';
-import { ElementMeta } from './../../decorator/decorator';
+import { CustomElement, OnStateChange } from './../../component';
+import { ElementMeta } from './../../decorator';
 export declare const STRING_VALUE_REGEX: RegExp;
 export declare const STRING_DOT_REGEX: RegExp;
+export declare const ARRAY_REGEX: RegExp;
+export declare const DOT_BRACKET_NOTATION_REGEX: RegExp;
 export declare const TEMPLATE_BIND_REGEX: RegExp;
 export declare const BRACKET_START_REGEX: RegExp;
 export declare const BRACKET_END_REGEX: RegExp;
@@ -19,6 +21,9 @@ declare const findValueByString: (o: any, s: string) => any;
 declare function setValueByString(obj: any, path: string, value: any): any;
 declare function templateId(): string;
 declare function uuidv4(): string;
+declare function stripKey(key: string): string;
+declare function stripTemplateString(key: string): string;
+declare function templateRegExp(key: string): RegExp;
 declare class NodeTree {
     $parent: Node;
     $parentId: string;
@@ -47,4 +52,4 @@ declare class BoundHandler {
 declare function bindTemplate(): void;
 declare function setState(prop: string, model: any): void;
 declare function compileTemplate(elementMeta: ElementMeta, target: any): void;
-export { isObject, findValueByString, setValueByString, templateId, uuidv4, bindTemplate, compileTemplate, setState, BoundHandler, BoundNode };
+export { isObject, findValueByString, setValueByString, templateId, uuidv4, stripKey, stripTemplateString, templateRegExp, bindTemplate, compileTemplate, setState, BoundHandler, BoundNode };

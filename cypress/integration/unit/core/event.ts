@@ -1,5 +1,5 @@
 /// <reference types="cypress" />
-import { EventDispatcher } from '../../../../src/modules/core/event/event';
+import { EventDispatcher } from '../../../../src/modules/core/event';
 
 let fromElement: HTMLElement;
 let toElement: HTMLElement;

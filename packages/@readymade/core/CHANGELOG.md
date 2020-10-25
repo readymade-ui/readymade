@@ -2,6 +2,7 @@
 
 ## 2.0.0-beta.0
 
+- NEW set Shadow DOM mode to 'open' or 'closed' in Component Decorator
 - NEW `$state` property exposes component state, use `getState()` (or whatever method is bound to `State`) as a best practice
 - NEW development and testing environment 
 - FIX performance issues

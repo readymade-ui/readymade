@@ -1,4 +1,4 @@
-import { ElementMeta } from './../../decorator/decorator';
+import { ElementMeta } from './../../decorator';
 
 function attachShadow(instance: any, options?: any) {
   const shadowRoot: ShadowRoot = instance.attachShadow(options || {});

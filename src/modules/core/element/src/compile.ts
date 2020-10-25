@@ -1,13 +1,13 @@
-import { CustomElement, OnStateChange } from './../../component/component';
-import { ElementMeta } from './../../decorator/decorator';
+import { CustomElement, OnStateChange } from './../../component';
+import { ElementMeta } from './../../decorator';
 
 export const STRING_VALUE_REGEX = /\[(\w+)\]/g;
 export const STRING_DOT_REGEX = /^\./;
 export const ARRAY_REGEX = /(?<=\[)(.*)(\])/;
 export const DOT_BRACKET_NOTATION_REGEX = /\.|\[[0-9]*\]|(?:\['|'\])/g
 export const TEMPLATE_BIND_REGEX = /\{\{(\s*)(.*?)(\s*)\}\}/g;
-export const BRACKET_START_REGEX = new RegExp(`\\[`, 'gi');
-export const BRACKET_END_REGEX = new RegExp(`\\]`, 'gi');
+export const BRACKET_START_REGEX = new RegExp(`\\[`, 'g');
+export const BRACKET_END_REGEX = new RegExp(`\\]`, 'g');
 export const TEMPLATE_START_REGEX = new RegExp(`{{`);
 export const TEMPLATE_END_REGEX = new RegExp(`}}`);
 export const BIND_SUFFIX = '__state';
@@ -75,7 +75,7 @@ function templateId() {
 }
 
 /* tslint:disable */
-function uuidv4() {
+function uuidv4(): string {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
     const r = (Math.random() * 16) | 0,
       v = c == 'x' ? r : (r & 0x3) | 0x8;
@@ -84,17 +84,21 @@ function uuidv4() {
 }
 /* tslint:enable */
 
-function stripKey(key: string) {
+function stripKey(key: string): string {
   key = key.replace(BRACKET_START_REGEX, `\\[`);
   key = key.replace(BRACKET_END_REGEX, `\\]`);
   return key;
 }
 
 
-function stripTemplateString(key: string) {
+function stripTemplateString(key: string): string {
   key = key.replace(TEMPLATE_START_REGEX, ``);
   key = key.replace(TEMPLATE_END_REGEX, ``);
   return key;
+}
+
+function templateRegExp(key: string): RegExp {
+  return new RegExp(`\{\{(\b*)(${key})(\b*)\}\}`, 'g')
 }
 
 class NodeTree {
@@ -126,16 +130,15 @@ class NodeTree {
       id,
       node: clone
     };
-    if (key && value) {
-      this.updateNode(node, key, value);
-    }
     node.$init = true;
     return this.$flatMap[id];
   }
   public changeNode(node: Node, key: string, value: any, protoNode: any) {
     key = stripKey(key);
-    const regex = new RegExp(`\{\{(\s*)(${key})(\s*)\}\}`, 'gi');
-    if (protoNode.textContent.match(regex) && (node as Element).textContent !== value) {
+    const regex = templateRegExp(key);
+    if (protoNode.textContent.match(regex) &&
+        protoNode.textContent === `{{${key}}}` &&
+        (node as Element).textContent !== value) {
       (node as Element).textContent = protoNode.textContent.replace(
         regex,
         value
@@ -144,7 +147,7 @@ class NodeTree {
     if (protoNode.attributes.length === 1) {
       return;
     }
-    let attr;
+    let attr: string = '';
     for (const attribute of protoNode.attributes) {
       attr = attribute.nodeName || attribute.name;
       if (attr.includes('attr.')) {
@@ -190,7 +193,15 @@ class NodeTree {
     const attrId = attr ? attr.nodeName || attr.name : null;
     let entry = this.setNode(node, key, value, attrId);
     let protoNode = entry.node;
-    let templateStrings = protoNode.outerHTML.toString().match(TEMPLATE_BIND_REGEX);
+    let templateStrings = null;
+
+    if ( protoNode.outerHTML ) {
+      templateStrings = protoNode.outerHTML.toString().match(TEMPLATE_BIND_REGEX);
+    }
+    if ( protoNode._nodeValue ) {
+      templateStrings = protoNode._nodeValue.match(TEMPLATE_BIND_REGEX);
+    }
+
     if (templateStrings == null) {
       return;
     }
@@ -313,6 +324,7 @@ function bindTemplate() {
 }
 
 function setState(prop: string, model: any) {
+  setValueByString(this.ɵstate, prop, model);
   this.ɵɵstate[NODE_KEY].update(prop, model);
 }
 
@@ -339,6 +351,9 @@ export {
   setValueByString,
   templateId,
   uuidv4,
+  stripKey,
+  stripTemplateString,
+  templateRegExp,
   bindTemplate,
   compileTemplate,
   setState,

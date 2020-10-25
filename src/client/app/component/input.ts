@@ -1,9 +1,12 @@
 import {
   Component,
   css,
-  InputComponent,
   Listen
 } from './../../../modules/core';
+
+import {
+  InputComponent
+} from './../../../modules/dom';
 
 @Component({
   selector: 'my-input',
