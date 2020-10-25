@@ -2,6 +2,9 @@
 
 ## 2.0.0-beta.0
 
+- NEW @readymade/dom package includes a collection of readymade components that extend from native HTML elements
+- NEW @readymade/router package features a client-side router for navigating between custom element based views
+- NEW `r-repeatr` and `r-repeat` components loop over a data model to display a custom template. 
 - NEW set Shadow DOM mode to 'open' or 'closed' in Component Decorator
 - NEW `$state` property exposes component state, use `getState()` (or whatever method is bound to `State`) as a best practice
 - NEW development and testing environment 
@@ -10,6 +13,8 @@
 
 
 BREAKING CHANGES
+
+Several components that were previously exported from @readymade/core have been moved to the new @readymade/dom package. `CustomElement`, `PseudoElement`, and `StructuralElement` remain in @readymade/core, while every other class is now exported from @readymade/dom. This is to cut down on library size when bundlers can't treeshake @readymade/core, as is the case with Parcel. Rollup and Webpack should treeshake @readymade/core fine. Another reason for this change is @skatejs/ssr, the only known package that can server-side Readymade components, can't interpret anything but classes that extend from HTMLElement.
 
 State will no longer automatically update after changing properties on the Component class. While this approach was convenient, it is much more performant not to track instances of the class but rather instances of state. State is now exposed as this.$state or by the getter used when declaring the @State decorator.
 

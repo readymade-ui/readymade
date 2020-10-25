@@ -1,7 +1,7 @@
 npx tsc -p src/modules/core/tsconfig.json
 npx rollup -c src/modules/core/rollup.config.js
 cp src/modules/core/package.json packages/@readymade/core/package.json
-cp src/modules/core/CHANGELOG.md packages/@readymade/core/CHANGELOG.md
+cp CHANGELOG.md packages/@readymade/core/CHANGELOG.md
 cp src/modules/core/LICENSE.txt packages/@readymade/core/LICENSE.txt
 cp src/modules/core/README.md packages/@readymade/core/README.md
 mkdir -p packages/@readymade/core/types
