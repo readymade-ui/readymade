@@ -11,7 +11,7 @@ const clean = {
 export default [
   {
     input: 'src/modules/core/index.ts',
-    plugins: [resolve(), typescript(), cleanup(clean)],
+    plugins: [resolve(), typescript({declaration: false}), cleanup(clean)],
     onwarn: (warning, next) => {
       if (warning.code === 'THIS_IS_UNDEFINED') return;
       next(warning);
@@ -44,7 +44,7 @@ export default [
   },
   {
     input: 'src/modules/core/index.ts',
-    plugins: [resolve(), typescript(), cleanup(clean)],
+    plugins: [resolve(), typescript({declaration: false}), cleanup(clean)],
     onwarn: (warning, next) => {
       if (warning.code === 'THIS_IS_UNDEFINED') return;
       next(warning);
@@ -60,6 +60,7 @@ export default [
     plugins: [
       resolve(),
       typescript({
+        declaration: false,
         sourceMap: true
       }),
       cleanup(clean),
