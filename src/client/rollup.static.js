@@ -12,7 +12,7 @@ export default [
     input: 'src/client/polyfill.ts',
     plugins: [
         resolve(),
-        typescript(),
+        typescript({declaration: false}),
         terser(),
         cleanup({
             comments: 'none'
