@@ -2,9 +2,7 @@
 
 ## 2.0.0-beta.0
 
-- NEW @readymade/dom package includes classes that are extendable for customized built-in elements and more
-- NEW `r-repeatr` and `r-repeat` components allow for looping over a data model bound to a template
-- NEW set Shadow DOM mode to 'open' or 'closed' in `@Component` Decorator
+- NEW set Shadow DOM mode to 'open' or 'closed' in Component Decorator
 - NEW `$state` property exposes component state, use `getState()` (or whatever method is bound to `State`) as a best practice
 - NEW development and testing environment 
 - FIX performance issues
@@ -12,8 +10,6 @@
 
 
 BREAKING CHANGES
-
-Several components have moved to the new `@readymade/dom` package. `CustomElement`, `PseudoElement`, and `StructuralElement` remain in `@readymade/core`. This change is due to server-side renderers not having default support for customized built-in elements and also to cut down on the size of the core package when bundlers can't treeshake the library. 
 
 State will no longer automatically update after changing properties on the Component class. While this approach was convenient, it is much more performant not to track instances of the class but rather instances of state. State is now exposed as this.$state or by the getter used when declaring the @State decorator.
 
