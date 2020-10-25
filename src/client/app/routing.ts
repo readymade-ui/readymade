@@ -1,4 +1,4 @@
-import { RdRouter } from './router/index';
+import { Router } from '../../modules/router';
 
 const routing = [
   { path: '/', component: 'app-home' },
@@ -6,4 +6,4 @@ const routing = [
   { path: '/perf', component: 'app-perftest' }
 ];
 
-export { RdRouter, routing };
+export { Router, routing };
