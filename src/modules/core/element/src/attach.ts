@@ -33,7 +33,6 @@ function define(instance: any, meta: ElementMeta) {
     } else if (meta.selector && meta.custom) {
       customElements.define(meta.selector, instance.contructor, meta.custom);
     } else {
-      console.log(meta.selector, instance.constructor);
       customElements.define(meta.selector, instance.contructor);
     }
   }
