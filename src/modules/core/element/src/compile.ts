@@ -101,6 +101,36 @@ function templateRegExp(key: string): RegExp {
   return new RegExp(`\{\{(\b*)(${key})(\b*)\}\}`, 'g')
 }
 
+function getTextNodesByContent(node: Element, key: string) {
+  if (!node.childNodes) {
+    return [];
+  }
+  const nodes = [];
+  for (const child of node.childNodes) {
+    if (child.nodeType === Node.TEXT_NODE && child.textContent === key) {
+      nodes.push(child);
+    }
+  }
+  return nodes;
+}
+
+function getElementByAttribute(node: Element) {
+  if (!node.attributes) {
+    return [];
+  }
+  let matches = [];
+  for (let i = 0; i < node.attributes.length; i++) {
+    if (
+      /[A-Za-z0-9]{3}-[A-Za-z0-9]{6}/gm.test(
+        node.attributes[i].nodeName || node.attributes[i].name
+      )
+    ) {
+      matches.push(node.attributes[i]);
+    }
+  }
+  return matches;
+}
+
 class NodeTree {
   public $parent: Node;
   public $parentId: string;
@@ -136,13 +166,16 @@ class NodeTree {
   public changeNode(node: Node, key: string, value: any, protoNode: any) {
     key = stripKey(key);
     const regex = templateRegExp(key);
-    if (protoNode.textContent.match(regex) &&
-        protoNode.textContent === `{{${key}}}` &&
-        (node as Element).textContent !== value) {
-      (node as Element).textContent = protoNode.textContent.replace(
-        regex,
-        value
-      );
+    const nodes = getTextNodesByContent(protoNode, `{{${key}}}`);
+    if (nodes.length) {
+      for (const textNode of nodes) {
+        if (textNode.parentNode === protoNode) {
+          (node as Element).textContent = protoNode.textContent.replace(
+            regex,
+            value
+          );
+        }
+      }
     }
     if (protoNode.attributes.length === 1) {
       return;
@@ -189,7 +222,7 @@ class NodeTree {
     }
   }
   public updateNode(node: Node | Element, key: string, value: any) {
-    const attr = this.getElementByAttribute(node as Element)[0];
+    const attr = getElementByAttribute(node as Element)[0];
     const attrId = attr ? attr.nodeName || attr.name : null;
     let entry = this.setNode(node, key, value, attrId);
     let protoNode = entry.node;
@@ -219,22 +252,6 @@ class NodeTree {
     } else {
       this.changeNode(node, key, value, protoNode);
     }
-  }
-  public getElementByAttribute(node: Element) {
-    if (!node.attributes) {
-      return [];
-    }
-    let matches = [];
-    for (let i = 0; i < node.attributes.length; i++) {
-      if (
-        /[A-Za-z0-9]{3}-[A-Za-z0-9]{6}/gm.test(
-          node.attributes[i].nodeName || node.attributes[i].name
-        )
-      ) {
-        matches.push(node.attributes[i]);
-      }
-    }
-    return matches;
   }
   public update(key: string, value: any) {
     const walk = document.createTreeWalker(
@@ -356,6 +373,8 @@ export {
   templateRegExp,
   bindTemplate,
   compileTemplate,
+  getTextNodesByContent,
+  getElementByAttribute,
   setState,
   BoundHandler,
   BoundNode

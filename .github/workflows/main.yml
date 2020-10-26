@@ -9,5 +9,6 @@ jobs:
       - name: Cypress
         uses: cypress-io/github-action@v1
         with:
-          start: yarn dev
+          build: yarn build
+          start: yarn serve
           wait-on: http://localhost:4444
