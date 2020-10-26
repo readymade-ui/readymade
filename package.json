@@ -3,7 +3,7 @@
   "version": "2.0.0-beta.0",
   "description": "JavaScript microlibrary for developing Web Components with Decorators",
   "scripts": {
-    "build": "npm run clean:dist && npm run prod",
+    "build": "npm run clean && npm run prod",
     "build:lib": "./BUILD.sh",
     "build:mock": "rollup -c src/client/rollup.mock.js",
     "build:prod": "concurrently \"npm run prod:client\" \"npm run prod:server\"",
