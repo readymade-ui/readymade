@@ -102,9 +102,16 @@ function templateRegExp(key: string): RegExp {
 }
 
 function getTextNodesByContent(node: Element, key: string) {
-  return Array.from(node.childNodes).filter(child => {
-    return child.nodeType === Node.TEXT_NODE && child.textContent === key;
-  });
+  if (!node.childNodes) {
+    return [];
+  }
+  const nodes = [];
+  for (const child of node.childNodes) {
+    if (child.nodeType === Node.TEXT_NODE && child.textContent === key) {
+      nodes.push(child);
+    }
+  }
+  return nodes;
 }
 
 function getElementByAttribute(node: Element) {
