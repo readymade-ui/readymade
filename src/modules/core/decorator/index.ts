@@ -79,7 +79,10 @@ function State(property?: string) {
       this.ɵɵstate[NODE_KEY] = new BoundNode(
         this.shadowRoot ? this.shadowRoot : this
       );
-      this.ɵstate = new Proxy(this.$state, this.ɵɵstate['handler' + BIND_SUFFIX]);
+      this.ɵstate = new Proxy(
+        this.$state,
+        this.ɵɵstate['handler' + BIND_SUFFIX]
+      );
       for (const prop in this.$state) {
         this.ɵstate[prop] = this.$state[prop];
       }

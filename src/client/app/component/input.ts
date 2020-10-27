@@ -1,12 +1,6 @@
-import {
-  Component,
-  css,
-  Listen
-} from './../../../modules/core';
+import { Component, css, Listen } from './../../../modules/core';
 
-import {
-  InputComponent
-} from './../../../modules/dom';
+import { InputComponent } from './../../../modules/dom';
 
 @Component({
   selector: 'my-input',

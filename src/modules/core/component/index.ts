@@ -87,7 +87,7 @@ export class CustomElement extends HTMLElement {
   public elementMeta: ElementMeta;
   constructor() {
     super();
-    attachShadow(this, { mode: this.elementMeta.mode || 'open'  });
+    attachShadow(this, { mode: this.elementMeta.mode || 'open' });
     if (this.bindEmitters) {
       this.bindEmitters();
     }

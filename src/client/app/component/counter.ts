@@ -4,7 +4,7 @@ import { Component, State, CustomElement } from './../../../modules/core';
   selector: 'my-counter',
   template: `
     <button id="dec">-</button>
-    <span>{{c}}</span>
+    <span>{{ c }}</span>
     <button id="inc">+</button>
   `,
   style: `
@@ -32,7 +32,7 @@ import { Component, State, CustomElement } from './../../../modules/core';
 export class MyCounter extends CustomElement {
   private $state: {
     c: '0';
-  }
+  };
   connectedCallback() {
     this.shadowRoot
       .querySelector('#inc')

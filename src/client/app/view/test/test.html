@@ -27,19 +27,21 @@
     <x-tree model="deep"></x-tree>
   </div>
   <div>
-
-      <template is="r-repeat" items="item of {{items}}">
-        <ul class="is--large">
-          <li repeat="item" foo="{{item.index}}">{{item.title}}</li>
-        </ul>
-      </template>
-      <template is="r-repeat" items="sub of {{subitems}}">
-        <ul class="is--large">
-          <li repeat="sub" foo="{{sub}}">{{sub}}</li>
-        </ul>
-      </template>
-      <r-repeatr template="object-repeater" items="item of {{items}}"></r-repeatr>
-      <r-repeatr template="array-repeater" items="sub of {{subitems}}"></r-repeatr>
-      <footer>{{message}}</footer>
+    <template is="r-repeat" items="item of {{items}}">
+      <ul class="is--large">
+        <li repeat="item" foo="{{item.index}}">{{item.title}}</li>
+      </ul>
+    </template>
+    <template is="r-repeat" items="sub of {{subitems}}">
+      <ul class="is--large">
+        <li repeat="sub" foo="{{sub}}">{{sub}}</li>
+      </ul>
+    </template>
+    <r-repeatr template="object-repeater" items="item of {{items}}"></r-repeatr>
+    <r-repeatr
+      template="array-repeater"
+      items="sub of {{subitems}}"
+    ></r-repeatr>
+    <footer>{{message}}</footer>
   </div>
 </div>

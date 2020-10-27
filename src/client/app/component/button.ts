@@ -7,9 +7,7 @@ import {
   State
 } from './../../../modules/core';
 
-import {
-  ButtonComponent
-} from './../../../modules/dom';
+import { ButtonComponent } from './../../../modules/dom';
 
 class ButtonState {
   public model: string = 'Click';

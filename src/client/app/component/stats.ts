@@ -31,7 +31,9 @@ class RStatsComponent extends CustomElement {
     this.animateIn();
   }
   public animateIn() {
-    const ul = this.shadowRoot.querySelector('slot').assignedNodes()[env === 'production' ? 0 : 1];
+    const ul = this.shadowRoot.querySelector('slot').assignedNodes()[
+      env === 'production' ? 0 : 1
+    ];
     Array.from((ul as Element).children).forEach((li: Element, index) => {
       li.animate(
         [

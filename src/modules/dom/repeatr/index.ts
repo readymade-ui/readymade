@@ -1,8 +1,20 @@
 import { Component, PseudoElement } from '../../core';
 import { TemplateComponent } from '../custom';
-import { isObject, stripTemplateString, findValueByString, templateRegExp, DOT_BRACKET_NOTATION_REGEX } from '../../core/element/src/compile';
+import {
+  isObject,
+  stripTemplateString,
+  findValueByString,
+  templateRegExp,
+  DOT_BRACKET_NOTATION_REGEX
+} from '../../core/element/src/compile';
 
-function changeNode(protoNode: Element, key: string, regex: RegExp, value: any, index?: number) {
+function changeNode(
+  protoNode: Element,
+  key: string,
+  regex: RegExp,
+  value: any,
+  index?: number
+) {
   const node = document.importNode(protoNode, true);
   let attr: string = '';
 
@@ -14,7 +26,7 @@ function changeNode(protoNode: Element, key: string, regex: RegExp, value: any, 
     node.textContent = protoNode.textContent.replace(
       protoNode.textContent,
       isObject(value) ? findValueByString(value, template) : value
-    )
+    );
   }
 
   for (const attribute of protoNode.attributes) {
@@ -29,10 +41,12 @@ function changeNode(protoNode: Element, key: string, regex: RegExp, value: any, 
           }
           if (!protoNode.setAttribute) {
             // tslint:disable-next-line: only-arrow-functions, no-empty
-            protoNode.setAttribute = function (i: string, v: string) { };
+            protoNode.setAttribute = function(i: string, v: string) {};
           }
           const path = stripTemplateString(attribute.nodeValue);
-          const template = path.substring(path.search(DOT_BRACKET_NOTATION_REGEX));
+          const template = path.substring(
+            path.search(DOT_BRACKET_NOTATION_REGEX)
+          );
           protoNode.setAttribute(
             attr,
             isObject(value) ? findValueByString(value, template) : value
@@ -46,10 +60,12 @@ function changeNode(protoNode: Element, key: string, regex: RegExp, value: any, 
       if (attributeValue.startsWith(`{{${key}`)) {
         if (!node.setAttribute) {
           // tslint:disable-next-line: only-arrow-functions, no-empty
-          node.setAttribute = function (i: string, v: string) { };
+          node.setAttribute = function(i: string, v: string) {};
         }
         const path = stripTemplateString(attributeValue);
-        const template = path.substring(path.search(DOT_BRACKET_NOTATION_REGEX));
+        const template = path.substring(
+          path.search(DOT_BRACKET_NOTATION_REGEX)
+        );
         node.setAttribute(
           attr,
           attributeValue.replace(
@@ -65,12 +81,16 @@ function changeNode(protoNode: Element, key: string, regex: RegExp, value: any, 
     }
   }
   protoNode.parentNode.appendChild(node);
-
 }
 
-function renderTemplate(elem: Repeater | TemplateRepeater, template: HTMLTemplateElement, items: string): void {
-
-  const bound = items.match(/(\w*)(?:\s)(?:of)(?:\s)(?:\{\{(?:\s*)(.*?)(?:\s*)\}\})/);
+function renderTemplate(
+  elem: Repeater | TemplateRepeater,
+  template: HTMLTemplateElement,
+  items: string
+): void {
+  const bound = items.match(
+    /(\w*)(?:\s)(?:of)(?:\s)(?:\{\{(?:\s*)(.*?)(?:\s*)\}\})/
+  );
 
   if (bound && bound.length) {
     return;
@@ -100,7 +120,6 @@ function renderTemplate(elem: Repeater | TemplateRepeater, template: HTMLTemplat
   } else {
     elem.parentNode.appendChild(clone);
   }
-
 }
 
 @Component({
@@ -108,7 +127,6 @@ function renderTemplate(elem: Repeater | TemplateRepeater, template: HTMLTemplat
   custom: { extends: 'template' }
 })
 export class Repeater extends TemplateComponent {
-
   constructor() {
     super();
     this.bindTemplate();
@@ -124,21 +142,18 @@ export class Repeater extends TemplateComponent {
         this.render(next);
         break;
     }
-  
   }
   public render(items: string): void {
     renderTemplate(this, this, items);
   }
 
   public bindTemplate?(): void;
-
 }
 
 @Component({
   selector: 'r-repeatr'
 })
 export class TemplateRepeater extends PseudoElement {
-
   $templateId: string;
   $items: string;
 
@@ -167,7 +182,9 @@ export class TemplateRepeater extends PseudoElement {
   }
 
   public render() {
-    const template = document.querySelector(`[id="${this.$templateId}"]`) as HTMLTemplateElement;
+    const template = document.querySelector(
+      `[id="${this.$templateId}"]`
+    ) as HTMLTemplateElement;
     if (template && this.$items) {
       renderTemplate(this, template, this.$items);
     }
@@ -177,5 +194,4 @@ export class TemplateRepeater extends PseudoElement {
     this.$templateId = id;
     this.render();
   }
-
 }

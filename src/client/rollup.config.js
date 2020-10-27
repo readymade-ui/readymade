@@ -5,43 +5,46 @@ import postcss from 'rollup-plugin-postcss';
 import html from 'rollup-plugin-string-html';
 import json from '@rollup/plugin-json';
 
-export default [{
+export default [
+  {
     input: 'src/client/server.ts',
     treeshake: true,
     external: ['path', 'html-minifier-terser'],
     output: {
-        file: 'src/server/view/index.js',
-        format: 'esm'
+      file: 'src/server/view/index.js',
+      format: 'esm'
     },
     plugins: [
-        nodeResolve({
-            mainFields: ['module', 'jsnext']
-        }),
-        json(),
-        postcss({
-            extract: false,
-            modules: false,
-            use: [
-                ['sass', {
-                    includePaths: ['src/client/style']
-                }]
-            ],
-            minimize: true,
-            extensions: ['.scss','.css']
-        }),
-        html({
-            include: ["**/*.html"],
-            exclude: ["**/index.html"],
-            minifier: {}
-        }),
-        typescript({
-            experimentalDecorators: true
-        }),
-        commonjsResolve()
+      nodeResolve({
+        mainFields: ['module', 'jsnext']
+      }),
+      json(),
+      postcss({
+        extract: false,
+        modules: false,
+        use: [
+          [
+            'sass',
+            {
+              includePaths: ['src/client/style']
+            }
+          ]
+        ],
+        minimize: true,
+        extensions: ['.scss', '.css']
+      }),
+      html({
+        include: ['**/*.html'],
+        exclude: ['**/index.html'],
+        minifier: {}
+      }),
+      typescript({
+        experimentalDecorators: true
+      }),
+      commonjsResolve()
     ],
-    onwarn: function (message) {
-
-        console.log(message);
-
+    onwarn: function(message) {
+      console.log(message);
     }
-}]
+  }
+];

@@ -4,7 +4,7 @@ import { ElementMeta } from './../../decorator';
 export const STRING_VALUE_REGEX = /\[(\w+)\]/g;
 export const STRING_DOT_REGEX = /^\./;
 export const ARRAY_REGEX = /(?<=\[)(.*)(\])/;
-export const DOT_BRACKET_NOTATION_REGEX = /\.|\[[0-9]*\]|(?:\['|'\])/g
+export const DOT_BRACKET_NOTATION_REGEX = /\.|\[[0-9]*\]|(?:\['|'\])/g;
 export const TEMPLATE_BIND_REGEX = /\{\{(\s*)(.*?)(\s*)\}\}/g;
 export const BRACKET_START_REGEX = new RegExp(`\\[`, 'g');
 export const BRACKET_END_REGEX = new RegExp(`\\]`, 'g');
@@ -55,7 +55,7 @@ function setValueByString(obj: any, path: string, value: any) {
   return obj;
 }
 
-function filter(fn: any, a: Array<any>){
+function filter(fn: any, a: Array<any>) {
   const f = [];
   for (let i = 0; i < a.length; i++) {
     if (fn(a[i])) {
@@ -63,7 +63,7 @@ function filter(fn: any, a: Array<any>){
     }
   }
   return f;
-};
+}
 
 function templateId() {
   let str = '';
@@ -90,7 +90,6 @@ function stripKey(key: string): string {
   return key;
 }
 
-
 function stripTemplateString(key: string): string {
   key = key.replace(TEMPLATE_START_REGEX, ``);
   key = key.replace(TEMPLATE_END_REGEX, ``);
@@ -98,7 +97,7 @@ function stripTemplateString(key: string): string {
 }
 
 function templateRegExp(key: string): RegExp {
-  return new RegExp(`\{\{(\b*)(${key})(\b*)\}\}`, 'g')
+  return new RegExp(`\{\{(\b*)(${key})(\b*)\}\}`, 'g');
 }
 
 function getTextNodesByContent(node: Element, key: string) {
@@ -228,10 +227,12 @@ class NodeTree {
     let protoNode = entry.node;
     let templateStrings = null;
 
-    if ( protoNode.outerHTML ) {
-      templateStrings = protoNode.outerHTML.toString().match(TEMPLATE_BIND_REGEX);
+    if (protoNode.outerHTML) {
+      templateStrings = protoNode.outerHTML
+        .toString()
+        .match(TEMPLATE_BIND_REGEX);
     }
-    if ( protoNode._nodeValue ) {
+    if (protoNode._nodeValue) {
       templateStrings = protoNode._nodeValue.match(TEMPLATE_BIND_REGEX);
     }
 
@@ -247,7 +248,17 @@ class NodeTree {
     }
     if (isObject(value) || Array.isArray(value)) {
       for (let index = 0; index < matches.length; index++) {
-        this.changeNode(node, templateStrings[index], findValueByString(value,templateStrings[index].substring(templateStrings[index].search(DOT_BRACKET_NOTATION_REGEX))), protoNode);
+        this.changeNode(
+          node,
+          templateStrings[index],
+          findValueByString(
+            value,
+            templateStrings[index].substring(
+              templateStrings[index].search(DOT_BRACKET_NOTATION_REGEX)
+            )
+          ),
+          protoNode
+        );
       }
     } else {
       this.changeNode(node, key, value, protoNode);
@@ -255,7 +266,7 @@ class NodeTree {
   }
   public update(key: string, value: any) {
     const walk = document.createTreeWalker(
-      (this.$parent as Element),
+      this.$parent as Element,
       NodeFilter.SHOW_ELEMENT,
       {
         acceptNode(node) {
@@ -298,7 +309,6 @@ class BoundHandler {
     this.$parent = obj;
   }
   public set(target: any, key: string, value: any) {
-
     if (value === 'undefined') {
       return true;
     }
@@ -313,13 +323,15 @@ class BoundHandler {
     };
 
     if (capturedGroup) {
-      if (target.parentNode &&
-          target.parentNode.host &&
-          target.parentNode.mode === 'open') {
-            target[key] = findValueByString(target.parentNode.host, capturedGroup);
-          } else if (capturedGroup && target.parentNode) {
-            target[key] = findValueByString(target.parentNode, capturedGroup);
-          }
+      if (
+        target.parentNode &&
+        target.parentNode.host &&
+        target.parentNode.mode === 'open'
+      ) {
+        target[key] = findValueByString(target.parentNode.host, capturedGroup);
+      } else if (capturedGroup && target.parentNode) {
+        target[key] = findValueByString(target.parentNode, capturedGroup);
+      }
     } else {
       target[key] = value;
     }
