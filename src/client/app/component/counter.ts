@@ -4,7 +4,7 @@ import { Component, State, CustomElement } from './../../../modules/core';
   selector: 'my-counter',
   template: `
     <button id="dec">-</button>
-    <span>{{ c }}</span>
+    <span>{{c}}</span>
     <button id="inc">+</button>
   `,
   style: `

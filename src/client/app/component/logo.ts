@@ -50,9 +50,11 @@ class RLogoComponent extends CustomElement {
         break;
     }
   }
+
   public setSize(size: string) {
     this.setState('size', size);
   }
+  
 }
 
 export { RLogoComponent };

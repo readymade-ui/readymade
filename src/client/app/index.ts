@@ -9,6 +9,7 @@ export { NodeComponent } from './component/tree/node';
 export { AtomComponent } from './component/tree/atom';
 
 // docs
+export { RMeterComponent } from './component/meter';
 export { RMainNavComponent } from './component/main-nav';
 export { RSideNavComponent } from './component/side-nav';
 export { RHeadlineComponent } from './component/headline';
