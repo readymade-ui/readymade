@@ -15,6 +15,7 @@
     "dev": "NODE_ENV=development parcel src/client/index.html --port 4444",
     "dev:server": "NODE_ENV=development node watch.js",
     "lint": "eslint src/**/*.ts --fix",
+    "precommit": "yarn lint",
     "prod": "NODE_ENV=production npm run clean:dist && npm run build:prod && npm run copy:root && npm run prod:static && npm run build:mock",
     "prod:static": "rollup -c src/client/rollup.static.js",
     "prod:client": "parcel build src/client/index.html -d dist/client --no-source-maps --out-file=index.html",
@@ -91,6 +92,7 @@
     "eslint-plugin-prettier": "^3.1.2",
     "gh-pages": "^3.1.0",
     "http-server": "^0.12.3",
+    "husky": "^4.3.0",
     "node-sass": "^4.13.1",
     "prettier": "^1.19.1",
     "rollup": "2.3.2",
@@ -111,5 +113,10 @@
   ],
   "externals": [
     "./src/server/config.js"
-  ]
+  ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn precommit"
+    }
+  }
 }
