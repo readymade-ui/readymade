@@ -7,7 +7,7 @@
     "build:lib": "./BUILD.sh",
     "build:mock": "rollup -c src/client/rollup.mock.js",
     "build:prod": "concurrently \"npm run prod:client\" \"npm run prod:server\"",
-    "copy:root": "copyfiles src/client/robots.txt src/client/static.html src/client/performance.html dist/client --flat",
+    "copy:root": "copyfiles src/client/robots.txt src/client/static.html src/client/hello.html src/client/hello-state.html src/client/performance.html dist/client --flat",
     "clean": "yarn clean:dist && yarn clean:packages",
     "clean:dist": "rimraf dist",
     "clean:packages": "rimraf packages",
@@ -121,7 +121,7 @@
     }
   },
   "lint-staged": {
-    "src/**/*.{ts,js,scss,html,json,css}": [
+    "src/**/*.{ts}": [
       "eslint --fix",
       "prettier --write"
     ]

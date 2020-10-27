@@ -56,5 +56,29 @@ export default [
     external: ['path', 'html-minifier-terser'],
     plugins: plugins,
     onwarn: onwarn
+  },
+  {
+    input: 'src/client/app/component/hello.ts',
+    output: {
+      name: 'hello',
+      file: 'dist/client/hello-world.js',
+      format: 'iife'
+    },
+    treeshake: true,
+    external: ['path', 'html-minifier-terser'],
+    plugins: plugins,
+    onwarn: onwarn
+  },
+  {
+    input: 'src/client/app/component/hello.state.ts',
+    output: {
+      name: 'statetest',
+      file: 'dist/client/hello-state.js',
+      format: 'iife'
+    },
+    treeshake: true,
+    external: ['path', 'html-minifier-terser'],
+    plugins: plugins,
+    onwarn: onwarn
   }
 ];
