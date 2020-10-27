@@ -15,7 +15,7 @@
     "dev": "NODE_ENV=development parcel src/client/index.html --port 4444",
     "dev:server": "NODE_ENV=development node watch.js",
     "lint": "eslint src/**/*.ts --fix",
-    "precommit": "yarn lint && yarn pretty && git add",
+    "precommit": "yarn lint && yarn pretty && git add .",
     "prod": "NODE_ENV=production npm run clean:dist && npm run build:prod && npm run copy:root && npm run prod:static && npm run build:mock",
     "prod:static": "rollup -c src/client/rollup.static.js",
     "prod:client": "parcel build src/client/index.html -d dist/client --no-source-maps --out-file=index.html",
