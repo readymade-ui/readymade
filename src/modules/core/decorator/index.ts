@@ -3,7 +3,8 @@ import {
   NODE_KEY,
   HANDLER_KEY,
   BoundHandler,
-  BoundNode
+  BoundNode,
+  setState
 } from '../element/src/compile';
 import { compileTemplate } from './../element';
 import { EventDispatcher } from './../event';
@@ -39,7 +40,7 @@ const css = (...args) => {
 };
 
 // tslint:disable-next-line
-const noop = () => {};
+const noop = () => { };
 
 // Decorators
 
@@ -87,7 +88,7 @@ function State(property?: string) {
         this.ɵstate[prop] = this.$state[prop];
       }
     }
-
+    target.setState = setState;
     target.bindState = function onBind() {
       bindState.call(this);
     };
@@ -130,7 +131,7 @@ function Emitter(eventName?: string, options?: any, channelName?: string) {
     }
 
     if (!target[prop]) {
-      target[prop] = function() {
+      target[prop] = function () {
         addEvent.call(this, eventName, channelName);
       };
     }

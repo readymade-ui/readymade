@@ -374,7 +374,6 @@ function compileTemplate(elementMeta: ElementMeta, target: any) {
   target.prototype.elementMeta.eventMap = {};
   target.prototype.template = `<style>${elementMeta.style}</style>${elementMeta.template}`;
   target.prototype.bindTemplate = bindTemplate;
-  target.prototype.setState = setState;
 }
 
 export {
