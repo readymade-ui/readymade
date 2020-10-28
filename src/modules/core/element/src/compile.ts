@@ -5,11 +5,11 @@ export const STRING_VALUE_REGEX = /\[(\w+)\]/g;
 export const STRING_DOT_REGEX = /^\./;
 export const ARRAY_REGEX = /(?<=\[)(.*)(\])/;
 export const DOT_BRACKET_NOTATION_REGEX = /\.|\[[0-9]*\]|(?:\['|'\])/g;
-export const TEMPLATE_BIND_REGEX = /\{\{(\s*)(.*?)(\s*)\}\}/g;
-export const BRACKET_START_REGEX = new RegExp(`\\[`, 'g');
-export const BRACKET_END_REGEX = new RegExp(`\\]`, 'g');
-export const TEMPLATE_START_REGEX = new RegExp(`{{`);
-export const TEMPLATE_END_REGEX = new RegExp(`}}`);
+export const TEMPLATE_BIND_REGEX = /\{\{\s*(.*?)\s*\}\}/g;
+export const BRACKET_START_REGEX = /\[/g;
+export const BRACKET_END_REGEX = /\]/g;
+export const TEMPLATE_START_REGEX = /\{\{\s?/g;
+export const TEMPLATE_END_REGEX = /\s?\}\}/g;
 export const BIND_SUFFIX = '__state';
 export const NODE_KEY = 'node' + BIND_SUFFIX;
 export const HANDLER_KEY = 'handler' + BIND_SUFFIX;
@@ -19,14 +19,14 @@ interface Node {
   $init?: boolean;
 }
 
-const isObject = function(val) {
+const isObject = function (val) {
   if (val === null) {
     return false;
   }
   return typeof val === 'function' || typeof val === 'object';
 };
 
-const findValueByString = function(o: any, s: string) {
+const findValueByString = function (o: any, s: string) {
   s = s.replace(STRING_VALUE_REGEX, '.$1');
   s = s.replace(STRING_DOT_REGEX, '');
   const a = s.split(DOT_BRACKET_NOTATION_REGEX).filter(s => s.length > 0);
@@ -76,7 +76,7 @@ function templateId() {
 
 /* tslint:disable */
 function uuidv4(): string {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
     const r = (Math.random() * 16) | 0,
       v = c == 'x' ? r : (r & 0x3) | 0x8;
     return v.toString(24);
@@ -97,7 +97,7 @@ function stripTemplateString(key: string): string {
 }
 
 function templateRegExp(key: string): RegExp {
-  return new RegExp(`\{\{(\b*)(${key})(\b*)\}\}`, 'g');
+  return new RegExp(`\\{\\{\\s*(${key})\\s*\\}\\}`, 'g');
 }
 
 function getTextNodesByContent(node: Element, key: string) {
@@ -106,7 +106,10 @@ function getTextNodesByContent(node: Element, key: string) {
   }
   const nodes = [];
   for (const child of node.childNodes) {
-    if (child.nodeType === Node.TEXT_NODE && child.textContent === key) {
+    if (
+      child.nodeType === Node.TEXT_NODE &&
+      templateRegExp(key).exec(child.textContent)
+    ) {
       nodes.push(child);
     }
   }
@@ -147,12 +150,12 @@ class NodeTree {
     const clone = node.cloneNode(true);
     if (!(node as Element).setAttribute) {
       // tslint:disable-next-line: only-arrow-functions, no-empty
-      (node as Element).setAttribute = function(i: string, v: string) {};
+      (node as Element).setAttribute = function (i: string, v: string) { };
     }
     (node as Element).setAttribute(id, '');
     if (!(clone as Element).setAttribute) {
       // tslint:disable-next-line: only-arrow-functions, no-empty
-      (clone as Element).setAttribute = function(i: string, v: string) {};
+      (clone as Element).setAttribute = function (i: string, v: string) { };
     }
     (clone as Element).setAttribute(id, '');
     this.$flatMap[id] = {
@@ -165,7 +168,7 @@ class NodeTree {
   public changeNode(node: Node, key: string, value: any, protoNode: any) {
     key = stripKey(key);
     const regex = templateRegExp(key);
-    const nodes = getTextNodesByContent(protoNode, `{{${key}}}`);
+    const nodes = getTextNodesByContent(protoNode, key);
     if (nodes.length) {
       for (const textNode of nodes) {
         if (textNode.parentNode === protoNode) {
@@ -191,7 +194,7 @@ class NodeTree {
           }
           if (!protoNode.setAttribute) {
             // tslint:disable-next-line: only-arrow-functions, no-empty
-            protoNode.setAttribute = function(i: string, v: string) {};
+            protoNode.setAttribute = function (i: string, v: string) { };
           }
           protoNode.setAttribute(
             attr,
@@ -206,7 +209,7 @@ class NodeTree {
         if ((node as Element).getAttribute(attr) !== value) {
           if (!(node as Element).setAttribute) {
             // tslint:disable-next-line: only-arrow-functions, no-empty
-            (node as Element).setAttribute = function(i: string, v: string) {};
+            (node as Element).setAttribute = function (i: string, v: string) { };
           }
           (node as Element).setAttribute(
             attr,

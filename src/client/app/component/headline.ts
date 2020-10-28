@@ -39,7 +39,7 @@ import {
     }
   `,
   template: html`
-    <h1 class="{{model.size}}">{{model.copy}}</h1>
+    <h1 class="{{model.size}}">{{ model.copy }}</h1>
   `
 })
 class RHeadlineComponent extends CustomElement {
