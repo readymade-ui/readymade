@@ -11,7 +11,7 @@
         <ul>
             <li> 🎰 Declare metadata for CSS and HTML ShadowDOM template</li>
             <li> ☕️ Single interface for 'autonomous custom' and 'customized built-in' elements </li>
-            <li> 🏋️‍ Weighing in at 1.3Kb for 'Hello World' <span class="hint">(gzipped)</span> </li>
+            <li> 🏋️‍ Weighing in at 1.2Kb for 'Hello World' <span class="hint">(gzipped)</span> </li>
             <li> 1️⃣ One-way data binding </li>
             <li> 🎤 Event Emitter pattern </li>
             <li> 🌲 Treeshakable </li>
@@ -20,10 +20,10 @@
 </section>
 
 <section id="intro">
-    <h1>@readymade/core</h1>
+    <h1>@readymade</h1>
     <p>Readymade is a JavaScript library for composing user interfaces with Web Components. <span class="i__c">@readymade/core</span> provides an interface for bootstrapping new custom elements.</p>
     <h2 id="whatis">What is Readymade?</h2>
-    <p>Readymade simplifies handling template and styling for Web Components via an interface that uses TypeScript Decorators.</p>
+    <p>Readymade simplifies handling template and styling for Web Components with TypeScript Decorators. The <span class="i__c">@Component</span> decorator has an interface that uses the Custom Elements v1 spec to provide template and styling for the component.</p>
     <r-code type="javascript">
             <span hidden>
 @Component({
@@ -46,17 +46,20 @@
 </section>
 
 <section>
-  <p>Readymade optimizes down to 1.3Kb for Hello World w/o data-binding and 3.2Kb with data-binding. JavaScript libraries like React are bloated in comparison. Readymade mainly uses available DOM API to provide features like template data-binding and event handling.</p>
-  <r-meter value="1.3" max="44.17" label="Readymade without @State" color="#8AC926"></r-meter>
-  <r-meter value="3.0" max="44.17" label="Readymade with @State" color="#e6d06c"></r-meter>
-  <r-meter value="44.17" max="44.17" label="React with hooks" color="#ff7de9"></r-meter>
+  <p>Readymade optimizes down to 1.2Kb for Hello World without data binding and 3Kb with data binding (gzipped). JavaScript UI libraries like React are bloated in comparison.</p>
+  <p>Readymade is treeshakable and relies mainly on existing DOM API. A simple component that uses all the available decorators in Readymade: <span class="i__c">@Component</span>, <span class="i__c">@State</span>, <span class="i__c">@Listen</span> and <span class="i__c">@Emitter</span> is 3.7Kb (gzipped). </p>
+  <h3>🏋️‍ Weighing in at 1.2Kb for 'Hello World' (gzipped)</h3>
+  <r-meter value="1.2" max="44.17" label="Readymade w/o data-binding" color="#8AC926"></r-meter>
+  <r-meter value="3.0" max="44.17" label="Readymade w/ data binding" color="#e6d06c"></r-meter>
+  <r-meter value="3.7" max="44.17" label="Readymade w/ data binding &amp; event handling" color="#FFAE03"></r-meter>
+  <r-meter value="44.17" max="44.17" label="React with hooks" color="#61dafb"></r-meter>
 </section>
 
 <section>
-    <h2>Readymade Example</h2>
+    <h2>A Readymade Example</h2>
 
     <p>A class named <span class="i__c">MyButtonComponent
-        </span> includes a template and styling for a button. A call to action is bound to the template through the <span class="i__c">@State</span> decorator. Readymade enables one-way data binding with the template declared with the <span class="i__c">@Component</span> decorator. MyButtonComponent includes <span class="i__c">@Emitter</span> and <span class="i__c">@Listen</span> decorators for event handling, broadcasting a 'bang' event when the user clicks on the button. Emitters broadcast events with the BroadcastChannel API. Readymade components can emit events where DOM Events don't bubble up, to other browsing contexts like a ServiceWorker.</p>
+        </span> includes a template and styling for a button. A call to action is bound to the template through the <span class="i__c">@State</span> decorator and a one-way data binding algorithm. <span class="i__c">@Listen</span> decorator binds <span class="i__c">addEventListener</span> to the element, while <span class="i__c">@Emitter</span> broadcasts 'bang' on click using the <span class="i__c">BroadcastChannel API</span>.</p>
 
     <r-code type="typescript">
         <span hidden>
@@ -106,10 +109,10 @@ class MyButtonComponent extends ButtonComponent {
       }
   }
 }
-
-export { MyButtonComponent };
         </span>
     </r-code>
+<p>The above example uses customized built-in elements, extending from <span class="i__c">HTMLButtonElement</span> under the hood. Readymade calls <span class="i__c">define</span> on the <span class="i__c">CustomElementRegistry</span> and attachs the template and styles using ShadowDOM to autonomous custom elements.</p>
+<p><span class="i__c">@readymade/core</span> provides all the decorators and element classes that extend from <span class="i__c">HTMLElement</span>. Components that extend from other elements are in the <span class="i__c">@readymade/dom</span> package. A client-side router is exported from <span class="i__c">@readymade/router</span>.</p>
 </section>
 
 
@@ -120,6 +123,13 @@ export { MyButtonComponent };
     <r-code type="javascript">
             <span hidden>
 npm i @readymade/core --save
+            </span>
+    </r-code>
+
+    <p>If you want to use the client-side router or customized built-in elements also install these packages.</p>
+    <r-code type="javascript">
+            <span hidden>
+npm i @readymade/router @readymade/dom --save
             </span>
     </r-code>
 
@@ -140,19 +150,17 @@ npm i typescript --save
       "moduleResolution": "node",
       "typeRoots": ["node_modules/@types"],
       "lib": ["es2017", "dom", "dom.iterable"],
-  },
-  "include": [
-      "./src/**/*.ts"
-  ]
+  }
 }
             </span>
     </r-code>
-    <p>Readymade is compiled with Typescript.</p>
+    <p>If you want to start a new project, consider bootstrapping your development environment with readymade-starter.</p>
     <r-code type="javascript">
             <span hidden>
-tsc -p tsconfig.json --watch
+git clone --depth 1 https://github.com/readymade-ui/starter.git my-app
             </span>
     </r-code>
+    <p>readymade-starter provides a development environment with Parcel and has the option to server-side render with @skatejs/ssr.</p>
     <h2 id="myfirst">First Component</h2>
     <p>Code your component. First, import all the necessary Decorators and classes for a component that implements ShadowDOM.</p>
     <ul class="definition__list">

@@ -2,7 +2,9 @@ import {
   Component,
   CustomElement,
   html,
-  State
+  State,
+  Emitter,
+  Listen
 } from './../../../modules/core';
 
 class HelloState {
@@ -23,6 +25,17 @@ class HelloStateComponent extends CustomElement {
   @State()
   public getState() {
     return new HelloState();
+  }
+  @Emitter('bang')
+  @Listen('click')
+  public onClick(event) {
+    this.emitter.broadcast('bang');
+  }
+  @Listen('keyup')
+  public onKeyUp(event) {
+    if (event.key === 'Enter') {
+      this.emitter.broadcast('bang');
+    }
   }
 }
 
