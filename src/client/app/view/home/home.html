@@ -59,7 +59,7 @@
     <h2>A Readymade Example</h2>
 
     <p>A class named <span class="i__c">MyButtonComponent
-        </span> includes a template and styling for a button. A call to action is bound to the template through the <span class="i__c">@State</span> decorator and a one-way data binding algorithm. <span class="i__c">@Listen</span> decorator binds <span class="i__c">addEventListener</span> to the element, while <span class="i__c">@Emitter</span> broadcasts 'bang' on click using the <span class="i__c">BroadcastChannel API</span>.</p>
+        </span> is decorated with <span class="i__c">@Component</span> that includes properties for specifying the template and styling for a button. A call to action is bound to the template through the <span class="i__c">@State</span> decorator and a one-way data binding algorithm. <span class="i__c">@Listen</span> decorator binds <span class="i__c">addEventListener</span> to the element, while <span class="i__c">@Emitter</span> broadcasts 'bang' on click using the <span class="i__c">BroadcastChannel API</span>.</p>
 
     <r-code type="typescript">
         <span hidden>
@@ -111,8 +111,7 @@ class MyButtonComponent extends ButtonComponent {
 }
         </span>
     </r-code>
-<p>The above example uses customized built-in elements, extending from <span class="i__c">HTMLButtonElement</span> under the hood. Readymade calls <span class="i__c">define</span> on the <span class="i__c">CustomElementRegistry</span> and attachs the template and styles using ShadowDOM to autonomous custom elements.</p>
-<p><span class="i__c">@readymade/core</span> provides all the decorators and element classes that extend from <span class="i__c">HTMLElement</span>. Components that extend from other elements are in the <span class="i__c">@readymade/dom</span> package. A client-side router is exported from <span class="i__c">@readymade/router</span>.</p>
+<p>The above example uses customized built-in elements, extending from <span class="i__c">HTMLButtonElement</span> under the hood. Readymade calls <span class="i__c">define</span> on the <span class="i__c">CustomElementRegistry</span> and provides encapsulation for the template and styling whether or not the element supports ShadowDOM.</p>
 </section>
 
 
@@ -154,150 +153,121 @@ npm i typescript --save
 }
             </span>
     </r-code>
+    <h2 id="decorators">Readymade Starter</h2>
     <p>If you want to start a new project, consider bootstrapping your development environment with readymade-starter.</p>
     <r-code type="javascript">
             <span hidden>
 git clone --depth 1 https://github.com/readymade-ui/starter.git my-app
             </span>
     </r-code>
-    <p>readymade-starter provides a development environment with Parcel and has the option to server-side render with @skatejs/ssr.</p>
-    <h2 id="myfirst">First Component</h2>
-    <p>Code your component. First, import all the necessary Decorators and classes for a component that implements ShadowDOM.</p>
-    <ul class="definition__list">
-        <li><span class="definition__title">Component</span> metadata class decorator for defining template and styling</li>
-        <li><span class="definition__title">CustomElement</span> class that extends HTMLElement and provides hooks for Readymade to implement one-way data binding and event handlers.</li>
-    </ul>
+    <p>readymade-starter provides a development environment with Parcel.</p>
+
+    <p>The readymade-starter repo allows you to separate template and styling into separate files out of the box. Support for SCSS and PostCSS is baked in.</p>
     <r-code type="javascript">
-            <span hidden>
-import { Component, CustomElement } from '@readymade/core';
-            </span>
-    </r-code>
-    <p>Declare a html template and styling using the Component decorator.</p>
-    <r-code type="javascript">
-            <span hidden>
+      <span hidden>
+import style from './button.scss';
+import template from './button.html';
+
 @Component({
-selector: 'my-component',
-template:`
-&lt;span>{{copyModel}}&lt;/span>
-    `,
-style:`
-    :host {
-        border: 2px solid #FF0000;
-        padding: 4px;
-    }
-    `,
+  selector: 'my-button',
+  style: style,
+  template: template,
 })
-            </span>
-    </r-code>
-    <p>Declare a new custom element.</p>
-    <r-code type="javascript">
-            <span hidden>
-class MyComponent extends CustomElement {
-constructor() {
-    super();
-}
-@State()
-getState() {
-  return {
-    copyModel: 'Hello World!'
-  }
-}
-}
-            </span>
-    </r-code>
-    <p>Use the new component in your template.</p>
-    <r-code type="markup">
-            <span hidden>
-&lt;my-component>&lt;/my-component>
-            </span>
-    </r-code>
+      </span>
+</r-code>
+    <p>readymade-starter bootstraps the necessary polyfill for Web Components to work in IE11, provides a client-side router and has the option to server-side render with @skatejs/ssr. The readymade-starter makes it easy to start developing websites or applications with Readymade.</p>
 </section>
+
 <section id="docs">
     <h1>Using Readymade</h1>
     <h2 id="decorators">Decorators</h2>
-    <p>Readymade implements UI components using a decorator pattern. Decorators are currently in stage 2 proposal for the ECMAScript Internationalization API Specification. Readymade implements decorators with TypeScript. A class decorator called Component allows you to declare styling and template for custom elements. The Emitter decorator provides a way to declare CustomEvents that can be emitted or broadcasted to other elements. The Listen decorator binds a method to the callback of an event listener.</p>
-    <h3>Types of Readymade Decorators</h3>
+    <p>Readymade implements UI components using a decorator pattern. Decorators are currently in [stage 2 proposal](https://github.com/tc39/proposal-decorators) for the ECMAScript Internationalization API Specification. Readymade implements decorators now with TypeScript.</p>
+    <p>A class decorator called <span class="i__c">@Component</span> provides an interface for declaring styles and template for custom elements. The <span class="i__c">@Emitter</span> method decorator declares how CustomEvents that can be emitted or broadcasted. The <span class="i__c">@Listen</span> method decorator is a wrapper around <span class="i__c">addEventListener</span>, making the method it decorates the callback function for event handling. <span class="i__c">@State</span> method decorator returns a State that is bound to a template.</p>
+    <h3>Readymade Decorators</h3>
     <ul class="definition__list">
         <li><span class="definition__title">@Component</span> metadata class decorator for defining template and styling</li>
-        <li><span class="definition__title">@Listen</span> method decorator that binds a method to an Event</li>
-        <li><span class="definition__title">@Emitter</span> method decorator that declares a CustomEvent that can be emitted by the component</li>
+        <li><span class="definition__title">@Listen</span> method decorator binds the method to <span class="i__c">addEventListener</span> callback</li>
+        <li><span class="definition__title">@Emitter</span> method decorator declares <span class="i__c">CustomEvent</span> emitted by the component</li>
+        <li><span class="definition__title">@State</span> method decorator returns stateful object used for data-binding the template</li>
     </ul>
+    <p></p>
     <h3>@Component</h3>
-    <p>The Component decorator modifies the class it decorates by providing metadata needed for Readymade to compile the template and styling defined within it.</p>
+    <p>The Component decorator is the place to specify the custom element selector. The decorator encapsulates the template and styles declared here with ShadowDOM on elements that support it or through attribute scoping on elements that don't.</p>
     <r-code type="javascript">
             <span hidden>
 @Component({
-selector: 'my-button',
-custom: { extends: 'button' },
-template:`
-&lt;span>{{buttonCopy}}&lt;/span>
-`,
-style:`
-    :host {
-        background: rgba(24, 24, 24, 1);
-        cursor: pointer;
-        color: white;
-        font-weight: 400;
-    }
-`,
+  selector: 'my-button',
+  custom: { extends: 'button' },
+  template:`
+  &lt;span>{{buttonCopy}}&lt;/span>
+  `,
+  style:`
+      :host {
+          background: rgba(24, 24, 24, 1);
+          cursor: pointer;
+          color: white;
+          font-weight: 400;
+      }
+  `,
 })
 class MyButtonComponent extends CustomElement
             </span>
     </r-code>
+    <h4>@Component API</h4>
+    <ul class="definition__list">
+      <li><span class="definition__title">autoDefine:</span> set to false to call CustomElementRegistry.define manually</li>
+      <li><span class="definition__title">custom:</span> use with customized built-in elements to specify which element to extend from</li>
+      <li><span class="definition__title">mode:</span> specifies whether ShadowDOM is "open" or "closed" mode</li>
+      <li><span class="definition__title">selector:</span> tag name for the custom element</li>
+      <li><span class="definition__title">style:</span> styles for the custom element</li>
+      <li><span class="definition__title">template:</span> custom element HTML template</li>
+    </ul>
     <h3>@Listen</h3>
-    <p>The Listen sets up <span class="i__c">addEventListener</span> for Events. This example listens for <span class="i__c">keyup</span> events and emits a CustomEvent when the user presses <span class="i__c">Enter</span>. This method decorator takes the event name in it's first argument. When listening for broadcasted events over the BroadcastChannel API, a channel name can be specified in the second argument.</p>
+    <p>Attaches the method it decorates to the function callback of <span class="i__c">addEventListener</span> . The following example listens for <span class="i__c">keyup</span> events, emits a <span class="i__c">CustomEvent</span> when the user presses the Enter key. This method decorator takes an event name in the first argument. When listening for broadcasted events over the <span class="i__c">BroadcastChannel API</span>, a channel name can be specified in the second argument.</p>
     <r-code type="javascript">
             <span hidden>
 @Listen('keyup')
 public onKeyUp(event) {
-if (event.key === 'Enter') {
-    this.emitter.broadcast('bang');
-}
+  if (event.key === 'Enter') {
+      this.emitter.broadcast('bang');
+  }
 }
             </span>
     </r-code>
+    <h4>@Listen API</h4>
+    <ul class="definition__list">
+      <li><span class="definition__title">event:</span> the name of the event</li>
+      <li><span class="definition__title">channel:</span> the channel name to listen for events using the BroadcastChannel API</li>
+    </ul>
     <h3>@Emitter</h3>
-    <p>The Emitter decorator defines CustomEvent the component can emit. This decorator takes the CustomEvent type as a first arugment and options for the CustomEvent in the second argument. If you want to broadcast Event with this Emitter, a channel name can be specified in the third argument.</p>
+    <p>The Emitter method decorator adds the <span class="i__c">emitter</span> property to the component. <span class="i__c">@Emitter</span> first argument is the <span class="i__c">CustomEvent</span> type, options for the <span class="i__c">CustomEvent</span> in the second argument. To broadcast <span class="i__c">CustomEvent</span> with this <span class="i__c">Emitter</span>, specify a channel name in the third argument.</p>
     <r-code type="javascript">
             <span hidden>
-@Emitter('bang', options)
+@Emitter('bang', options, 'mtv')
             </span>
     </r-code>
-    <p>Emitters are stored on the component instance with the property <span class="i__c">emitter</span>. There are two methods for Emitters: <span class="i__c">emit</span> and <span class="i__c">broadcast</span>. </p>
+    <h4>@Emitter API</h4>
+    <ul class="definition__list">
+      <li><span class="definition__title">event:</span> the name of the <span class="i__c">CustomEvent</span></li>
+      <li><span class="definition__title">options:</span> options used with <span class="i__c">new CustomEvent</span></li>
+      <li><span class="definition__title">channel:</span> the channel name to broadcast on using the <span class="i__c">BroadcastChannel API</span></li>
+    </ul>
+    <p>Emitters are stored on the component instance using the property <span class="i__c">emitter</span>. There are two methods for <span class="i__c">emitter</span>: <span class="i__c">emit</span> and <span class="i__c">broadcast</span>.</p>
     <ul class="definition__list">
             <li><span class="definition__title">emit</span> calls <span class="i__c">dispatchEvent</span> internally.</li>
-            <li><span class="definition__title">broadcast</span> uses <span class="i__c">BroadcastChannel API</span> to broadcast events even to other browser contexts.</li>
+            <li><span class="definition__title">broadcast</span> uses <span class="i__c">BroadcastChannel API</span> to broadcast events, even to other browser contexts.</li>
     </ul>
-</section>
-<section>
-    <h2 id="databinding">Data Binding</h2>
-    <p>Readymade includes state used for one-way data binding with templates.</p>
-    <p>In the example below state is declared with a property called <span class="i__c">buttonCopy</span>.</p>
+    <h3>@State</h3>
+    <p>Binds a method that returns a stateful object to data bound template. In the example below, <span class="i__c">@State</span> decoarates the <span class="i__c">setState</span> method that returns an <span class="i__c">Object</span> with a property named <span class="i__c">buttonCopy</span>.</p>
     <r-code type="javascript">
-            <span hidden>
-class MyComponent extends CustomElement {
-constructor() {
-super();
-}
-@State()
-getState() {
-return {
-  buttonCopy: 'Click'
-}
-}
-            </span>
-    </r-code>
-    <h3>template</h3>
-    <p><span class="i__c">buttonCopy</span> is bound to the template. Set the value of <span class="i__c">buttonCopy</span> in the class constructor so the button can display with a call to action: <span class="i__c">Click</span>.</p>
-    <r-code type="javascript">
-            <span hidden>
+      <span hidden>
 @Component({
-template:`
-&lt;span>{{buttonCopy}}&lt;/span>
-`,
+  template:`
+    &lt;span>{{buttonCopy}}&lt;/span>
+  `,
 })
-class MyComponent extends CustomElement {
-constructor() {
+class MyButtonComponent extends HTMLButtonElement {
+  constructor() {
   super();
 }
 @State()
@@ -306,22 +276,67 @@ getState() {
     buttonCopy: 'Click'
   }
 }
-            </span>
+      </span>
     </r-code>
-    <h3>Proxy</h3>
-    <p>Readymade listens for changes to state with ES2015 Proxy and then uses the DOM TreeWalker API to crawl nodes and update template.</p>
+    <p>In the template, this property is wrapped in data-binding template syntax (curly brackets). When the instance of the component is instantiated, Readymade crawls the DOM nodes in the component's template and replaces  <span class="i__c">{{buttonCopy}}</span> with the value of that property on state: <span class="i__c">'Click'</span>.</p>
+    <h4>A More Complex Example</h4>
+    <p>Readymade can handle the following permutations on state, setting properties on Objects or indices of Arrays.</p>
+    <r-code type="javascript">
+      <span hidden>
+export class TreeState {
+  public arrayModel = [
+    ['far', 'fiz', 'faz', 'fuz']
+  ];
+  public objectModel = {
+    foo: {
+      bar: 'x'
+    }
+  };
+  public stringModel = 'r';
+  public numberModel = 0;
+}
+@Component({
+  selector: 'r-tree',
+  template: html`
+  &lt;x-node data-model="{{arrayModel[0][1]}}">&lt;/x-node>
+  &lt;x-node>{{objectModel['foo'].bar}}&lt;/x-node>
+  &lt;x-node model="{{stringModel}}">&lt;/x-node>
+  &lt;x-node>{{numberModel}}&lt;/x-node>
+  `
+})
+class TreeComponent extends CustomElement {
+  constructor() {
+    super();
+  }
+  @State()
+  public getState() {
+    return new TreeState();
+  }
+      </span>
+    </r-code>
+
+    <p>Readymade binds the properties in curly brackets to DOM attributes and content. The template is instantly updated as state changes through one-way data-binding.</p>
+    <r-code type="javascript">
+      <span hidden>
+  &lt;x-node data-model="fiz">&lt;/x-node>
+  &lt;x-node>x&lt;/x-node>
+  &lt;x-node model="r">&lt;/x-node>
+  &lt;x-node>0&lt;/x-node>
+      </span>
+    </r-code>
 </section>
+
 <section>
     <h2 id="components">Components</h2>
-    <p>Readymade comes packaged with several component classes that are used to bootstrap web component development. Readymade takes the hassle out of remembering which DOM elements support ShadowDOM. Readymade takes the guess work out of implementing autonomous custom elements and customized built-in elements.</p>
-    <h3>Basic Usage</h3>
-    <p>Typically you would extend HTMLElement when coding a custom element that uses ShadowDOM.</p>
+    <p>Readymade is packaged with several component classes to bootstrap UI component development. Readymade takes the hassle out of remembering which DOM elements support ShadowDOM, encapsulating elements with ShadowDOM that support it under the hood. Readymade reduces the complexity of implementing customized built-in elements by handling styles and template with a unified API via the <span class="i__c">@Component</span> decorator.</p>
+    <p>Typically you would extend <span class="i__c">HTMLElement</span> for an element that utilizes ShadowDOM.</p>
     <r-code type="javascript">
             <span hidden>
 class MyComponent extends HTMLElement
             </span>
     </r-code>
-    <p>With Readymade extend CustomElement instead. CustomElement extends <span class="i__c">HTMLElement</span>, but also bootstraps event listeners and state.</p>
+    <h4>Automomous custom elements</h4>
+    <p>With Readymade extend <span class="i__c">CustomElement</span> instead when implementing autonomous custom elements. CustomElement extends <span class="i__c">HTMLElement</span> already. Along with the <span class="i__c">@Component</span> decorator, <span class="i__c">CustomElement</span> attachs ShadowDOM and provides an interface for interacting with Readymade API via TypeScript. <span class="i__c">CustomElement</span> is exported from the @readymade/core package.</p>
     <r-code type="javascript">
             <span hidden>
 import { CustomElement } from 'readymade/core';
@@ -329,22 +344,73 @@ import { CustomElement } from 'readymade/core';
 class MyComponent extends CustomElement
             </span>
     </r-code>
-    <p>Sometimes you need to extend other elements to retain Web Accessibility features or other user experience paradigms.</p>
+    <p>Two other autonomous custom element classes <span class="i__c">PseudoElement</span> and <span class="i__c">StructuralElement</span> are also exported from @readymade/core.</p>
+    <ul class="definition__list">
+      <li><span class="definition__title">CustomElement</span> attachs ShadowDOM</li>
+      <li><span class="definition__title">PseudoElement</span> encapsulates template and styling without ShadowDOM</li>
+      <li><span class="definition__title">StructuralElement</span> doesn't accept template or styling, is purely "structural"</li>
+    </ul>
+    <p>All other component classes are exported from @readymade/dom, including customized built-in elements.</p>
+    <h4>Customized built-in elements</h4>
+    <p>Sometimes you need to extend other elements to retain Web Accessibility features or other user experience paradigms. Customized built-in elements allow you to extend form input elements, retaining their accessible characteristics.</p>
     <r-code type="javascript">
             <span hidden>
 class MyInputComponent extends HTMLInputElement
             </span>
     </r-code>
-    <p>This is called a customized built-in element. Readymade handles styling differently for customized built-in elements by passing styles into the <span class="i__c">&lt;head></span> due to the lack of ShadowDOM. </p>
+    <p>Readymade handles customized built-in elements slightly differently. These elements are exported from the @readymade/dom package. Readymade provides encapsulation for styling despite the lack of ShadowDOM in customized built-in element by scoping the styles with attributes in the <span class="i__c">&lt;head></span>.</p>
     <r-code type="javascript">
             <span hidden>
-import { InputComponent } from 'readymade/core';
+import { InputComponent } from 'readymade/dom';
+
+@Component({
+  selector: 'my-input',
+  custom: { extends: 'input' },
+  style:`
+      :host {
+          background: rgba(24, 24, 24, 1);
+          cursor: pointer;
+          color: white;
+          font-weight: 400;
+      }
+  `,
+})
 
 class MyInputComponent extends InputComponent
             </span>
     </r-code>
-    <p>Readymade provides a single interface for handling 'autonomous custom' and 'customized built-in' elements.</p>
-
+    <p>Readymade provides a single interface for handling 'autonomous custom' and 'customized built-in' elements. Customized built-in elements require the <span class="i__c">custom</span> property set to an <span class="i__c">Object</span> that would normally be used with <span class="i__c">CustomElementRegistry.register</span>. By using the <span class="i__c">is</span> attribute in DOM, the <span class="i__c">input</span> will become an instance of <span class="i__c">MyInputComponent</span>, a customized built-in element.</p>
+    <r-code type="javascript">
+      <span hidden>
+&lt;input is="my-input">
+      </span>
+  </r-code>
+  <h4>Repeaters</h4>
+  <p>Readymade exports two classes useful for looping over a data model and appending DOM nodes with the content of that model: <span class="i__c">Repeater</span> and <span class="i__c">TemplateRepeater</span>.</p>
+  <r-code type="javascript">
+    <span hidden>
+&lt;template is="r-repeat" items="item of {{items}}">
+  &lt;ul class="is--large">
+    &lt;li repeat="item" foo="{{item.index}}">{{item.title}}&lt;/li>
+  &lt;/ul>
+&lt;/template>
+    </span>
+  </r-code>
+  <r-code type="javascript">
+    <span hidden>
+&lt;template id="object-repeater" items="item of {{items}}">
+  &lt;ul class="is--large">
+    &lt;li repeat="item" foo="{{item.index}}">{{item.title}}&lt;/li>
+  &lt;/ul>
+&lt;/template>
+&lt;r-repeatr template="object-repeater" items="item of {{items}}">
+&lt;/r-repeatr>
+    </span>
+  </r-code>
+  <ul class="definition__list">
+    <li><span class="definition__title">Repeater</span> uses template element to append DOM</li>
+    <li><span class="definition__title">TemplateRepeater</span> references a template element to append DOM</li>
+  </ul>
 </section>
 
 <section id="why">

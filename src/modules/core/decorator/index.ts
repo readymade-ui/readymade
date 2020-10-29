@@ -20,7 +20,6 @@ interface EventMeta {
 
 interface ElementMeta {
   autoDefine?: boolean;
-  boundState?: any;
   custom?: {
     extends: string;
   };
