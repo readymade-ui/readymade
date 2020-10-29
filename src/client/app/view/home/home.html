@@ -14,6 +14,7 @@
             <li> 🏋️‍ Weighing in at 1.2Kb for 'Hello World' <span class="hint">(gzipped)</span> </li>
             <li> 1️⃣ One-way data binding </li>
             <li> 🎤 Event Emitter pattern </li>
+            <li> 🖥 Server-side renderable </li>
             <li> 🌲 Treeshakable </li>
         </ul>
     </r-stats>
@@ -412,7 +413,24 @@ class MyInputComponent extends InputComponent
     <li><span class="definition__title">TemplateRepeater</span> references a template element to append DOM</li>
   </ul>
 </section>
+<section>
+  <h2 id="components">Router</h2>
+  <p>@readymade/router exports a client-side router that handles swapping out views on a root element in DOM based on a provided route configuration.</p>
+  <r-code type="javascript">
+    <span hidden>
+import { Router } from '@readymade/router';
 
+const routing = [
+  { path: '/', component: 'app-home' },
+  { path: '/test', component: 'app-testbed' },
+  { path: '/perf', component: 'app-perftest' }
+];
+
+const router = new Router('#root', routing)
+  </span>
+</r-code>
+  <p><span class="i__c">Route</span> configuration can be used to server-side render views. </p>
+</section>
 <section id="why">
         <h1>Why Do We Need Another Web Component Library?</h1>
         <p>Readymade started as an exercise to see how component based frameworks like Angular, Polymer, and Stencil could be built with just available browser API. The microlibrary that came to fruition simplifes web component development and includes some powerful features. The Component metadata decorator provides an easy interface for declaring styling and template. One way data binding allows you to forget about setting innerHTML and attributes of elements. Method decorators bind CustomEvent listeners and use the BroadcastChannel API to overcome limitations of event bubbling. Readymade is treeshakable, meaning you only import the code your project needs and leave the rest behind.</p>
