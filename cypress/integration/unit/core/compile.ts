@@ -109,7 +109,6 @@ describe('Compile Test', () => {
     expect(compiled.elementMeta.eventMap).does.not.equal(undefined);
     expect(compiled.template).does.not.equal(undefined);
     expect(compiled.bindTemplate).does.not.equal(undefined);
-    expect(compiled.setState).does.not.equal(undefined);
   });
 
 

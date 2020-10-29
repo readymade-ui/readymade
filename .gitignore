@@ -1,4 +1,5 @@
 .idea
+.nova
 .cache
 .parcel-cache
 .DS_Store
