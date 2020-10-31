@@ -115,11 +115,13 @@ function renderTemplate(
 
   protoNode.parentNode.removeChild(protoNode);
 
-  if (elem instanceof TemplateRepeater) {
+  if (elem instanceof TemplateRepeater  ||
+      elem.constructor.name === 'TemplateRepeater') {
     elem.appendChild(clone);
   } else {
     elem.parentNode.appendChild(clone);
   }
+
 }
 
 @Component({
@@ -135,7 +137,7 @@ export class Repeater extends TemplateComponent {
   static get observedAttributes() {
     return ['items'];
   }
-
+  
   attributeChangedCallback(name, prev, next) {
     switch (name) {
       case 'items':
@@ -143,6 +145,7 @@ export class Repeater extends TemplateComponent {
         break;
     }
   }
+  
   public render(items: string): void {
     renderTemplate(this, this, items);
   }
@@ -154,9 +157,10 @@ export class Repeater extends TemplateComponent {
   selector: 'r-repeatr'
 })
 export class TemplateRepeater extends PseudoElement {
+  
   $templateId: string;
   $items: string;
-
+  
   constructor() {
     super();
   }

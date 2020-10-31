@@ -1,2 +1,2 @@
-export * from '@corpuscule/custom-builtin-elements';
+export * from '@ungap/custom-elements';
 export * from 'broadcastchannel-polyfill';

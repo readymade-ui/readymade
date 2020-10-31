@@ -3,7 +3,7 @@ import { ElementMeta } from './../../decorator';
 
 export const STRING_VALUE_REGEX = /\[(\w+)\]/g;
 export const STRING_DOT_REGEX = /^\./;
-export const ARRAY_REGEX = /(?<=\[)(.*)(\])/;
+export const ARRAY_REGEX = /(\[)(.*)(\])/;
 export const DOT_BRACKET_NOTATION_REGEX = /\.|\[[0-9]*\]|(?:\['|'\])/g;
 export const TEMPLATE_BIND_REGEX = /\{\{\s*(.*?)\s*\}\}/g;
 export const BRACKET_START_REGEX = /\[/g;

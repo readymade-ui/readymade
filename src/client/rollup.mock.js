@@ -80,5 +80,17 @@ export default [
     external: ['path', 'html-minifier-terser'],
     plugins: plugins,
     onwarn: onwarn
+  },
+  {
+    input: 'src/client/app/component/button.ts',
+    output: {
+      name: 'button',
+      file: 'dist/client/button.js',
+      format: 'iife'
+    },
+    treeshake: true,
+    external: ['path', 'html-minifier-terser'],
+    plugins: plugins,
+    onwarn: onwarn
   }
 ];
