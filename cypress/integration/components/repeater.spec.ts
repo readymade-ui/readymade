@@ -1,12 +1,12 @@
 
-describe('Repeater Test', () => {
+describe('TemplateRepeater Test', () => {
 
   beforeEach(() => {
     cy.visit('/test');
     cy.wait(100);
   });
 
-  it('Displays Repeater', () => {
+  it('Displays TemplateRepeater', () => {
     cy.get('app-testbed').shadow().find('r-repeatr').should('exist');
   });
 

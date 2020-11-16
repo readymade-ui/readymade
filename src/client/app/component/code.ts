@@ -213,7 +213,8 @@ class RCodeComponent extends CustomElement {
   public connectedCallback(event) {
     this.onSlotChange();
   }
-  static get observedAttributes() {
+  
+  get observedAttributes() {
     return ['type'];
   }
 

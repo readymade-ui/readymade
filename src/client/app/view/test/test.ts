@@ -1,7 +1,6 @@
-import { CustomElement, State, Component } from './../../../../modules/core';
-
-import style from './test.scss';
+import { Component, CustomElement, State } from './../../../../modules/core';
 import template from './test.html';
+import style from './test.scss';
 
 const objectModel = [
   {
@@ -36,6 +35,24 @@ const arrayModel = [1, 'two', 3, 4, 'five'];
 class TestBedComponent extends CustomElement {
   constructor() {
     super();
+    //     setTimeout(
+    //       () => this.setState('subitems', JSON.stringify(['one', 'two'])),
+    //       5000
+    //     );
+    //
+    //     setTimeout(
+    //       () =>
+    //         this.setState(
+    //           'items',
+    //           JSON.stringify([
+    //             {
+    //               index: 1,
+    //               title: 'Item 1'
+    //             }
+    //           ])
+    //         ),
+    //       7500
+    //     );
   }
 
   @State()

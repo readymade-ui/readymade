@@ -11,7 +11,7 @@ export interface StateChange {
   };
 }
 
-export type OnStateChange = (change: StateChange) => void;
+export type OnStateChange = (change: StateChange, cb: (change: StateChange) => void) => void;
 
 export type SetState = (property: string, model: any) => void;
 

@@ -1,19 +1,20 @@
-import { Component, PseudoElement } from '../../core';
-import { TemplateComponent } from '../custom';
+import { Component, PseudoElement, templateId, uuidv4 } from '../../core';
 import {
-  isObject,
-  stripTemplateString,
-  findValueByString,
-  templateRegExp,
-  DOT_BRACKET_NOTATION_REGEX
+    DOT_BRACKET_NOTATION_REGEX,
+    findValueByString,
+    isObject,
+    stripTemplateString,
+    templateRegExp
 } from '../../core/element/src/compile';
+import { TemplateComponent } from '../custom';
 
 function changeNode(
   protoNode: Element,
   key: string,
   regex: RegExp,
   value: any,
-  index?: number
+  index?: number,
+  elem?: TemplateRepeater | Repeater
 ) {
   const node = document.importNode(protoNode, true);
   let attr: string = '';
@@ -84,83 +85,123 @@ function changeNode(
 }
 
 function renderTemplate(
-  elem: Repeater | TemplateRepeater,
+  elem: any,
   template: HTMLTemplateElement,
   items: string
 ): void {
-  const bound = items.match(
-    /(\w*)(?:\s)(?:of)(?:\s)(?:\{\{(?:\s*)(.*?)(?:\s*)\}\})/
-  );
-
-  if (bound && bound.length) {
-    return;
-  }
-
   if (!elem.parentNode) {
     return;
   }
 
-  const key = items.split('of')[0].trim();
-  const model = JSON.parse(items.split('of')[1].trim());
-  const regex = templateRegExp(key);
+  const bound = items.match(/(\w*)(?:\s)(?:of)(?:\s)(.*)/);
 
+  if (!bound.length) {
+    return;
+  }
+
+  // key = bound[1];
+  // modelKey = bound[2];
+
+  const regex = templateRegExp(bound[1]);
   const clone = template.content.cloneNode(true);
-  const protoNode = (clone as Element).querySelector(`[repeat="${key}"]`);
+  const protoNode = (clone as Element).querySelector(`[repeat="${bound[1]}"]`);
+  let $elem = elem;
+  let model;
+
+  for (; $elem && $elem !== document; $elem = $elem.parentNode) {
+    if ($elem.host && $elem.host.$state && $elem.host.$state[bound[2]]) {
+      model = JSON.parse($elem.host.$state[bound[2]]);
+      elem.$key = bound[2];
+      $elem.host.ɵɵstate.$changes.addEventListener('change', ev =>
+        elem.onChange(ev.detail)
+      );
+    } else if ($elem.$state && $elem.$state[bound[2]]) {
+      model = JSON.parse($elem.$state[bound[2]]);
+      elem.$key = bound[2];
+      $elem.ɵɵstate.$changes.addEventListener('change', ev =>
+        elem.onChange(ev.detail)
+      );
+    }
+  }
+
+  if (!model) {
+    return;
+  }
 
   if (Array.isArray(model)) {
     for (let index = 0; index < model.length; index++) {
-      changeNode(protoNode, key, regex, model[index], index);
+      changeNode(protoNode, bound[1], regex, model[index], index, elem);
     }
   }
 
   protoNode.parentNode.removeChild(protoNode);
 
-  if (elem instanceof TemplateRepeater  ||
-      elem.constructor.name === 'TemplateRepeater') {
+  if (elem instanceof Repeater || elem.constructor.name === 'Repeater') {
     elem.appendChild(clone);
-  } else {
-    elem.parentNode.appendChild(clone);
+  } else if (
+    elem instanceof TemplateRepeater ||
+    elem.constructor.name === 'TemplateRepeater'
+  ) {
+    const div = document.createElement('div');
+    div.appendChild(clone);
+    div.setAttribute('target', elem.$id);
+    elem.parentNode.appendChild(div);
   }
-
 }
 
 @Component({
   selector: 'r-repeat',
   custom: { extends: 'template' }
 })
-export class Repeater extends TemplateComponent {
+export class TemplateRepeater extends TemplateComponent {
+  $id: string = templateId() + uuidv4().slice(0, 6);
+  $key: string;
   constructor() {
     super();
-    this.bindTemplate();
   }
 
   static get observedAttributes() {
     return ['items'];
   }
-  
-  attributeChangedCallback(name, prev, next) {
+
+  attributeChangedCallback(name: string, prev: string, next: string) {
     switch (name) {
       case 'items':
-        this.render(next);
+        this.render();
         break;
     }
   }
-  
-  public render(items: string): void {
-    renderTemplate(this, this, items);
+
+  public remove() {
+    if (!this.parentNode) {
+      return;
+    }
+    const target = this.parentNode.querySelector(`[target="${this.$id}"]`);
+    if (target) {
+      target.innerHTML = '';
+      this.parentNode.removeChild(target);
+    }
   }
 
-  public bindTemplate?(): void;
+  public render(): void {
+    this.remove();
+    renderTemplate(this, this, this.getAttribute('items'));
+  }
+
+  public onChange(change: any) {
+    if (change[this.$key]) {
+      this.render();
+    }
+  }
 }
 
 @Component({
   selector: 'r-repeatr'
 })
-export class TemplateRepeater extends PseudoElement {
-  
+export class Repeater extends PseudoElement {
+  $id: string = templateId() + uuidv4().slice(0, 6);
+  $key: string;
   $templateId: string;
-  $items: string;
-  
   constructor() {
     super();
   }
@@ -169,28 +210,34 @@ export class TemplateRepeater extends PseudoElement {
     return ['items', 'template'];
   }
 
-  attributeChangedCallback(name, prev, next) {
+  attributeChangedCallback(name: string, prev: string, next: string) {
     switch (name) {
       case 'template':
         this.setTemplate(next);
         break;
       case 'items':
-        this.setItems(next);
+        this.render();
         break;
     }
   }
 
-  public setItems(items: string): void {
-    this.$items = items;
-    this.render();
+  public remove() {
+    this.innerHTML = '';
   }
 
   public render() {
     const template = document.querySelector(
       `[id="${this.$templateId}"]`
     ) as HTMLTemplateElement;
-    if (template && this.$items) {
-      renderTemplate(this, template, this.$items);
+    if (template) {
+      this.remove();
+      renderTemplate(this, template, this.getAttribute('items'));
+    }
+  }
+
+  public onChange(change: any) {
+    if (change[this.$key]) {
+      this.render();
     }
   }
 

@@ -19,14 +19,14 @@ interface Node {
   $init?: boolean;
 }
 
-const isObject = function (val) {
+const isObject = function(val) {
   if (val === null) {
     return false;
   }
   return typeof val === 'function' || typeof val === 'object';
 };
 
-const findValueByString = function (o: any, s: string) {
+const findValueByString = function(o: any, s: string) {
   s = s.replace(STRING_VALUE_REGEX, '.$1');
   s = s.replace(STRING_DOT_REGEX, '');
   const a = s.split(DOT_BRACKET_NOTATION_REGEX).filter(s => s.length > 0);
@@ -76,7 +76,7 @@ function templateId() {
 
 /* tslint:disable */
 function uuidv4(): string {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
     const r = (Math.random() * 16) | 0,
       v = c == 'x' ? r : (r & 0x3) | 0x8;
     return v.toString(24);
@@ -150,12 +150,12 @@ class NodeTree {
     const clone = node.cloneNode(true);
     if (!(node as Element).setAttribute) {
       // tslint:disable-next-line: only-arrow-functions, no-empty
-      (node as Element).setAttribute = function (i: string, v: string) { };
+      (node as Element).setAttribute = function(i: string, v: string) {};
     }
     (node as Element).setAttribute(id, '');
     if (!(clone as Element).setAttribute) {
       // tslint:disable-next-line: only-arrow-functions, no-empty
-      (clone as Element).setAttribute = function (i: string, v: string) { };
+      (clone as Element).setAttribute = function(i: string, v: string) {};
     }
     (clone as Element).setAttribute(id, '');
     this.$flatMap[id] = {
@@ -194,7 +194,7 @@ class NodeTree {
           }
           if (!protoNode.setAttribute) {
             // tslint:disable-next-line: only-arrow-functions, no-empty
-            protoNode.setAttribute = function (i: string, v: string) { };
+            protoNode.setAttribute = function(i: string, v: string) {};
           }
           protoNode.setAttribute(
             attr,
@@ -209,7 +209,7 @@ class NodeTree {
         if ((node as Element).getAttribute(attr) !== value) {
           if (!(node as Element).setAttribute) {
             // tslint:disable-next-line: only-arrow-functions, no-empty
-            (node as Element).setAttribute = function (i: string, v: string) { };
+            (node as Element).setAttribute = function(i: string, v: string) {};
           }
           (node as Element).setAttribute(
             attr,
@@ -340,9 +340,12 @@ class BoundHandler {
     }
 
     this.$parent.ɵɵstate[NODE_KEY].update(key, target[key]);
+    this.$parent.ɵɵstate.$changes.dispatchEvent(
+      new CustomEvent('change', { detail: change  })
+    );
 
-    if (target.onStateChange) {
-      target.onStateChange(change);
+    if (this.$parent.onStateChange) {
+      this.$parent.onStateChange(change);
     }
 
     return true;

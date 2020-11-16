@@ -7,7 +7,7 @@ import {
   setState
 } from '../element/src/compile';
 import { compileTemplate } from './../element';
-import { EventDispatcher } from './../event';
+import { EventDispatcher, ReadymadeEventTarget } from './../event';
 
 export type EventHandler = () => void;
 export const EMIT_KEY = '$emit';
@@ -39,7 +39,7 @@ const css = (...args) => {
 };
 
 // tslint:disable-next-line
-const noop = () => { };
+const noop = () => {};
 
 // Decorators
 
@@ -79,6 +79,7 @@ function State(property?: string) {
       this.ɵɵstate[NODE_KEY] = new BoundNode(
         this.shadowRoot ? this.shadowRoot : this
       );
+      this.ɵɵstate.$changes = new ReadymadeEventTarget();
       this.ɵstate = new Proxy(
         this.$state,
         this.ɵɵstate['handler' + BIND_SUFFIX]
@@ -130,7 +131,7 @@ function Emitter(eventName?: string, options?: any, channelName?: string) {
     }
 
     if (!target[prop]) {
-      target[prop] = function () {
+      target[prop] = function() {
         addEvent.call(this, eventName, channelName);
       };
     }

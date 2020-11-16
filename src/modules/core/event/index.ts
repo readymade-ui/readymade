@@ -67,4 +67,11 @@ class EventDispatcher {
   }
 }
 
-export { EventDispatcher };
+
+interface EmitterEvents {
+  [key: string]: any
+}
+
+class ReadymadeEventTarget extends EventTarget {}
+
+export { EventDispatcher, ReadymadeEventTarget };
