@@ -388,49 +388,49 @@ class MyInputComponent extends InputComponent
 &lt;input is="my-input">
       </span>
   </r-code>
-  <h4>Repeaters</h4>
-  <p>Readymade exports two classes useful for looping over a data model and appending DOM nodes with the content of that model: <span class="i__c">Repeater</span> and <span class="i__c">TemplateRepeater</span>.</p>
-  
-  <ul class="definition__list">
-    <li><span class="definition__title">Repeater</span> uses template element to append DOM</li>
-    <li><span class="definition__title">TemplateRepeater</span> references a template element to append DOM</li>
-  </ul> 
-  
-  <p>Suppose an Array of strings is found on state.</p>
-  
-  <r-code type="javascript">
-    <span hidden>
+<h4>Repeaters</h4>
+<p>Readymade exports two classes useful for looping over a data model and appending DOM nodes with the content of that model: <span class="i__c">Repeater</span> and <span class="i__c">TemplateRepeater</span>.</p>
+
+<ul class="definition__list">
+  <li><span class="definition__title">Repeater</span> is a custom element that references a template to iterate over a model and replace DOM nodes.</li>
+  <li><span class="definition__title">TemplateRepeater</span> extends HTMLTemplateElement to iterate over a model and replace DOM nodes.</li>
+</ul> 
+
+<p>Suppose an Array of strings is found on state.</p>
+
+<r-code type="javascript">
+  <span hidden>
 @State()
 public getState() {
   return {
     items: ["1", "2", "3", "4", "5"]
   }
 }
-    </span>
-  </r-code>
-  
-  <p><span class="definition__title">Repeater</span> will append the template to the template's <span class="i__c">parentNode</span>, iterating over the Array, printing the element tagged <span class="i__c">repeat</span> on each loop.</p>
-  
-  
-  <r-code type="javascript">
-    <span hidden>
-&lt;template is="r-repeat" items="item of {{items}}">
+  </span>
+</r-code>
+
+<p><span class="definition__title">TemplateRepeater</span> clones the template, iterates over the Array, binds the data model to each node, then inserts the new cloned template in the <span class="i__c">parentNode</span> of the original template.</p>
+
+
+<r-code type="javascript">
+  <span hidden>
+&lt;template is="r-repeat" items="item of items">
   &lt;ul class="is--large">
     &lt;li repeat="item" foo="{{item}}">{{item}}&lt;/li>
   &lt;/ul>
 &lt;/template>
-    </span>
-  </r-code>
-  
-  <h4>Repeater API</h4>
-  <ul class="definition__list">
-    <li><span class="definition__title">items:</span> specifies the reference of each item used in the template and items bound to state of parent component</li>
-  </ul> 
-  
-  <p>Suppose an Array of objects is found on state.</p>
-  
-  <r-code type="javascript">
-    <span hidden>
+  </span>
+</r-code>
+
+<h4>TemplateRepeater API</h4>
+<ul class="definition__list">
+  <li><span class="definition__title">items:</span> string that specifies the property on state <span class="definition__title">TemplateRepeater</span> should reference</li>
+</ul>
+
+<p>Suppose an Array of objects is found on state.</p>
+
+<r-code type="javascript">
+  <span hidden>
 @State()
 public getState() {
   return {
@@ -443,32 +443,32 @@ public getState() {
     ]
   }
 }
-    </span>
-  </r-code>
-  
-  <p><span class="definition__title">TemplateRepeater</span> will append the template to the r-repeater inner content, iterating over the Array, printing the element tagged <span class="i__c">repeat</span> on each loop.</p>
+  </span>
+</r-code>
 
-  <r-code type="javascript">
-    <span hidden>
-&lt;template id="object-repeater" items="item of {{items}}">
+<p><span class="definition__title">Repeater</span> clones a template anywhere in the document, iterates over the Array, binds the data model to each node that is appended to DOM, and then inserts the cloned template as the content of <span class="i__c">Repeater</span>.</p>
+
+<r-code type="javascript">
+  <span hidden>
+&lt;template id="object-repeater" items="item of items">
   &lt;ul class="is--large">
     &lt;li repeat="item" foo="{{item.index}}">{{item.title}}&lt;/li>
   &lt;/ul>
 &lt;/template>
 
-&lt;r-repeatr template="object-repeater" items="item of {{items}}">
+&lt;r-repeatr template="object-repeater" items="item of items">
 &lt;/r-repeatr>
-    </span>
-  </r-code>
+  </span>
+</r-code>
 
-  <h4>TemplateRepeater API</h4>
-  <ul class="definition__list">
-    <li><span class="definition__title">template:</span> id of the template r-repeater should reference</li>
-    <li><span class="definition__title">items:</span> specifies the reference of each item used in the template and items bound to state of parent component</li>
-  </ul>
-  
-  <p><span class="i__c">Repeater</span> and <span class="i__c">TemplateRepeater</span> use a template element. Any repeatable element should be tagged with the <span class="i__c">repeat</span> attribute that matches the name of the item reference passed into the <span class="i__c">items</span> attribute. </p>
-  
+<h4>Repeater API</h4>
+<ul class="definition__list">
+  <li><span class="definition__title">template:</span> id of the template Repeater should reference</li>
+  <li><span class="definition__title">items:</span> string that specifies the property on state <span class="definition__title">TemplateRepeater</span> should reference</li>
+</ul>
+
+<p><span class="i__c">Repeater</span> and <span class="i__c">TemplateRepeater</span> use a template element. Any repeatable element should be tagged with the <span class="i__c">repeat</span> attribute that matches the name of the item reference passed into the <span class="i__c">items</span> attribute. </p>
+
 </section>
 <section>
   <h2 id="components">Router</h2>

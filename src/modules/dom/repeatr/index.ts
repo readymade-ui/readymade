@@ -3,19 +3,11 @@ import {
     DOT_BRACKET_NOTATION_REGEX,
     findValueByString,
     isObject,
-    stripTemplateString,
-    templateRegExp
+    stripTemplateString
 } from '../../core/element/src/compile';
 import { TemplateComponent } from '../custom';
 
-function changeNode(
-  protoNode: Element,
-  key: string,
-  regex: RegExp,
-  value: any,
-  index?: number,
-  elem?: TemplateRepeater | Repeater
-) {
+function changeNode(protoNode: Element, key: string, value: any) {
   const node = document.importNode(protoNode, true);
   let attr: string = '';
 
@@ -41,8 +33,7 @@ function changeNode(
             attr = attribute.name.replace('attr.', '');
           }
           if (!protoNode.setAttribute) {
-            // tslint:disable-next-line: only-arrow-functions, no-empty
-            protoNode.setAttribute = function(i: string, v: string) {};
+            node.setAttribute = () => {};
           }
           const path = stripTemplateString(attribute.nodeValue);
           const template = path.substring(
@@ -60,8 +51,7 @@ function changeNode(
 
       if (attributeValue.startsWith(`{{${key}`)) {
         if (!node.setAttribute) {
-          // tslint:disable-next-line: only-arrow-functions, no-empty
-          node.setAttribute = function(i: string, v: string) {};
+          node.setAttribute = () => {};
         }
         const path = stripTemplateString(attributeValue);
         const template = path.substring(
@@ -87,7 +77,8 @@ function changeNode(
 function renderTemplate(
   elem: any,
   template: HTMLTemplateElement,
-  items: string
+  items: string,
+  previousNode?: any
 ): void {
   if (!elem.parentNode) {
     return;
@@ -99,28 +90,27 @@ function renderTemplate(
     return;
   }
 
-  // key = bound[1];
-  // modelKey = bound[2];
-
-  const regex = templateRegExp(bound[1]);
   const clone = template.content.cloneNode(true);
   const protoNode = (clone as Element).querySelector(`[repeat="${bound[1]}"]`);
-  let $elem = elem;
-  let model;
+  let $elem: any = elem;
+  let model: any;
 
   for (; $elem && $elem !== document; $elem = $elem.parentNode) {
     if ($elem.host && $elem.host.$state && $elem.host.$state[bound[2]]) {
       model = JSON.parse($elem.host.$state[bound[2]]);
       elem.$key = bound[2];
-      $elem.host.ɵɵstate.$changes.addEventListener('change', ev =>
-        elem.onChange(ev.detail)
+      $elem.host.ɵɵstate.$changes.addEventListener(
+        'change',
+        (ev: CustomEvent) => {
+          elem.onChange(ev.detail);
+        }
       );
     } else if ($elem.$state && $elem.$state[bound[2]]) {
       model = JSON.parse($elem.$state[bound[2]]);
       elem.$key = bound[2];
-      $elem.ɵɵstate.$changes.addEventListener('change', ev =>
-        elem.onChange(ev.detail)
-      );
+      $elem.ɵɵstate.$changes.addEventListener('change', (ev: CustomEvent) => {
+        elem.onChange(ev.detail);
+      });
     }
   }
 
@@ -130,7 +120,7 @@ function renderTemplate(
 
   if (Array.isArray(model)) {
     for (let index = 0; index < model.length; index++) {
-      changeNode(protoNode, bound[1], regex, model[index], index, elem);
+      changeNode(protoNode, bound[1], model[index]);
     }
   }
 
@@ -145,7 +135,11 @@ function renderTemplate(
     const div = document.createElement('div');
     div.appendChild(clone);
     div.setAttribute('target', elem.$id);
-    elem.parentNode.appendChild(div);
+    if (previousNode) {
+      elem.parentNode.replaceChild(div, previousNode);
+    } else {
+      elem.parentNode.appendChild(div);
+    }
   }
 }
 
@@ -164,7 +158,7 @@ export class TemplateRepeater extends TemplateComponent {
     return ['items'];
   }
 
-  attributeChangedCallback(name: string, prev: string, next: string) {
+  attributeChangedCallback(name: string) {
     switch (name) {
       case 'items':
         this.render();
@@ -172,20 +166,16 @@ export class TemplateRepeater extends TemplateComponent {
     }
   }
 
-  public remove() {
+  public remove(): null | HTMLElement {
     if (!this.parentNode) {
-      return;
+      return null;
     }
-    const target = this.parentNode.querySelector(`[target="${this.$id}"]`);
-    if (target) {
-      target.innerHTML = '';
-      this.parentNode.removeChild(target);
-    }
+    return this.parentNode.querySelector(`[target="${this.$id}"]`);
   }
 
   public render(): void {
-    this.remove();
-    renderTemplate(this, this, this.getAttribute('items'));
+    const previousTarget = this.remove();
+    renderTemplate(this, this, this.getAttribute('items'), previousTarget);
   }
 
   public onChange(change: any) {
