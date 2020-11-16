@@ -4,38 +4,34 @@
 
 - NEW @readymade/dom package includes a collection of readymade components that extend from native HTML elements
 - NEW @readymade/router package features a client-side router for navigating between custom element based views
-- NEW `r-repeatr` and `r-repeat` components loop over a data model to display a custom template. 
-- NEW set Shadow DOM mode to 'open' or 'closed' in Component Decorator
+- NEW `Repeater` and `TemplateRepeater` iterates over a data model and appends custom template to DOM
+- NEW ability to set Shadow DOM mode to 'open' or 'closed' in Component Decorator
 - NEW `$state` property exposes component state, use `getState()` (or whatever method is bound to `State`) as a best practice
-- NEW development and testing environment 
+- NEW development and testing environment
 - FIX performance issues
 - FIX issues with state when custom elements are dynamically added to DOM
-
 
 BREAKING CHANGES
 
 Several components that were previously exported from @readymade/core have been moved to the new @readymade/dom package. `CustomElement`, `PseudoElement`, and `StructuralElement` remain in @readymade/core, while every other class is now exported from @readymade/dom. This is to cut down on library size when bundlers can't treeshake @readymade/core, as is the case with Parcel. Rollup and Webpack should treeshake @readymade/core fine. Another reason for this change is @skatejs/ssr, the only known package that can server-side Readymade components, can't interpret anything but classes that extend from HTMLElement.
 
-State will no longer automatically update after changing properties on the Component class. While this approach was convenient, it is much more performant not to track instances of the class but rather instances of state. State is now exposed as this.$state or by the getter used when declaring the @State decorator.
+State will no longer automatically update after changing properties on the Component class. While this approach was convenient, it is much more performant not to track instances of the class but rather instances of state. State is now exposed as this.\$state or by the getter used when declaring the @State decorator.
 
-Several internal APIs were shifted around. Private APIs are prexied with `ɵ`. Public APIs are exposed with `$`. 
+Several internal APIs were shifted around. Private APIs are prefixed with `ɵ`. Public APIs are exposed with `$`.
 
 ## 1.2.0
 
 - FIX performance improvements
 - REMOVE check for `no-attr` attribute, make check automatic for non applicable attributes during change detection
 
-
 ## 1.1.2
 
 - FIX automatic call to `customElements.define` should be opt out
-
 
 ## 1.1.1
 
 - FIX issue that caused array values to not correctly update in some use cases
 - ADD check for `no-attr` attribute on Elements to forego expensive change detection on attributes where not applicable
-
 
 ## 1.1.0
 
@@ -105,13 +101,21 @@ Now its possible to define properties on state as Objects and Arrays.
 
 ```typescript
 export class TreeState {
-  public arrayModel = ['Node 1', 'Node 2', 'Node 3', 'Node 4', 'Node 5', 'Node 6', 'Node 7'];
+  public arrayModel = [
+    'Node 1',
+    'Node 2',
+    'Node 3',
+    'Node 4',
+    'Node 5',
+    'Node 6',
+    'Node 7'
+  ];
   public objectModel = {
     foo: {
       bar: {
-        baz: 'bbb',
-      },
-    },
+        baz: 'bbb'
+      }
+    }
   };
 }
 ```
@@ -135,11 +139,10 @@ reference objects and arrays in the component's template
 and update deeply nested objects with `setState`.
 
 ```typescript
- this.setState('objectModel.foo.bar', { baz: 'foo' } );
+this.setState('objectModel.foo.bar', { baz: 'foo' });
 ```
 
 This represents a substantial improvement over the state mechanisms introduced in 1.0.0.
-
 
 ## 1.0.2
 
