@@ -1,11 +1,17 @@
 export interface Route {
   path: string;
   component: string;
+  queryParams?: { [key: string]: string };
+}
+
+export interface RouteComponent extends HTMLElement {
+  onNavigate?: (route: Route) => {};
 }
 
 class Router {
   rootElement: HTMLElement;
   routes: any[];
+  currentRoute: Route;
   constructor(root: string, routes: Route[]) {
     if (document.querySelector(root) === null) {
       console.error(`[Router] Root element '${root}' does not exist.`);
@@ -41,6 +47,25 @@ class Router {
     }
   }
 
+  decodeQuery() {
+    if (location.search.length === 0) {
+      return {};
+    }
+    const search = location.search.substring(1);
+    return JSON.parse(
+      '{"' +
+        decodeURI(search)
+          .replace(/"/g, '\\"')
+          .replace(/&/g, '","')
+          .replace(/=/g, '":"') +
+        '"}'
+    );
+  }
+
+  parseQuery(route: Route) {
+    return new URLSearchParams(route.queryParams);
+  }
+
   matchRoute(path: string) {
     return this.routes.find(route => route.path === path);
   }
@@ -55,9 +80,26 @@ class Router {
   }
 
   resolve(route: Route) {
-    const component = document.createElement(route.component);
+    const locationParams = this.decodeQuery();
+    const component: RouteComponent = document.createElement(route.component);
+
+    if (Object.keys(locationParams).length) {
+      route.queryParams = locationParams;
+    } else if (route.queryParams) {
+      window.history.replaceState(
+        {},
+        '',
+        `${location.pathname}?${this.parseQuery(route)}`
+      );
+    }
+
     this.rootElement.innerHTML = '';
     this.rootElement.appendChild(component);
+    this.currentRoute = route;
+
+    if (component.onNavigate) {
+      component.onNavigate(this.currentRoute);
+    }
   }
 
   private isHashChange() {

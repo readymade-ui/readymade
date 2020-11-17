@@ -1,23 +1,24 @@
 // components
 export { ButtonState, MyButtonComponent } from './component/button';
+export { RCodeComponent } from './component/code';
+export { MyCounter } from './component/counter';
+export { RHeadlineComponent } from './component/headline';
 export { MyInputComponent } from './component/input';
 export { MyItemComponent } from './component/item';
 export { MyListComponent } from './component/list';
-export { MyCounter } from './component/counter';
-export { TreeComponent } from './component/tree/tree';
-export { NodeComponent } from './component/tree/node';
-export { AtomComponent } from './component/tree/atom';
-
+export { RLogoComponent } from './component/logo';
+export { RMainNavComponent } from './component/main-nav';
 // docs
 export { RMeterComponent } from './component/meter';
-export { RMainNavComponent } from './component/main-nav';
 export { RSideNavComponent } from './component/side-nav';
-export { RHeadlineComponent } from './component/headline';
-export { RLogoComponent } from './component/logo';
 export { RStatsComponent } from './component/stats';
-export { RCodeComponent } from './component/code';
-
+export { AtomComponent } from './component/tree/atom';
+export { NodeComponent } from './component/tree/node';
+export { TreeComponent } from './component/tree/tree';
 // views
 export { HomeComponent } from './view/home';
-export { TestBedComponent } from './view/test';
 export { PerformanceTestComponent } from './view/perf';
+export { QueryComponent } from './view/query';
+export { TestBedComponent } from './view/test';
+
+

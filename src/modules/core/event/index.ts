@@ -1,5 +1,11 @@
 // events
 
+interface EmitterEvents {
+  [key: string]: any;
+}
+
+class ReadymadeEventTarget extends EventTarget {}
+
 class EventDispatcher {
   public target: Element;
   public events: {
@@ -66,12 +72,5 @@ class EventDispatcher {
     delete this.channels[name];
   }
 }
-
-
-interface EmitterEvents {
-  [key: string]: any
-}
-
-class ReadymadeEventTarget extends EventTarget {}
 
 export { EventDispatcher, ReadymadeEventTarget };
