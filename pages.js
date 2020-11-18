@@ -16,7 +16,8 @@ const replace = str => {
 };
 
 (async () => {
-  const input = await fs.readFileSync('dist/client/index.html', 'utf8');
+  let input = await fs.readFileSync('dist/client/index.html', 'utf8');
+  input = input.replace('<head>', '<head><base href="/readymade">');
   const result = posthtml([
     inline({ root: path.join(__dirname, 'dist', 'client') })
   ]).process(input);
