@@ -12,7 +12,7 @@ JavaScript microlibrary for developing Web Components with Decorators that uses 
 
 Chat with us on [Dischord](https://discord.gg/8GDKfv).
 
-For more information, read [Readymade documentation](https://readymade-ui.github.io/readymade/).
+For more information, read our [Readymade documentation](https://readymade-ui.github.io/readymade/).
 
 ### Development
 
