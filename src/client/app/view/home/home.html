@@ -14,7 +14,7 @@
             <li> 🏋️‍ Weighing in at 1.2Kb for 'Hello World' <span class="hint">(gzipped)</span> </li>
             <li> 1️⃣ One-way data binding </li>
             <li> 🎤 Event Emitter pattern </li>
-            <li> 🖥 Server-side renderable </li>
+            <li> 🖥 Server side renderable </li>
             <li> 🌲 Treeshakable </li>
         </ul>
     </r-stats>
@@ -472,7 +472,7 @@ public getState() {
 </section>
 <section>
   <h2 id="components">Router</h2>
-  <p>@readymade/router exports a client-side router that handles swapping out views on a root element in DOM based on a provided route configuration.</p>
+  <p>@readymade/router exports a client-side router that handles swapping out views on a root element in DOM.</p>
   <r-code type="javascript">
     <span hidden>
 import { Router } from '@readymade/router';
@@ -483,16 +483,39 @@ const routing = [
   { path: '/perf', component: 'app-perftest' }
 ];
 
-const router = new Router('#root', routing)
+const router = new Router('#root', routing);
   </span>
 </r-code>
   <h4>Router API</h4>
   <ul class="definition__list">
-    <li><span class="definition__title">id:</span> selector for DOM Element Router should append views</li>
-    <li><span class="definition__title">routing:</span> Array of configuration for routes </li>
+    <li><span class="definition__title">id</span> selector for DOM Element Router should append views</li>
+    <li><span class="definition__title">routing</span> Array of configuration for routes </li>
   </ul>
-  <p><span class="i__c">Route</span> configuration can be used to server-side render views. </p>
+  <p><span class="i__c">Route</span> configuration is used to specify the renderable component, query params, page title and meta description, and JSON-LD. While success may be varied client-side for specifying these properties for SEO, the same Route configuration could be used for server-side rendering to sure crawlers can analyze the JSON-LD.</p>
+  <h4>Route</h4>
+  <ul class="definition__list">
+    <li><span class="definition__title">path</span> the URL path</li>
+    <li><span class="definition__title">component</span> component selector as string </li>
+    <li><span class="definition__title">queryParams</span> Object that specifies query params in key / value pairs </li>
+    <li><span class="definition__title">title</span> document title </li>
+    <li><span class="definition__title">description</span> text displayed in the content attribute of meta description tag </li>
+    <li><span class="definition__title">schema</span>JSON-LD</li>
+  </ul>
+  
+  <p>* description and JSON-LD schema require the appropriate meta and script tags, respectively to already be available in DOM.</p>
+  
+  <h2>Server Side Rendering</h2>
+  
+  <p>Readymade is server side renderable with @skatejs/ssr and Express.</p>
+     
+  <p>There is one limitation: the implementation can only extend from CustomElement (ShadowDOM). Customized built-in elements are not server side renderable by @skatejs/ssr.</p>
+  
+  <p>For more information, read <a href="https://dev.to/steveblue/server-side-rendering-web-components-320g" target="_blank" rel="noreferrer" >Server Side Render Web Components</a> and follow the link to the source code for an example of Express middleware. <a href="https://gist.github.com/steveblue/d003740efd08983f78d9d3e49e61072d" target="_blank" rel="noreferrer" >Advanced example of server side rendering web components with SEO</a> is available in a gist.</p>
+  
+  
+  
 </section>
+
 <section id="why">
         <h1>Why Do We Need Another Web Component Library?</h1>
         <p>Readymade started as an exercise to see how component based frameworks like Angular, Polymer, and Stencil could be built with just available browser API. The microlibrary that came to fruition simplifes web component development and includes some powerful features. The Component metadata decorator provides an easy interface for declaring styling and template. One way data binding allows you to forget about setting innerHTML and attributes of elements. Method decorators bind CustomEvent listeners and use the BroadcastChannel API to overcome limitations of event bubbling. Readymade is treeshakable, meaning you only import the code your project needs and leave the rest behind.</p>

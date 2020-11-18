@@ -1,11 +1,25 @@
-export interface Route {
-  path: string;
-  component: string;
-  queryParams?: { [key: string]: string };
-}
+import { ElementMeta, EventDispatcher } from './../../core';
 
 export interface RouteComponent extends HTMLElement {
-  onNavigate?: (route: Route) => {};
+  emitter?: EventDispatcher;
+  elementMeta?: ElementMeta;
+  onInit?(): void;
+  bindEmitters?(): void;
+  bindListeners?(): void;
+  bindState?(): void;
+  setState?(property: string, model: any): void;
+  onNavigate?(route: Route): void;
+  onUpdate?(): void;
+  onDestroy?(): void;
+}
+
+export interface Route {
+  path: string;
+  component: string | RouteComponent;
+  queryParams?: { [key: string]: string };
+  title?: string;
+  description?: string;
+  schema?: any;
 }
 
 class Router {
@@ -81,7 +95,9 @@ class Router {
 
   resolve(route: Route) {
     const locationParams = this.decodeQuery();
-    const component: RouteComponent = document.createElement(route.component);
+    const component: RouteComponent = document.createElement(
+      route.component as string
+    );
 
     if (Object.keys(locationParams).length) {
       route.queryParams = locationParams;
@@ -91,6 +107,24 @@ class Router {
         '',
         `${location.pathname}?${this.parseQuery(route)}`
       );
+    }
+
+    if (route.title) {
+      document.title = route.title;
+    }
+
+    if (route.description) {
+      const description = document.querySelector('meta[name="description"]');
+      if (description) {
+        description.setAttribute('content', route.description);
+      }
+    }
+
+    if (route.schema) {
+      const script = document.querySelector('[type="application/ld+json"]');
+      if (script) {
+        script.innerHTML = route.schema;
+      }
     }
 
     this.rootElement.innerHTML = '';
