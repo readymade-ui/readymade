@@ -12,7 +12,27 @@ JavaScript microlibrary for developing Web Components with Decorators that uses 
 
 Chat with us on [Dischord](https://discord.gg/8GDKfv).
 
-For more information, read our [Readymade documentation](https://readymade-ui.github.io/readymade/).
+For more information, read the [Readymade documentation](https://readymade-ui.github.io/readymade/).
+
+### Getting Started
+
+Install Readymade:
+
+```
+npm install @readymade/core
+```
+
+If you want to develop with customized built-in elements or Readymade's Repeater components:
+
+```
+npm install @readymade/dom
+```
+
+If you want to use the client-side router:
+
+```
+npm install @readymade/router
+```
 
 ### Development
 

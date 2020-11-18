@@ -1,3 +1,9 @@
 # @readymade/dom
 
-A collection of readymade components that extend from native HTML elements.
+Collection of readymade components that extend from native HTML elements.
+
+```
+npm install @readymade/dom
+```
+
+For more information, read the [Readymade documentation](https://readymade-ui.github.io/readymade/).
