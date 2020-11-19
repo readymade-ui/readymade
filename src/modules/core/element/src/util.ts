@@ -40,7 +40,18 @@ function getElementIndex(el: any) {
   return getSiblings(el).indexOf(el);
 }
 
+const isNode =
+typeof process !== undefined &&
+process.versions != null &&
+process.versions.node != null;
+
+const isBrowser =
+typeof window !== undefined &&
+typeof window.document !== undefined;
+
 export {
+  isBrowser,
+  isNode,
   getParent,
   getChildNodes,
   getSiblings,

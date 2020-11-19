@@ -1,5 +1,6 @@
 import { CustomElement, OnStateChange } from './../../component';
 import { ElementMeta } from './../../decorator';
+import { isBrowser } from './util';
 
 export const STRING_VALUE_REGEX = /\[(\w+)\]/g;
 export const STRING_DOT_REGEX = /^\./;
@@ -340,9 +341,12 @@ class BoundHandler {
     }
 
     this.$parent.ɵɵstate[NODE_KEY].update(key, target[key]);
-    this.$parent.ɵɵstate.$changes.dispatchEvent(
-      new CustomEvent('change', { detail: change  })
-    );
+
+    if (isBrowser) {
+      this.$parent.ɵɵstate.$changes.dispatchEvent(
+        new CustomEvent('change', { detail: change  })
+      );
+    }
 
     if (this.$parent.onStateChange) {
       this.$parent.onStateChange(change);
