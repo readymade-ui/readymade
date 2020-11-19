@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.0.0-beta.2
+
+- FIX issue with server side rendering
+
 ## 2.0.0-beta.1
 
 - FIX issue with server side rendering

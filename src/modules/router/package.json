@@ -1,6 +1,6 @@
 {
   "name": "@readymade/router",
-  "version": "2.0.0-beta.1",
+  "version": "2.0.0-beta.2",
   "description": "JavaScript microlibrary for developing Web Components with TypeScript and Decorators",
   "umd": "./bundles/router.js",
   "main": "./fesm2015/router.js",
