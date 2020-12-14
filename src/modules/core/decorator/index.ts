@@ -1,10 +1,10 @@
 import {
-  BIND_SUFFIX,
-  NODE_KEY,
-  HANDLER_KEY,
-  BoundHandler,
-  BoundNode,
-  setState
+    BIND_SUFFIX,
+    BoundHandler,
+    BoundNode,
+    HANDLER_KEY,
+    NODE_KEY,
+    setState
 } from '../element/src/compile';
 import { compileTemplate } from './../element';
 import { EventDispatcher, ReadymadeEventTarget } from './../event';
@@ -53,7 +53,10 @@ function Component(meta: ElementMeta) {
     if (meta.autoDefine === undefined) {
       meta.autoDefine = true;
     }
-    if (meta.autoDefine === true) {
+    if (
+      meta.autoDefine === true &&
+      customElements.get(meta.selector) === undefined
+    ) {
       if (meta.selector && !meta.custom) {
         customElements.define(meta.selector, target);
       } else if (meta.selector && meta.custom) {
@@ -204,13 +207,13 @@ function Listen(eventName: string, channelName?: string) {
 }
 
 export {
-  EventMeta,
-  ElementMeta,
-  Component,
-  State,
-  Emitter,
-  Listen,
-  html,
-  css,
-  noop
+    EventMeta,
+    ElementMeta,
+    Component,
+    State,
+    Emitter,
+    Listen,
+    html,
+    css,
+    noop
 };
