@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.0.0-beta.3
+
+- FIX issue when using Readymade components with hot module reloading
+
 ## 2.0.0-beta.2
 
 - FIX issue with server side rendering
