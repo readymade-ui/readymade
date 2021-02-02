@@ -1,5 +1,28 @@
 # CHANGELOG
 
+## 2.0.0
+
+- NEW @readymade/dom package includes a collection of readymade components that extend from native HTML elements
+- NEW @readymade/router package features a client-side router for navigating between custom element based views
+- NEW `Repeater` and `TemplateRepeater` iterates over a data model and appends custom template to DOM
+- NEW ability to set Shadow DOM mode to 'open' or 'closed' in Component Decorator
+- NEW `$state` property exposes component state, use `getState()` (or whatever method is bound to `State`) as a best practice
+- NEW development and testing environment
+- FIX performance related issues with using state
+- FIX issues with state when custom elements are dynamically added to DOM
+- FIX issue when using Readymade components with hot module reloading with Parcel
+- FIX issues with server side rendering
+
+### BREAKING CHANGES
+
+Several components that were previously exported from @readymade/core have been moved to the new @readymade/dom package. `CustomElement`, `PseudoElement`, and `StructuralElement` remain in @readymade/core, while every other class is now exported from @readymade/dom. This change was made to cut down on library size when bundlers can't treeshake @readymade/core, as is the case with Parcel. Rollup and Webpack can treeshake @readymade/core. Another reason for this change is @skatejs/ssr, the only known package that can server-side Readymade components, can't interpret customized built-in elements and only supports components that extend from HTMLElement.
+
+State will no longer automatically update after changing properties directly on the Component class. While this approach was convenient, it is much more performant not to track instances of the class but rather instances of state. State is now exposed as this.\$state or by the getter used when declaring the @State decorator.
+
+Several internal APIs were shifted around. Private APIs are prefixed with `ɵ`. Public APIs are exposed with `$`.
+
+Readymade now requires node > 15.0.0 for server-side rendering due to EventTarget being shipped with the library.
+
 ## 2.0.0-beta.3
 
 - FIX issue when using Readymade components with hot module reloading
