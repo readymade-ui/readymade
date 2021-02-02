@@ -279,7 +279,7 @@ exports.routing = void 0;
 var _router = require("../../modules/router");
 
 const routing = [{
-  path: '/',
+  path: '/readymade',
   component: 'app-home',
   title: 'Readymade'
 }, {
