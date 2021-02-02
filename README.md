@@ -10,7 +10,7 @@ JavaScript microlibrary for developing Web Components with Decorators that uses 
 - 🖥 Server side renderable
 - 🌲 Treeshakable
 
-Chat with us on [Dischord](https://discord.gg/8GDKfv).
+Chat with us on [Dischord](https://discord.gg/xzsnBfD3fu).
 
 For more information, read the [Readymade documentation](https://readymade-ui.github.io).
 
