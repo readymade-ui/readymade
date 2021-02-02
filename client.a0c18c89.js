@@ -279,7 +279,7 @@ exports.routing = void 0;
 var _router = require("../../modules/router");
 
 const routing = [{
-  path: '/readymade',
+  path: '/',
   component: 'app-home',
   title: 'Readymade'
 }, {
@@ -433,7 +433,285 @@ function define(instance, meta) {
     }
   }
 }
-},{}],"ZUwi":[function(require,module,exports) {
+},{}],"rH1J":[function(require,module,exports) {
+
+// shim for using process in browser
+var process = module.exports = {}; // cached from whatever global is present so that test runners that stub it
+// don't break things.  But we need to wrap it in a try catch in case it is
+// wrapped in strict mode code which doesn't define any globals.  It's inside a
+// function because try/catches deoptimize in certain engines.
+
+var cachedSetTimeout;
+var cachedClearTimeout;
+
+function defaultSetTimout() {
+  throw new Error('setTimeout has not been defined');
+}
+
+function defaultClearTimeout() {
+  throw new Error('clearTimeout has not been defined');
+}
+
+(function () {
+  try {
+    if (typeof setTimeout === 'function') {
+      cachedSetTimeout = setTimeout;
+    } else {
+      cachedSetTimeout = defaultSetTimout;
+    }
+  } catch (e) {
+    cachedSetTimeout = defaultSetTimout;
+  }
+
+  try {
+    if (typeof clearTimeout === 'function') {
+      cachedClearTimeout = clearTimeout;
+    } else {
+      cachedClearTimeout = defaultClearTimeout;
+    }
+  } catch (e) {
+    cachedClearTimeout = defaultClearTimeout;
+  }
+})();
+
+function runTimeout(fun) {
+  if (cachedSetTimeout === setTimeout) {
+    //normal enviroments in sane situations
+    return setTimeout(fun, 0);
+  } // if setTimeout wasn't available but was latter defined
+
+
+  if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+    cachedSetTimeout = setTimeout;
+    return setTimeout(fun, 0);
+  }
+
+  try {
+    // when when somebody has screwed with setTimeout but no I.E. maddness
+    return cachedSetTimeout(fun, 0);
+  } catch (e) {
+    try {
+      // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+      return cachedSetTimeout.call(null, fun, 0);
+    } catch (e) {
+      // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+      return cachedSetTimeout.call(this, fun, 0);
+    }
+  }
+}
+
+function runClearTimeout(marker) {
+  if (cachedClearTimeout === clearTimeout) {
+    //normal enviroments in sane situations
+    return clearTimeout(marker);
+  } // if clearTimeout wasn't available but was latter defined
+
+
+  if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+    cachedClearTimeout = clearTimeout;
+    return clearTimeout(marker);
+  }
+
+  try {
+    // when when somebody has screwed with setTimeout but no I.E. maddness
+    return cachedClearTimeout(marker);
+  } catch (e) {
+    try {
+      // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+      return cachedClearTimeout.call(null, marker);
+    } catch (e) {
+      // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+      // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+      return cachedClearTimeout.call(this, marker);
+    }
+  }
+}
+
+var queue = [];
+var draining = false;
+var currentQueue;
+var queueIndex = -1;
+
+function cleanUpNextTick() {
+  if (!draining || !currentQueue) {
+    return;
+  }
+
+  draining = false;
+
+  if (currentQueue.length) {
+    queue = currentQueue.concat(queue);
+  } else {
+    queueIndex = -1;
+  }
+
+  if (queue.length) {
+    drainQueue();
+  }
+}
+
+function drainQueue() {
+  if (draining) {
+    return;
+  }
+
+  var timeout = runTimeout(cleanUpNextTick);
+  draining = true;
+  var len = queue.length;
+
+  while (len) {
+    currentQueue = queue;
+    queue = [];
+
+    while (++queueIndex < len) {
+      if (currentQueue) {
+        currentQueue[queueIndex].run();
+      }
+    }
+
+    queueIndex = -1;
+    len = queue.length;
+  }
+
+  currentQueue = null;
+  draining = false;
+  runClearTimeout(timeout);
+}
+
+process.nextTick = function (fun) {
+  var args = new Array(arguments.length - 1);
+
+  if (arguments.length > 1) {
+    for (var i = 1; i < arguments.length; i++) {
+      args[i - 1] = arguments[i];
+    }
+  }
+
+  queue.push(new Item(fun, args));
+
+  if (queue.length === 1 && !draining) {
+    runTimeout(drainQueue);
+  }
+}; // v8 likes predictible objects
+
+
+function Item(fun, array) {
+  this.fun = fun;
+  this.array = array;
+}
+
+Item.prototype.run = function () {
+  this.fun.apply(null, this.array);
+};
+
+process.title = 'browser';
+process.env = {};
+process.argv = [];
+process.version = ''; // empty string to avoid regexp issues
+
+process.versions = {};
+
+function noop() {}
+
+process.on = noop;
+process.addListener = noop;
+process.once = noop;
+process.off = noop;
+process.removeListener = noop;
+process.removeAllListeners = noop;
+process.emit = noop;
+process.prependListener = noop;
+process.prependOnceListener = noop;
+
+process.listeners = function (name) {
+  return [];
+};
+
+process.binding = function (name) {
+  throw new Error('process.binding is not supported');
+};
+
+process.cwd = function () {
+  return '/';
+};
+
+process.chdir = function (dir) {
+  throw new Error('process.chdir is not supported');
+};
+
+process.umask = function () {
+  return 0;
+};
+},{}],"cttP":[function(require,module,exports) {
+var process = require("process");
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.getParent = getParent;
+exports.getChildNodes = getChildNodes;
+exports.getSiblings = getSiblings;
+exports.querySelector = querySelector;
+exports.querySelectorAll = querySelectorAll;
+exports.getElementIndex = getElementIndex;
+exports.isNode = exports.isBrowser = void 0;
+
+function getParent(el) {
+  return el.parentNode;
+}
+
+function getChildNodes(template) {
+  const elem = template ? template : this;
+
+  if (!elem) {
+    return [];
+  }
+
+  function getChildren(node) {
+    let path = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+    let result = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
+
+    if (!node.children.length) {
+      result.push(path.concat(node));
+    }
+
+    for (const child of node.children) {
+      getChildren(child, path.concat(child), result);
+    }
+
+    return result;
+  }
+
+  const nodes = getChildren(elem, []).reduce((nd, curr) => {
+    return nd.concat(curr);
+  }, []);
+  return nodes.filter((item, index) => nodes.indexOf(item) >= index);
+}
+
+function getSiblings(el) {
+  return Array.from(getParent(el).children).filter(elem => {
+    return elem.tagName !== 'TEXT' && elem.tagName !== 'STYLE';
+  });
+}
+
+function querySelector(selector) {
+  return document.querySelector(selector);
+}
+
+function querySelectorAll(selector) {
+  return Array.from(document.querySelectorAll(selector));
+}
+
+function getElementIndex(el) {
+  return getSiblings(el).indexOf(el);
+}
+
+const isNode = typeof process !== undefined && process.versions != null && process.versions.node != null;
+exports.isNode = isNode;
+const isBrowser = typeof window !== undefined && typeof window.document !== undefined;
+exports.isBrowser = isBrowser;
+},{"process":"rH1J"}],"ZUwi":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -451,6 +729,9 @@ exports.getTextNodesByContent = getTextNodesByContent;
 exports.getElementByAttribute = getElementByAttribute;
 exports.setState = setState;
 exports.BoundNode = exports.BoundHandler = exports.findValueByString = exports.isObject = exports.HANDLER_KEY = exports.NODE_KEY = exports.BIND_SUFFIX = exports.TEMPLATE_END_REGEX = exports.TEMPLATE_START_REGEX = exports.BRACKET_END_REGEX = exports.BRACKET_START_REGEX = exports.TEMPLATE_BIND_REGEX = exports.DOT_BRACKET_NOTATION_REGEX = exports.ARRAY_REGEX = exports.STRING_DOT_REGEX = exports.STRING_VALUE_REGEX = void 0;
+
+var _util = require("./util");
+
 const STRING_VALUE_REGEX = /\[(\w+)\]/g;
 exports.STRING_VALUE_REGEX = STRING_VALUE_REGEX;
 const STRING_DOT_REGEX = /^\./;
@@ -813,9 +1094,12 @@ class BoundHandler {
     }
 
     this.$parent.ɵɵstate[NODE_KEY].update(key, target[key]);
-    this.$parent.ɵɵstate.$changes.dispatchEvent(new CustomEvent('change', {
-      detail: change
-    }));
+
+    if (!_util.isNode) {
+      this.$parent.ɵɵstate.$changes.dispatchEvent(new CustomEvent('change', {
+        detail: change
+      }));
+    }
 
     if (this.$parent.onStateChange) {
       this.$parent.onStateChange(change);
@@ -853,69 +1137,7 @@ function compileTemplate(elementMeta, target) {
   target.prototype.template = "<style>".concat(elementMeta.style, "</style>").concat(elementMeta.template);
   target.prototype.bindTemplate = bindTemplate;
 }
-},{}],"cttP":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.getParent = getParent;
-exports.getChildNodes = getChildNodes;
-exports.getSiblings = getSiblings;
-exports.querySelector = querySelector;
-exports.querySelectorAll = querySelectorAll;
-exports.getElementIndex = getElementIndex;
-
-function getParent(el) {
-  return el.parentNode;
-}
-
-function getChildNodes(template) {
-  const elem = template ? template : this;
-
-  if (!elem) {
-    return [];
-  }
-
-  function getChildren(node) {
-    let path = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
-    let result = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
-
-    if (!node.children.length) {
-      result.push(path.concat(node));
-    }
-
-    for (const child of node.children) {
-      getChildren(child, path.concat(child), result);
-    }
-
-    return result;
-  }
-
-  const nodes = getChildren(elem, []).reduce((nd, curr) => {
-    return nd.concat(curr);
-  }, []);
-  return nodes.filter((item, index) => nodes.indexOf(item) >= index);
-}
-
-function getSiblings(el) {
-  return Array.from(getParent(el).children).filter(elem => {
-    return elem.tagName !== 'TEXT' && elem.tagName !== 'STYLE';
-  });
-}
-
-function querySelector(selector) {
-  return document.querySelector(selector);
-}
-
-function querySelectorAll(selector) {
-  return Array.from(document.querySelectorAll(selector));
-}
-
-function getElementIndex(el) {
-  return getSiblings(el).indexOf(el);
-}
-},{}],"isQ4":[function(require,module,exports) {
+},{"./util":"cttP"}],"isQ4":[function(require,module,exports) {
 var define;
 "use strict";
 
@@ -1106,7 +1328,7 @@ function Component(meta) {
       meta.autoDefine = true;
     }
 
-    if (meta.autoDefine === true) {
+    if (meta.autoDefine === true && customElements.get(meta.selector) === undefined) {
       if (meta.selector && !meta.custom) {
         customElements.define(meta.selector, target);
       } else if (meta.selector && meta.custom) {
@@ -5047,5 +5269,5 @@ module.exports = function loadHTMLBundle(bundle) {
   });
 };
 },{}],0:[function(require,module,exports) {
-var b=require("yU0Q");b.register("html",require("OkSu"));b.load([["home.0f60438b.html","m5eZ"],["perf.1ed8496c.html","nF9K"],["query.f10bc655.html","iCVQ"],["test.f2c55edf.html","pDyl"]]).then(function(){require("QCba");});
+var b=require("yU0Q");b.register("html",require("OkSu"));b.load([["home.8f6e152d.html","m5eZ"],["perf.1ed8496c.html","nF9K"],["query.f10bc655.html","iCVQ"],["test.f2c55edf.html","pDyl"]]).then(function(){require("QCba");});
 },{}]},{},[0], null)

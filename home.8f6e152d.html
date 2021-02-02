@@ -155,15 +155,14 @@ npm i typescript --save
             </span>
     </r-code>
     <h2 id="decorators">Readymade Starter</h2>
-    <p>If you want to start a new project, consider bootstrapping your development environment with readymade-starter.</p>
+    <p>primr is a tool for generating Readymade projects.</p>
     <r-code type="javascript">
             <span hidden="">
-git clone --depth 1 https://github.com/readymade-ui/starter.git my-app
+npx primr my-app
             </span>
     </r-code>
-    <p>readymade-starter provides a development environment with Parcel.</p>
 
-    <p>The readymade-starter repo allows you to separate template and styling into separate files out of the box. Support for SCSS and PostCSS is baked in.</p>
+    <p>The above command generates a project called my-app. primr separates template and styling into separate files out of the box. Support for SCSS and PostCSS is baked in. The development environment is built with Parcel.</p>
     <r-code type="javascript">
       <span hidden="">
 import style from './button.scss';
@@ -176,7 +175,7 @@ import template from './button.html';
 })
       </span>
 </r-code>
-    <p>readymade-starter bootstraps the necessary polyfill for Web Components to work in IE11, provides a client-side router and has the option to server-side render with @skatejs/ssr. The readymade-starter makes it easy to start developing websites or applications with Readymade.</p>
+    <p>primr bootstraps the necessary polyfill for Web Components to work in IE11, provides a client-side router and has the option to server-side render with @skatejs/ssr.</p>
 </section>
 
 <section id="docs">
