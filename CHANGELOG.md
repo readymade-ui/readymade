@@ -1,6 +1,10 @@
 # CHANGELOG
 
-## 2.0.0
+## 2.0.1
+
+- FIX issue with exported type definitions in @readymade/dom package
+
+## 2.0.0 Bicycle Wheel
 
 - NEW @readymade/dom package includes a collection of readymade components that extend from native HTML elements
 - NEW @readymade/router package features a client-side router for navigating between custom element based views
