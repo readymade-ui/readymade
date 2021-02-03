@@ -14,7 +14,9 @@ cp src/modules/dom/package.json packages/@readymade/dom/package.json
 cp src/modules/dom/LICENSE.txt packages/@readymade/dom/LICENSE.txt
 cp src/modules/dom/README.md packages/@readymade/dom/README.md
 mkdir -p packages/@readymade/dom/types
+mkdir -p packages/@readymade/dom/core
 cp -R src/modules/dom/typings/dom/* packages/@readymade/dom/types
+cp -R packages/@readymade/core/types/* packages/@readymade/dom/core
 rm -rf src/modules/dom/typings
 
 npx tsc -p src/modules/router/tsconfig.json
