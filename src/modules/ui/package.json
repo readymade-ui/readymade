@@ -26,9 +26,5 @@
   "bugs": {
     "url": "https://github.com/readymade-ui/readymade/issues"
   },
-  "homepage": "https://github.com/readymade-ui/readymade#readme",
-  "dependencies": {
-    "@readymade/core": "^2.0.0",
-    "@readymade/dom": "^2.0.0"
-  }
+  "homepage": "https://github.com/readymade-ui/readymade#readme"
 }

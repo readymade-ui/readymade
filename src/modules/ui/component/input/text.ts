@@ -1,5 +1,5 @@
-import { Component, css } from '@readymade/core';
-import { InputComponent } from '@readymade/dom';
+import { Component, css } from '../../../core';
+import { InputComponent } from '../../../dom';
 
 @Component({
   selector: 'rd-input',

@@ -1001,16 +1001,6 @@
     "@parcel/utils" "^1.11.0"
     physical-cpu-count "^2.0.0"
 
-"@readymade/core@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@readymade/core/-/core-2.0.0.tgz#6ec3686d5cd94494eaec70361ebcaae3ee3e70e9"
-  integrity sha512-JegQFGYwsaxBM/H6yFFKwNvblbBtn/DB9nF69iYh3730isaWerMJ054Uf1RZgCUwAbQRV+hZYoxb44n2cXAPTA==
-
-"@readymade/dom@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@readymade/dom/-/dom-2.0.0.tgz#85ee0d57b79a2d18cd6309e2bb482c764b8d652c"
-  integrity sha512-wHTaLbwKkLcWu3oK9o7TpCPSjokqT5qubSMEtQOGXXLTt2m/Ffr9F0f86X4qm+pjjoGU+F35JZvjbRSd1TSkkg==
-
 "@rollup/plugin-commonjs@^11.1.0":
   version "11.1.0"
   resolved "https://registry.yarnpkg.com/@rollup/plugin-commonjs/-/plugin-commonjs-11.1.0.tgz#60636c7a722f54b41e419e1709df05c7234557ef"
