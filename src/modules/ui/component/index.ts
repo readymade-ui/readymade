@@ -1,1 +1,1 @@
-export { RdInput } from './input/text';
+export { RdInput } from './input/input';
