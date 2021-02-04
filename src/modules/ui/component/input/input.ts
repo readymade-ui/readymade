@@ -9,9 +9,15 @@ import { InputComponent } from '@readymade/dom';
       background: rgba(24, 24, 24, 1);
       border: 2px solid rgba(236, 236, 236, 1);
       border-radius: 4px;
-      cursor: pointer;
       color: white;
       font-weight: 400;
+      min-width: 280px;
+      min-height: 44px;
+      outline-color: rgba(236, 0, 236, 1);
+      padding: 0px 14px;
+      &:focus {
+        border: 2px solid rgba(236, 0, 236, 1);
+      }
     }
   `
 })
