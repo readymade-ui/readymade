@@ -5,19 +5,16 @@ import { InputComponent } from '@readymade/dom';
   selector: 'rd-input',
   custom: { extends: 'input' },
   style: css`
-    .rdInput {
-      background: rgba(24, 24, 24, 1);
-      border: 2px solid rgba(236, 236, 236, 1);
+    :host {
+      background: var(--color-highlight);
+      border: 2px solid var(--color-default);
       border-radius: 4px;
-      color: white;
+      color: var(--color-default);
       font-weight: 400;
       min-width: 280px;
       min-height: 44px;
       outline-color: rgba(236, 0, 236, 1);
       padding: 0px 14px;
-      &:focus {
-        border: 2px solid rgba(236, 0, 236, 1);
-      }
     }
   `
 })
