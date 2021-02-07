@@ -2,8 +2,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@1,500&display=swap');
 
 :root {
-  --color-default: rgba(0, 0, 0, 0.1);
-  --color-highlight: rgba(0, 0, 0, 0.3);
+  --color-default: rgba(0, 0, 0, 1.0);
+  --color-border: rgba(0, 0, 0, 0.4);
+  --color-highlight: rgba(0, 0, 0, 1.0);
+  --color-bg: rgba(255, 255, 255, 0.5);
+  --color-container-bg: rgba(255, 255, 255, 1.0);
   --icon-handle-bg: url("data:image/svg+xml;charset=UTF-8,%3c?xml version='1.0' encoding='UTF-8'?%3e%3csvg width='48px' height='48px' viewBox='0 0 48 48' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3e%3cg id='touch-indicator' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd' fill-opacity='0.1'%3e%3ccircle id='joystick-handle' fill='%23FFFFFF' transformfill-opacity='0.1' transform='translate(3,3)' cx='22' cy='22' r='21'%3e%3c/circle%3e%3c/g%3e%3c/svg%3e");
   --icon-hor: url("data:image/svg+xml;charset=UTF-8,%3c?xml version='1.0' encoding='UTF-8'?%3e%3csvg width='34px' height='34px' viewBox='0 0 34 34' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3e%3cg id='slider-handle-horizonal' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd' stroke-linecap='square' stroke-opacity='0.3'%3e%3cg id='Group' transform='translate(16.000000, 16.000000) rotate(90.000000) translate(-16.000000, -16.000000) translate(0.000000, 14.000000)' stroke='%23FFFFFF' stroke-width='2'%3e%3cpath d='M0,2 L30,2' id='Line-Copy'%3e%3c/path%3e%3c/g%3e%3c/g%3e%3c/svg%3e");
   --icon-vert: url("data:image/svg+xml;charset=UTF-8,%3c?xml version='1.0' encoding='UTF-8'?%3e%3csvg width='34px' height='34px' viewBox='0 0 34 34' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3e%3cg id='slider-handle-vertical' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd' stroke-linecap='square' stroke-opacity='0.3'%3e%3cg id='Group' transform='translate(0.000000, 13.000000)' stroke='%23FFFFFF' stroke-width='2'%3e%3cpath d='M0,2 L30,2' id='Line-Copy'%3e%3c/path%3e%3c/g%3e%3c/g%3e%3c/svg%3e");
@@ -14,8 +17,8 @@
 
 [data-theme="dark"] {
   --color-default:rgba(255, 255, 255, 1.0);
-  --color-border: rgba(255, 255, 255, 0.5);
-  --color-highlight: rgba(255, 255, 255, 0.75);
+  --color-border: rgba(255, 255, 255, 0.65);
+  --color-highlight: rgba(255, 255, 255, 1.0);
   --color-bg: rgba(0, 0, 0, 0.5);
   --color-container-bg: rgba(0, 0, 0, 1.0);
   --icon-handle-bg: url("data:image/svg+xml;charset=UTF-8,%3c?xml version='1.0' encoding='UTF-8'?%3e%3csvg width='48px' height='48px' viewBox='0 0 48 48' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3e%3cg id='touch-indicator' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd' fill-opacity='0.1'%3e%3ccircle id='joystick-handle' fill='%23000000' transformfill-opacity='0.1' transform='translate(3,3)' cx='22' cy='22' r='21'%3e%3c/circle%3e%3c/g%3e%3c/svg%3e");
@@ -28,8 +31,8 @@
 
 [data-theme="light"] {
   --color-default: rgba(0, 0, 0, 1.0);
-  --color-border: rgba(0, 0, 0, 0.25);
-  --color-highlight: rgba(0, 0, 0, 0.75);
+  --color-border: rgba(0, 0, 0, 0.4);
+  --color-highlight: rgba(0, 0, 0, 1.0);
   --color-bg: rgba(255, 255, 255, 0.5);
   --color-container-bg: rgba(255, 255, 255, 1.0);
   --icon-handle-bg: url("data:image/svg+xml;charset=UTF-8,%3c?xml version='1.0' encoding='UTF-8'?%3e%3csvg width='48px' height='48px' viewBox='0 0 48 48' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3e%3cg id='touch-indicator' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd' fill-opacity='0.1'%3e%3ccircle id='joystick-handle' fill='%23FFFFFF' transformfill-opacity='0.1' transform='translate(3,3)' cx='22' cy='22' r='21'%3e%3c/circle%3e%3c/g%3e%3c/svg%3e");

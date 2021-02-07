@@ -4,5 +4,5 @@ export default {
 };
 
 export const Default = () => `
-	<rd-button></rd-button>
+	<button is="rd-button" class="is--large">
 `;
