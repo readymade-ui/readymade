@@ -6,15 +6,19 @@ import { InputComponent } from '@readymade/dom';
   custom: { extends: 'input' },
   style: css`
     :host {
-      background: var(--color-highlight);
-      border: 2px solid var(--color-default);
+      background-color: var(--color-bg);
+      border: 2px solid var(--color-border);
       border-radius: 4px;
       color: var(--color-default);
       font-weight: 400;
       min-width: 280px;
       min-height: 44px;
-      outline-color: rgba(236, 0, 236, 1);
       padding: 0px 14px;
+    }
+    :host:focus {
+      border: 2px solid var(--color-highlight);
+      outline: none;
+      box-shadow: none;
     }
   `
 })
