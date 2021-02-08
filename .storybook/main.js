@@ -3,8 +3,5 @@ module.exports = {
     '../src/stories/*.stories.mdx',
     '../src/stories/*.stories.@(js|ts)'
   ],
-  addons: ['@storybook/addon-links', '@storybook/addon-essentials'],
-  babel: async options => ({
-    ...options
-  })
+  addons: ['@storybook/addon-links', '@storybook/addon-essentials']
 };
