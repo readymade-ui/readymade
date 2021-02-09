@@ -1,5 +1,13 @@
 import { ElementMeta } from './../../decorator';
 
+function closestRoot(el) {
+  if (el.getRootNode().host) {
+    return el.getRootNode().host.shadowRoot;
+  } else {
+    return document.head;
+  }
+}
+
 function attachShadow(instance: any, options?: any) {
   const shadowRoot: ShadowRoot = instance.attachShadow(options || {});
   const t = document.createElement('template');
@@ -17,12 +25,13 @@ function attachDOM(instance: any, options?: any) {
 
 function attachStyle(instance: any, options?: any) {
   const id = `${instance.elementMeta.selector}`;
+  const closest = closestRoot(instance);
   if (!document.getElementById(`${id}-x`)) {
     const t = document.createElement('style');
     t.setAttribute('id', `${id}-x`);
     t.innerText = instance.elementMeta.style;
     t.innerText = t.innerText.replace(/:host/gi, `[is=${id}]`);
-    document.head.appendChild(t);
+    closest.appendChild(t);
   }
 }
 

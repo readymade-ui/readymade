@@ -1,4 +1,4 @@
-// components
+// test components
 export { ButtonState, MyButtonComponent } from './component/button';
 export { RCodeComponent } from './component/code';
 export { MyCounter } from './component/counter';
@@ -15,10 +15,11 @@ export { RStatsComponent } from './component/stats';
 export { AtomComponent } from './component/tree/atom';
 export { NodeComponent } from './component/tree/node';
 export { TreeComponent } from './component/tree/tree';
+// ui library
+export { RdButton, RdInput, RdSlider } from './../../modules/ui';
 // views
 export { HomeComponent } from './view/home';
 export { PerformanceTestComponent } from './view/perf';
 export { QueryComponent } from './view/query';
 export { TestBedComponent } from './view/test';
-
-
+export { LibraryComponent } from './view/lib';
