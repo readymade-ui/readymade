@@ -1,6 +1,6 @@
 import { Component, css, html, CustomElement, Listen } from './../../../core';
 
-export interface NgFxControl {
+export interface RdControl {
   type: string;
   name: string;
   orient?: string;
@@ -40,7 +40,6 @@ export interface NgFxControl {
       background-color: var(--color-bg);
       border: 2px solid var(--color-border); 
       border-radius: 12px;
-      transform: translateY(8px);
       cursor: pointer;
     }
     .draggable .range {
@@ -65,6 +64,7 @@ export interface NgFxControl {
     }
     .slider.hor {
       width: 100%;
+      max-width: 240px;
       height: 32px;
     }
     .slider.hor .draggable {
@@ -77,6 +77,7 @@ export interface NgFxControl {
       background-position: 50% 0px;
       background-repeat: no-repeat;
       background-size: 100% 100%;
+      height: 38px;
     }
     .slider.hor.small {
       width: 100%;
@@ -90,7 +91,6 @@ export interface NgFxControl {
     .slider.vert {
       width: 32px;
       height: 100%;
-      min-height: 240px;
     }
     .slider.vert .draggable {
       width: 32px;
@@ -114,7 +114,7 @@ export interface NgFxControl {
     }
     .slider.joystick {
       width: 200px;
-      height: auto;
+      height: 200px;
     }
     .slider.joystick .draggable {
       width: 200px;
@@ -128,20 +128,25 @@ export interface NgFxControl {
       width: 44px;
       height: 44px;
     }
+    .slider .draggable:hover, 
+    .slider .draggale.active {
+      border: 2px solid var(--color-highlight);
+      outline: none;
+      box-shadow: none;
+    }
   }
   `,
   template: html`
-  <div class="slider">
-    <div class="draggable">
-      <div class="range">
-        <div class="handle"></div>
+    <div class="slider">
+      <div class="draggable">
+        <div class="range">
+          <div class="handle"></div>
+        </div>
       </div>
     </div>
-  </div>
   `
 })
 class RdSlider extends CustomElement {
-
   private _rect: ClientRect | DOMRect;
   private _joystickPos: number[];
   private _touchItem: number | null;
@@ -149,7 +154,7 @@ class RdSlider extends CustomElement {
   private _timeout: number;
   private _animation: Animation;
   private _lastPos: any;
-  public control: NgFxControl;
+  public control: RdControl;
 
   constructor() {
     super();
@@ -177,7 +182,9 @@ class RdSlider extends CustomElement {
   }
 
   onSliderInit() {
-    const node: HTMLElement = <HTMLElement>(<any>this.shadowRoot.querySelector('.handle'));
+    const node: HTMLElement = <HTMLElement>(
+      (<any>this.shadowRoot.querySelector('.handle'))
+    );
 
     this._touchItem = null;
     this._handle = node;
@@ -186,12 +193,16 @@ class RdSlider extends CustomElement {
     this.control.width = this.clientWidth;
 
     if (this.control.orient === 'is--hor') {
+      this.style.maxWidth = '240px';
       this.control.currentValue = 0;
       this.control.position = 'translate(' + 0 + 'px' + ',' + 0 + 'px' + ')';
     } else if (this.control.orient === 'is--vert') {
+      this.style.height = '240px';
       this.control.currentValue = 0;
       this.control.position = 'translate(' + 0 + 'px' + ',' + 0 + 'px' + ')';
     } else if (this.control.orient === 'is--joystick') {
+      this.style.maxWidth = '200px';
+      this.style.maxHeight = '200px';
       this.control.currentValue = [0, 0];
       this.control.x = this.control.y = 76;
       this.control.position = 'translate(' + 76 + 'px' + ',' + 76 + 'px' + ')';
@@ -237,8 +248,14 @@ class RdSlider extends CustomElement {
       this._touchItem = e.touches.length - 1;
     }
 
-    this.control.x = e.touches[this._touchItem].pageX - this._rect.left - this._handle.clientWidth / 2;
-    this.control.y = e.touches[this._touchItem].pageY - this._rect.top - this._handle.clientWidth / 2;
+    this.control.x =
+      e.touches[this._touchItem].pageX -
+      this._rect.left -
+      this._handle.clientWidth / 2;
+    this.control.y =
+      e.touches[this._touchItem].pageY -
+      this._rect.top -
+      this._handle.clientWidth / 2;
 
     this.setPosition(this.control.x, this.control.y);
   }
@@ -253,8 +270,10 @@ class RdSlider extends CustomElement {
     this._rect = this.getBoundingClientRect();
     this.control.height = this.clientHeight;
     this.control.width = this.clientWidth;
-    this.control.x = e.offsetX;
-    this.control.y = e.offsetY;
+    if (this.control.orient === 'is--joystick') {
+      this.control.x = e.offsetX;
+      this.control.y = e.offsetY;
+    }
 
     this.addEventListener('mousemove', this.onMouseMove.bind(this));
     this.addEventListener('mouseup', this.onMouseUp.bind(this));
@@ -274,8 +293,14 @@ class RdSlider extends CustomElement {
       this._touchItem = e.touches.length - 1; // make this touch = the latest touch in the touches list instead of using event
     }
 
-    this.control.x = e.touches[this._touchItem].pageX - this._rect.left - this._handle.getBoundingClientRect().width / 2; // - 22; // TODO: figure out why these artificial offsets are here
-    this.control.y = e.touches[this._touchItem].pageY - this._rect.top - this._handle.getBoundingClientRect().height / 2; // - 66; // TODO: figure out why these artificial offsets are here
+    this.control.x =
+      e.touches[this._touchItem].pageX -
+      this._rect.left -
+      this._handle.getBoundingClientRect().width / 2; // - 22; // TODO: figure out why these artificial offsets are here
+    this.control.y =
+      e.touches[this._touchItem].pageY -
+      this._rect.top -
+      this._handle.getBoundingClientRect().height / 2; // - 66; // TODO: figure out why these artificial offsets are here
 
     if (this.control.hasUserInput && this.control.isActive) {
       this.setPosition(this.control.x, this.control.y);
@@ -296,13 +321,17 @@ class RdSlider extends CustomElement {
     }
 
     if (this.control.orient === 'is--hor') {
-      this.control.x = (this.getBoundingClientRect().left - e.pageX) * -1 - this._handle.getBoundingClientRect().width / 2;
-      this.control.y = e.offsetY;
+      this.control.x =
+        (this.getBoundingClientRect().left - e.pageX) * -1 -
+        this._handle.getBoundingClientRect().width / 2;
+      this.control.y = 0;
     }
 
     if (this.control.orient === 'is--vert') {
-      this.control.x = e.offsetX;
-      this.control.y = (this.getBoundingClientRect().top - e.pageY) * -1 - this._handle.getBoundingClientRect().height / 2;
+      this.control.x = 0;
+      this.control.y =
+        (this.getBoundingClientRect().top - e.pageY) * -1 -
+        this._handle.getBoundingClientRect().height / 2;
     }
 
     if (this.control.hasUserInput && this.control.isActive) {
@@ -327,7 +356,10 @@ class RdSlider extends CustomElement {
       this.removeEventListener('mouseup', this.onMouseUp.bind(this));
     }
 
-    if (this.control.orient === 'is--joystick' && this.control.snapToCenter === true) {
+    if (
+      this.control.orient === 'is--joystick' &&
+      this.control.snapToCenter === true
+    ) {
       const center = this.getCenter(
         [0, this.control.width - this._handle.offsetWidth],
         [0, this.control.height - this._handle.offsetHeight]
@@ -343,9 +375,7 @@ class RdSlider extends CustomElement {
     this.onMouseUp(e);
   }
 
-  onEvent() {
-
-  }
+  onEvent() {}
 
   // Get Center of Circle
   getCenter(xRange: number[], yRange: number[]) {
@@ -380,7 +410,10 @@ class RdSlider extends CustomElement {
       x = x - center[0];
       y = y - center[1];
       const radians = Math.atan2(y, x);
-      return [Math.cos(radians) * radius + center[0], Math.sin(radians) * radius + center[1]];
+      return [
+        Math.cos(radians) * radius + center[0],
+        Math.sin(radians) * radius + center[1]
+      ];
     }
   }
 
@@ -391,7 +424,14 @@ class RdSlider extends CustomElement {
   setActualPosition(pos: string) {
     const transformRegex = new RegExp(/(\d+(\.\d+)?)/g);
     const positions = pos.match(transformRegex);
-    this._handle.style.transform = 'matrix3d(1,0,0.00,0,0.00,1,0.00,0,0,0,1,0,' + positions[0] + ',' + positions[1] + ',0,1)';
+    if (positions) {
+      this._handle.style.transform =
+        'matrix3d(1,0,0.00,0,0.00,1,0.00,0,0,0,1,0,' +
+        positions[0] +
+        ',' +
+        positions[1] +
+        ',0,1)';
+    }
   }
 
   // set currentValue on control
@@ -428,18 +468,46 @@ class RdSlider extends CustomElement {
   setValue() {
     if (this.control.orient === 'is--hor') {
       this.control.currentValue = this.clampSlider(
-        this.scale(this.control.x, 0, this.control.width - 44, <number>this.control.min, <number>this.control.max)
+        this.scale(
+          this.control.x,
+          0,
+          this.control.width - 44,
+          <number>this.control.min,
+          <number>this.control.max
+        )
       );
     }
     if (this.control.orient === 'is--vert') {
       this.control.currentValue = this.clampSlider(
-        this.scale(this.control.y, 0, this.control.height - 44, <number>this.control.min, <number>this.control.max)
+        this.scale(
+          this.control.y,
+          0,
+          this.control.height - 44,
+          <number>this.control.min,
+          <number>this.control.max
+        )
       );
     }
     if (this.control.orient === 'is--joystick') {
       this.control.currentValue = [
-        this.clampJoystickX(this.scale(this.control.x, 0, this.control.width - 44, this.control.min[0], this.control.max[0])),
-        this.clampJoystickY(this.scale(this.control.y, 0, this.control.height - 44, this.control.min[1], this.control.max[1]))
+        this.clampJoystickX(
+          this.scale(
+            this.control.x,
+            0,
+            this.control.width - 44,
+            this.control.min[0],
+            this.control.max[0]
+          )
+        ),
+        this.clampJoystickY(
+          this.scale(
+            this.control.y,
+            0,
+            this.control.height - 44,
+            this.control.min[1],
+            this.control.max[1]
+          )
+        )
       ];
     }
   }
@@ -460,10 +528,23 @@ class RdSlider extends CustomElement {
         [0, this.control.width - this._handle.offsetWidth],
         [0, this.control.height - this._handle.offsetHeight]
       );
-      this.control.x = this.clamp(this._joystickPos[0], [0, this.control.width - this._handle.offsetWidth]);
-      this.control.y = this.clamp(this._joystickPos[1], [0, this.control.height - this._handle.offsetHeight]);
+      this.control.x = this.clamp(this._joystickPos[0], [
+        0,
+        this.control.width - this._handle.offsetWidth
+      ]);
+      this.control.y = this.clamp(this._joystickPos[1], [
+        0,
+        this.control.height - this._handle.offsetHeight
+      ]);
 
-      this.control.position = 'translate(' + this.control.x + 'px' + ',' + this.control.y + 'px' + ')';
+      this.control.position =
+        'translate(' +
+        this.control.x +
+        'px' +
+        ',' +
+        this.control.y +
+        'px' +
+        ')';
       this.setActualPosition(this.control.position);
     } else {
       if (x <= 0) {
@@ -482,7 +563,14 @@ class RdSlider extends CustomElement {
         this.control.y = y;
       }
 
-      this.control.position = 'translate(' + clampPos(this.control.x) + 'px' + ',' + clampPos(this.control.y) + 'px' + ')';
+      this.control.position =
+        'translate(' +
+        clampPos(this.control.x) +
+        'px' +
+        ',' +
+        clampPos(this.control.y) +
+        'px' +
+        ')';
       this.setActualPosition(this.control.position);
     }
   }

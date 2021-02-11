@@ -1,11 +1,14 @@
 import { ElementMeta } from './../../decorator';
 
-function closestRoot(el) {
-  if (el.getRootNode().host) {
-    return el.getRootNode().host.shadowRoot;
-  } else {
-    return document.head;
+function closestRoot(base: Element) {
+  function __closestFrom(el: Element | Window | Document): Element {
+    if (el.getRootNode()) {
+      return el.getRootNode();
+    } else {
+      return document.head;
+    }
   }
+  return __closestFrom(base);
 }
 
 function attachShadow(instance: any, options?: any) {

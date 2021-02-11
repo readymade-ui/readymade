@@ -12,7 +12,7 @@ import { InputComponent } from './../../../dom';
       color: var(--color-default);
       font-weight: 400;
       min-width: 280px;
-      min-height: 40px;
+      min-height: 32px;
       padding: 0px 14px;
     }
     :host:hover,
