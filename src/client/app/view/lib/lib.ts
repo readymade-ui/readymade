@@ -8,8 +8,17 @@ import style from './lib.scss';
   template: template
 })
 class LibraryComponent extends CustomElement {
+  theme: string = 'light';
   constructor() {
     super();
+  }
+  connectedCallback() {
+    this.shadowRoot.querySelector('.theme__toggle').classList.add(this.theme);
+    this.shadowRoot
+      .querySelector('.theme__toggle')
+      .addEventListener('click', () => {
+        this.toggleTheme();
+      });
   }
   @State()
   public getState() {
@@ -41,6 +50,13 @@ class LibraryComponent extends CustomElement {
         gridArea: '1 / 2 / span 4 / span 1'
       })
     };
+  }
+  toggleTheme() {
+    this.theme = this.theme === 'light' ? 'dark' : 'light';
+    document.body.setAttribute('data-theme', this.theme);
+    this.shadowRoot.querySelector('.theme__toggle').classList.remove('light');
+    this.shadowRoot.querySelector('.theme__toggle').classList.remove('dark');
+    this.shadowRoot.querySelector('.theme__toggle').classList.add(this.theme);
   }
 }
 

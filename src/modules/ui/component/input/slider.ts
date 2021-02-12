@@ -39,7 +39,6 @@ export interface RdControl {
       z-index: 1000;
       background-color: var(--color-bg);
       border: 2px solid var(--color-border); 
-      border-radius: 12px;
       cursor: pointer;
     }
     .draggable .range {
@@ -64,12 +63,10 @@ export interface RdControl {
     }
     .slider.hor {
       width: 100%;
-      max-width: 240px;
-      height: 32px;
+      max-width: 280px;
     }
     .slider.hor .draggable {
       width: 100%;
-      height: 32px;
       border-radius: 14px;
     }
     .slider.hor .draggable .handle {
@@ -77,7 +74,8 @@ export interface RdControl {
       background-position: 50% 0px;
       background-repeat: no-repeat;
       background-size: 100% 100%;
-      height: 38px;
+      height: 32px;
+      width: 32px;
     }
     .slider.hor.small {
       width: 100%;
@@ -102,6 +100,8 @@ export interface RdControl {
       background: var(--icon-vert);
       background-position: 0px 50%;
       background-repeat: no-repeat;
+      height: 32px;
+      width: 32px;
     }
     .slider.vert.small {
       width: 12px;
@@ -129,10 +129,15 @@ export interface RdControl {
       height: 44px;
     }
     .slider .draggable:hover, 
-    .slider .draggale.active {
+    .slider .draggable.active {
       border: 2px solid var(--color-highlight);
       outline: none;
       box-shadow: none;
+    }
+    .slider .draggable:hover .handle, 
+    .slider .draggable.active .handle {
+      -webkit-filter: grayscale(100%) brightness(5);
+      filter: grayscale(100%) brightness(5); 
     }
   }
   `,
@@ -235,6 +240,7 @@ class RdSlider extends CustomElement {
 
     this.control.isActive = true;
     this.control.hasUserInput = true;
+    this.shadowRoot.querySelector('.draggable').classList.add('active');
 
     this._rect = this.getBoundingClientRect();
     this.control.height = this.clientHeight;
@@ -266,6 +272,7 @@ class RdSlider extends CustomElement {
 
     this.control.isActive = true;
     this.control.hasUserInput = true;
+    this.shadowRoot.querySelector('.draggable').classList.add('active');
 
     this._rect = this.getBoundingClientRect();
     this.control.height = this.clientHeight;
@@ -315,6 +322,8 @@ class RdSlider extends CustomElement {
       return;
     }
 
+    this.shadowRoot.querySelector('.draggable').classList.add('active');
+
     if (this.control.orient === 'is--joystick') {
       this.control.x = (this.getBoundingClientRect().left - e.pageX) * -1;
       this.control.y = (this.getBoundingClientRect().top - e.pageY) * -1;
@@ -347,6 +356,7 @@ class RdSlider extends CustomElement {
   onMouseUp(e: MouseEvent | TouchEvent) {
     this.control.isActive = false;
     this.control.hasUserInput = false;
+    this.shadowRoot.querySelector('.draggable').classList.remove('active');
     // this._handle.style.opacity = '0.3';
 
     if ('ontouchstart' in document.documentElement) {

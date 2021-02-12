@@ -7,7 +7,8 @@ import { ButtonComponent } from './../../../dom';
   style: css`
     :host {
       width: 100%;
-      min-height: 32px;
+      min-height: 36px;
+      max-width: 178px;
       border: 2px solid var(--color-border);
       background-color: var(--color-bg);
       border-radius: 14px;
@@ -49,16 +50,20 @@ import { ButtonComponent } from './../../../dom';
       width: 32px;
       height: 32px;
     }
-    :host:hover,
-    :host:focus {
+    :host:hover {
       background-color: var(--color-bg);
       border: 2px solid var(--color-highlight);
     }
-    :host:focus,
-    :host:active {
+    :host:focus {
       outline: 0px;
       outline-offset: 0px;
       background-color: var(--color-bg);
+      border: 2px solid var(--color-highlight);
+    }
+    :host:active {
+      outline: 0px;
+      outline-offset: 0px;
+      background-color: var(--color-highlight);
       border: 2px solid var(--color-highlight);
     }
   `,

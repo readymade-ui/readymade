@@ -1,7 +1,13 @@
 <div class="testbed">
-  <button is="rd-button">
+  <div class="theme__toggle"></div>
+  <h3>Button</h3>
+  <button is="rd-button"></button>
+  <h3>Input</h3>
   <input is="rd-input">
-  <rd-slider type="vert" control="{{vertControl}}"></rd-slider>
-  <rd-slider type="hor" control="{{horControl}}"></rd-slider>
-  <rd-slider type="joystick" control="{{joyControl}}"></rd-slider>
+  <h3>Slider (Vertical)</h3>
+  <rd-slider type="vert" control="{{ vertControl }}"></rd-slider>
+  <h3>Slider (Horizontal)</h3>
+  <rd-slider type="hor" control="{{ horControl }}"></rd-slider>
+  <h3>Joystick</h3>
+  <rd-slider type="joystick" control="{{ joyControl }}"></rd-slider>
 </div>

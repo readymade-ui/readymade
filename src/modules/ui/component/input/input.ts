@@ -8,10 +8,10 @@ import { InputComponent } from './../../../dom';
     :host {
       background-color: var(--color-bg);
       border: 2px solid var(--color-border);
-      border-radius: 8px;
+      border-radius: 14px;
       color: var(--color-default);
       font-weight: 400;
-      min-width: 280px;
+      max-width: 280px;
       min-height: 32px;
       padding: 0px 14px;
     }
