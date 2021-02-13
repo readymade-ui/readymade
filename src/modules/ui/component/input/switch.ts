@@ -62,14 +62,15 @@ const ACTIVE_CLASS: string = 'active';
     :host:active {
       outline: 0px;
       outline-offset: 0px;
-      background-color: var(--color-highlight);
+      background-color: var(--color-selected);
       border: 2px solid var(--color-highlight);
     }
     .left,
     .right {
       display: inline-block;
-      width: 30px;
-      height: 30px;
+      transform: translateY(1px);
+      width: 28px;
+      height: 28px;
       border-radius: 14px;
     }
     .left.active,

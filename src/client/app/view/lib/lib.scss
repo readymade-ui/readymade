@@ -1,10 +1,5 @@
-@import url('https://fonts.googleapis.com/css?family=Major+Mono+Display|Source Sans Pro:100,300,400');
-
 :host {
   display: block;
-  background: #cfcfcf;
-  color: rgb(25, 25, 25);
-  font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
   font-size: 16px;
   padding: 20px;
@@ -15,6 +10,7 @@
   overflow-y: auto;
   -webkit-font-smoothing: auto;
   -moz-osx-font-smoothing: grayscale;
+  margin-bottom: 360px;
 }
 
 .theme__toggle {
@@ -31,8 +27,4 @@
   &.light {
     background: #000000;
   }
-}
-
-.grid {
-  display: grid;
 }

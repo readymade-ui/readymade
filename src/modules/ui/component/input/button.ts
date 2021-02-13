@@ -63,7 +63,7 @@ import { ButtonComponent } from './../../../dom';
     :host:active {
       outline: 0px;
       outline-offset: 0px;
-      background-color: var(--color-highlight);
+      background-color: var(--color-selected);
       border: 2px solid var(--color-highlight);
     }
   `,

@@ -55,6 +55,9 @@ export interface RdControl {
       transition: transform 0.175;
       pointer-events: none;
     }
+    .slider {
+      position: relative;
+    }
     .slider.small .draggable {
       border: none;
     }  
@@ -326,7 +329,7 @@ class RdSlider extends CustomElement {
 
     if (this.control.orient === 'is--joystick') {
       this.control.x = (this.getBoundingClientRect().left - e.pageX) * -1;
-      this.control.y = (this.getBoundingClientRect().top - e.pageY) * -1;
+      this.control.y = (this.offsetTop - e.pageY) * -1;
     }
 
     if (this.control.orient === 'is--hor') {
@@ -339,7 +342,7 @@ class RdSlider extends CustomElement {
     if (this.control.orient === 'is--vert') {
       this.control.x = 0;
       this.control.y =
-        (this.getBoundingClientRect().top - e.pageY) * -1 -
+        ((this.offsetTop - e.pageY) * -1 -
         this._handle.getBoundingClientRect().height / 2;
     }
 
@@ -513,7 +516,7 @@ class RdSlider extends CustomElement {
           this.scale(
             this.control.y,
             0,
-            this.control.height - 44,
+            this.control.height,
             this.control.min[1],
             this.control.max[1]
           )
