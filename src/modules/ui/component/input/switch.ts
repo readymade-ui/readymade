@@ -10,14 +10,13 @@ const ACTIVE_CLASS: string = 'active';
     :host {
       width: 100%;
       min-height: 36px;
-      min-width: 88px;
+      min-width: 72px;
       border: 2px solid var(--color-border);
       background-color: var(--color-bg);
       border-radius: 14px;
       color: var(--color-default);
+      padding: 1px 0px;
       cursor: pointer;
-      display: flex;
-      align-items: stretch;
     }
     :host {
       width: 22px;
@@ -68,14 +67,14 @@ const ACTIVE_CLASS: string = 'active';
     }
     .left,
     .right {
-      display: block;
-      width: calc(50% - 4px);
-      height: 100%;
-      border-radius: 50%;
+      display: inline-block;
+      width: 30px;
+      height: 30px;
+      border-radius: 14px;
     }
     .left.active,
     .right.active {
-      background-color: var(--color-highlight);
+      background-color: var(--color-selected);
     }
   `,
   template: html`
@@ -88,17 +87,25 @@ class RdSwitch extends ButtonComponent {
   constructor() {
     super();
   }
-  connectedCallback() {}
+  connectedCallback() {
+    this.setActive(false);
+  }
   @Listen('click')
-  setStatus() {
-    this.active = this.active === false ? true : false;
+  onClick(active: boolean) {
+    this.setActive(this.active === false ? true : false);
+  }
+  setActive(active: boolean) {
+    this.active = active;
+    this.updateView();
+  }
+  updateView() {
     if (this.active === true) {
-      this.querySelector('.left').classList.add(ACTIVE_CLASS);
-      this.querySelector('.right').classList.remove(ACTIVE_CLASS);
+      this.querySelector('.right').classList.add(ACTIVE_CLASS);
+      this.querySelector('.left').classList.remove(ACTIVE_CLASS);
     }
     if (this.active === false) {
-      this.querySelector('.left').classList.remove(ACTIVE_CLASS);
-      this.querySelector('.right').classList.add(ACTIVE_CLASS);
+      this.querySelector('.right').classList.remove(ACTIVE_CLASS);
+      this.querySelector('.left').classList.add(ACTIVE_CLASS);
     }
   }
 }
