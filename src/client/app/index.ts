@@ -16,7 +16,13 @@ export { AtomComponent } from './component/tree/atom';
 export { NodeComponent } from './component/tree/node';
 export { TreeComponent } from './component/tree/tree';
 // ui library
-export { RdButton, RdInput, RdSlider } from './../../modules/ui';
+export {
+  RdButton,
+  RdInput,
+  RdSlider,
+  RdSwitch,
+  RdSelect
+} from './../../modules/ui';
 // views
 export { HomeComponent } from './view/home';
 export { PerformanceTestComponent } from './view/perf';

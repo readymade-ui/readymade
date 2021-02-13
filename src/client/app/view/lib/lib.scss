@@ -28,3 +28,8 @@
     background: #000000;
   }
 }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}

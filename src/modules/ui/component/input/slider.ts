@@ -1,27 +1,5 @@
 import { Component, css, html, CustomElement, Listen } from './../../../core';
-
-export interface RdControl {
-  type: string;
-  name: string;
-  orient?: string;
-  min?: number | number[];
-  max?: number | number[];
-  isActive?: boolean;
-  hasUserInput?: boolean;
-  hasRemoteInput?: boolean;
-  currentValue?: number | number[] | boolean | string;
-  position?: string;
-  x?: number;
-  y?: number;
-  height?: number;
-  width?: number;
-  size?: string;
-  timeStamp?: Date | number;
-  snapToCenter?: boolean;
-  gridArea?: string;
-  placeSelf?: string;
-  transform?: string;
-}
+import { RdControl } from './../control';
 
 @Component({
   selector: 'rd-slider',
@@ -96,7 +74,7 @@ export interface RdControl {
     .slider.vert .draggable {
       width: 32px;
       height: 100%;
-      min-height: 240px;
+      min-height: 208px;
       border-radius: 14px;
     }
     .slider.vert .draggable .handle {
@@ -201,11 +179,11 @@ class RdSlider extends CustomElement {
     this.control.width = this.clientWidth;
 
     if (this.control.orient === 'is--hor') {
-      this.style.maxWidth = '240px';
+      this.style.maxWidth = '200px';
       this.control.currentValue = 0;
       this.control.position = 'translate(' + 0 + 'px' + ',' + 0 + 'px' + ')';
     } else if (this.control.orient === 'is--vert') {
-      this.style.height = '240px';
+      this.style.height = '200px';
       this.control.currentValue = 0;
       this.control.position = 'translate(' + 0 + 'px' + ',' + 0 + 'px' + ')';
     } else if (this.control.orient === 'is--joystick') {

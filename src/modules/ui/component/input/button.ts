@@ -6,9 +6,8 @@ import { ButtonComponent } from './../../../dom';
   custom: { extends: 'button' },
   style: css`
     :host {
-      width: 100%;
-      min-height: 36px;
-      max-width: 178px;
+      width: 72px;
+      height: 36px;
       border: 2px solid var(--color-border);
       background-color: var(--color-bg);
       border-radius: 14px;

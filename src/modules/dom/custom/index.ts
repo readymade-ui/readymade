@@ -1096,6 +1096,7 @@ export class SelectComponent extends HTMLSelectElement {
   public elementMeta: ElementMeta;
   constructor() {
     super();
+    attachStyle(this);
     if (this.bindEmitters) {
       this.bindEmitters();
     }
