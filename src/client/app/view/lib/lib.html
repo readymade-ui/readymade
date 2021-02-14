@@ -26,6 +26,15 @@
       </select>
     </div>
     <div class="pane">
+      <h3>Radio</h3>
+      <input type="radio" name="control" value="hue" is="rd-radio">
+      <label for="hue">Hue</label>
+      <input type="radio" name="control" value="saturation" is="rd-radio">
+      <label for="saturation">Saturation</label>
+      <input type="radio" name="control" value="brightness" is="rd-radio">
+      <label for="brightess">Brightness</label>
+    </div>
+    <div class="pane">
       <h3>Joystick</h3>
       <rd-slider type="joystick" control="{{ joyControl }}"></rd-slider>
     </div>

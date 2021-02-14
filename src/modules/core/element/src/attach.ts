@@ -29,13 +29,17 @@ function attachDOM(instance: any, options?: any) {
 function attachStyle(instance: any, options?: any) {
   const id = `${instance.elementMeta.selector}`;
   const closest = closestRoot(instance);
-  if (!document.getElementById(`${id}-x`)) {
-    const t = document.createElement('style');
-    t.setAttribute('id', `${id}-x`);
-    t.innerText = instance.elementMeta.style;
-    t.innerText = t.innerText.replace(/:host/gi, `[is=${id}]`);
-    closest.appendChild(t);
+  if (closest.tagName === 'HEAD' && document.getElementById(`${id}-x`)) {
+    return;
   }
+  if (closest.getElementById && closest.getElementById(`${id}-x`)) {
+    return;
+  }
+  const t = document.createElement('style');
+  t.setAttribute('id', `${id}-x`);
+  t.innerText = instance.elementMeta.style;
+  t.innerText = t.innerText.replace(/:host/gi, `[is=${id}]`);
+  closest.appendChild(t);
 }
 
 function define(instance: any, meta: ElementMeta) {

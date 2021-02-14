@@ -18,6 +18,7 @@ export { TreeComponent } from './component/tree/tree';
 // ui library
 export {
   RdButton,
+  RdRadioButton,
   RdInput,
   RdTextArea,
   RdSlider,
