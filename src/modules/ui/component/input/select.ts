@@ -9,7 +9,7 @@ import { SelectComponent } from './../../../dom';
       display: block;
       background-color: var(--color-bg);
       border: 2px solid var(--color-border);
-      border-radius: 14px;
+      border-radius: 1em;
       color: var(--color-default);
       font: var(--font-family);
       line-height: 1.3;

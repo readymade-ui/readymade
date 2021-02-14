@@ -1370,6 +1370,31 @@ export class TemplateComponent extends HTMLTemplateElement {
   public onDestroy?(): void;
 }
 
+export class TextAreaComponent extends HTMLTextAreaElement {
+  public emitter: EventDispatcher;
+  public elementMeta: ElementMeta;
+  constructor() {
+    super();
+    attachStyle(this);
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
+  }
+  public onInit?(): void;
+  public bindEmitters?(): void;
+  public bindListeners?(): void;
+  public bindState?(): void;
+  public setState?(property: string, model: any): void;
+  public onUpdate?(): void;
+  public onDestroy?(): void;
+}
+
 export class TimeComponent extends HTMLTimeElement {
   public emitter: EventDispatcher;
   public elementMeta: ElementMeta;

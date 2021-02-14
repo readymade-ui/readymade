@@ -13,7 +13,7 @@ const ACTIVE_CLASS: string = 'active';
       min-width: 72px;
       border: 2px solid var(--color-border);
       background-color: var(--color-bg);
-      border-radius: 14px;
+      border-radius: 1em;
       color: var(--color-default);
       padding: 1px 0px;
       cursor: pointer;
@@ -75,7 +75,7 @@ const ACTIVE_CLASS: string = 'active';
     }
     .left.active,
     .right.active {
-      background-color: var(--color-selected);
+      background-color: var(--color-border);
     }
   `,
   template: html`
