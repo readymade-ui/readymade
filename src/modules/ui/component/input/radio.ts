@@ -31,8 +31,8 @@ import { InputComponent } from './../../../dom';
     }
     :host:checked + *::before {
       background: radial-gradient(
-        var(--color-highlight) 0%,
-        var(--color-highlight) 50%,
+        var(--color-border) 0%,
+        var(--color-border) 50%,
         transparent 50%,
         transparent
       );
@@ -40,7 +40,6 @@ import { InputComponent } from './../../../dom';
     }
     :host:checked + * {
       color: var(--color-highlight);
-      font-weight: bold;
     }
   `
 })

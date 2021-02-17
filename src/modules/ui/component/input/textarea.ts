@@ -13,7 +13,6 @@ import { TextAreaComponent } from './../../../dom';
       font: var(--font-family);
       outline: none;
       overflow: auto;
-      max-width: 280px;
       padding: 1em;
       -moz-appearance: none;
       -webkit-appearance: none;
@@ -28,6 +27,9 @@ import { TextAreaComponent } from './../../../dom';
       border: 2px solid var(--color-highlight);
       outline: none;
       box-shadow: none;
+    }
+    ::-webkit-resizer {
+      display: none;
     }
   `
 })

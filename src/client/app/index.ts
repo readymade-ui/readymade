@@ -19,6 +19,7 @@ export { TreeComponent } from './component/tree/tree';
 export {
   RdButton,
   RdRadioButton,
+  RdCheckBox,
   RdInput,
   RdTextArea,
   RdSlider,
