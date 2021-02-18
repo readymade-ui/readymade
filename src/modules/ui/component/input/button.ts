@@ -17,7 +17,7 @@ import { ButtonComponent } from './../../../dom';
       align-items: center;
       justify-content: center;
     }
-    :host .rd__icon {
+    :host .icon {
       display: block;
       width: 22px;
       height: 22px;
@@ -26,7 +26,7 @@ import { ButtonComponent } from './../../../dom';
       min-height: 18px;
       border-radius: 8px;
     }
-    :host.is--small .rd__icon {
+    :host.is--small .icon {
       display: inline-block;
       width: 12px;
       height: 12px;
@@ -35,7 +35,7 @@ import { ButtonComponent } from './../../../dom';
       min-height: 32px;
       border-radius: 14px;
     }
-    :host.is--medium .rd__icon {
+    :host.is--medium .icon {
       display: inline-block;
       width: 22px;
       height: 22px;
@@ -44,7 +44,7 @@ import { ButtonComponent } from './../../../dom';
       min-height: 44px;
       border-radius: 18px;
     }
-    :host.is--large .rd__icon {
+    :host.is--large .icon {
       display: inline-block;
       width: 32px;
       height: 32px;
@@ -67,7 +67,7 @@ import { ButtonComponent } from './../../../dom';
     }
   `,
   template: html`
-    <span class="button__icon"></span>
+    <span class="icon"></span>
   `
 })
 class RdButton extends ButtonComponent {

@@ -16,8 +16,7 @@ import { RdControl } from './../control';
       display: block;
       z-index: 1000;
       background-color: var(--color-bg);
-      border: 2px solid var(--color-border); 
-      cursor: pointer;
+      border: 2px solid var(--color-border);
     }
     .draggable .range {
       width: 100%;
