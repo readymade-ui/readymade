@@ -6,30 +6,21 @@ import { InputComponent } from './../../../dom';
   custom: { extends: 'input' },
   style: css`
     :host {
-      opacity: 0;
-      width: 1.25em;
-      height: 1.25em;
-      margin: 0;
-      transform: translateX(1.65em) translateY(0.25em);
+      -moz-appearance: none;
+      -webkit-appearance: none;
+      appearance: none;
     }
-    :host + *::before {
+    :host:before {
       content: '';
-      display: inline-block;
-      vertical-align: bottom;
-      width: 1em;
-      height: 1em;
-      margin-right: 0.5rem;
-      border-radius: 50%;
+      display: block;
+      width: 16px;
+      height: 16px;
       border: 2px solid var(--color-border);
+      border-radius: 50%;
+      background: var(--color-bg);
+      transform: translateY(4px);
     }
-    :host:hover,
-    :host:focus,
-    :host:active {
-      border: 2px solid var(--color-highlight);
-      outline: none;
-      box-shadow: none;
-    }
-    :host:checked + *::before {
+    :host:checked:before {
       background: radial-gradient(
         var(--color-border) 0%,
         var(--color-border) 50%,
@@ -38,8 +29,15 @@ import { InputComponent } from './../../../dom';
       );
       border-color: var(--color-highlight);
     }
-    :host:checked + * {
-      color: var(--color-highlight);
+    :host:focus,
+    :host:active {
+      outline: 0px;
+      outline-offset: 0px;
+    }
+    :host:hover:before,
+    :host:focus:before,
+    :host:active:before {
+      border: 2px solid var(--color-highlight);
     }
   `
 })
