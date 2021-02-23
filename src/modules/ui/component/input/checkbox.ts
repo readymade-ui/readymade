@@ -24,6 +24,11 @@ import { InputComponent } from './../../../dom';
       background-repeat: no-repeat;
       background-position: center;
     }
+    :host:focus,
+    :host:active {
+      outline: 0px;
+      outline-offset: 0px;
+    }
     :host:hover:before,
     :host:focus:before,
     :host:active:before {

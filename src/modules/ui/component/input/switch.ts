@@ -38,6 +38,7 @@ import { InputComponent } from './../../../dom';
     :host:active:before {
       border: 2px solid var(--color-highlight);
     }
+    :host:focus,
     :host:active {
       outline: 0px;
       outline-offset: 0px;
