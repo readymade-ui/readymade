@@ -20,6 +20,7 @@ export {
   RdButton,
   RdRadioButton,
   RdCheckBox,
+  RdFormCheckBox,
   RdInput,
   RdTextArea,
   RdSlider,

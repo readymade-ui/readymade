@@ -11,7 +11,10 @@ export interface StateChange {
   };
 }
 
-export type OnStateChange = (change: StateChange, cb: (change: StateChange) => void) => void;
+export type OnStateChange = (
+  change: StateChange,
+  cb: (change: StateChange) => void
+) => void;
 
 export type SetState = (property: string, model: any) => void;
 
@@ -87,7 +90,10 @@ export class CustomElement extends HTMLElement {
   public elementMeta: ElementMeta;
   constructor() {
     super();
-    attachShadow(this, { mode: this.elementMeta.mode || 'open' });
+    attachShadow(this, {
+      mode: this.elementMeta.mode || 'open',
+      delegatesFocus: this.elementMeta.delegatesFocus || false
+    });
     if (this.bindEmitters) {
       this.bindEmitters();
     }
@@ -105,4 +111,14 @@ export class CustomElement extends HTMLElement {
   public setState?(property: string, model: any): void;
   public onUpdate?(): void;
   public onDestroy?(): void;
+}
+
+export class FormElement extends CustomElement {
+  static get formAssociated() {
+    return true;
+  }
+  constructor() {
+    super();
+    this._internals = this.attachInternals();
+  }
 }
