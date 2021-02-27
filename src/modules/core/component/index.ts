@@ -119,6 +119,6 @@ export class FormElement extends CustomElement {
   }
   constructor() {
     super();
-    this._internals = this.attachInternals();
+    this.$internals = this.attachInternals();
   }
 }

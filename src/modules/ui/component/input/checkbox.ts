@@ -1,50 +1,8 @@
 import { Component, html, css, FormElement } from './../../../core';
-import { InputComponent } from './../../../dom';
-
-@Component({
-  selector: 'rd-checkbox',
-  custom: { extends: 'input' },
-  style: css`
-    :host {
-      -moz-appearance: none;
-      -webkit-appearance: none;
-      appearance: none;
-    }
-    :host:before {
-      content: '';
-      display: block;
-      width: 24px;
-      height: 24px;
-      border: 2px solid var(--color-border);
-      border-radius: 6px;
-      background: var(--color-bg);
-    }
-    :host:checked:before {
-      background-image: var(--icon-check);
-      background-repeat: no-repeat;
-      background-position: center;
-    }
-    :host:focus,
-    :host:active {
-      outline: 0px;
-      outline-offset: 0px;
-    }
-    :host:hover:before,
-    :host:focus:before,
-    :host:active:before {
-      border: 2px solid var(--color-highlight);
-    }
-  `
-})
-class RdCheckBox extends InputComponent {
-  constructor() {
-    super();
-  }
-}
 
 @Component({
   delegatesFocus: true,
-  selector: 'rd-formcheckbox',
+  selector: 'rd-checkbox',
   style: css`
     :host {
       display: inline-block;
@@ -87,13 +45,13 @@ class RdCheckBox extends InputComponent {
     <input type="checkbox" />
   `
 })
-class RdFormCheckBox extends FormElement {
+class RdCheckBox extends FormElement {
   constructor() {
     super();
   }
 
   get form() {
-    return this._internals.form;
+    return this.$internals.form;
   }
 
   get name() {
@@ -105,27 +63,27 @@ class RdFormCheckBox extends FormElement {
   }
 
   get validity() {
-    return this._internals.validity;
+    return this.$internals.validity;
   }
 
   get validationMessage() {
-    return this._internals.validationMessage;
+    return this.$internals.validationMessage;
   }
 
   get willValidate() {
-    return this._internals.willValidate;
+    return this.$internals.willValidate;
   }
 
   get checked() {
-    return this._inputElement.checked;
+    return this.$elem.checked;
   }
 
   set checked(value) {
-    this._inputElement.checked = value;
+    this.$elem.checked = value;
   }
 
-  get _inputElement() {
+  get $elem() {
     return this.shadowRoot.querySelector('input');
   }
 }
-export { RdCheckBox, RdFormCheckBox };
+export { RdCheckBox };
