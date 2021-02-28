@@ -25,6 +25,12 @@ class LibraryComponent extends CustomElement {
     this.shadowRoot.querySelector('rd-checkbox').onchange = (ev: Event) => {
       console.log(ev.target.checked);
     };
+    this.shadowRoot.querySelector('rd-input').onchange = (ev: Event) => {
+      console.log(ev.target.value);
+    };
+    this.shadowRoot.querySelector('rd-input').oninput = (ev: Event) => {
+      console.log(ev.target.value);
+    };
   }
   @State()
   public getState() {
