@@ -1,8 +1,8 @@
 import { Component, html, css, FormElement } from './../../../core';
 
 @Component({
-  delegatesFocus: true,
   selector: 'rd-checkbox',
+  delegatesFocus: true,
   style: css`
     :host {
       display: inline-block;
@@ -50,16 +50,16 @@ class RdCheckBox extends FormElement {
     super();
   }
 
+  get type() {
+    return 'checkbox';
+  }
+
   get form() {
     return this.$internals.form;
   }
 
   get name() {
     return this.getAttribute('name');
-  }
-
-  get type() {
-    return 'checkbox';
   }
 
   get validity() {

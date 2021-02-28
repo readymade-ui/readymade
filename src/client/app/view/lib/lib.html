@@ -27,12 +27,14 @@
     </div>
     <div class="pane">
       <h3>Radio</h3>
-      <input type="radio" name="control" value="hue" is="rd-radio">
-      <label for="hue">Hue</label>
-      <input type="radio" name="control" value="saturation" is="rd-radio">
-      <label for="saturation">Saturation</label>
-      <input type="radio" name="control" value="brightness" is="rd-radio">
-      <label for="brightess">Brightness</label>
+      <rd-radiogroup>
+        <input type="radio" name="control" value="hue">
+        <label for="hue">Hue</label>
+        <input type="radio" name="control" value="saturation">
+        <label for="saturation">Saturation</label>
+        <input type="radio" name="control" value="brightness">
+        <label for="brightess">Brightness</label>
+      </rd-radiogroup>
     </div>
     <div class="pane">
       <h3>Check Box</h3>

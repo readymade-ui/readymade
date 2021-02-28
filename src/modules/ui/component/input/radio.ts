@@ -1,16 +1,18 @@
-import { Component, css } from './../../../core';
-import { InputComponent } from './../../../dom';
+import { Component, CustomElement, html, css } from './../../../core';
 
 @Component({
-  selector: 'rd-radio',
-  custom: { extends: 'input' },
+  selector: 'rd-radiogroup',
   style: css`
     :host {
+      display: inline-block;
+    }
+    ::slotted(input[type='radio']) {
       -moz-appearance: none;
       -webkit-appearance: none;
       appearance: none;
+      margin: 0;
     }
-    :host:before {
+    ::slotted(input[type='radio']):before {
       content: '';
       display: block;
       width: 16px;
@@ -20,7 +22,7 @@ import { InputComponent } from './../../../dom';
       background: var(--color-bg);
       transform: translateY(4px);
     }
-    :host:checked:before {
+    ::slotted(input[type='radio']:checked):before {
       background: radial-gradient(
         var(--color-border) 0%,
         var(--color-border) 50%,
@@ -29,22 +31,34 @@ import { InputComponent } from './../../../dom';
       );
       border-color: var(--color-highlight);
     }
-    :host:focus,
-    :host:active {
+    ::slotted(input[type='radio']:focus),
+    ::slotted(input[type='radio']:active) {
       outline: 0px;
       outline-offset: 0px;
     }
-    :host:hover:before,
-    :host:focus:before,
-    :host:active:before {
+    ::slotted(input[type='radio']:hover):before,
+    ::slotted(input[type='radio']:focus):before,
+    ::slotted(input[type='radio']:active):before {
       border: 2px solid var(--color-highlight);
     }
+  `,
+  template: html`
+    <slot></slot>
   `
 })
-class RdRadioButton extends InputComponent {
+class RdRadioGroup extends CustomElement {
   constructor() {
     super();
   }
+  connectedCallback() {
+    Array.from(this.shadowRoot.querySelector('slot').assignedNodes())
+      .filter(elem => elem.tagName === 'INPUT' && elem.type === 'radio')
+      .forEach(elem => (elem.onchange = this.onChange));
+  }
+  onChange(ev: Event) {
+    // TODO: hook into event pattern to notify outside world of selection
+    console.log(ev.target.value);
+  }
 }
 
-export { RdRadioButton };
+export { RdRadioGroup };
