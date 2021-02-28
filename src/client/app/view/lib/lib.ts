@@ -31,6 +31,12 @@ class LibraryComponent extends CustomElement {
     this.shadowRoot.querySelector('rd-input').oninput = (ev: Event) => {
       console.log(ev.target.value);
     };
+    this.shadowRoot.querySelector('rd-textarea').onchange = (ev: Event) => {
+      console.log(ev.target.value);
+    };
+    this.shadowRoot.querySelector('rd-textarea').oninput = (ev: Event) => {
+      console.log(ev.target.value);
+    };
   }
   @State()
   public getState() {
