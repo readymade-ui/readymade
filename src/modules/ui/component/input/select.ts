@@ -1,11 +1,20 @@
-import { Component, css, html } from './../../../core';
-import { SelectComponent } from './../../../dom';
+import {
+  Component,
+  CustomElement,
+  FormElement,
+  css,
+  html
+} from './../../../core';
 
 @Component({
   selector: 'rd-select',
-  custom: { extends: 'select' },
+  delegatesFocus: true,
   style: css`
     :host {
+      display: inline-block;
+      outline: none;
+    }
+    ::slotted(select) {
       display: block;
       background-color: var(--color-bg);
       border: 2px solid var(--color-border);
@@ -26,27 +35,65 @@ import { SelectComponent } from './../../../dom';
       background-position: right 0.7em top 50%, 0 0;
       background-size: 10px 9px;
     }
-    :host:hover,
-    :host:focus,
-    :host:active {
+    ::slotted(select:hover),
+    ::slotted(select:focus),
+    ::slotted(select:active) {
       border: 2px solid var(--color-highlight);
       outline: none;
       box-shadow: none;
     }
-    *[dir='rtl'] :host,
-    :root:lang(ar) :host,
-    :root:lang(iw) :host {
+    *[dir='rtl'] ::slotted(select),
+    :root:lang(ar) ::slotted(select),
+    :root:lang(iw) ::slotted(select) {
       background-position: left 0.7em top 50%, 0 0;
       padding: 0.3em 0.8em 0.3em 1.4em;
     }
-    :host::-ms-expand {
+    ::slotted(select::-ms-expand) {
       display: none;
     }
+  `,
+  template: html`
+    <slot></slot>
   `
 })
-class RdSelect extends SelectComponent {
+class RdSelect extends FormElement {
   constructor() {
     super();
+  }
+
+  get form() {
+    return this.$internals.form;
+  }
+
+  get name() {
+    return this.getAttribute('name');
+  }
+
+  get validity() {
+    return this.$internals.validity;
+  }
+
+  get validationMessage() {
+    return this.$internals.validationMessage;
+  }
+
+  get willValidate() {
+    return this.$internals.willValidate;
+  }
+
+  get value(): boolean {
+    return this.$elem.value;
+  }
+
+  set value(value) {
+    this.$elem.value = value;
+  }
+
+  get $elem() {
+    return this.shadowRoot
+      .querySelector('slot')
+      .assignedNodes()
+      .filter(elem => elem.tagName === 'SELECT')[0];
   }
 }
 

@@ -55,6 +55,9 @@ class LibraryComponent extends CustomElement {
       .addEventListener('change', (ev: Event) => {
         console.log(ev.target.value);
       });
+    this.shadowRoot.querySelector('rd-select').onchange = (ev: Event) => {
+      console.log(ev.target.value);
+    };
   }
   @State()
   public getState() {
