@@ -1,4 +1,4 @@
-import { Component, html, css, FormElement } from './../../../core';
+import { Component, Emitter, FormElement, html, css } from './../../../core';
 
 @Component({
   selector: 'rd-checkbox',
@@ -50,6 +50,27 @@ class RdCheckBox extends FormElement {
     super();
   }
 
+  static get observedAttributes() {
+    return ['checked'];
+  }
+
+  attributeChangedCallback(name: string, old: string, next: string) {
+    switch (name) {
+      case 'checked':
+        this.checked = next === 'true' || next === '' ? true : false;
+        break;
+    }
+  }
+
+  @Emitter('change')
+  connectedCallback() {
+    this.$elem.onchange = (ev: Event) => {
+      if (this.onchange) {
+        this.onchange(ev);
+      }
+    };
+  }
+
   get type() {
     return 'checkbox';
   }
@@ -74,7 +95,7 @@ class RdCheckBox extends FormElement {
     return this.$internals.willValidate;
   }
 
-  get checked() {
+  get checked(): boolean {
     return this.$elem.checked;
   }
 

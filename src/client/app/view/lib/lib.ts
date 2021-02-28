@@ -22,6 +22,9 @@ class LibraryComponent extends CustomElement {
     this.shadowRoot.querySelector('rd-radiogroup').onchange = (ev: Event) => {
       console.log(ev.target.value);
     };
+    this.shadowRoot.querySelector('rd-checkbox').onchange = (ev: Event) => {
+      console.log(ev.target.checked);
+    };
   }
   @State()
   public getState() {
