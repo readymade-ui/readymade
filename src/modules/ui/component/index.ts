@@ -4,5 +4,5 @@ export { RdInput } from './input/input';
 export { RdRadioGroup } from './input/radio';
 export { RdCheckBox } from './input/checkbox';
 export { RdTextArea } from './input/textarea';
-export { RdSelect } from './input/select';
+export { RdDropdown } from './input/select';
 export { RdSlider } from './input/slider';

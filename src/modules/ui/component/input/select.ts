@@ -7,7 +7,7 @@ import {
 } from './../../../core';
 
 @Component({
-  selector: 'rd-select',
+  selector: 'rd-dropdown',
   delegatesFocus: true,
   style: css`
     :host {
@@ -56,7 +56,7 @@ import {
     <slot></slot>
   `
 })
-class RdSelect extends FormElement {
+class RdDropdown extends FormElement {
   constructor() {
     super();
   }
@@ -97,4 +97,4 @@ class RdSelect extends FormElement {
   }
 }
 
-export { RdSelect };
+export { RdDropdown };
