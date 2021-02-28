@@ -50,15 +50,6 @@ class RdRadioGroup extends CustomElement {
   constructor() {
     super();
   }
-  connectedCallback() {
-    Array.from(this.shadowRoot.querySelector('slot').assignedNodes())
-      .filter(elem => elem.tagName === 'INPUT' && elem.type === 'radio')
-      .forEach(elem => (elem.onchange = this.onChange));
-  }
-  onChange(ev: Event) {
-    // TODO: hook into event pattern to notify outside world of selection
-    console.log(ev.target.value);
-  }
 }
 
 export { RdRadioGroup };

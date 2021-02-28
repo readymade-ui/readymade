@@ -86,4 +86,5 @@ class RdCheckBox extends FormElement {
     return this.shadowRoot.querySelector('input');
   }
 }
+
 export { RdCheckBox };

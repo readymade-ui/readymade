@@ -19,6 +19,9 @@ class LibraryComponent extends CustomElement {
       .addEventListener('click', () => {
         this.toggleTheme();
       });
+    this.shadowRoot.querySelector('rd-radiogroup').onchange = (ev: Event) => {
+      console.log(ev.target.value);
+    };
   }
   @State()
   public getState() {
