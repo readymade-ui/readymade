@@ -19,27 +19,42 @@ class LibraryComponent extends CustomElement {
       .addEventListener('click', () => {
         this.toggleTheme();
       });
-    this.shadowRoot.querySelector('rd-radiogroup').onchange = (ev: Event) => {
-      console.log(ev.target.value);
-    };
-    this.shadowRoot.querySelector('rd-checkbox').onchange = (ev: Event) => {
-      console.log(ev.target.checked);
-    };
-    this.shadowRoot.querySelector('rd-switch').onchange = (ev: Event) => {
-      console.log(ev.target.checked);
-    };
-    this.shadowRoot.querySelector('rd-input').onchange = (ev: Event) => {
-      console.log(ev.target.value);
-    };
-    this.shadowRoot.querySelector('rd-input').oninput = (ev: Event) => {
-      console.log(ev.target.value);
-    };
-    this.shadowRoot.querySelector('rd-textarea').onchange = (ev: Event) => {
-      console.log(ev.target.value);
-    };
-    this.shadowRoot.querySelector('rd-textarea').oninput = (ev: Event) => {
-      console.log(ev.target.value);
-    };
+    this.shadowRoot
+      .querySelector('rd-radiogroup')
+      .addEventListener('change', (ev: Event) => {
+        console.log(ev.target.value);
+      });
+
+    this.shadowRoot
+      .querySelector('rd-switch')
+      .addEventListener('change', (ev: Event) => {
+        console.log(ev.target.checked);
+      });
+    this.shadowRoot
+      .querySelector('rd-checkbox')
+      .addEventListener('change', (ev: Event) => {
+        console.log(ev.target.checked);
+      });
+    this.shadowRoot
+      .querySelector('rd-input')
+      .addEventListener('input', (ev: Event) => {
+        console.log(ev.target.value);
+      });
+    this.shadowRoot
+      .querySelector('rd-input')
+      .addEventListener('change', (ev: Event) => {
+        console.log(ev.target.value);
+      });
+    this.shadowRoot
+      .querySelector('rd-textarea')
+      .addEventListener('input', (ev: Event) => {
+        console.log(ev.target.value);
+      });
+    this.shadowRoot
+      .querySelector('rd-textarea')
+      .addEventListener('change', (ev: Event) => {
+        console.log(ev.target.value);
+      });
   }
   @State()
   public getState() {

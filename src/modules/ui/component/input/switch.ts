@@ -1,4 +1,11 @@
-import { Component, Emitter, FormElement, html, css } from './../../../core';
+import {
+  Component,
+  Emitter,
+  EventDispatcher,
+  FormElement,
+  html,
+  css
+} from './../../../core';
 
 @Component({
   selector: 'rd-switch',
@@ -58,6 +65,7 @@ import { Component, Emitter, FormElement, html, css } from './../../../core';
   `
 })
 class RdSwitch extends FormElement {
+  private emitter: EventDispatcher;
   constructor() {
     super();
   }
@@ -77,6 +85,13 @@ class RdSwitch extends FormElement {
   @Emitter('change')
   connectedCallback() {
     this.$elem.onchange = (ev: Event) => {
+      this.emitter.emit(
+        new CustomEvent('change', {
+          bubbles: true,
+          composed: true,
+          detail: 'composed'
+        })
+      );
       if (this.onchange) {
         this.onchange(ev);
       }
