@@ -60,7 +60,7 @@ class LibraryComponent extends CustomElement {
     this.shadowRoot.querySelector('[type="hor"]').oninput = (ev: Event) => {
       console.log(ev.detail.currentValue);
     };
-    this.shadowRoot.querySelector('form').onsubmit = (ev: Event) => {
+    this.shadowRoot.querySelector('[type="submit"]').onclick = (ev: Event) => {
       ev.preventDefault();
       // const items = Array.from();
       const values = Array.from(

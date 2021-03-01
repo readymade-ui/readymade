@@ -294,7 +294,7 @@ class RdSlider extends CustomElement {
 
     if (this.control.hasUserInput && this.control.isActive) {
       this.setPosition(this.control.x, this.control.y);
-      this.setValue();
+      this.mapValue();
       this.control.timeStamp = e.timeStamp;
       this.onEvent();
     }
@@ -328,7 +328,7 @@ class RdSlider extends CustomElement {
 
     if (this.control.hasUserInput && this.control.isActive) {
       this.setPosition(this.control.x, this.control.y);
-      this.setValue();
+      this.mapValue();
       this.control.timeStamp = e.timeStamp;
       this.onEvent();
     }
@@ -468,7 +468,7 @@ class RdSlider extends CustomElement {
     return val;
   }
 
-  setValue() {
+  mapValue() {
     if (this.control.orient === 'is--hor') {
       this.control.currentValue = this.clampSlider(
         this.scale(
