@@ -90,6 +90,9 @@ class RdButton extends FormElement {
       case 'type':
         this.type = next;
         break;
+      case 'value':
+        this.value = next;
+        break;
     }
   }
 
