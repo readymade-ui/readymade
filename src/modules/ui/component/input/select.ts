@@ -57,6 +57,7 @@ import {
   `
 })
 class RdDropdown extends FormElement {
+  public value: any;
   constructor() {
     super();
   }

@@ -48,6 +48,7 @@ import {
 })
 class RdTextArea extends FormElement {
   private emitter: EventDispatcher;
+  public value: any;
   constructor() {
     super();
   }

@@ -39,6 +39,7 @@ import {
 })
 class RdInput extends FormElement {
   private emitter: EventDispatcher;
+  public value: any;
   constructor() {
     super();
   }

@@ -1,4 +1,4 @@
-import { Component, CustomElement, html, css } from './../../../core';
+import { Component, CustomElement, Emitter, html, css } from './../../../core';
 
 @Component({
   selector: 'rd-radiogroup',

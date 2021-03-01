@@ -1,25 +1,26 @@
 <div class="testbed">
   <div class="theme__toggle"></div>
   <div class="grid">
+    <form>
     <div class="pane">
       <h3>Button</h3>
       <rd-button></rd-button>
     </div>
     <div class="pane">
       <h3>Switch</h3>
-      <rd-switch checked></rd-switch>
+      <rd-switch class="form__item"></rd-switch>
     </div>
     <div class="pane">
       <h3>Input</h3>
-      <rd-input></rd-input>
+      <rd-input class="form__item"></rd-input>
     </div>
     <div class="pane">
       <h3>Text Area</h3>
-      <rd-textarea></textarea>
+      <rd-textarea class="form__item"></textarea>
     </div>
     <div class="pane">
       <h3>Select</h3>
-      <rd-dropdown>
+      <rd-dropdown class="form__item">
         <select>
           <option>Option 1</option>
           <option>Option 2</option>
@@ -29,7 +30,7 @@
     </div>
     <div class="pane">
       <h3>Radio</h3>
-      <rd-radiogroup>
+      <rd-radiogroup class="form__item">
         <input type="radio" name="control" value="hue">
         <label for="hue">Hue</label>
         <input type="radio" name="control" value="saturation">
@@ -40,20 +41,23 @@
     </div>
     <div class="pane">
       <h3>Check Box</h3>
-      <rd-checkbox checked></rd-checkbox>
+      <rd-checkbox class="form__item" checked></rd-checkbox>
     </div>
     <div class="pane">
       <h3>Joystick</h3>
-      <rd-slider type="joystick" control="{{ joyControl }}"></rd-slider>
+      <rd-slider class="form__item" type="joystick" control="{{ joyControl }}"></rd-slider>
     </div>
     <div class="pane">
       <h3>Slider (Vertical)</h3>
-      <rd-slider type="vert" control="{{ vertControl }}"></rd-slider>
+      <rd-slider class="form__item" type="vert" control="{{ vertControl }}"></rd-slider>
     </div>
     <div class="pane">
       <h3>Slider (Horizontal)</h3>
-      <rd-slider type="hor" control="{{ horControl }}"></rd-slider>
+      <rd-slider class="form__item" type="hor" control="{{ horControl }}"></rd-slider>
     </div>
+    <input type="submit">
+    </form>
+    
   </div>
   <div class="spacer"></div>
 </div>

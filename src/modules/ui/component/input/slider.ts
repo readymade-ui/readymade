@@ -1,4 +1,4 @@
-import { Component, css, html, CustomElement, Listen } from './../../../core';
+import { Component, css, html, CustomElement, Emitter, EventDispatcher, Listen } from './../../../core';
 import { RdControl } from './../control';
 
 @Component({
@@ -140,6 +140,8 @@ class RdSlider extends CustomElement {
   private _animation: Animation;
   private _lastPos: any;
   public control: RdControl;
+  private emitter: EventDispatcher;
+  public value: number[] | number;
 
   constructor() {
     super();
@@ -166,6 +168,7 @@ class RdSlider extends CustomElement {
     }
   }
 
+  @Emitter('input')
   onSliderInit() {
     const node: HTMLElement = <HTMLElement>(
       (<any>this.shadowRoot.querySelector('.handle'))
@@ -365,7 +368,17 @@ class RdSlider extends CustomElement {
     this.onMouseUp(e);
   }
 
-  onEvent() {}
+  onEvent() {
+    const event = new CustomEvent('input', {
+      bubbles: true,
+      composed: true,
+      detail: this.control
+    });
+    this.emitter.emit(event);
+    if (this.onchange) {
+      this.onchange(event);
+    }
+  }
 
   // Get Center of Circle
   getCenter(xRange: number[], yRange: number[]) {
@@ -564,6 +577,11 @@ class RdSlider extends CustomElement {
       this.setActualPosition(this.control.position);
     }
   }
+
+  get value() {
+    return this.control.currentValue;
+  }
+
 }
 
 export { RdSlider };

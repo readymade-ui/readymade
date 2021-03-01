@@ -66,6 +66,7 @@ import {
 })
 class RdSwitch extends FormElement {
   private emitter: EventDispatcher;
+  public value: boolean | string;
   constructor() {
     super();
   }
@@ -85,15 +86,16 @@ class RdSwitch extends FormElement {
   @Emitter('change')
   connectedCallback() {
     this.$elem.onchange = (ev: Event) => {
-      this.emitter.emit(
-        new CustomEvent('change', {
-          bubbles: true,
-          composed: true,
-          detail: 'composed'
-        })
-      );
       if (this.onchange) {
         this.onchange(ev);
+      } else {
+        this.emitter.emit(
+          new CustomEvent('change', {
+            bubbles: true,
+            composed: true,
+            detail: 'composed'
+          })
+        );
       }
     };
   }
@@ -128,6 +130,16 @@ class RdSwitch extends FormElement {
 
   set checked(value) {
     this.$elem.checked = value;
+  }
+
+  get value(): boolean {
+    return this.$elem.checked;
+  }
+
+  set value(value) {
+    if (typeof value === 'boolean') {
+      this.$elem.checked = value;
+    }
   }
 
   get $elem() {

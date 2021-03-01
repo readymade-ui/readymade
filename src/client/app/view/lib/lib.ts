@@ -19,48 +19,59 @@ class LibraryComponent extends CustomElement {
       .addEventListener('click', () => {
         this.toggleTheme();
       });
-    this.shadowRoot
-      .querySelector('rd-radiogroup')
-      .addEventListener('change', (ev: Event) => {
-        console.log(ev.target.value);
-      });
+    this.shadowRoot.querySelector('rd-radiogroup').onchange = (ev: Event) => {
+      console.log(ev.target.value);
+    };
 
-    this.shadowRoot
-      .querySelector('rd-switch')
-      .addEventListener('change', (ev: Event) => {
-        console.log(ev.target.checked);
-      });
-    this.shadowRoot
-      .querySelector('rd-checkbox')
-      .addEventListener('change', (ev: Event) => {
-        console.log(ev.target.checked);
-      });
-    this.shadowRoot
-      .querySelector('rd-input')
-      .addEventListener('input', (ev: Event) => {
-        console.log(ev.target.value);
-      });
-    this.shadowRoot
-      .querySelector('rd-input')
-      .addEventListener('change', (ev: Event) => {
-        console.log(ev.target.value);
-      });
-    this.shadowRoot
-      .querySelector('rd-textarea')
-      .addEventListener('input', (ev: Event) => {
-        console.log(ev.target.value);
-      });
-    this.shadowRoot
-      .querySelector('rd-textarea')
-      .addEventListener('change', (ev: Event) => {
-        console.log(ev.target.value);
-      });
+    this.shadowRoot.querySelector('rd-switch').onchange = (ev: Event) => {
+      console.log(ev.target.checked);
+    };
+    this.shadowRoot.querySelector('rd-checkbox').onchange = (ev: Event) => {
+      console.log(ev.target.checked);
+    };
+    this.shadowRoot.querySelector('rd-input').oninput = (ev: Event) => {
+      console.log(ev.target.value);
+    };
+    this.shadowRoot.querySelector('rd-input').onchange = (ev: Event) => {
+      console.log(ev.target.value);
+    };
+    this.shadowRoot.querySelector('rd-textarea').oninput = (ev: Event) => {
+      console.log(ev.target.value);
+    };
+    this.shadowRoot.querySelector('rd-textarea').onchange = (ev: Event) => {
+      console.log(ev.target.value);
+    };
     this.shadowRoot.querySelector('rd-dropdown').onchange = (ev: Event) => {
       console.log(ev.target.value);
     };
 
     this.shadowRoot.querySelector('rd-button').onclick = (ev: Event) => {
       console.log(ev);
+    };
+
+    this.shadowRoot.querySelector('[type="joystick"]').oninput = (
+      ev: Event
+    ) => {
+      console.log(ev.detail.currentValue);
+    };
+    this.shadowRoot.querySelector('[type="vert"]').oninput = (ev: Event) => {
+      console.log(ev.detail.currentValue);
+    };
+    this.shadowRoot.querySelector('[type="hor"]').oninput = (ev: Event) => {
+      console.log(ev.detail.currentValue);
+    };
+    this.shadowRoot.querySelector('form').onsubmit = (ev: Event) => {
+      ev.preventDefault();
+      // const items = Array.from();
+      const values = Array.from(
+        this.shadowRoot.querySelectorAll('.form__item')
+      ).map(item => {
+        return {
+          tag: item.tagName,
+          value: item.value
+        };
+      });
+      console.log(values);
     };
   }
   @State()
