@@ -58,6 +58,10 @@ class LibraryComponent extends CustomElement {
     this.shadowRoot.querySelector('rd-dropdown').onchange = (ev: Event) => {
       console.log(ev.target.value);
     };
+
+    this.shadowRoot.querySelector('rd-button').onclick = (ev: Event) => {
+      console.log(ev);
+    };
   }
   @State()
   public getState() {
