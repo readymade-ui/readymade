@@ -75,6 +75,18 @@ import {
       background-color: var(--color-selected);
       border: 2px solid var(--color-highlight);
     }
+    :host button[disabled] {
+      opacity: var(--opacity-disabled);
+      background: var(--color-disabled);
+      cursor: not-allowed;
+    }
+    :host button[disabled]:hover,
+    :host button[disabled]:focus,
+    :host button[disabled]:active {
+      border: 2px solid var(--color-border);
+      outline: none;
+      box-shadow: none;
+    }
   `,
   template: html`
     <button>
@@ -102,6 +114,10 @@ class RdButton extends FormElement {
         this.value = next;
         break;
     }
+  }
+
+  formDisabledCallback(disabled: boolean) {
+    this.$elem.disabled = disabled;
   }
 
   @Emitter('change')

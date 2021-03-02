@@ -1,4 +1,4 @@
-import { Component, CustomElement, Emitter, html, css } from './../../../core';
+import { Component, FormElement, Emitter, html, css } from './../../../core';
 
 @Component({
   selector: 'rd-radiogroup',
@@ -41,14 +41,35 @@ import { Component, CustomElement, Emitter, html, css } from './../../../core';
     ::slotted(input[type='radio']:active):before {
       border: 2px solid var(--color-highlight);
     }
+    ::slotted(input[type='radio'][disabled]):before {
+      opacity: var(--opacity-disabled);
+      background: var(--color-disabled);
+      cursor: not-allowed;
+    }
+    ::slotted(input[type='radio'][disabled]:hover):before,
+    ::slotted(input[type='radio'][disabled]:focus):before,
+    ::slotted(input[type='radio'][disabled]:active):before {
+      border: 2px solid var(--color-border);
+      outline: none;
+      box-shadow: none;
+    }
   `,
   template: html`
     <slot></slot>
   `
 })
-class RdRadioGroup extends CustomElement {
+class RdRadioGroup extends FormElement {
   constructor() {
     super();
+  }
+  formDisabledCallback(disabled: boolean) {
+    this.$elem.forEach(elem => (elem.disabled = disabled));
+  }
+  get $elem() {
+    return this.shadowRoot
+      .querySelector('slot')
+      .assignedNodes()
+      .filter(elem => elem.tagName === 'INPUT' && elem.type === 'radio');
   }
 }
 

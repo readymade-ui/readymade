@@ -59,6 +59,28 @@ import {
       background-color: var(--color-selected);
       border: 2px solid var(--color-highlight);
     }
+    :host input[type='checkbox'][disabled]:before {
+      opacity: var(--opacity-disabled);
+      background: var(--color-disabled);
+      background-image: var(--icon-switch);
+      background-size: 22px 22px;
+      background-repeat: no-repeat;
+      background-position: left 2px top 50%;
+      cursor: not-allowed;
+    }
+    :host input[type='checkbox'][disabled]:checked:before {
+      background-image: var(--icon-switch);
+      background-size: 22px 22px;
+      background-repeat: no-repeat;
+      background-position: right 2px top 50%;
+    }
+    :host input[type='checkbox'][disabled]:hover:before,
+    :host input[type='checkbox'][disabled]:focus:before,
+    :host input[type='checkbox'][disabled]:active:before {
+      border: 2px solid var(--color-border);
+      outline: none;
+      box-shadow: none;
+    }
   `,
   template: html`
     <input type="checkbox" />
@@ -81,6 +103,10 @@ class RdSwitch extends FormElement {
         this.checked = next === 'true' || next === '' ? true : false;
         break;
     }
+  }
+
+  formDisabledCallback(disabled: boolean) {
+    this.$elem.disabled = disabled;
   }
 
   @Emitter('change')

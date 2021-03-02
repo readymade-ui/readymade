@@ -32,6 +32,18 @@ import {
       outline: none;
       box-shadow: none;
     }
+    :host input[disabled] {
+      opacity: var(--opacity-disabled);
+      background: var(--color-disabled);
+      cursor: not-allowed;
+    }
+    :host input[disabled]:hover,
+    :host input[disabled]:focus,
+    :host input[disabled]:active {
+      border: 2px solid var(--color-border);
+      outline: none;
+      box-shadow: none;
+    }
   `,
   template: html`
     <input type="text" />
@@ -63,6 +75,10 @@ class RdInput extends FormElement {
         this.oninput(ev);
       }
     };
+  }
+
+  formDisabledCallback(disabled: boolean) {
+    this.$elem.disabled = disabled;
   }
 
   get type() {

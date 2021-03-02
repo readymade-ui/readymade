@@ -38,6 +38,18 @@ import {
       outline: none;
       box-shadow: none;
     }
+    :host textarea[disabled] {
+      opacity: var(--opacity-disabled);
+      background: var(--color-disabled);
+      cursor: not-allowed;
+    }
+    :host textarea[disabled]:hover,
+    :host textarea[disabled]:focus,
+    :host textarea[disabled]:active {
+      border: 2px solid var(--color-border);
+      outline: none;
+      box-shadow: none;
+    }
     textarea::-webkit-resizer {
       display: none;
     }
@@ -72,6 +84,10 @@ class RdTextArea extends FormElement {
         this.oninput(ev);
       }
     };
+  }
+
+  formDisabledCallback(disabled: boolean) {
+    this.$elem.disabled = disabled;
   }
 
   get form() {

@@ -51,6 +51,22 @@ import {
     ::slotted(select::-ms-expand) {
       display: none;
     }
+    ::slotted(select[disabled]) {
+      opacity: var(--opacity-disabled);
+      background: var(--color-disabled);
+      background-image: var(--icon-menu);
+      background-repeat: no-repeat;
+      background-position: right 0.7em top 50%, 0 0;
+      background-size: 10px 9px;
+      cursor: not-allowed;
+    }
+    ::slotted(select[disabled]:hover),
+    ::slotted(select[disabled]:focus),
+    ::slotted(select[disabled]:active) {
+      border: 2px solid var(--color-border);
+      outline: none;
+      box-shadow: none;
+    }
   `,
   template: html`
     <slot></slot>
@@ -60,6 +76,10 @@ class RdDropdown extends FormElement {
   public value: any;
   constructor() {
     super();
+  }
+
+  formDisabledCallback(disabled: boolean) {
+    this.$elem.disabled = disabled;
   }
 
   get form() {

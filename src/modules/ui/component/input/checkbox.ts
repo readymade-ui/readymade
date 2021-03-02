@@ -47,6 +47,23 @@ import {
     :host input[type='checkbox']:active:before {
       border: 2px solid var(--color-highlight);
     }
+    :host input[type='checkbox'][disabled]:before {
+      opacity: var(--opacity-disabled);
+      background: var(--color-disabled);
+      cursor: not-allowed;
+    }
+    :host input[type='checkbox'][disabled]:checked:before {
+      background-image: var(--icon-check);
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+    :host input[type='checkbox'][disabled]:hover:before,
+    :host input[type='checkbox'][disabled]:focus:before,
+    :host input[type='checkbox'][disabled]:active:before {
+      border: 2px solid var(--color-border);
+      outline: none;
+      box-shadow: none;
+    }
   `,
   template: html`
     <input type="checkbox" />
@@ -69,6 +86,10 @@ class RdCheckBox extends FormElement {
         this.checked = next === 'true' || next === '' ? true : false;
         break;
     }
+  }
+
+  formDisabledCallback(disabled: boolean) {
+    this.$elem.disabled = disabled;
   }
 
   @Emitter('change')
