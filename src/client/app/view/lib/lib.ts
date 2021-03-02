@@ -58,8 +58,21 @@ class LibraryComponent extends CustomElement {
       console.log(ev.detail.currentValue);
     };
     this.shadowRoot.querySelector('[type="hor"]').oninput = (ev: Event) => {
-      console.log(ev.detail.currentValue);
+      console.log(this.shadowRoot.querySelector('[type="hor"]').value);
     };
+    setTimeout(
+      () => (this.shadowRoot.querySelector('[type="vert"]').value = 100),
+      0
+    );
+    setTimeout(
+      () => (this.shadowRoot.querySelector('[type="hor"]').value = 1000),
+      0
+    );
+    setTimeout(
+      () =>
+        (this.shadowRoot.querySelector('[type="joystick"]').value = [140, 140]),
+      0
+    );
     this.shadowRoot.querySelector('[type="submit"]').onclick = (ev: Event) => {
       ev.preventDefault();
       // const items = Array.from();
@@ -100,7 +113,7 @@ class LibraryComponent extends CustomElement {
         orient: 'is--joystick',
         min: [0, 0],
         max: [255, 255],
-        snapToCenter: true,
+        snapToCenter: false,
         gridArea: '1 / 2 / span 4 / span 1'
       })
     };

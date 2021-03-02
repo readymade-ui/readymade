@@ -1,4 +1,12 @@
-import { Component, css, html, Emitter, EventDispatcher, FormElement, Listen } from './../../../core';
+import {
+  Component,
+  css,
+  html,
+  Emitter,
+  EventDispatcher,
+  FormElement,
+  Listen
+} from './../../../core';
 import { RdControl } from './../control';
 
 @Component({
@@ -152,7 +160,7 @@ class RdSlider extends FormElement {
   private _lastPos: any;
   public control: RdControl;
   private emitter: EventDispatcher;
-  public value: number[] | number;
+
   constructor() {
     super();
   }
@@ -174,7 +182,7 @@ class RdSlider extends FormElement {
           this.control = JSON.parse(next);
           this.onSliderInit();
         }
-      break;
+        break;
     }
   }
 
@@ -185,7 +193,7 @@ class RdSlider extends FormElement {
       this.$elem.removeAttribute('disabled');
     }
   }
-  
+
   get form() {
     return this.$internals.form;
   }
@@ -208,6 +216,10 @@ class RdSlider extends FormElement {
 
   get value() {
     return this.control.currentValue;
+  }
+
+  set value(controlValue: number | number[]) {
+    this.updateControl(controlValue);
   }
 
   get $elem() {
@@ -367,10 +379,9 @@ class RdSlider extends FormElement {
     if (this.control.orient === 'is--vert') {
       this.control.x = 0;
       this.control.y =
-        ((this.offsetTop - e.pageY) * -1 -
+        (this.offsetTop - e.pageY) * -1 -
         this.$handle.getBoundingClientRect().height / 2;
     }
-
 
     if (this.control.hasUserInput && this.control.isActive) {
       this.setPosition(this.control.x, this.control.y);
@@ -624,6 +635,49 @@ class RdSlider extends FormElement {
     }
   }
 
+  updateControl(controlValue: number | number[]) {
+    if (this.control.orient === 'is--joystick') {
+      this.control.x = this.scale(
+        controlValue[0],
+        this.control.min[0],
+        this.control.max[0],
+        0,
+        this.clientWidth
+      );
+      this.control.y = this.scale(
+        controlValue[1],
+        this.control.min[1],
+        this.control.max[1],
+        0,
+        this.clientHeight
+      );
+    }
+
+    if (this.control.orient === 'is--hor') {
+      this.control.x = this.scale(
+        controlValue,
+        this.control.min,
+        this.control.max,
+        0,
+        this.clientWidth
+      );
+      this.control.y = 0;
+    }
+
+    if (this.control.orient === 'is--vert') {
+      this.control.x = 0;
+      this.control.y = this.scale(
+        controlValue,
+        this.control.min,
+        this.control.max,
+        0,
+        this.clientHeight
+      );
+    }
+
+    this.setPosition(this.control.x, this.control.y);
+    this.mapValue();
+  }
 }
 
 export { RdSlider };
