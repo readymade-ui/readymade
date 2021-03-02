@@ -153,7 +153,6 @@ class RdSlider extends FormElement {
   public control: RdControl;
   private emitter: EventDispatcher;
   public value: number[] | number;
-
   constructor() {
     super();
   }
@@ -162,20 +161,20 @@ class RdSlider extends FormElement {
     return ['type', 'size', 'control'];
   }
 
-  public attributeChangedCallback(name, oldValue, newValue) {
+  public attributeChangedCallback(name, old, next) {
     switch (name) {
       case 'type':
-        this.shadowRoot.querySelector('.slider').classList.add(newValue);
+        this.shadowRoot.querySelector('.slider').classList.add(next);
         break;
       case 'size':
-        this.shadowRoot.querySelector('.slider').classList.add(newValue);
+        this.shadowRoot.querySelector('.slider').classList.add(next);
         break;
       case 'control':
-        if (!newValue.startsWith('{{')) {
-          this.control = JSON.parse(newValue);
+        if (!next.startsWith('{{')) {
+          this.control = JSON.parse(next);
           this.onSliderInit();
         }
-        break;
+      break;
     }
   }
 
@@ -186,15 +185,42 @@ class RdSlider extends FormElement {
       this.$elem.removeAttribute('disabled');
     }
   }
+  
+  get form() {
+    return this.$internals.form;
+  }
+
+  get name() {
+    return this.getAttribute('name');
+  }
+
+  get validity() {
+    return this.$internals.validity;
+  }
+
+  get validationMessage() {
+    return this.$internals.validationMessage;
+  }
+
+  get willValidate() {
+    return this.$internals.willValidate;
+  }
+
+  get value() {
+    return this.control.currentValue;
+  }
+
+  get $elem() {
+    return this.shadowRoot.querySelector('.draggable');
+  }
+
+  get $handle() {
+    return this.shadowRoot.querySelector('.handle');
+  }
 
   @Emitter('input')
   onSliderInit() {
-    const node: HTMLElement = <HTMLElement>(
-      (<any>this.shadowRoot.querySelector('.handle'))
-    );
-
     this._touchItem = null;
-    this._handle = node;
 
     this.control.height = this.clientHeight;
     this.control.width = this.clientWidth;
@@ -259,11 +285,11 @@ class RdSlider extends FormElement {
     this.control.x =
       e.touches[this._touchItem].pageX -
       this._rect.left -
-      this._handle.clientWidth / 2;
+      this.$handle.clientWidth / 2;
     this.control.y =
       e.touches[this._touchItem].pageY -
       this._rect.top -
-      this._handle.clientWidth / 2;
+      this.$handle.clientWidth / 2;
 
     this.setPosition(this.control.x, this.control.y);
   }
@@ -296,7 +322,7 @@ class RdSlider extends FormElement {
   onTouchMove(e: TouchEvent) {
     e.preventDefault();
 
-    // this._handle.style.opacity = '0.8';
+    // this.$handle.style.opacity = '0.8';
 
     if (this._touchItem === null) {
       this._touchItem = e.touches.length - 1; // make this touch = the latest touch in the touches list instead of using event
@@ -305,11 +331,11 @@ class RdSlider extends FormElement {
     this.control.x =
       e.touches[this._touchItem].pageX -
       this._rect.left -
-      this._handle.getBoundingClientRect().width / 2; // - 22; // TODO: figure out why these artificial offsets are here
+      this.$handle.getBoundingClientRect().width / 2;
     this.control.y =
       e.touches[this._touchItem].pageY -
       this._rect.top -
-      this._handle.getBoundingClientRect().height / 2; // - 66; // TODO: figure out why these artificial offsets are here
+      this.$handle.getBoundingClientRect().height / 2;
 
     if (this.control.hasUserInput && this.control.isActive) {
       this.setPosition(this.control.x, this.control.y);
@@ -334,7 +360,7 @@ class RdSlider extends FormElement {
     if (this.control.orient === 'is--hor') {
       this.control.x =
         (this.getBoundingClientRect().left - e.pageX) * -1 -
-        this._handle.getBoundingClientRect().width / 2;
+        this.$handle.getBoundingClientRect().width / 2;
       this.control.y = 0;
     }
 
@@ -342,8 +368,9 @@ class RdSlider extends FormElement {
       this.control.x = 0;
       this.control.y =
         ((this.offsetTop - e.pageY) * -1 -
-        this._handle.getBoundingClientRect().height / 2;
+        this.$handle.getBoundingClientRect().height / 2;
     }
+
 
     if (this.control.hasUserInput && this.control.isActive) {
       this.setPosition(this.control.x, this.control.y);
@@ -359,7 +386,7 @@ class RdSlider extends FormElement {
     this.control.isActive = false;
     this.control.hasUserInput = false;
     this.$elem.classList.remove('active');
-    // this._handle.style.opacity = '0.3';
+    // this.$handle.style.opacity = '0.3';
 
     if ('ontouchstart' in document.documentElement) {
       this._touchItem = null;
@@ -373,8 +400,8 @@ class RdSlider extends FormElement {
       this.control.snapToCenter === true
     ) {
       const center = this.getCenter(
-        [0, this.control.width - this._handle.offsetWidth],
-        [0, this.control.height - this._handle.offsetHeight]
+        [0, this.control.width - this.$handle.offsetWidth],
+        [0, this.control.height - this.$handle.offsetHeight]
       );
       this.control.x = center[0];
       this.control.y = center[1];
@@ -447,7 +474,7 @@ class RdSlider extends FormElement {
     const transformRegex = new RegExp(/(\d+(\.\d+)?)/g);
     const positions = pos.match(transformRegex);
     if (positions) {
-      this._handle.style.transform =
+      this.$handle.style.transform =
         'matrix3d(1,0,0.00,0,0.00,1,0.00,0,0,0,1,0,' +
         positions[0] +
         ',' +
@@ -547,16 +574,16 @@ class RdSlider extends FormElement {
       this._joystickPos = this.circularBounds(
         this.control.x,
         this.control.y,
-        [0, this.control.width - this._handle.offsetWidth],
-        [0, this.control.height - this._handle.offsetHeight]
+        [0, this.control.width - this.$handle.offsetWidth],
+        [0, this.control.height - this.$handle.offsetHeight]
       );
       this.control.x = this.clamp(this._joystickPos[0], [
         0,
-        this.control.width - this._handle.offsetWidth
+        this.control.width - this.$handle.offsetWidth
       ]);
       this.control.y = this.clamp(this._joystickPos[1], [
         0,
-        this.control.height - this._handle.offsetHeight
+        this.control.height - this.$handle.offsetHeight
       ]);
 
       this.control.position =
@@ -571,16 +598,16 @@ class RdSlider extends FormElement {
     } else {
       if (x <= 0) {
         this.control.x = 0;
-      } else if (x > this.clientWidth - this._handle.offsetWidth) {
-        this.control.x = this.clientWidth - this._handle.offsetWidth;
+      } else if (x > this.clientWidth - this.$handle.offsetWidth) {
+        this.control.x = this.clientWidth - this.$handle.offsetWidth;
       } else {
         this.control.x = x;
       }
 
       if (y <= 0) {
         this.control.y = 0;
-      } else if (y > this.clientHeight - this._handle.offsetHeight) {
-        this.control.y = this.clientHeight - this._handle.offsetHeight;
+      } else if (y > this.clientHeight - this.$handle.offsetHeight) {
+        this.control.y = this.clientHeight - this.$handle.offsetHeight;
       } else {
         this.control.y = y;
       }
@@ -595,14 +622,6 @@ class RdSlider extends FormElement {
         ')';
       this.setActualPosition(this.control.position);
     }
-  }
-
-  get value() {
-    return this.control.currentValue;
-  }
-
-  get $elem() {
-    return this.shadowRoot.querySelector('.draggable');
   }
 
 }
