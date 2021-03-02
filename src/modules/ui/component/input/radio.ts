@@ -62,9 +62,30 @@ class RdRadioGroup extends FormElement {
   constructor() {
     super();
   }
+
   formDisabledCallback(disabled: boolean) {
     this.$elem.forEach(elem => (elem.disabled = disabled));
   }
+
+  get value(): any {
+    const checked = this.$elem.filter(elem => elem.checked)[0];
+    if (checked) {
+      return this.$elem.filter(elem => elem.checked)[0].value;
+    } else {
+      return undefined;
+    }
+  }
+
+  set value(value) {
+    this.$elem.forEach(elem => {
+      if (elem.value === value) {
+        elem.checked = true;
+      } else {
+        elem.checked = false;
+      }
+    });
+  }
+
   get $elem() {
     return this.shadowRoot
       .querySelector('slot')
