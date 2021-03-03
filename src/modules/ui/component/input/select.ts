@@ -1,6 +1,7 @@
 import {
   Component,
   CustomElement,
+  Emitter,
   FormElement,
   css,
   html
@@ -67,6 +68,14 @@ import {
       outline: none;
       box-shadow: none;
     }
+    ::slotted(select.required),
+    ::slotted(select.required:hover),
+    ::slotted(select.required:focus),
+    ::slotted(select.required:active) {
+      border: 2px solid var(--color-error);
+      outline: none;
+      box-shadow: none;
+    }
   `,
   template: html`
     <slot></slot>
@@ -78,8 +87,32 @@ class RdDropdown extends FormElement {
     super();
   }
 
+  @Emitter('select')
+  connectedCallback() {
+    this.$elem.onselect = (ev: Event) => {
+      this.emitter.emit(
+        new CustomEvent('select', {
+          bubbles: true,
+          composed: true,
+          detail: 'composed'
+        })
+      );
+      if (this.onselect) {
+        this.onselect(ev);
+      }
+    };
+    this.$elem.onblur = (ev: Event) => {
+      this.onValidate();
+    };
+  }
+
   formDisabledCallback(disabled: boolean) {
     this.$elem.disabled = disabled;
+  }
+
+  formResetCallback() {
+    this.$elem.selectedIndex = -1;
+    this.$internals.setFormValue('');
   }
 
   get form() {
@@ -88,6 +121,10 @@ class RdDropdown extends FormElement {
 
   get name() {
     return this.getAttribute('name');
+  }
+
+  checkValidity() {
+    return this.$internals.checkValidity();
   }
 
   get validity() {
@@ -115,6 +152,15 @@ class RdDropdown extends FormElement {
       .querySelector('slot')
       .assignedNodes()
       .filter(elem => elem.tagName === 'SELECT')[0];
+  }
+  onValidate() {
+    if (this.hasAttribute('required') && this.value.length <= 0) {
+      this.$internals.setValidity({ customError: true }, 'required');
+      this.$elem.classList.add('required');
+    } else {
+      this.$internals.setValidity({});
+      this.$elem.classList.remove('required');
+    }
   }
 }
 

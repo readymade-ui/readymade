@@ -194,6 +194,11 @@ class RdSlider extends FormElement {
     }
   }
 
+  formResetCallback() {
+    this.onSliderInit();
+    this.$internals.setFormValue(this.value);
+  }
+
   get form() {
     return this.$internals.form;
   }

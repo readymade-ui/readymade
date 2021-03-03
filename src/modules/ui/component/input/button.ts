@@ -145,6 +145,10 @@ class RdButton extends FormElement {
     return this.getAttribute('name');
   }
 
+  checkValidity() {
+    return this.$internals.checkValidity();
+  }
+
   get validity() {
     return this.$internals.validity;
   }

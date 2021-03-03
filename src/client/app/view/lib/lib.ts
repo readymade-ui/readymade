@@ -81,7 +81,8 @@ class LibraryComponent extends CustomElement {
       ).map(item => {
         return {
           tag: item.tagName,
-          value: item.value
+          value: item.value,
+          validity: item.checkValidity ? item.checkValidity() : null
         };
       });
       console.log(values);

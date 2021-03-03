@@ -10,7 +10,8 @@ import { Component, FormElement, Emitter, html, css } from './../../../core';
       -moz-appearance: none;
       -webkit-appearance: none;
       appearance: none;
-      margin: 0;
+      margin: 0px 4px 0px 0px;
+      transform: translateY(4px);
     }
     ::slotted(input[type='radio']):before {
       content: '';
@@ -20,7 +21,6 @@ import { Component, FormElement, Emitter, html, css } from './../../../core';
       border: 2px solid var(--color-border);
       border-radius: 50%;
       background: var(--color-bg);
-      transform: translateY(4px);
     }
     ::slotted(input[type='radio']:checked):before {
       background: radial-gradient(
@@ -53,18 +53,49 @@ import { Component, FormElement, Emitter, html, css } from './../../../core';
       outline: none;
       box-shadow: none;
     }
+    ::slotted(label) {
+      margin-right: 8px;
+    }
+    .group {
+      box-sizing: border-box:
+      border: 2px solid transparent;
+      padding: 12px;
+      border-radius: 14px;
+    }
+    .group.required {
+      border: 2px solid var(--color-error);
+    }
+    .group.required ::slotted(input[type='radio']) {
+     transform: translateX(-1px) translateY(3px);
+    }
   `,
   template: html`
-    <slot></slot>
+    <div class="group"><slot></slot></div>
   `
 })
 class RdRadioGroup extends FormElement {
   constructor() {
     super();
   }
+  connectedCallback() {
+    this.$elem.forEach(elem => {
+      elem.onblur = (ev: Event) => {
+        this.onValidate();
+      };
+    });
+  }
 
   formDisabledCallback(disabled: boolean) {
     this.$elem.forEach(elem => (elem.disabled = disabled));
+  }
+
+  formResetCallback() {
+    this.$elem.forEach(elem => (elem.checked = false));
+    this.$internals.setFormValue('');
+  }
+
+  checkValidity() {
+    return this.$internals.checkValidity();
   }
 
   get value(): any {
@@ -86,11 +117,28 @@ class RdRadioGroup extends FormElement {
     });
   }
 
+  get $group() {
+    return this.shadowRoot.querySelector('.group');
+  }
+
   get $elem() {
     return this.shadowRoot
       .querySelector('slot')
       .assignedNodes()
       .filter(elem => elem.tagName === 'INPUT' && elem.type === 'radio');
+  }
+
+  onValidate() {
+    if (
+      this.hasAttribute('required') &&
+      (!this.value || this.value.length <= 0)
+    ) {
+      this.$internals.setValidity({ customError: true }, 'required');
+      this.$group.classList.add('required');
+    } else {
+      this.$internals.setValidity({});
+      this.$group.classList.remove('required');
+    }
   }
 }
 

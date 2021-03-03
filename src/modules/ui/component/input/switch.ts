@@ -81,6 +81,14 @@ import {
       outline: none;
       box-shadow: none;
     }
+    :host input[type='checkbox'].required:before,
+    :host input[type='checkbox'].required:hover:before,
+    :host input[type='checkbox'].required:focus:before,
+    :host input[type='checkbox'].required:active:before {
+      border: 2px solid var(--color-error);
+      outline: none;
+      box-shadow: none;
+    }
   `,
   template: html`
     <input type="checkbox" />
@@ -109,6 +117,11 @@ class RdSwitch extends FormElement {
     this.$elem.disabled = disabled;
   }
 
+  formResetCallback() {
+    this.$elem.checked = false;
+    this.$internals.setFormValue(this.$elem.checked);
+  }
+
   @Emitter('change')
   connectedCallback() {
     this.$elem.onchange = (ev: Event) => {
@@ -124,6 +137,9 @@ class RdSwitch extends FormElement {
         );
       }
     };
+    this.$elem.onblur = (ev: Event) => {
+      this.onValidate();
+    };
   }
 
   get type() {
@@ -136,6 +152,10 @@ class RdSwitch extends FormElement {
 
   get name() {
     return this.getAttribute('name');
+  }
+
+  checkValidity() {
+    return this.$internals.checkValidity();
   }
 
   get validity() {
@@ -170,6 +190,16 @@ class RdSwitch extends FormElement {
 
   get $elem() {
     return this.shadowRoot.querySelector('input');
+  }
+
+  onValidate() {
+    if (this.hasAttribute('required') && this.value === false) {
+      this.$internals.setValidity({ customError: true }, 'required');
+      this.$elem.classList.add('required');
+    } else {
+      this.$internals.setValidity({});
+      this.$elem.classList.remove('required');
+    }
   }
 }
 

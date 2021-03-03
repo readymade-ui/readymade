@@ -50,6 +50,14 @@ import {
       outline: none;
       box-shadow: none;
     }
+    :host textarea.required,
+    :host textarea.required:hover,
+    :host textarea.required:focus,
+    :host textarea.required:active {
+      border: 2px solid var(--color-error);
+      outline: none;
+      box-shadow: none;
+    }
     textarea::-webkit-resizer {
       display: none;
     }
@@ -84,10 +92,18 @@ class RdTextArea extends FormElement {
         this.oninput(ev);
       }
     };
+    this.$elem.onblur = (ev: Event) => {
+      this.onValidate();
+    };
   }
 
   formDisabledCallback(disabled: boolean) {
     this.$elem.disabled = disabled;
+  }
+
+  formResetCallback() {
+    this.value = '';
+    this.internals_.setFormValue('');
   }
 
   get form() {
@@ -96,6 +112,10 @@ class RdTextArea extends FormElement {
 
   get name() {
     return this.getAttribute('name');
+  }
+
+  checkValidity() {
+    return this.$internals.checkValidity();
   }
 
   get validity() {
@@ -120,6 +140,16 @@ class RdTextArea extends FormElement {
 
   get $elem() {
     return this.shadowRoot.querySelector('textarea');
+  }
+
+  onValidate() {
+    if (this.hasAttribute('required') && this.value.length <= 0) {
+      this.$internals.setValidity({ customError: true }, 'required');
+      this.$elem.classList.add('required');
+    } else {
+      this.$internals.setValidity({});
+      this.$elem.classList.remove('required');
+    }
   }
 }
 

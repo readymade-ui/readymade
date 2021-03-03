@@ -44,6 +44,14 @@ import {
       outline: none;
       box-shadow: none;
     }
+    :host input.required,
+    :host input.required:hover,
+    :host input.required:focus,
+    :host input.required:active {
+      border: 2px solid var(--color-error);
+      outline: none;
+      box-shadow: none;
+    }
   `,
   template: html`
     <input type="text" />
@@ -75,10 +83,18 @@ class RdInput extends FormElement {
         this.oninput(ev);
       }
     };
+    this.$elem.onblur = (ev: Event) => {
+      this.onValidate();
+    };
   }
 
   formDisabledCallback(disabled: boolean) {
     this.$elem.disabled = disabled;
+  }
+
+  formResetCallback() {
+    this.value = '';
+    this.$internals.setFormValue('');
   }
 
   get type() {
@@ -91,6 +107,10 @@ class RdInput extends FormElement {
 
   get name() {
     return this.getAttribute('name');
+  }
+
+  checkValidity() {
+    return this.$internals.checkValidity();
   }
 
   get validity() {
@@ -115,6 +135,16 @@ class RdInput extends FormElement {
 
   get $elem() {
     return this.shadowRoot.querySelector('input');
+  }
+
+  onValidate() {
+    if (this.hasAttribute('required') && this.value.length <= 0) {
+      this.$internals.setValidity({ customError: true }, 'required');
+      this.$elem.classList.add('required');
+    } else {
+      this.$internals.setValidity({});
+      this.$elem.classList.remove('required');
+    }
   }
 }
 
