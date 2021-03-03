@@ -23,7 +23,7 @@ interface ElementMeta {
   custom?: {
     extends: string;
   };
-  delegatesFocus: boolean;
+  delegatesFocus?: boolean;
   eventMap?: { [key: string]: EventMeta };
   mode?: 'closed' | 'open';
   selector: string;
