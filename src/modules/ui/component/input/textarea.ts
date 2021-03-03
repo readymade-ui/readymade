@@ -7,6 +7,8 @@ import {
   css
 } from './../../../core';
 
+import { RdInput } from './input';
+
 @Component({
   selector: 'rd-textarea',
   delegatesFocus: true,
@@ -66,90 +68,12 @@ import {
     <textarea></textarea>
   `
 })
-class RdTextArea extends FormElement {
-  private emitter: EventDispatcher;
-  public value: any;
+class RdTextArea extends RdInput {
   constructor() {
     super();
   }
-
-  @Emitter('change')
-  connectedCallback() {
-    this.$elem.onchange = (ev: Event) => {
-      this.emitter.emit(
-        new CustomEvent('change', {
-          bubbles: true,
-          composed: true,
-          detail: 'composed'
-        })
-      );
-      if (this.onchange) {
-        this.onchange(ev);
-      }
-    };
-    this.$elem.oninput = (ev: Event) => {
-      if (this.oninput) {
-        this.oninput(ev);
-      }
-    };
-    this.$elem.onblur = (ev: Event) => {
-      this.onValidate();
-    };
-  }
-
-  formDisabledCallback(disabled: boolean) {
-    this.$elem.disabled = disabled;
-  }
-
-  formResetCallback() {
-    this.value = '';
-    this.internals_.setFormValue('');
-  }
-
-  get form() {
-    return this.$internals.form;
-  }
-
-  get name() {
-    return this.getAttribute('name');
-  }
-
-  checkValidity() {
-    return this.$internals.checkValidity();
-  }
-
-  get validity() {
-    return this.$internals.validity;
-  }
-
-  get validationMessage() {
-    return this.$internals.validationMessage;
-  }
-
-  get willValidate() {
-    return this.$internals.willValidate;
-  }
-
-  get value(): boolean {
-    return this.$elem.value;
-  }
-
-  set value(value) {
-    this.$elem.value = value;
-  }
-
   get $elem() {
     return this.shadowRoot.querySelector('textarea');
-  }
-
-  onValidate() {
-    if (this.hasAttribute('required') && this.value.length <= 0) {
-      this.$internals.setValidity({ customError: true }, 'required');
-      this.$elem.classList.add('required');
-    } else {
-      this.$internals.setValidity({});
-      this.$elem.classList.remove('required');
-    }
   }
 }
 

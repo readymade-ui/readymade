@@ -7,6 +7,8 @@ import {
   css
 } from './../../../core';
 
+import { RdCheckBox } from './checkbox';
+
 @Component({
   selector: 'rd-switch',
   delegatesFocus: true,
@@ -94,112 +96,9 @@ import {
     <input type="checkbox" />
   `
 })
-class RdSwitch extends FormElement {
-  private emitter: EventDispatcher;
-  public value: boolean | string;
+class RdSwitch extends RdCheckBox {
   constructor() {
     super();
-  }
-
-  static get observedAttributes() {
-    return ['checked'];
-  }
-
-  attributeChangedCallback(name: string, old: string, next: string) {
-    switch (name) {
-      case 'checked':
-        this.checked = next === 'true' || next === '' ? true : false;
-        break;
-    }
-  }
-
-  formDisabledCallback(disabled: boolean) {
-    this.$elem.disabled = disabled;
-  }
-
-  formResetCallback() {
-    this.$elem.checked = false;
-    this.$internals.setFormValue(this.$elem.checked);
-  }
-
-  @Emitter('change')
-  connectedCallback() {
-    this.$elem.onchange = (ev: Event) => {
-      if (this.onchange) {
-        this.onchange(ev);
-      } else {
-        this.emitter.emit(
-          new CustomEvent('change', {
-            bubbles: true,
-            composed: true,
-            detail: 'composed'
-          })
-        );
-      }
-    };
-    this.$elem.onblur = (ev: Event) => {
-      this.onValidate();
-    };
-  }
-
-  get type() {
-    return 'checkbox';
-  }
-
-  get form() {
-    return this.$internals.form;
-  }
-
-  get name() {
-    return this.getAttribute('name');
-  }
-
-  checkValidity() {
-    return this.$internals.checkValidity();
-  }
-
-  get validity() {
-    return this.$internals.validity;
-  }
-
-  get validationMessage() {
-    return this.$internals.validationMessage;
-  }
-
-  get willValidate() {
-    return this.$internals.willValidate;
-  }
-
-  get checked(): boolean {
-    return this.$elem.checked;
-  }
-
-  set checked(value) {
-    this.$elem.checked = value;
-  }
-
-  get value(): boolean {
-    return this.$elem.checked;
-  }
-
-  set value(value) {
-    if (typeof value === 'boolean') {
-      this.$elem.checked = value;
-    }
-  }
-
-  get $elem() {
-    return this.shadowRoot.querySelector('input');
-  }
-
-  onValidate() {
-    if (this.hasAttribute('required') && this.value === false) {
-      this.$internals.setValidity({ customError: true }, 'required');
-      this.$elem.classList.add('required');
-    } else {
-      this.$internals.setValidity({});
-      this.$elem.classList.remove('required');
-    }
   }
 }
 
