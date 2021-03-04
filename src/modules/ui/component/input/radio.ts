@@ -78,7 +78,7 @@ class RdRadioGroup extends FormElement {
     super();
   }
   connectedCallback() {
-    this.$elem.forEach(elem => {
+    this.$elem.forEach((elem: HTMLInputElement) => {
       elem.onblur = (ev: Event) => {
         this.onValidate();
       };
@@ -86,11 +86,11 @@ class RdRadioGroup extends FormElement {
   }
 
   formDisabledCallback(disabled: boolean) {
-    this.$elem.forEach(elem => (elem.disabled = disabled));
+    this.$elem.forEach((elem: HTMLInputElement) => (elem.disabled = disabled));
   }
 
   formResetCallback() {
-    this.$elem.forEach(elem => (elem.checked = false));
+    this.$elem.forEach((elem: HTMLInputElement) => (elem.checked = false));
     this.$internals.setFormValue('');
   }
 
@@ -112,16 +112,20 @@ class RdRadioGroup extends FormElement {
   }
 
   get value(): any {
-    const checked = this.$elem.filter(elem => elem.checked)[0];
+    const checked = this.$elem.filter(
+      (elem: HTMLInputElement) => elem.checked
+    )[0];
     if (checked) {
-      return this.$elem.filter(elem => elem.checked)[0].value;
+      return (this.$elem.filter(
+        (elem: HTMLInputElement) => elem.checked
+      )[0] as HTMLInputElement).value;
     } else {
       return undefined;
     }
   }
 
   set value(value) {
-    this.$elem.forEach(elem => {
+    this.$elem.forEach((elem: HTMLInputElement) => {
       if (elem.value === value) {
         elem.checked = true;
       } else {
@@ -130,15 +134,17 @@ class RdRadioGroup extends FormElement {
     });
   }
 
-  get $group() {
+  get $group(): HTMLElement {
     return this.shadowRoot.querySelector('.group');
   }
 
-  get $elem() {
-    return this.shadowRoot
+  get $elem(): HTMLInputElement[] {
+    return (this.shadowRoot
       .querySelector('slot')
-      .assignedNodes()
-      .filter(elem => elem.tagName === 'INPUT' && elem.type === 'radio');
+      .assignedNodes() as HTMLInputElement[]).filter(
+      (elem: HTMLInputElement) =>
+        elem.tagName === 'INPUT' && elem.type === 'radio'
+    );
   }
 }
 

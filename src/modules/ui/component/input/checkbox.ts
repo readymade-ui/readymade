@@ -78,8 +78,6 @@ import {
   `
 })
 class RdCheckBox extends FormElement {
-  private emitter: EventDispatcher;
-  public value: boolean | string;
   constructor() {
     super();
   }
@@ -102,7 +100,6 @@ class RdCheckBox extends FormElement {
 
   formResetCallback() {
     this.$elem.checked = false;
-    this.$internals.setFormValue(this.$elem.checked);
   }
 
   onValidate() {
@@ -181,7 +178,7 @@ class RdCheckBox extends FormElement {
     }
   }
 
-  get $elem() {
+  get $elem(): HTMLInputElement {
     return this.shadowRoot.querySelector('input');
   }
 }

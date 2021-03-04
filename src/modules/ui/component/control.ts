@@ -7,7 +7,7 @@ export interface RdControl {
   isActive?: boolean;
   hasUserInput?: boolean;
   hasRemoteInput?: boolean;
-  currentValue?: number | number[] | boolean | string;
+  currentValue?: any;
   position?: string;
   x?: number;
   y?: number;

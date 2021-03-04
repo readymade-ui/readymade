@@ -1,7 +1,7 @@
 import { ElementMeta } from './../../decorator';
 
 function closestRoot(base: Element) {
-  function __closestFrom(el: Element | Window | Document): Element {
+  function __closestFrom(el: any): Element {
     if (el.getRootNode()) {
       return el.getRootNode();
     } else {
@@ -28,7 +28,7 @@ function attachDOM(instance: any, options?: any) {
 
 function attachStyle(instance: any, options?: any) {
   const id = `${instance.elementMeta.selector}`;
-  const closest = closestRoot(instance);
+  const closest: any = closestRoot(instance);
   if (closest.tagName === 'HEAD' && document.getElementById(`${id}-x`)) {
     return;
   }

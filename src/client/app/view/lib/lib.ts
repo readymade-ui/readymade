@@ -1,4 +1,9 @@
-import { Component, CustomElement, State } from './../../../../modules/core';
+import {
+  Component,
+  CustomElement,
+  FormElement,
+  State
+} from './../../../../modules/core';
 import template from './lib.html';
 import style from './lib.scss';
 
@@ -19,65 +24,79 @@ class LibraryComponent extends CustomElement {
       .addEventListener('click', () => {
         this.toggleTheme();
       });
-    this.shadowRoot.querySelector('rd-radiogroup').onchange = (ev: Event) => {
-      console.log(ev.target.value);
+    const radio: FormElement = this.shadowRoot.querySelector('rd-radiogroup');
+    const dropdown: FormElement = this.shadowRoot.querySelector('rd-switch');
+    const checkbox: FormElement = this.shadowRoot.querySelector('rd-checkbox');
+    const input: FormElement = this.shadowRoot.querySelector('rd-input');
+    const textarea: FormElement = this.shadowRoot.querySelector('rd-textarea');
+    const select: FormElement = this.shadowRoot.querySelector('rd-dropdown');
+    const button: FormElement = this.shadowRoot.querySelector('rd-button');
+    const joystick: FormElement = this.shadowRoot.querySelector(
+      '[type="joystick"]'
+    );
+    const vertSlider: FormElement = this.shadowRoot.querySelector(
+      '[type="vert"]'
+    );
+    const horizontalSlider: FormElement = this.shadowRoot.querySelector(
+      '[type="hor"]'
+    );
+    const submit: FormElement = this.shadowRoot.querySelector(
+      '[type="submit"]'
+    );
+    radio.onchange = (ev: Event) => {
+      console.log((ev.target as FormElement).value);
     };
-
-    this.shadowRoot.querySelector('rd-switch').onchange = (ev: Event) => {
-      console.log(ev.target.checked);
+    dropdown.onchange = (ev: Event) => {
+      console.log((ev.target as FormElement).checked);
     };
-    this.shadowRoot.querySelector('rd-checkbox').onchange = (ev: Event) => {
-      console.log(ev.target.checked);
+    checkbox.onchange = (ev: Event) => {
+      console.log((ev.target as FormElement).checked);
     };
-    this.shadowRoot.querySelector('rd-input').oninput = (ev: Event) => {
-      console.log(ev.target.value);
+    input.oninput = (ev: Event) => {
+      console.log((ev.target as FormElement).value);
     };
-    this.shadowRoot.querySelector('rd-input').onchange = (ev: Event) => {
-      console.log(ev.target.value);
+    input.onchange = (ev: Event) => {
+      console.log((ev.target as FormElement).value);
     };
-    this.shadowRoot.querySelector('rd-textarea').oninput = (ev: Event) => {
-      console.log(ev.target.value);
+    textarea.oninput = (ev: Event) => {
+      console.log((ev.target as FormElement).value);
     };
-    this.shadowRoot.querySelector('rd-textarea').onchange = (ev: Event) => {
-      console.log(ev.target.value);
+    textarea.onchange = (ev: Event) => {
+      console.log((ev.target as FormElement).value);
     };
-    this.shadowRoot.querySelector('rd-dropdown').onchange = (ev: Event) => {
-      console.log(ev.target.value);
+    dropdown.onchange = (ev: Event) => {
+      console.log((ev.target as FormElement).value);
     };
-
-    this.shadowRoot.querySelector('rd-button').onclick = (ev: Event) => {
+    button.onclick = (ev: Event) => {
       console.log(ev);
     };
-
-    this.shadowRoot.querySelector('[type="joystick"]').oninput = (
-      ev: Event
-    ) => {
-      console.log(ev.detail.currentValue);
+    joystick.oninput = (ev: CustomEvent) => {
+      console.log((ev.detail as FormElement).value);
     };
-    this.shadowRoot.querySelector('[type="vert"]').oninput = (ev: Event) => {
-      console.log(ev.detail.currentValue);
+    vertSlider.oninput = (ev: CustomEvent) => {
+      console.log((ev.detail as FormElement).value);
     };
-    this.shadowRoot.querySelector('[type="hor"]').oninput = (ev: Event) => {
-      console.log(this.shadowRoot.querySelector('[type="hor"]').value);
+    horizontalSlider.oninput = (ev: CustomEvent) => {
+      console.log((ev.detail as FormElement).value);
     };
     // setTimeout(
-    //   () => (this.shadowRoot.querySelector('[type="vert"]').value = 100),
+    //   () => (vertSlider.value = 100),
     //   0
     // );
     // setTimeout(
-    //   () => (this.shadowRoot.querySelector('[type="hor"]').value = 1000),
+    //   () => ( horizontalSlider.value = 1000),
     //   0
     // );
     // setTimeout(
     //   () =>
-    //     (this.shadowRoot.querySelector('[type="joystick"]').value = [140, 140]),
+    //     (joystick.value = [140, 140]),
     //   0
     // );
-    this.shadowRoot.querySelector('[type="submit"]').onclick = (ev: Event) => {
+    submit.onclick = (ev: Event) => {
       ev.preventDefault();
       const values = Array.from(
         this.shadowRoot.querySelectorAll('.form__item')
-      ).map(item => {
+      ).map((item: FormElement) => {
         item.onValidate();
         return {
           tag: item.tagName,

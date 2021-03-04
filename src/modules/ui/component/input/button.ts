@@ -96,7 +96,6 @@ import {
   `
 })
 class RdButton extends FormElement {
-  private emitter: EventDispatcher;
   constructor() {
     super();
   }
@@ -173,7 +172,7 @@ class RdButton extends FormElement {
     this.$elem.value = value;
   }
 
-  get $elem() {
+  get $elem(): HTMLButtonElement {
     return this.shadowRoot.querySelector('button');
   }
 }

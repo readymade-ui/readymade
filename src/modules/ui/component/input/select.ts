@@ -82,7 +82,6 @@ import {
   `
 })
 class RdDropdown extends FormElement {
-  public value: any;
   constructor() {
     super();
   }
@@ -149,7 +148,7 @@ class RdDropdown extends FormElement {
     return this.$internals.willValidate;
   }
 
-  get value(): boolean {
+  get value(): string {
     return this.$elem.value;
   }
 
@@ -157,11 +156,12 @@ class RdDropdown extends FormElement {
     this.$elem.value = value;
   }
 
-  get $elem() {
-    return this.shadowRoot
+  get $elem(): HTMLSelectElement {
+    return (this.shadowRoot
       .querySelector('slot')
-      .assignedNodes()
-      .filter(elem => elem.tagName === 'SELECT')[0];
+      .assignedNodes() as HTMLSelectElement[]).filter(
+      elem => elem.tagName === 'SELECT'
+    )[0];
   }
 }
 

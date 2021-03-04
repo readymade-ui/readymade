@@ -166,7 +166,6 @@ class RdSlider extends FormElement {
   private _animation: Animation;
   private _lastPos: any;
   public control: RdControl;
-  private emitter: EventDispatcher;
 
   constructor() {
     super();
@@ -195,7 +194,7 @@ class RdSlider extends FormElement {
 
   formDisabledCallback(disabled: boolean) {
     if (disabled) {
-      this.$elem.setAttribute('disabled', true);
+      this.$elem.setAttribute('disabled', 'true');
     } else {
       this.$elem.removeAttribute('disabled');
     }
@@ -203,7 +202,6 @@ class RdSlider extends FormElement {
 
   formResetCallback() {
     this.onSliderInit();
-    this.$internals.setFormValue(this.value);
   }
 
   onValidate() {
@@ -236,7 +234,7 @@ class RdSlider extends FormElement {
     return this.$internals.willValidate;
   }
 
-  get value() {
+  get value(): number | number[] {
     return this.control.currentValue;
   }
 
@@ -244,11 +242,11 @@ class RdSlider extends FormElement {
     this.updateControl(controlValue);
   }
 
-  get $elem() {
+  get $elem(): HTMLElement {
     return this.shadowRoot.querySelector('.draggable');
   }
 
-  get $handle() {
+  get $handle(): HTMLElement {
     return this.shadowRoot.querySelector('.handle');
   }
 
@@ -551,7 +549,7 @@ class RdSlider extends FormElement {
     if (this.control.orient === 'is--hor') {
       this.control.currentValue = this.clampSlider(
         this.scale(
-          this.control.x,
+          this.control.x as number,
           0,
           this.control.width - 44,
           <number>this.control.min,
@@ -562,7 +560,7 @@ class RdSlider extends FormElement {
     if (this.control.orient === 'is--vert') {
       this.control.currentValue = this.clampSlider(
         this.scale(
-          this.control.y,
+          this.control.y as number,
           0,
           this.control.height - 44,
           <number>this.control.min,
@@ -574,7 +572,7 @@ class RdSlider extends FormElement {
       this.control.currentValue = [
         this.clampJoystickX(
           this.scale(
-            this.control.x,
+            this.control.x as number,
             0,
             this.control.width - 44,
             this.control.min[0],
@@ -583,7 +581,7 @@ class RdSlider extends FormElement {
         ),
         this.clampJoystickY(
           this.scale(
-            this.control.y,
+            this.control.y as number,
             0,
             this.control.height,
             this.control.min[1],
@@ -660,14 +658,14 @@ class RdSlider extends FormElement {
   updateControl(controlValue: number | number[]) {
     if (this.control.orient === 'is--joystick') {
       this.control.x = this.scale(
-        controlValue[0],
+        controlValue[0] as number,
         this.control.min[0],
         this.control.max[0],
         0,
         this.clientWidth
       );
       this.control.y = this.scale(
-        controlValue[1],
+        controlValue[1] as number,
         this.control.min[1],
         this.control.max[1],
         0,
@@ -677,9 +675,9 @@ class RdSlider extends FormElement {
 
     if (this.control.orient === 'is--hor') {
       this.control.x = this.scale(
-        controlValue,
-        this.control.min,
-        this.control.max,
+        controlValue as number,
+        this.control.min as number,
+        this.control.max as number,
         0,
         this.clientWidth
       );
@@ -689,9 +687,9 @@ class RdSlider extends FormElement {
     if (this.control.orient === 'is--vert') {
       this.control.x = 0;
       this.control.y = this.scale(
-        controlValue,
-        this.control.min,
-        this.control.max,
+        controlValue as number,
+        this.control.min as number,
+        this.control.max as number,
         0,
         this.clientHeight
       );

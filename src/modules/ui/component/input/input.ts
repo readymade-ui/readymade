@@ -58,8 +58,6 @@ import {
   `
 })
 class RdInput extends FormElement {
-  private emitter: EventDispatcher;
-  public value: any;
   constructor() {
     super();
   }
@@ -135,7 +133,7 @@ class RdInput extends FormElement {
     return this.$internals.willValidate;
   }
 
-  get value(): boolean {
+  get value(): string {
     return this.$elem.value;
   }
 
@@ -143,7 +141,7 @@ class RdInput extends FormElement {
     this.$elem.value = value;
   }
 
-  get $elem() {
+  get $elem(): HTMLInputElement | HTMLTextAreaElement {
     return this.shadowRoot.querySelector('input');
   }
 }

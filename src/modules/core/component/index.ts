@@ -11,6 +11,61 @@ export interface StateChange {
   };
 }
 
+export interface Aom {
+  ariaAtomic: string;
+  ariaAutoComplete: string;
+  ariaBusy: string;
+  ariaChecked: string;
+  ariaColCount: string;
+  ariaColIndex: string;
+  ariaColSpan: string;
+  ariaCurrent: string;
+  ariaDisabled: string;
+  ariaExpanded: string;
+  ariaHasPopup: string;
+  ariaHidden: string;
+  ariaKeyShortcuts: string;
+  ariaLabel: string;
+  ariaLevel: string;
+  ariaLive: string;
+  ariaModal: string;
+  ariaMultiLine: string;
+  ariaMultiSelectable: string;
+  ariaOrientation: string;
+  ariaPlaceholder: string;
+  ariaPosInSet: string;
+  ariaPressed: string;
+  ariaReadOnly: string;
+  ariaRelevant: string;
+  ariaRequired: string;
+  ariaRoleDescription: string;
+  ariaRowCount: string;
+  ariaRowIndex: string;
+  ariaRowSpan: string;
+  ariaSelected: string;
+  ariaSort: string;
+  ariaValueMax: string;
+  ariaValueMin: string;
+  ariaValueNow: string;
+  ariaValueText: string;
+}
+
+export interface ElementInternals extends Aom {
+  checkValidity: () => boolean;
+  form: HTMLFormElement;
+  labels: NodeListOf<HTMLLabelElement> | [];
+  reportValidity: () => boolean;
+  setFormValue: (value: string | FormData) => void;
+  setValidity: (
+    validityChanges: Partial<globalThis.ValidityState>,
+    validationMessage?: string,
+    anchor?: HTMLElement
+  ) => void;
+  validationMessage: string;
+  validity: globalThis.ValidityState;
+  willValidate: boolean;
+}
+
 export type OnStateChange = (
   change: StateChange,
   cb: (change: StateChange) => void
@@ -114,6 +169,53 @@ export class CustomElement extends HTMLElement {
 }
 
 export class FormElement extends CustomElement {
+  ariaAtomic: string;
+  ariaAutoComplete: string;
+  ariaBusy: string;
+  ariaChecked: string;
+  ariaColCount: string;
+  ariaColIndex: string;
+  ariaColSpan: string;
+  ariaCurrent: string;
+  ariaDisabled: string;
+  ariaExpanded: string;
+  ariaHasPopup: string;
+  ariaHidden: string;
+  ariaKeyShortcuts: string;
+  ariaLabel: string;
+  ariaLevel: string;
+  ariaLive: string;
+  ariaModal: string;
+  ariaMultiLine: string;
+  ariaMultiSelectable: string;
+  ariaOrientation: string;
+  ariaPlaceholder: string;
+  ariaPosInSet: string;
+  ariaPressed: string;
+  ariaReadOnly: string;
+  ariaRelevant: string;
+  ariaRequired: string;
+  ariaRoleDescription: string;
+  ariaRowCount: string;
+  ariaRowIndex: string;
+  ariaRowSpan: string;
+  ariaSelected: string;
+  ariaSort: string;
+  ariaValueMax: string;
+  ariaValueMin: string;
+  ariaValueNow: string;
+  ariaValueText: string;
+  form: HTMLFormElement;
+  labels: NodeListOf<HTMLLabelElement> | [];
+  validationMessage: string;
+  validity: globalThis.ValidityState;
+  willValidate: boolean;
+  disabled?: boolean;
+  $elem?: any;
+  name?: string;
+  value?: any;
+  checked?: boolean;
+  $internals?: ElementInternals;
   static get formAssociated() {
     return true;
   }
@@ -121,4 +223,16 @@ export class FormElement extends CustomElement {
     super();
     this.$internals = this.attachInternals();
   }
+  reportValidity?(): boolean;
+  setFormValue?(value: string | FormData): void;
+  setValidity?(
+    validityChanges: Partial<globalThis.ValidityState>,
+    validationMessage?: string,
+    anchor?: HTMLElement
+  ): void;
+  checkValidity?(): boolean;
+  formDisabledCallback?(disabled: boolean): void;
+  formResetCallback?(): void;
+  formAssociatedCallback?(form: HTMLFormElement): void;
+  onValidate?(): void;
 }
