@@ -1,7 +1,7 @@
 import { ElementMeta, EMIT_KEY, LISTEN_KEY } from '../decorator';
 import { attachDOM, attachShadow, attachStyle } from '../element';
 import { EventDispatcher } from '../event';
-
+import { IElementInternals, ICustomElement } from 'element-internals-polyfill';
 export type OnInit = () => void;
 
 export interface StateChange {
@@ -9,61 +9,6 @@ export interface StateChange {
     previousValue: any;
     newValue: any;
   };
-}
-
-export interface Aom {
-  ariaAtomic: string;
-  ariaAutoComplete: string;
-  ariaBusy: string;
-  ariaChecked: string;
-  ariaColCount: string;
-  ariaColIndex: string;
-  ariaColSpan: string;
-  ariaCurrent: string;
-  ariaDisabled: string;
-  ariaExpanded: string;
-  ariaHasPopup: string;
-  ariaHidden: string;
-  ariaKeyShortcuts: string;
-  ariaLabel: string;
-  ariaLevel: string;
-  ariaLive: string;
-  ariaModal: string;
-  ariaMultiLine: string;
-  ariaMultiSelectable: string;
-  ariaOrientation: string;
-  ariaPlaceholder: string;
-  ariaPosInSet: string;
-  ariaPressed: string;
-  ariaReadOnly: string;
-  ariaRelevant: string;
-  ariaRequired: string;
-  ariaRoleDescription: string;
-  ariaRowCount: string;
-  ariaRowIndex: string;
-  ariaRowSpan: string;
-  ariaSelected: string;
-  ariaSort: string;
-  ariaValueMax: string;
-  ariaValueMin: string;
-  ariaValueNow: string;
-  ariaValueText: string;
-}
-
-export interface ElementInternals extends Aom {
-  checkValidity: () => boolean;
-  form: HTMLFormElement;
-  labels: NodeListOf<HTMLLabelElement> | [];
-  reportValidity: () => boolean;
-  setFormValue: (value: string | FormData) => void;
-  setValidity: (
-    validityChanges: Partial<globalThis.ValidityState>,
-    validationMessage?: string,
-    anchor?: HTMLElement
-  ) => void;
-  validationMessage: string;
-  validity: globalThis.ValidityState;
-  willValidate: boolean;
 }
 
 export type OnStateChange = (
@@ -168,54 +113,14 @@ export class CustomElement extends HTMLElement {
   public onDestroy?(): void;
 }
 
-export class FormElement extends CustomElement {
-  ariaAtomic: string;
-  ariaAutoComplete: string;
-  ariaBusy: string;
-  ariaChecked: string;
-  ariaColCount: string;
-  ariaColIndex: string;
-  ariaColSpan: string;
-  ariaCurrent: string;
-  ariaDisabled: string;
-  ariaExpanded: string;
-  ariaHasPopup: string;
-  ariaHidden: string;
-  ariaKeyShortcuts: string;
-  ariaLabel: string;
-  ariaLevel: string;
-  ariaLive: string;
-  ariaModal: string;
-  ariaMultiLine: string;
-  ariaMultiSelectable: string;
-  ariaOrientation: string;
-  ariaPlaceholder: string;
-  ariaPosInSet: string;
-  ariaPressed: string;
-  ariaReadOnly: string;
-  ariaRelevant: string;
-  ariaRequired: string;
-  ariaRoleDescription: string;
-  ariaRowCount: string;
-  ariaRowIndex: string;
-  ariaRowSpan: string;
-  ariaSelected: string;
-  ariaSort: string;
-  ariaValueMax: string;
-  ariaValueMin: string;
-  ariaValueNow: string;
-  ariaValueText: string;
-  form: HTMLFormElement;
-  labels: NodeListOf<HTMLLabelElement> | [];
-  validationMessage: string;
-  validity: globalThis.ValidityState;
-  willValidate: boolean;
-  disabled?: boolean;
-  $elem?: any;
-  name?: string;
-  value?: any;
+export class FormElement extends CustomElement implements ICustomElement {
   checked?: boolean;
-  $internals?: ElementInternals;
+  disabled?: boolean;
+  name?: string;
+  required?: boolean;
+  value?: any;
+  $elem?: any;
+  $internals?: IElementInternals;
   static get formAssociated() {
     return true;
   }
@@ -223,16 +128,5 @@ export class FormElement extends CustomElement {
     super();
     this.$internals = this.attachInternals();
   }
-  reportValidity?(): boolean;
-  setFormValue?(value: string | FormData): void;
-  setValidity?(
-    validityChanges: Partial<globalThis.ValidityState>,
-    validationMessage?: string,
-    anchor?: HTMLElement
-  ): void;
-  checkValidity?(): boolean;
-  formDisabledCallback?(disabled: boolean): void;
-  formResetCallback?(): void;
-  formAssociatedCallback?(form: HTMLFormElement): void;
   onValidate?(): void;
 }

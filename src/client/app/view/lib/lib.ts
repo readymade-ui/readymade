@@ -4,6 +4,7 @@ import {
   FormElement,
   State
 } from './../../../../modules/core';
+import { RdSlider } from './../../../../modules/ui';
 import template from './lib.html';
 import style from './lib.scss';
 
@@ -24,23 +25,35 @@ class LibraryComponent extends CustomElement {
       .addEventListener('click', () => {
         this.toggleTheme();
       });
-    const radio: FormElement = this.shadowRoot.querySelector('rd-radiogroup');
-    const dropdown: FormElement = this.shadowRoot.querySelector('rd-switch');
-    const checkbox: FormElement = this.shadowRoot.querySelector('rd-checkbox');
-    const input: FormElement = this.shadowRoot.querySelector('rd-input');
-    const textarea: FormElement = this.shadowRoot.querySelector('rd-textarea');
-    const select: FormElement = this.shadowRoot.querySelector('rd-dropdown');
-    const button: FormElement = this.shadowRoot.querySelector('rd-button');
-    const joystick: FormElement = this.shadowRoot.querySelector(
-      '[type="joystick"]'
+    const radio: HTMLInputElement = this.shadowRoot.querySelector(
+      'rd-radiogroup'
     );
-    const vertSlider: FormElement = this.shadowRoot.querySelector(
-      '[type="vert"]'
+    const dropdown: HTMLInputElement = this.shadowRoot.querySelector(
+      'rd-switch'
     );
-    const horizontalSlider: FormElement = this.shadowRoot.querySelector(
-      '[type="hor"]'
+    const checkbox: HTMLInputElement = this.shadowRoot.querySelector(
+      'rd-checkbox'
     );
-    const submit: FormElement = this.shadowRoot.querySelector(
+    const input: HTMLInputElement = this.shadowRoot.querySelector('rd-input');
+    const textarea: HTMLInputElement = this.shadowRoot.querySelector(
+      'rd-textarea'
+    );
+    const select: HTMLSelectElement = this.shadowRoot.querySelector(
+      'rd-dropdown'
+    );
+    const button: HTMLButtonElement = this.shadowRoot.querySelector(
+      'rd-button'
+    );
+    const joystick = (<unknown>(
+      this.shadowRoot.querySelector('[type="joystick"]')
+    )) as RdSlider;
+    const vertSlider = (<unknown>(
+      this.shadowRoot.querySelector('[type="vert"]')
+    )) as RdSlider;
+    const horizontalSlider = (<unknown>(
+      this.shadowRoot.querySelector('[type="hor"]')
+    )) as RdSlider;
+    const submit: HTMLInputElement = this.shadowRoot.querySelector(
       '[type="submit"]'
     );
     radio.onchange = (ev: Event) => {
@@ -96,7 +109,7 @@ class LibraryComponent extends CustomElement {
       ev.preventDefault();
       const values = Array.from(
         this.shadowRoot.querySelectorAll('.form__item')
-      ).map((item: FormElement) => {
+      ).map((item: any) => {
         item.onValidate();
         return {
           tag: item.tagName,
