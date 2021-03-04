@@ -25,25 +25,13 @@ class LibraryComponent extends CustomElement {
       .addEventListener('click', () => {
         this.toggleTheme();
       });
-    const radio: HTMLInputElement = this.shadowRoot.querySelector(
-      'rd-radiogroup'
-    );
-    const dropdown: HTMLInputElement = this.shadowRoot.querySelector(
-      'rd-switch'
-    );
-    const checkbox: HTMLInputElement = this.shadowRoot.querySelector(
-      'rd-checkbox'
-    );
-    const input: HTMLInputElement = this.shadowRoot.querySelector('rd-input');
-    const textarea: HTMLInputElement = this.shadowRoot.querySelector(
-      'rd-textarea'
-    );
-    const select: HTMLSelectElement = this.shadowRoot.querySelector(
-      'rd-dropdown'
-    );
-    const button: HTMLButtonElement = this.shadowRoot.querySelector(
-      'rd-button'
-    );
+    const radio: FormElement = this.shadowRoot.querySelector('rd-radiogroup');
+    const dropdown: FormElement = this.shadowRoot.querySelector('rd-switch');
+    const checkbox: FormElement = this.shadowRoot.querySelector('rd-checkbox');
+    const input: FormElement = this.shadowRoot.querySelector('rd-input');
+    const textarea: FormElement = this.shadowRoot.querySelector('rd-textarea');
+    const select: FormElement = this.shadowRoot.querySelector('rd-dropdown');
+    const button: FormElement = this.shadowRoot.querySelector('rd-button');
     const joystick = (<unknown>(
       this.shadowRoot.querySelector('[type="joystick"]')
     )) as RdSlider;
@@ -53,7 +41,7 @@ class LibraryComponent extends CustomElement {
     const horizontalSlider = (<unknown>(
       this.shadowRoot.querySelector('[type="hor"]')
     )) as RdSlider;
-    const submit: HTMLInputElement = this.shadowRoot.querySelector(
+    const submit: FormElement = this.shadowRoot.querySelector(
       '[type="submit"]'
     );
     radio.onchange = (ev: Event) => {
@@ -92,19 +80,9 @@ class LibraryComponent extends CustomElement {
     horizontalSlider.oninput = (ev: CustomEvent) => {
       console.log((ev.detail as FormElement).value);
     };
-    // setTimeout(
-    //   () => (vertSlider.value = 100),
-    //   0
-    // );
-    // setTimeout(
-    //   () => ( horizontalSlider.value = 1000),
-    //   0
-    // );
-    // setTimeout(
-    //   () =>
-    //     (joystick.value = [140, 140]),
-    //   0
-    // );
+    setTimeout(() => (vertSlider.value = 100), 0);
+    setTimeout(() => (horizontalSlider.value = 1000), 0);
+    setTimeout(() => (joystick.value = [140, 140]), 0);
     submit.onclick = (ev: Event) => {
       ev.preventDefault();
       const values = Array.from(
