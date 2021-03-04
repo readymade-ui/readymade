@@ -8,7 +8,7 @@ import style from './lib.scss';
   template: template
 })
 class LibraryComponent extends CustomElement {
-  theme: string = 'light';
+  theme: string = 'dark';
   constructor() {
     super();
   }
@@ -60,25 +60,25 @@ class LibraryComponent extends CustomElement {
     this.shadowRoot.querySelector('[type="hor"]').oninput = (ev: Event) => {
       console.log(this.shadowRoot.querySelector('[type="hor"]').value);
     };
-    setTimeout(
-      () => (this.shadowRoot.querySelector('[type="vert"]').value = 100),
-      0
-    );
-    setTimeout(
-      () => (this.shadowRoot.querySelector('[type="hor"]').value = 1000),
-      0
-    );
-    setTimeout(
-      () =>
-        (this.shadowRoot.querySelector('[type="joystick"]').value = [140, 140]),
-      0
-    );
+    // setTimeout(
+    //   () => (this.shadowRoot.querySelector('[type="vert"]').value = 100),
+    //   0
+    // );
+    // setTimeout(
+    //   () => (this.shadowRoot.querySelector('[type="hor"]').value = 1000),
+    //   0
+    // );
+    // setTimeout(
+    //   () =>
+    //     (this.shadowRoot.querySelector('[type="joystick"]').value = [140, 140]),
+    //   0
+    // );
     this.shadowRoot.querySelector('[type="submit"]').onclick = (ev: Event) => {
       ev.preventDefault();
-      // const items = Array.from();
       const values = Array.from(
         this.shadowRoot.querySelectorAll('.form__item')
       ).map(item => {
+        item.onValidate();
         return {
           tag: item.tagName,
           value: item.value,

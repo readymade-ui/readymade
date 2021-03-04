@@ -98,6 +98,19 @@ class RdRadioGroup extends FormElement {
     return this.$internals.checkValidity();
   }
 
+  onValidate() {
+    if (
+      this.hasAttribute('required') &&
+      (!this.value || this.value.length <= 0)
+    ) {
+      this.$internals.setValidity({ customError: true }, 'required');
+      this.$group.classList.add('required');
+    } else {
+      this.$internals.setValidity({});
+      this.$group.classList.remove('required');
+    }
+  }
+
   get value(): any {
     const checked = this.$elem.filter(elem => elem.checked)[0];
     if (checked) {
@@ -126,19 +139,6 @@ class RdRadioGroup extends FormElement {
       .querySelector('slot')
       .assignedNodes()
       .filter(elem => elem.tagName === 'INPUT' && elem.type === 'radio');
-  }
-
-  onValidate() {
-    if (
-      this.hasAttribute('required') &&
-      (!this.value || this.value.length <= 0)
-    ) {
-      this.$internals.setValidity({ customError: true }, 'required');
-      this.$group.classList.add('required');
-    } else {
-      this.$internals.setValidity({});
-      this.$group.classList.remove('required');
-    }
   }
 }
 

@@ -97,6 +97,16 @@ class RdInput extends FormElement {
     this.$internals.setFormValue('');
   }
 
+  onValidate() {
+    if (this.hasAttribute('required') && this.value.length <= 0) {
+      this.$internals.setValidity({ customError: true }, 'required');
+      this.$elem.classList.add('required');
+    } else {
+      this.$internals.setValidity({});
+      this.$elem.classList.remove('required');
+    }
+  }
+
   get type() {
     return 'text';
   }
@@ -135,16 +145,6 @@ class RdInput extends FormElement {
 
   get $elem() {
     return this.shadowRoot.querySelector('input');
-  }
-
-  onValidate() {
-    if (this.hasAttribute('required') && this.value.length <= 0) {
-      this.$internals.setValidity({ customError: true }, 'required');
-      this.$elem.classList.add('required');
-    } else {
-      this.$internals.setValidity({});
-      this.$elem.classList.remove('required');
-    }
   }
 }
 

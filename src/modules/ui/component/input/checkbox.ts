@@ -105,6 +105,16 @@ class RdCheckBox extends FormElement {
     this.$internals.setFormValue(this.$elem.checked);
   }
 
+  onValidate() {
+    if (this.hasAttribute('required') && this.value === false) {
+      this.$internals.setValidity({ customError: true }, 'required');
+      this.$elem.classList.add('required');
+    } else {
+      this.$internals.setValidity({});
+      this.$elem.classList.remove('required');
+    }
+  }
+
   @Emitter('change')
   connectedCallback() {
     this.$elem.onchange = (ev: Event) => {
@@ -173,16 +183,6 @@ class RdCheckBox extends FormElement {
 
   get $elem() {
     return this.shadowRoot.querySelector('input');
-  }
-
-  onValidate() {
-    if (this.hasAttribute('required') && this.value === false) {
-      this.$internals.setValidity({ customError: true }, 'required');
-      this.$elem.classList.add('required');
-    } else {
-      this.$internals.setValidity({});
-      this.$elem.classList.remove('required');
-    }
   }
 }
 

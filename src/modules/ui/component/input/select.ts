@@ -115,6 +115,16 @@ class RdDropdown extends FormElement {
     this.$internals.setFormValue('');
   }
 
+  onValidate() {
+    if (this.hasAttribute('required') && this.value.length <= 0) {
+      this.$internals.setValidity({ customError: true }, 'required');
+      this.$elem.classList.add('required');
+    } else {
+      this.$internals.setValidity({});
+      this.$elem.classList.remove('required');
+    }
+  }
+
   get form() {
     return this.$internals.form;
   }
@@ -152,15 +162,6 @@ class RdDropdown extends FormElement {
       .querySelector('slot')
       .assignedNodes()
       .filter(elem => elem.tagName === 'SELECT')[0];
-  }
-  onValidate() {
-    if (this.hasAttribute('required') && this.value.length <= 0) {
-      this.$internals.setValidity({ customError: true }, 'required');
-      this.$elem.classList.add('required');
-    } else {
-      this.$internals.setValidity({});
-      this.$elem.classList.remove('required');
-    }
   }
 }
 

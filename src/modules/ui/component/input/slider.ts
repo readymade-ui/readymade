@@ -138,6 +138,13 @@ import { RdControl } from './../control';
       outline: none;
       box-shadow: none;
     }
+    :host.required .slider .draggable,
+    :host.required .slider .draggable[disabled]:hover, 
+    :host.required .slider .draggable[disabled].active {
+      border: 2px solid var(--color-error);
+      outline: none;
+      box-shadow: none;
+    }
   }
   `,
   template: html`
@@ -197,6 +204,16 @@ class RdSlider extends FormElement {
   formResetCallback() {
     this.onSliderInit();
     this.$internals.setFormValue(this.value);
+  }
+
+  onValidate() {
+    if (this.hasAttribute('required')) {
+      this.$internals.setValidity({ customError: true }, 'required');
+      this.$elem.classList.add('required');
+    } else {
+      this.$internals.setValidity({});
+      this.$elem.classList.remove('required');
+    }
   }
 
   get form() {
