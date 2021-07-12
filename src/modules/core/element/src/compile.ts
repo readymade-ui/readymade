@@ -344,7 +344,7 @@ class BoundHandler {
 
     if (!isNode) {
       this.$parent.ɵɵstate.$changes.dispatchEvent(
-        new CustomEvent('change', { detail: change  })
+        new CustomEvent('change', { detail: change })
       );
     }
 

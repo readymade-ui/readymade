@@ -1,7 +1,7 @@
 import { ElementMeta, EMIT_KEY, LISTEN_KEY } from '../decorator';
 import { attachDOM, attachShadow, attachStyle } from '../element';
 import { EventDispatcher } from '../event';
-
+import { IElementInternals, ICustomElement } from 'element-internals-polyfill';
 export type OnInit = () => void;
 
 export interface StateChange {
@@ -11,7 +11,10 @@ export interface StateChange {
   };
 }
 
-export type OnStateChange = (change: StateChange, cb: (change: StateChange) => void) => void;
+export type OnStateChange = (
+  change: StateChange,
+  cb: (change: StateChange) => void
+) => void;
 
 export type SetState = (property: string, model: any) => void;
 
@@ -87,7 +90,10 @@ export class CustomElement extends HTMLElement {
   public elementMeta: ElementMeta;
   constructor() {
     super();
-    attachShadow(this, { mode: this.elementMeta.mode || 'open' });
+    attachShadow(this, {
+      mode: this.elementMeta.mode || 'open',
+      delegatesFocus: this.elementMeta.delegatesFocus || false
+    });
     if (this.bindEmitters) {
       this.bindEmitters();
     }
@@ -105,4 +111,22 @@ export class CustomElement extends HTMLElement {
   public setState?(property: string, model: any): void;
   public onUpdate?(): void;
   public onDestroy?(): void;
+}
+
+export class FormElement extends CustomElement implements ICustomElement {
+  checked?: boolean;
+  disabled?: boolean;
+  name?: string;
+  required?: boolean;
+  value?: any;
+  $elem?: any;
+  $internals?: IElementInternals;
+  static get formAssociated() {
+    return true;
+  }
+  constructor() {
+    super();
+    this.$internals = this.attachInternals();
+  }
+  onValidate?(): void;
 }

@@ -1,0 +1,67 @@
+<div class="testbed">
+  <div class="theme__toggle"></div>
+  <div>
+    <h1>Readymade UI</h1>
+    <form class="grid">
+    <div class="pane">
+      <h3>Button</h3>
+      <rd-button></rd-button>
+    </div>
+    <div class="pane">
+      <h3>Switch</h3>
+      <rd-switch class="form__item" disabled></rd-switch>
+    </div>
+    <div class="pane">
+      <h3>Input</h3>
+      <rd-input class="form__item" ></rd-input>
+    </div>
+    <div class="pane">
+      <h3>Text Area</h3>
+      <rd-textarea class="form__item" required></textarea>
+    </div>
+    <div class="pane">
+      <h3>Select</h3>
+      <rd-dropdown class="form__item" >
+        <select>
+          <option>Option 1</option>
+          <option>Option 2</option>
+          <option>Option With Very Long Title</option>
+        </select>
+      </rd-dropdown>
+    </div>
+    <div class="pane">
+      <h3>Radio</h3>
+      <rd-radiogroup class="form__item" >
+        <input type="radio" name="control" value="hue">
+        <label for="hue">Hue</label>
+        <input type="radio" name="control" value="saturation">
+        <label for="saturation">Saturation</label>
+        <input type="radio" name="control" value="brightness">
+        <label for="brightess">Brightness</label>
+      </rd-radiogroup>
+    </div>
+    <div class="pane">
+      <h3>Check Box</h3>
+      <rd-checkbox class="form__item" checked ></rd-checkbox>
+    </div>
+    <div class="pane">
+      <h3>Joystick</h3>
+      <rd-slider class="form__item" type="joystick" control="{{ joyControl }}"></rd-slider>
+    </div>
+    <div class="pane">
+      <h3>Slider (Vertical)</h3>
+      <rd-slider class="form__item" type="vert" control="{{ vertControl }}"></rd-slider>
+    </div>
+    <div class="pane">
+      <h3>Slider (Horizontal)</h3>
+      <rd-slider class="form__item" type="hor" control="{{ horControl }}"></rd-slider>
+    </div>
+    <div class="pane">
+      <h3>Form Submit</h3>
+      <rd-button type="submit"></rd-button>
+    </div>
+  </form>
+    
+  </div>
+  <div class="spacer"></div>
+</div>

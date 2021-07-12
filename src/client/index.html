@@ -14,7 +14,7 @@
     <script src="./polyfill.ts" inline="inline"></script>
     <script src="./vendor.ts" inline="inline"></script>
   </head>
-  <body>
+  <body data-theme="dark">
     <template id="object-repeater" items="item of {{items}}">
       <ul class="is--large">
         <li repeat="item" foo="{{item.index}}">{{item.title}}</li>
