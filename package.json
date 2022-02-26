@@ -69,7 +69,7 @@
     "parcel-bundler": "^1.12.4",
     "parcel-plugin-css-as-string": "^1.0.1",
     "parcel-plugin-externals": "^0.5.1",
-    "prismjs": "^1.24.0",
+    "prismjs": "^1.27.0",
     "rimraf": "^3.0.2"
   },
   "devDependencies": {
