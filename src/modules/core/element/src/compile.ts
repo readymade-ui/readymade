@@ -276,8 +276,7 @@ class NodeTree {
         acceptNode(node) {
           return NodeFilter.FILTER_ACCEPT;
         }
-      },
-      false
+      }
     );
     while (walk.nextNode()) {
       this.updateNode(walk.currentNode, key, value);

@@ -3,7 +3,6 @@ import {
   css,
   html,
   Emitter,
-  EventDispatcher,
   FormElement,
   Listen
 } from './../../../core';
@@ -242,12 +241,12 @@ class RdSlider extends FormElement {
     this.updateControl(controlValue);
   }
 
-  get $elem(): HTMLElement {
+  get $elem(): Element {
     return this.shadowRoot.querySelector('.draggable');
   }
 
   get $handle(): HTMLElement {
-    return this.shadowRoot.querySelector('.handle');
+    return (<unknown>this.shadowRoot.querySelector('.handle')) as HTMLElement;
   }
 
   @Emitter('input')

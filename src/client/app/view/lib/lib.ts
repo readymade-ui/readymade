@@ -25,13 +25,28 @@ class LibraryComponent extends CustomElement {
       .addEventListener('click', () => {
         this.toggleTheme();
       });
-    const radio: FormElement = this.shadowRoot.querySelector('rd-radiogroup');
-    const dropdown: FormElement = this.shadowRoot.querySelector('rd-switch');
-    const checkbox: FormElement = this.shadowRoot.querySelector('rd-checkbox');
-    const input: FormElement = this.shadowRoot.querySelector('rd-input');
-    const textarea: FormElement = this.shadowRoot.querySelector('rd-textarea');
-    const select: FormElement = this.shadowRoot.querySelector('rd-dropdown');
-    const button: FormElement = this.shadowRoot.querySelector('rd-button');
+    const form = this.shadowRoot.querySelector('form');
+    const radio = (<unknown>(
+      this.shadowRoot.querySelector('rd-radiogroup')
+    )) as FormElement;
+    const dropdown = (<unknown>(
+      this.shadowRoot.querySelector('rd-switch')
+    )) as FormElement;
+    const checkbox = (<unknown>(
+      this.shadowRoot.querySelector('rd-checkbox')
+    )) as FormElement;
+    const input = (<unknown>(
+      this.shadowRoot.querySelector('rd-input')
+    )) as FormElement;
+    const textarea = (<unknown>(
+      this.shadowRoot.querySelector('rd-textarea')
+    )) as FormElement;
+    const select = (<unknown>(
+      this.shadowRoot.querySelector('rd-dropdown')
+    )) as FormElement;
+    const button = (<unknown>(
+      this.shadowRoot.querySelector('rd-button')
+    )) as FormElement;
     const joystick = (<unknown>(
       this.shadowRoot.querySelector('[type="joystick"]')
     )) as RdSlider;
@@ -41,44 +56,55 @@ class LibraryComponent extends CustomElement {
     const horizontalSlider = (<unknown>(
       this.shadowRoot.querySelector('[type="hor"]')
     )) as RdSlider;
-    const submit: FormElement = this.shadowRoot.querySelector(
-      '[type="submit"]'
-    );
+    const submit = (<unknown>(
+      this.shadowRoot.querySelector('[type="submit"]')
+    )) as FormElement;
     radio.onchange = (ev: Event) => {
-      console.log((ev.target as FormElement).value);
+      console.log((ev.target as any).value);
     };
     dropdown.onchange = (ev: Event) => {
-      console.log((ev.target as FormElement).checked);
+      console.log((ev.target as any).value);
+      console.dir(form);
     };
     checkbox.onchange = (ev: Event) => {
-      console.log((ev.target as FormElement).checked);
+      console.log((ev.target as any).value);
+      console.dir(form);
     };
     input.oninput = (ev: Event) => {
-      console.log((ev.target as FormElement).value);
+      console.log((ev.target as any).value);
+      console.dir(form);
     };
     input.onchange = (ev: Event) => {
-      console.log((ev.target as FormElement).value);
+      console.log((ev.target as any).value);
+      console.dir(form);
     };
     textarea.oninput = (ev: Event) => {
-      console.log((ev.target as FormElement).value);
+      console.log((ev.target as any).value);
+      console.dir(form);
     };
     textarea.onchange = (ev: Event) => {
-      console.log((ev.target as FormElement).value);
+      console.log((ev.target as any).value);
+      console.dir(form);
     };
     dropdown.onchange = (ev: Event) => {
-      console.log((ev.target as FormElement).value);
+      console.log((ev.target as any).value);
+      console.dir(form);
     };
     button.onclick = (ev: Event) => {
       console.log(ev);
+      console.dir(form);
     };
     joystick.oninput = (ev: CustomEvent) => {
-      console.log((ev.detail as FormElement).value);
+      console.log((ev.target as any).value);
+      console.dir(form);
     };
     vertSlider.oninput = (ev: CustomEvent) => {
-      console.log((ev.detail as FormElement).value);
+      console.log((ev.target as any).value);
+      console.dir(form);
     };
     horizontalSlider.oninput = (ev: CustomEvent) => {
-      console.log((ev.detail as FormElement).value);
+      console.log((ev.target as any).value);
+      console.dir(form);
     };
     setTimeout(() => (vertSlider.value = 100), 0);
     setTimeout(() => (horizontalSlider.value = 1000), 0);
@@ -96,6 +122,7 @@ class LibraryComponent extends CustomElement {
         };
       });
       console.log(values);
+      console.dir(form);
     };
   }
   @State()

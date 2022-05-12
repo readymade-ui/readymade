@@ -51,7 +51,7 @@ class MyListComponent extends CustomElement {
         this.deactivateElement(li);
       }
       li.addEventListener('click', (clickEv: MouseEvent) => {
-        getSiblings(li).forEach((elem: HTMLElement) => {
+        getSiblings(li).forEach((elem: Element) => {
           this.deactivateElement(elem);
         });
         this.activateElement(li);
@@ -76,7 +76,7 @@ class MyListComponent extends CustomElement {
       } else {
         this.currentIndex -= 1;
       }
-      siblings.forEach((elem: HTMLElement) => {
+      siblings.forEach((elem: Element) => {
         if (getElementIndex(elem) === this.currentIndex) {
           this.activateElement(elem);
         } else {
@@ -91,7 +91,7 @@ class MyListComponent extends CustomElement {
       } else {
         this.currentIndex += 1;
       }
-      siblings.forEach((elem: HTMLElement) => {
+      siblings.forEach((elem: Element) => {
         if (getElementIndex(elem) === this.currentIndex) {
           this.activateElement(elem);
         } else {

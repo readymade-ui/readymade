@@ -1,9 +1,9 @@
 import { Component, PseudoElement, templateId, uuidv4 } from '../../core';
 import {
-    DOT_BRACKET_NOTATION_REGEX,
-    findValueByString,
-    isObject,
-    stripTemplateString
+  DOT_BRACKET_NOTATION_REGEX,
+  findValueByString,
+  isObject,
+  stripTemplateString
 } from '../../core/element/src/compile';
 import { TemplateComponent } from '../custom';
 
@@ -166,7 +166,7 @@ export class TemplateRepeater extends TemplateComponent {
     }
   }
 
-  public remove(): null | HTMLElement {
+  public remove(): Element | null {
     if (!this.parentNode) {
       return null;
     }
@@ -216,9 +216,9 @@ export class Repeater extends PseudoElement {
   }
 
   public render() {
-    const template = document.querySelector(
-      `[id="${this.$templateId}"]`
-    ) as HTMLTemplateElement;
+    const template = (<unknown>(
+      document.querySelector(`[id="${this.$templateId}"]`)
+    )) as HTMLTemplateElement;
     if (template) {
       this.remove();
       renderTemplate(this, template, this.getAttribute('items'));

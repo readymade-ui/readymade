@@ -1,7 +1,7 @@
 import { ElementMeta } from './../../decorator';
 
 function closestRoot(base: Element) {
-  function __closestFrom(el: any): Element {
+  function __closestFrom(el: any): Element | HTMLHeadElement {
     if (el.getRootNode()) {
       return el.getRootNode();
     } else {

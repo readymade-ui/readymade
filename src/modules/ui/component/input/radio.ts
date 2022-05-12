@@ -134,7 +134,7 @@ class RdRadioGroup extends FormElement {
     });
   }
 
-  get $group(): HTMLElement {
+  get $group(): Element {
     return this.shadowRoot.querySelector('.group');
   }
 
