@@ -41,13 +41,10 @@ function getElementIndex(el: any) {
 }
 
 const isNode =
-typeof process !== undefined &&
-process.versions != null &&
-process.versions.node != null;
+  typeof process === 'object' && String(process) === '[object process]';
 
 const isBrowser =
-typeof window !== undefined &&
-typeof window.document !== undefined;
+  typeof window !== undefined && typeof window.document !== undefined;
 
 export {
   isBrowser,
