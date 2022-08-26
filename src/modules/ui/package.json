@@ -1,11 +1,11 @@
 {
-  "name": "@readymade/router",
-  "version": "2.1.0",
-  "description": "JavaScript microlibrary for developing Web Components with TypeScript and Decorators",
-  "umd": "./bundles/router.js",
-  "main": "./fesm2015/router.js",
-  "es2015": "./fesm2015/router.js",
-  "fesm2015": "./fesm2015/router.js",
+  "name": "@readymade/ui",
+  "version": "1.0.0",
+  "description": "UI library of standard elements built with Readymade",
+  "umd": "./bundles/index.js",
+  "main": "./fesm2015/index.js",
+  "es2015": "./fesm2015/index.js",
+  "fesm2015": "./fesm2015/index.js",
   "types": "./types/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

@@ -23,7 +23,7 @@ export interface Route {
 }
 
 class Router {
-  rootElement: HTMLElement;
+  rootElement: Element;
   routes: any[];
   currentRoute: Route;
   constructor(root: string, routes: Route[]) {
@@ -33,7 +33,7 @@ class Router {
     if (!routes) {
       console.error(`[Router] initialized without any routes.`);
     }
-    this.rootElement = document.querySelector(root) as HTMLElement;
+    this.rootElement = document.querySelector(root);
     this.routes = routes;
     this.listen();
   }

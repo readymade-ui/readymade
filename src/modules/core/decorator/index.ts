@@ -1,10 +1,10 @@
 import {
-    BIND_SUFFIX,
-    BoundHandler,
-    BoundNode,
-    HANDLER_KEY,
-    NODE_KEY,
-    setState
+  BIND_SUFFIX,
+  BoundHandler,
+  BoundNode,
+  HANDLER_KEY,
+  NODE_KEY,
+  setState
 } from '../element/src/compile';
 import { compileTemplate } from './../element';
 import { EventDispatcher, ReadymadeEventTarget } from './../event';
@@ -23,6 +23,7 @@ interface ElementMeta {
   custom?: {
     extends: string;
   };
+  delegatesFocus?: boolean;
   eventMap?: { [key: string]: EventMeta };
   mode?: 'closed' | 'open';
   selector: string;
@@ -207,13 +208,13 @@ function Listen(eventName: string, channelName?: string) {
 }
 
 export {
-    EventMeta,
-    ElementMeta,
-    Component,
-    State,
-    Emitter,
-    Listen,
-    html,
-    css,
-    noop
+  EventMeta,
+  ElementMeta,
+  Component,
+  State,
+  Emitter,
+  Listen,
+  html,
+  css,
+  noop
 };

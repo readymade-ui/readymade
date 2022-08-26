@@ -152,7 +152,7 @@ class RSideNavComponent extends CustomElement {
   public direction: string;
   public status: string;
   public background: Element;
-  public nav: Element;
+  public nav: HTMLElement;
   public shadow: Element;
   public player: any;
   public points: any;

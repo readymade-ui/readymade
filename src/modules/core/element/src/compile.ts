@@ -276,8 +276,7 @@ class NodeTree {
         acceptNode(node) {
           return NodeFilter.FILTER_ACCEPT;
         }
-      },
-      false
+      }
     );
     while (walk.nextNode()) {
       this.updateNode(walk.currentNode, key, value);
@@ -344,7 +343,7 @@ class BoundHandler {
 
     if (!isNode) {
       this.$parent.ɵɵstate.$changes.dispatchEvent(
-        new CustomEvent('change', { detail: change  })
+        new CustomEvent('change', { detail: change })
       );
     }
 

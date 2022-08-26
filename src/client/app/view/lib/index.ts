@@ -1,0 +1,1 @@
+export { LibraryComponent } from './lib';

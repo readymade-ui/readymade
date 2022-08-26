@@ -1,5 +1,16 @@
 import { ElementMeta } from './../../decorator';
 
+function closestRoot(base: Element) {
+  function __closestFrom(el: any): Element | HTMLHeadElement {
+    if (el.getRootNode()) {
+      return el.getRootNode();
+    } else {
+      return document.head;
+    }
+  }
+  return __closestFrom(base);
+}
+
 function attachShadow(instance: any, options?: any) {
   const shadowRoot: ShadowRoot = instance.attachShadow(options || {});
   const t = document.createElement('template');
@@ -17,13 +28,18 @@ function attachDOM(instance: any, options?: any) {
 
 function attachStyle(instance: any, options?: any) {
   const id = `${instance.elementMeta.selector}`;
-  if (!document.getElementById(`${id}-x`)) {
-    const t = document.createElement('style');
-    t.setAttribute('id', `${id}-x`);
-    t.innerText = instance.elementMeta.style;
-    t.innerText = t.innerText.replace(/:host/gi, `[is=${id}]`);
-    document.head.appendChild(t);
+  const closest: any = closestRoot(instance);
+  if (closest.tagName === 'HEAD' && document.getElementById(`${id}-x`)) {
+    return;
   }
+  if (closest.getElementById && closest.getElementById(`${id}-x`)) {
+    return;
+  }
+  const t = document.createElement('style');
+  t.setAttribute('id', `${id}-x`);
+  t.innerText = instance.elementMeta.style;
+  t.innerText = t.innerText.replace(/:host/gi, `[is=${id}]`);
+  closest.appendChild(t);
 }
 
 function define(instance: any, meta: ElementMeta) {

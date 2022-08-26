@@ -5,7 +5,7 @@ import { Component, CustomElement, css, html } from './../../../modules/core';
   style: css`
     :host {
       display: block;
-      width: 100%; 
+      width: 100%;
       margin-bottom: 4px;
     }
     label {
@@ -40,7 +40,6 @@ import { Component, CustomElement, css, html } from './../../../modules/core';
   `
 })
 class RMeterComponent extends CustomElement {
-
   min: number;
   max: number;
   value: number;
@@ -73,8 +72,7 @@ class RMeterComponent extends CustomElement {
   }
 
   canSet() {
-    if (this.max === undefined ||
-      this.value === undefined) {
+    if (this.max === undefined || this.value === undefined) {
       return false;
     }
     return true;
@@ -82,19 +80,26 @@ class RMeterComponent extends CustomElement {
 
   setValue() {
     if (this.canSet()) {
-      (this.shadowRoot.querySelector('.progress') as HTMLElement).style.width = `${(this.value / this.max) * 100}%`;
-      (this.shadowRoot.querySelector('.value') as HTMLElement).innerText = `${this.value}Kb`;
+      ((<unknown>(
+        this.shadowRoot.querySelector('.progress')
+      )) as HTMLElement).style.width = `${(this.value / this.max) * 100}%`;
+      ((<unknown>(
+        this.shadowRoot.querySelector('.value')
+      )) as HTMLElement).innerText = `${this.value}Kb`;
     }
   }
 
   setLabel(val: string) {
-    (this.shadowRoot.querySelector('.label') as HTMLElement).innerText = val;
+    ((<unknown>(
+      this.shadowRoot.querySelector('.label')
+    )) as HTMLElement).innerText = val;
   }
 
   setColor(val: string) {
-    (this.shadowRoot.querySelector('.progress') as HTMLElement).style.background = val;
+    ((<unknown>(
+      this.shadowRoot.querySelector('.progress')
+    )) as HTMLElement).style.background = val;
   }
-
 }
 
 export { RMeterComponent };

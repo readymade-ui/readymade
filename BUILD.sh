@@ -27,3 +27,12 @@ cp src/modules/router/README.md packages/@readymade/router/README.md
 mkdir -p packages/@readymade/router/types
 cp -R src/modules/router/typings/* packages/@readymade/router/types
 rm -rf src/modules/router/typings
+
+npx tsc -p src/modules/ui/tsconfig.json
+npx rollup -c src/modules/ui/rollup.config.js
+cp src/modules/ui/package.json packages/@readymade/ui/package.json
+cp src/modules/ui/LICENSE.txt packages/@readymade/ui/LICENSE.txt
+cp src/modules/ui/README.md packages/@readymade/ui/README.md
+mkdir -p packages/@readymade/ui/types
+cp -R src/modules/ui/typings/* packages/@readymade/ui/types
+rm -rf src/modules/ui/typings
