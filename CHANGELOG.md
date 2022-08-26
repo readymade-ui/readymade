@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2.1.0
+
+- NEW @readymade/ui package includes UI library built with Web Components
+- NEW support for form-associated custom elements using `FormElement class` and `delegatesFocus`
+- NEW delegatesFocus property now supported when initializing ShadowDOM
+- FIX style tag may not append to host `shadowRoot` for customized built-in elements
+- FIX issues with `Repeater` and `Router` type definitions, may cause breaking change in development
+
 ## 2.0.0
 
 - NEW @readymade/dom package includes a collection of readymade components that extend from native HTML elements
