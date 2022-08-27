@@ -21,7 +21,6 @@ import {
       border-radius: 1em;
       color: var(--color-default);
       font: var(--font-family);
-      max-width: 280px;
       min-height: 2em;
       padding: 0em 1em;
     }
