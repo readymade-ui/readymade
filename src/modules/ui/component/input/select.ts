@@ -17,6 +17,7 @@ import {
     }
     ::slotted(select) {
       display: block;
+      width: 100%;
       background-color: var(--color-bg);
       border: 2px solid var(--color-border);
       border-radius: 1em;
