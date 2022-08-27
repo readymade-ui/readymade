@@ -24,7 +24,6 @@ import {
       font: var(--font-family);
       line-height: 1.3;
       padding: 0.3em 1.6em 0.3em 0.8em;
-      max-width: 280px;
       height: 36px;
       box-sizing: border-box;
       margin: 0;
