@@ -1,6 +1,6 @@
 {
   "name": "@readymade/ui",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "UI library of standard elements built with Readymade",
   "umd": "./bundles/index.js",
   "main": "./fesm2015/index.js",
