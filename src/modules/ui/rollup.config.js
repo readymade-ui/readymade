@@ -1,5 +1,7 @@
 import resolve from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
+import minifyHTML from 'rollup-plugin-minify-html-literals';
+import inlinePostCSS from 'rollup-plugin-inline-postcss';
 import cleanup from 'rollup-plugin-cleanup';
 import { terser } from 'rollup-plugin-terser';
 
@@ -11,7 +13,15 @@ const clean = {
 export default [
   {
     input: 'src/modules/ui/index.ts',
-    plugins: [resolve(), typescript({ declaration: false }), cleanup(clean)],
+    plugins: [
+      resolve(),
+      typescript({
+        sourceMap: true
+      }),
+      minifyHTML(),
+      inlinePostCSS(),
+      cleanup(clean)
+    ],
     onwarn: (warning, next) => {
       if (warning.code === 'THIS_IS_UNDEFINED') return;
       next(warning);
@@ -29,6 +39,8 @@ export default [
       typescript({
         sourceMap: true
       }),
+      minifyHTML(),
+      inlinePostCSS(),
       cleanup(clean),
       terser()
     ],
@@ -44,7 +56,13 @@ export default [
   },
   {
     input: 'src/modules/ui/index.ts',
-    plugins: [resolve(), typescript({ declaration: false }), cleanup(clean)],
+    plugins: [
+      resolve(),
+      typescript({ declaration: false }),
+      minifyHTML(),
+      inlinePostCSS(),
+      cleanup(clean)
+    ],
     onwarn: (warning, next) => {
       if (warning.code === 'THIS_IS_UNDEFINED') return;
       next(warning);
@@ -63,6 +81,8 @@ export default [
         declaration: false,
         sourceMap: true
       }),
+      minifyHTML(),
+      inlinePostCSS(),
       cleanup(clean),
       terser()
     ],
