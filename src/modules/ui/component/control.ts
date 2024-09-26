@@ -19,4 +19,5 @@ export interface RdControl {
   gridArea?: string;
   placeSelf?: string;
   transform?: string;
+  numberType?: 'int' | 'float';
 }

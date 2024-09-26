@@ -50,6 +50,9 @@ class LibraryComponent extends CustomElement {
     const joystick = (<unknown>(
       this.shadowRoot.querySelector('[type="joystick"]')
     )) as RdSlider;
+    const squareJoystick = (<unknown>(
+      this.shadowRoot.querySelectorAll('[type="joystick"]')[1]
+    )) as RdSlider;
     const vertSlider = (<unknown>(
       this.shadowRoot.querySelector('[type="vert"]')
     )) as RdSlider;
@@ -98,6 +101,10 @@ class LibraryComponent extends CustomElement {
       console.log((ev.target as any).value);
       console.dir(form);
     };
+    squareJoystick.oninput = (ev: CustomEvent) => {
+      console.log((ev.target as any).value);
+      console.dir(form);
+    };
     vertSlider.oninput = (ev: CustomEvent) => {
       console.log((ev.target as any).value);
       console.dir(form);
@@ -109,6 +116,7 @@ class LibraryComponent extends CustomElement {
     setTimeout(() => (vertSlider.value = 100), 0);
     setTimeout(() => (horizontalSlider.value = 1000), 0);
     setTimeout(() => (joystick.value = [140, 140]), 0);
+    setTimeout(() => (squareJoystick.value = [140, 140]), 0);
     submit.onclick = (ev: Event) => {
       ev.preventDefault();
       const values = Array.from(
@@ -149,10 +157,20 @@ class LibraryComponent extends CustomElement {
         type: 'slider',
         name: 'joystick',
         orient: 'is--joystick',
-        min: [0, 0],
-        max: [255, 255],
+        min: [0.0, 0.0],
+        max: [255.0, 255.0],
         snapToCenter: false,
-        gridArea: '1 / 2 / span 4 / span 1'
+        gridArea: '1 / 2 / span 4 / span 1',
+      }),
+      joySquareControl: JSON.stringify({
+        type: 'slider',
+        name: 'square-joystick',
+        orient: 'is--joystick--square',
+        min: [0, 0],
+        max: [12, 12],
+        snapToCenter: false,
+        gridArea: '1 / 2 / span 4 / span 1',
+        numberType: 'int'
       })
     };
   }
