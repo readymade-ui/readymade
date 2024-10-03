@@ -92,11 +92,12 @@ function renderTemplate(
 
   const clone = template.content.cloneNode(true);
   const protoNode = (clone as Element).querySelector(`[repeat="${bound[1]}"]`);
+
   let $elem: any = elem;
   let model: any;
 
   for (; $elem && $elem !== document; $elem = $elem.parentNode) {
-    if ($elem.host && $elem.host.$state && $elem.host.$state[bound[2]]) {
+    if ($elem?.host && $elem?.host?.$state && $elem?.host?.$state[bound[2]]) {
       model = JSON.parse($elem.host.$state[bound[2]]);
       elem.$key = bound[2];
       $elem.host.ɵɵstate.$changes.addEventListener(
@@ -105,7 +106,7 @@ function renderTemplate(
           elem.onChange(ev.detail);
         }
       );
-    } else if ($elem.$state && $elem.$state[bound[2]]) {
+    } else if ($elem?.$state && $elem?.$state[bound[2]]) {
       model = JSON.parse($elem.$state[bound[2]]);
       elem.$key = bound[2];
       $elem.ɵɵstate.$changes.addEventListener('change', (ev: CustomEvent) => {
@@ -175,7 +176,13 @@ export class TemplateRepeater extends TemplateComponent {
 
   public render(): void {
     const previousTarget = this.remove();
-    renderTemplate(this, this, this.getAttribute('items'), previousTarget);
+    if (this.getAttribute('force') === 'true') {
+      setTimeout(() =>
+        renderTemplate(this, this, this.getAttribute('items'), previousTarget)
+      );
+    } else {
+      renderTemplate(this, this, this.getAttribute('items'), previousTarget);
+    }
   }
 
   public onChange(change: any) {

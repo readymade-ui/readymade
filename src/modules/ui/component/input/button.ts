@@ -1,6 +1,7 @@
 import {
   Component,
   Emitter,
+  Listen,
   EventDispatcher,
   FormElement,
   html,
@@ -27,7 +28,13 @@ import {
       align-items: center;
       justify-content: center;
     }
-    :host button .icon {
+    :host button .label {
+      -webkit-user-select: none; /* Safari */
+      -moz-user-select: none; /* Firefox */
+      -ms-user-select: none; /* Internet Explorer/Edge */
+      user-select: none; /* Standard syntax */
+    }
+    :host button .icon:not(.is--empty) {
       display: block;
       width: 22px;
       height: 22px;
@@ -36,7 +43,7 @@ import {
       min-height: 18px;
       border-radius: 8px;
     }
-    :host button.is--small .icon {
+    :host button.is--small .icon:not(.is--empty) {
       display: inline-block;
       width: 12px;
       height: 12px;
@@ -45,7 +52,7 @@ import {
       min-height: 32px;
       border-radius: 14px;
     }
-    :host button.is--medium .icon {
+    :host button.is--medium .icon:not(.is--empty) {
       display: inline-block;
       width: 22px;
       height: 22px;
@@ -54,7 +61,7 @@ import {
       min-height: 44px;
       border-radius: 18px;
     }
-    :host button.is--large .icon {
+    :host button.is--large .icon:not(.is--empty) {
       display: inline-block;
       width: 32px;
       height: 32px;
@@ -69,7 +76,8 @@ import {
       background-color: var(--color-bg);
       border: 2px solid var(--color-highlight);
     }
-    :host button:active {
+    :host button:active,
+    :host button.active {
       outline: 0px;
       outline-offset: 0px;
       background-color: var(--color-selected);
@@ -82,7 +90,8 @@ import {
     }
     :host button[disabled]:hover,
     :host button[disabled]:focus,
-    :host button[disabled]:active {
+    :host button[disabled]:active,
+    :host button[disabled].active {
       border: 2px solid var(--color-border);
       outline: none;
       box-shadow: none;
@@ -101,7 +110,7 @@ class RdButton extends FormElement {
   }
 
   static get observedAttributes() {
-    return ['type'];
+    return ['type', 'label', 'width', 'height'];
   }
 
   attributeChangedCallback(name: string, old: string, next: string) {
@@ -112,6 +121,15 @@ class RdButton extends FormElement {
       case 'value':
         this.value = next;
         break;
+      case 'label':
+        this.shadowRoot.querySelector('.label').innerText = next;
+        break;
+      case 'width':
+        this.shadowRoot.querySelector('button').style.width = next;
+        break;
+      case 'height':
+        this.shadowRoot.querySelector('button').style.height = next;
+        break;
     }
   }
 
@@ -119,21 +137,35 @@ class RdButton extends FormElement {
     this.$elem.disabled = disabled;
   }
 
-  @Emitter('change')
   connectedCallback() {
-    this.$elem.onchange = (ev: Event) => {
-      console.log(ev);
-      this.emitter.emit(
-        new CustomEvent('change', {
-          bubbles: true,
-          composed: true,
-          detail: 'composed'
-        })
-      );
-      if (this.onchange) {
-        this.onchange(ev);
+    this.shadowRoot.querySelectorAll('span').forEach(spanElem => {
+      const slot = spanElem.querySelector('slot');
+      if (slot && slot.assignedNodes().length === 0) {
+        spanElem.classList.add('is--empty');
       }
-    };
+    });
+    if (this.type === 'submit') {
+      this.$elem.onsubmit = (ev: Event) => {
+        this.emitter.emit(
+          new CustomEvent('submit', {
+            bubbles: true,
+            composed: true,
+            detail: 'composed'
+          })
+        );
+        if (this.onsubmit) {
+          this.onsubmit(ev);
+        }
+      };
+    }
+  }
+
+  @Listen('press')
+  onPress(ev) {
+    if (ev.detail?.modifier) {
+      this.setAttribute('modifier', ev.detail?.modifier);
+    }
+    this.simulatePress(ev);
   }
 
   get form() {
@@ -174,6 +206,15 @@ class RdButton extends FormElement {
 
   get $elem(): HTMLButtonElement {
     return this.shadowRoot.querySelector('button');
+  }
+
+  simulatePress() {
+    this.$elem.classList.add('active');
+    this.$elem.click();
+    setTimeout(() => {
+      this.$elem.classList.remove('active');
+      this.removeAttribute('modifier');
+    }, 100);
   }
 }
 

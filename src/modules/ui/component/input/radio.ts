@@ -53,7 +53,9 @@ import { Component, FormElement, Emitter, html, css } from './../../../core';
       outline: none;
       box-shadow: none;
     }
+    // this doesn't work in Safari
     ::slotted(label) {
+      margin-top: 5px;
       margin-right: 8px;
     }
     .group {

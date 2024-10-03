@@ -25,6 +25,9 @@
         <li repeat="sub" foo="{{sub}}">{{sub}}</li>
       </ul>
     </template>
+    <template id="buttonpad-repeater" items="button of {{buttons}}">
+      <rd-button></rd-button>
+    </template>
     <div id="root"></div>
     <script src="./index.ts" inline="inline"></script>
   </body>

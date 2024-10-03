@@ -283,14 +283,15 @@ class RdSlider extends FormElement {
       this.control.currentValue = [0, 0];
       this.control.x = this.control.y = 76;
       this.control.position = 'translate(' + 76 + 'px' + ',' + 76 + 'px' + ')';
-      console.log(this.control.min[0], this.control.min[0].toString().includes('.'))
       const joyStickType = this.control.orient.replace('is--joystick--', '');
       if (joyStickType === 'is--joystick') {
         this._joystickType = 'circle';
       } else {
         this._joystickType = joyStickType as 'circle' | 'square';
       }
-      this.shadowRoot.querySelector('.slider').classList.add(this._joystickType);
+      this.shadowRoot
+        .querySelector('.slider')
+        .classList.add(this._joystickType);
     }
     this._lastPos = { transform: this.control.position };
     this.setActualPosition(this.control.position);
@@ -341,7 +342,7 @@ class RdSlider extends FormElement {
     this.control.y =
       e.touches[this._touchItem].pageY -
       this._rect.top -
-      this.$handle.clientWidth / 2;
+      this.$handle.clientHeight / 2;
 
     this.setPosition(this.control.x, this.control.y);
   }
@@ -373,21 +374,33 @@ class RdSlider extends FormElement {
   // Handle drag event
   onTouchMove(e: TouchEvent) {
     e.preventDefault();
-
     // this.$handle.style.opacity = '0.8';
 
     if (this._touchItem === null) {
       this._touchItem = e.touches.length - 1; // make this touch = the latest touch in the touches list instead of using event
     }
 
-    this.control.x =
-      e.touches[this._touchItem].pageX -
-      this._rect.left -
-      this.$handle.getBoundingClientRect().width / 2;
-    this.control.y =
-      e.touches[this._touchItem].pageY -
-      this._rect.top -
-      this.$handle.getBoundingClientRect().height / 2;
+    if (this._joystickType) {
+      this.control.x =
+        (this.getBoundingClientRect().left - e.touches[this._touchItem].pageX) *
+        -1;
+      this.control.y = (this.offsetTop - e.touches[this._touchItem].pageY) * -1;
+    }
+
+    if (this.control.orient === 'is--hor') {
+      this.control.x =
+        (this.getBoundingClientRect().left - e.touches[this._touchItem].pageX) *
+          -1 -
+        this.$handle.getBoundingClientRect().width / 2;
+      this.control.y = 0;
+    }
+
+    if (this.control.orient === 'is--vert') {
+      this.control.x = 0;
+      this.control.y =
+        (this.offsetTop - e.touches[this._touchItem].pageY) * -1 -
+        this.$handle.getBoundingClientRect().height / 2;
+    }
 
     if (this.control.hasUserInput && this.control.isActive) {
       this.setPosition(this.control.x, this.control.y);
@@ -446,10 +459,7 @@ class RdSlider extends FormElement {
       this.removeEventListener('mouseup', this.onMouseUp.bind(this));
     }
 
-    if (
-      this._joystickType &&
-      this.control.snapToCenter === true
-    ) {
+    if (this._joystickType && this.control.snapToCenter === true) {
       const center = this.getCenter(
         [0, this.control.width - this.$handle.offsetWidth],
         [0, this.control.height - this.$handle.offsetHeight]
@@ -536,15 +546,15 @@ class RdSlider extends FormElement {
 
   // set currentValue on control
   clampSlider(val: number) {
-    if (val < (<unknown>this.control.min as number)) {
+    if (val < ((<unknown>this.control.min) as number)) {
       if (this._numberType === 'int') {
         return Math.trunc(this.control.min as number);
       }
       return this.control.min;
     }
-    if (val > (<unknown>this.control.max as number)) {
+    if (val > ((<unknown>this.control.max) as number)) {
       if (this._numberType === 'int') {
-        return  Math.trunc(this.control.max as number);
+        return Math.trunc(this.control.max as number);
       }
       return this.control.max;
     }

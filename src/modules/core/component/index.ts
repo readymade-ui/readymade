@@ -1,5 +1,5 @@
 import { ElementMeta, EMIT_KEY, LISTEN_KEY } from '../decorator';
-import { attachDOM, attachShadow, attachStyle } from '../element';
+import { attachDOM, attachShadow, attachStyle, wait$ } from '../element';
 import { EventDispatcher } from '../event';
 
 export type OnInit = () => void;
@@ -128,6 +128,62 @@ export class StructuralElement extends HTMLElement {
   public bindState?(): void;
   public onUpdate?(): void;
   public onDestroy?(): void;
+  public get$(selector: string) {
+    return this.shadowRoot
+      ? this.shadowRoot.querySelector(selector)
+      : this.querySelector(selector);
+  }
+  public getAll$(selector: string) {
+    return this.shadowRoot
+      ? this.shadowRoot.querySelectorAll(selector)
+      : this.querySelectorAll(selector);
+  }
+  public wait$(selector: string, timeout = 60000): Promise<any, Error> {
+    return new Promise((resolve, reject) => {
+      const startTime = Date.now();
+      const interval = 100; // Check every 100 milliseconds
+      const checkForElement = () => {
+        const elapsedTime = Date.now() - startTime;
+        const root = this.shadowRoot ? this.shadowRoot : this;
+        const element = root.querySelector(selector);
+        if (element) {
+          resolve(element);
+        } else if (elapsedTime >= timeout) {
+          reject(
+            new Error(
+              `Element with selector "${selector}" did not appear within ${timeout} milliseconds`
+            )
+          );
+        } else {
+          setTimeout(checkForElement, interval);
+        }
+      };
+      checkForElement();
+    });
+  }
+  public waitAll$(selector: string, timeout = 60000): Promise<any, Error> {
+    return new Promise((resolve, reject) => {
+      const startTime = Date.now();
+      const interval = 100; // Check every 100 milliseconds
+      const checkForElement = () => {
+        const elapsedTime = Date.now() - startTime;
+        const root = this.shadowRoot ? this.shadowRoot : this;
+        const element = root.querySelectorAll(selector);
+        if (element && element.length) {
+          resolve(element);
+        } else if (elapsedTime >= timeout) {
+          reject(
+            new Error(
+              `Elements with selector "${selector}" did not appear within ${timeout} milliseconds`
+            )
+          );
+        } else {
+          setTimeout(checkForElement, interval);
+        }
+      };
+      checkForElement();
+    });
+  }
 }
 
 export class PseudoElement extends HTMLElement {
@@ -154,6 +210,62 @@ export class PseudoElement extends HTMLElement {
   public setState?(property: string, model: any): void;
   public onUpdate?(): void;
   public onDestroy?(): void;
+  public get$(selector: string) {
+    return this.shadowRoot
+      ? this.shadowRoot.querySelector(selector)
+      : this.querySelector(selector);
+  }
+  public getAll$(selector: string) {
+    return this.shadowRoot
+      ? this.shadowRoot.querySelectorAll(selector)
+      : this.querySelectorAll(selector);
+  }
+  public wait$(selector: string, timeout = 60000): Promise<any, Error> {
+    return new Promise((resolve, reject) => {
+      const startTime = Date.now();
+      const interval = 100; // Check every 100 milliseconds
+      const checkForElement = () => {
+        const elapsedTime = Date.now() - startTime;
+        const root = this.shadowRoot ? this.shadowRoot : this;
+        const element = root.querySelector(selector);
+        if (element) {
+          resolve(element);
+        } else if (elapsedTime >= timeout) {
+          reject(
+            new Error(
+              `Element with selector "${selector}" did not appear within ${timeout} milliseconds`
+            )
+          );
+        } else {
+          setTimeout(checkForElement, interval);
+        }
+      };
+      checkForElement();
+    });
+  }
+  public waitAll$(selector: string, timeout = 60000): Promise<any, Error> {
+    return new Promise((resolve, reject) => {
+      const startTime = Date.now();
+      const interval = 100; // Check every 100 milliseconds
+      const checkForElement = () => {
+        const elapsedTime = Date.now() - startTime;
+        const root = this.shadowRoot ? this.shadowRoot : this;
+        const element = root.querySelectorAll(selector);
+        if (element && element.length) {
+          resolve(element);
+        } else if (elapsedTime >= timeout) {
+          reject(
+            new Error(
+              `Elements with selector "${selector}" did not appear within ${timeout} milliseconds`
+            )
+          );
+        } else {
+          setTimeout(checkForElement, interval);
+        }
+      };
+      checkForElement();
+    });
+  }
 }
 
 export class CustomElement extends HTMLElement {
@@ -182,6 +294,62 @@ export class CustomElement extends HTMLElement {
   public setState?(property: string, model: any): void;
   public onUpdate?(): void;
   public onDestroy?(): void;
+  public get$(selector: string) {
+    return this.shadowRoot
+      ? this.shadowRoot.querySelector(selector)
+      : this.querySelector(selector);
+  }
+  public getAll$(selector: string) {
+    return this.shadowRoot
+      ? this.shadowRoot.querySelectorAll(selector)
+      : this.querySelectorAll(selector);
+  }
+  public wait$(selector: string, timeout = 60000): Promise<any, Error> {
+    return new Promise((resolve, reject) => {
+      const startTime = Date.now();
+      const interval = 100; // Check every 100 milliseconds
+      const checkForElement = () => {
+        const elapsedTime = Date.now() - startTime;
+        const root = this.shadowRoot ? this.shadowRoot : this;
+        const element = root.querySelector(selector);
+        if (element) {
+          resolve(element);
+        } else if (elapsedTime >= timeout) {
+          reject(
+            new Error(
+              `Element with selector "${selector}" did not appear within ${timeout} milliseconds`
+            )
+          );
+        } else {
+          setTimeout(checkForElement, interval);
+        }
+      };
+      checkForElement();
+    });
+  }
+  public waitAll$(selector: string, timeout = 60000): Promise<any, Error> {
+    return new Promise((resolve, reject) => {
+      const startTime = Date.now();
+      const interval = 100; // Check every 100 milliseconds
+      const checkForElement = () => {
+        const elapsedTime = Date.now() - startTime;
+        const root = this.shadowRoot ? this.shadowRoot : this;
+        const element = root.querySelectorAll(selector);
+        if (element && element.length) {
+          resolve(element);
+        } else if (elapsedTime >= timeout) {
+          reject(
+            new Error(
+              `Elements with selector "${selector}" did not appear within ${timeout} milliseconds`
+            )
+          );
+        } else {
+          setTimeout(checkForElement, interval);
+        }
+      };
+      checkForElement();
+    });
+  }
 }
 
 export class FormElement extends CustomElement {

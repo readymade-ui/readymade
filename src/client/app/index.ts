@@ -24,7 +24,8 @@ export {
   RdTextArea,
   RdSlider,
   RdSwitch,
-  RdDropdown
+  RdDropdown,
+  RdButtonPad
 } from './../../modules/ui';
 // views
 export { HomeComponent } from './view/home';

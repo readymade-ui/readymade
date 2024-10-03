@@ -32,4 +32,13 @@
 .grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.pane {
+  margin-top: 20px;
+}
+
+.full {
+  grid-column: span 3;
 }

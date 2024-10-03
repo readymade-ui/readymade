@@ -4,9 +4,19 @@ import {
   FormElement,
   State
 } from './../../../../modules/core';
-import { RdSlider } from './../../../../modules/ui';
+import {
+  keys,
+  numbers
+} from './../../../../modules/ui/component/input/key.model';
+// import { RdSlider } from './../../../../modules/ui';
+// import { TemplateRepeater } from './../../../../modules/dom/repeatr';
 import template from './lib.html';
 import style from './lib.scss';
+import {
+  StandardKeyboard,
+  StandardKeyboardNumPad,
+  StandardKeyboardModifiers
+} from './../../../../modules/ui/component/input/buttonpad';
 
 @Component({
   selector: 'app-library',
@@ -29,7 +39,7 @@ class LibraryComponent extends CustomElement {
     const radio = (<unknown>(
       this.shadowRoot.querySelector('rd-radiogroup')
     )) as FormElement;
-    const dropdown = (<unknown>(
+    const toggle = (<unknown>(
       this.shadowRoot.querySelector('rd-switch')
     )) as FormElement;
     const checkbox = (<unknown>(
@@ -46,6 +56,12 @@ class LibraryComponent extends CustomElement {
     )) as FormElement;
     const button = (<unknown>(
       this.shadowRoot.querySelector('rd-button')
+    )) as FormElement;
+    const buttonPad = (<unknown>(
+      this.shadowRoot.querySelector('rd-buttonpad')
+    )) as FormElement;
+    const buttonNumberPad = (<unknown>(
+      this.shadowRoot.querySelectorAll('rd-buttonpad')[1]
     )) as FormElement;
     const joystick = (<unknown>(
       this.shadowRoot.querySelector('[type="joystick"]')
@@ -65,53 +81,118 @@ class LibraryComponent extends CustomElement {
     radio.onchange = (ev: Event) => {
       console.log((ev.target as any).value);
     };
-    dropdown.onchange = (ev: Event) => {
-      console.log((ev.target as any).value);
-      console.dir(form);
+    toggle.onchange = (ev: Event) => {
+      console.log((ev.target as any).checked);
+      // console.dir(form);
     };
     checkbox.onchange = (ev: Event) => {
-      console.log((ev.target as any).value);
-      console.dir(form);
+      console.log((ev.target as any).checked);
+      // console.dir(form);
     };
     input.oninput = (ev: Event) => {
       console.log((ev.target as any).value);
-      console.dir(form);
+      // console.dir(form);
     };
     input.onchange = (ev: Event) => {
       console.log((ev.target as any).value);
-      console.dir(form);
+      // console.dir(form);
     };
     textarea.oninput = (ev: Event) => {
       console.log((ev.target as any).value);
-      console.dir(form);
+      // console.dir(form);
     };
     textarea.onchange = (ev: Event) => {
       console.log((ev.target as any).value);
-      console.dir(form);
+      // console.dir(form);
     };
-    dropdown.onchange = (ev: Event) => {
+    select.onchange = (ev: Event) => {
       console.log((ev.target as any).value);
-      console.dir(form);
+      // console.dir(form);
     };
     button.onclick = (ev: Event) => {
       console.log(ev);
-      console.dir(form);
+      // console.dir(form);
+    };
+    buttonPad.setAttribute(
+      'grid',
+      JSON.stringify({
+        gap: '4px',
+        columns: {
+          count: 14
+        },
+        cells: [
+          {
+            selector: '[key="Space"]',
+            styles: {
+              width: '100%',
+              gridColumn: 'span 3'
+            }
+          },
+          {
+            selector: '[key="Enter"]',
+            styles: {
+              width: '100%',
+              gridColumn: 'span 2'
+            }
+          }
+        ]
+      })
+    );
+    buttonPad.setAttribute('buttons', JSON.stringify(StandardKeyboard));
+    buttonPad.onclick = (ev: Event) => {
+      if (ev.target.tagName === 'RD-BUTTON') {
+        console.dir(form[16].value);
+      }
+    };
+    buttonNumberPad.setAttribute(
+      'grid',
+      JSON.stringify({
+        gap: '4px',
+        columns: {
+          count: 4
+        },
+        cells: [
+          {
+            selector: '[key="0"]',
+            styles: {
+              width: '100%',
+              gridColumn: 'span 2'
+            }
+          },
+          {
+            selector: '[key="Enter"]',
+            styles: {
+              height: '100%',
+              gridRow: 'span 2'
+            }
+          }
+        ]
+      })
+    );
+    buttonNumberPad.setAttribute(
+      'buttons',
+      JSON.stringify(StandardKeyboardNumPad)
+    );
+    buttonNumberPad.onclick = (ev: Event) => {
+      if (ev.target.tagName === 'RD-BUTTON') {
+        console.dir(form[17].value);
+      }
     };
     joystick.oninput = (ev: CustomEvent) => {
       console.log((ev.target as any).value);
-      console.dir(form);
+      // console.dir(form);
     };
     squareJoystick.oninput = (ev: CustomEvent) => {
       console.log((ev.target as any).value);
-      console.dir(form);
+      // console.dir(form);
     };
     vertSlider.oninput = (ev: CustomEvent) => {
       console.log((ev.target as any).value);
-      console.dir(form);
+      // console.dir(form);
     };
     horizontalSlider.oninput = (ev: CustomEvent) => {
       console.log((ev.target as any).value);
-      console.dir(form);
+      // console.dir(form);
     };
     setTimeout(() => (vertSlider.value = 100), 0);
     setTimeout(() => (horizontalSlider.value = 1000), 0);
@@ -122,7 +203,9 @@ class LibraryComponent extends CustomElement {
       const values = Array.from(
         this.shadowRoot.querySelectorAll('.form__item')
       ).map((item: any) => {
-        item.onValidate();
+        if (item.onValidate) {
+          item.onValidate();
+        }
         return {
           tag: item.tagName,
           value: item.value,
@@ -130,7 +213,7 @@ class LibraryComponent extends CustomElement {
         };
       });
       console.log(values);
-      console.dir(form);
+      // console.dir(form);
     };
   }
   @State()
@@ -160,7 +243,7 @@ class LibraryComponent extends CustomElement {
         min: [0.0, 0.0],
         max: [255.0, 255.0],
         snapToCenter: false,
-        gridArea: '1 / 2 / span 4 / span 1',
+        gridArea: '1 / 2 / span 4 / span 1'
       }),
       joySquareControl: JSON.stringify({
         type: 'slider',
