@@ -58,9 +58,9 @@ class EventDispatcher {
   public setChannel(name: string) {
     this.channels[name] = new BroadcastChannel(name);
     this.channels[name].onmessage = ev => {
-      for (const prop in (this.target as any).elementMeta.eventMap) {
+      for (const prop in (this.target as any).elementMeta?.eventMap) {
         if (prop.includes(name) && prop.includes(ev.data.type)) {
-          this.target[(this.target as any).elementMeta.eventMap[prop].handler](
+          this.target[(this.target as any).elementMeta?.eventMap[prop].handler](
             ev.data
           );
         }

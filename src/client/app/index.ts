@@ -33,3 +33,4 @@ export { PerformanceTestComponent } from './view/perf';
 export { QueryComponent } from './view/query';
 export { TestBedComponent } from './view/test';
 export { LibraryComponent } from './view/lib';
+export { Router, routing } from './routing'

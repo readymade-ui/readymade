@@ -213,7 +213,7 @@ export function buttonPadKeyPress(elem: Element) {
 class RdButtonPad extends FormElement {
   currentKey: string | null = null;
   currentModifier: string | null = null;
-  disabled: false;
+  disabled: boolean;
   constructor() {
     super();
   }
@@ -283,7 +283,7 @@ class RdButtonPad extends FormElement {
       .catch(err => console.error(err));
   }
 
-  updateVisualGrid(elem: Element, grid: any) {
+  updateVisualGrid(elem: HTMLElement, grid: any) {
     if (grid.gap) {
       elem.style.gridGap = grid.gap;
     }
@@ -361,16 +361,20 @@ class RdButtonPad extends FormElement {
 
   click$(ev: MouseEvent) {
     if (this.onclick) {
-      let value = ev.target.getAttribute('key');
+      let value = (ev.target as HTMLElement).getAttribute('key');
       if (
         this.currentModifier &&
         StandardKeyboardModifiers[
-          `${this.currentModifier}+${ev.target.getAttribute('code')}`
+          `${this.currentModifier}+${(ev.target as HTMLElement).getAttribute(
+            'code'
+          )}`
         ]
       ) {
         value =
           StandardKeyboardModifiers[
-            `${this.currentModifier}+${ev.target.getAttribute('code')}`
+            `${this.currentModifier}+${(ev.target as HTMLElement).getAttribute(
+              'code'
+            )}`
           ].key;
       }
       this.value = value;
@@ -381,7 +385,7 @@ class RdButtonPad extends FormElement {
   @Listen('keyup')
   press$(ev: KeyboardEvent) {
     let code = ev.code;
-    let modifier = false;
+    let modifier = null;
     if (code === 'NULL') {
       return;
     }
@@ -415,8 +419,8 @@ class RdButtonPad extends FormElement {
   }
 
   buttonPress$(ev: TouchEvent) {
-    let code = ev.target.getAttribute('code');
-    let modifier = false;
+    let code = (ev.target as HTMLElement).getAttribute('code');
+    let modifier = null;
     if (code === 'NULL') {
       return;
     }
@@ -431,7 +435,7 @@ class RdButtonPad extends FormElement {
           StandardKeyboardModifiers[`${this.currentModifier}+${code}`].code;
         modifier = this.currentModifier;
       }
-      this.value = ev.target.getAttribute('key');
+      this.value = (ev.target as HTMLElement).getAttribute('key');
       const keyElem = ev.target;
       keyElem?.dispatchEvent(
         new CustomEvent('press', { detail: { modifier } })
@@ -440,7 +444,7 @@ class RdButtonPad extends FormElement {
   }
 
   buttonPressModifier$(ev: TouchEvent) {
-    let code = ev.target.getAttribute('code');
+    let code = (ev.target as HTMLElement).getAttribute('code');
     if (StandardKeyboardModifierCodeKeyMap[code]) {
       this.currentModifier = StandardKeyboardModifierCodeKeyMap[code];
     }

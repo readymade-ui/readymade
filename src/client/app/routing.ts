@@ -3,7 +3,7 @@ import { Router } from '../../modules/router';
 const routing = [
   { path: '/', component: 'app-home', title: 'Readymade' },
   { path: '/test', component: 'app-testbed', title: 'Readymade Test Page' },
-  { path: '/ui', component: 'app-library', title: 'Readymade UI' },
+  { path: '/lib', component: 'app-library', title: 'Readymade UI' },
   {
     path: '/perf',
     component: 'app-perftest',

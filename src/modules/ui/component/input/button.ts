@@ -122,7 +122,9 @@ class RdButton extends FormElement {
         this.value = next;
         break;
       case 'label':
-        this.shadowRoot.querySelector('.label').innerText = next;
+        (this.shadowRoot.querySelector(
+          '.label'
+        ) as HTMLSpanElement).innerText = next;
         break;
       case 'width':
         this.shadowRoot.querySelector('button').style.width = next;
@@ -154,18 +156,18 @@ class RdButton extends FormElement {
           })
         );
         if (this.onsubmit) {
-          this.onsubmit(ev);
+          this.onsubmit(ev as SubmitEvent);
         }
       };
     }
   }
 
   @Listen('press')
-  onPress(ev) {
+  onPress(ev: CustomEvent) {
     if (ev.detail?.modifier) {
       this.setAttribute('modifier', ev.detail?.modifier);
     }
-    this.simulatePress(ev);
+    this.simulatePress();
   }
 
   get form() {

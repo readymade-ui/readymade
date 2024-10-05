@@ -4,24 +4,19 @@ import {
   FormElement,
   State
 } from './../../../../modules/core';
-import {
-  keys,
-  numbers
-} from './../../../../modules/ui/component/input/key.model';
-// import { RdSlider } from './../../../../modules/ui';
-// import { TemplateRepeater } from './../../../../modules/dom/repeatr';
-import template from './lib.html';
-import style from './lib.scss';
+import { RdSlider } from './../../../../modules/ui';
+import html from './lib.html?raw';
+import style from './lib.scss?raw';
+import resolve from 'es6-template-strings';
 import {
   StandardKeyboard,
-  StandardKeyboardNumPad,
-  StandardKeyboardModifiers
+  StandardKeyboardNumPad
 } from './../../../../modules/ui/component/input/buttonpad';
 
 @Component({
   selector: 'app-library',
   style: style,
-  template: template
+  template: html
 })
 class LibraryComponent extends CustomElement {
   theme: string = 'dark';
@@ -29,54 +24,54 @@ class LibraryComponent extends CustomElement {
     super();
   }
   connectedCallback() {
-    this.shadowRoot.querySelector('.theme__toggle').classList.add(this.theme);
+    this.shadowRoot?.querySelector('.theme__toggle')?.classList.add(this.theme);
     this.shadowRoot
-      .querySelector('.theme__toggle')
-      .addEventListener('click', () => {
+      ?.querySelector('.theme__toggle')
+      ?.addEventListener('click', () => {
         this.toggleTheme();
       });
-    const form = this.shadowRoot.querySelector('form');
+    const form = this.shadowRoot?.querySelector('form');
     const radio = (<unknown>(
-      this.shadowRoot.querySelector('rd-radiogroup')
+      this.shadowRoot?.querySelector('rd-radiogroup')
     )) as FormElement;
     const toggle = (<unknown>(
-      this.shadowRoot.querySelector('rd-switch')
+      this.shadowRoot?.querySelector('rd-switch')
     )) as FormElement;
     const checkbox = (<unknown>(
-      this.shadowRoot.querySelector('rd-checkbox')
+      this.shadowRoot?.querySelector('rd-checkbox')
     )) as FormElement;
     const input = (<unknown>(
-      this.shadowRoot.querySelector('rd-input')
+      this.shadowRoot?.querySelector('rd-input')
     )) as FormElement;
     const textarea = (<unknown>(
-      this.shadowRoot.querySelector('rd-textarea')
+      this.shadowRoot?.querySelector('rd-textarea')
     )) as FormElement;
     const select = (<unknown>(
-      this.shadowRoot.querySelector('rd-dropdown')
+      this.shadowRoot?.querySelector('rd-dropdown')
     )) as FormElement;
     const button = (<unknown>(
-      this.shadowRoot.querySelector('rd-button')
+      this.shadowRoot?.querySelector('rd-button')
     )) as FormElement;
     const buttonPad = (<unknown>(
-      this.shadowRoot.querySelector('rd-buttonpad')
+      this.shadowRoot?.querySelector('rd-buttonpad')
     )) as FormElement;
     const buttonNumberPad = (<unknown>(
-      this.shadowRoot.querySelectorAll('rd-buttonpad')[1]
+      this.shadowRoot?.querySelectorAll('rd-buttonpad')[1]
     )) as FormElement;
     const joystick = (<unknown>(
-      this.shadowRoot.querySelector('[type="joystick"]')
+      this.shadowRoot?.querySelector('[type="joystick"]')
     )) as RdSlider;
     const squareJoystick = (<unknown>(
-      this.shadowRoot.querySelectorAll('[type="joystick"]')[1]
+      this.shadowRoot?.querySelectorAll('[type="joystick"]')[1]
     )) as RdSlider;
     const vertSlider = (<unknown>(
-      this.shadowRoot.querySelector('[type="vert"]')
+      this.shadowRoot?.querySelector('[type="vert"]')
     )) as RdSlider;
     const horizontalSlider = (<unknown>(
-      this.shadowRoot.querySelector('[type="hor"]')
+      this.shadowRoot?.querySelector('[type="hor"]')
     )) as RdSlider;
     const submit = (<unknown>(
-      this.shadowRoot.querySelector('[type="submit"]')
+      this.shadowRoot?.querySelector('[type="submit"]')
     )) as FormElement;
     radio.onchange = (ev: Event) => {
       console.log((ev.target as any).value);
@@ -140,8 +135,8 @@ class LibraryComponent extends CustomElement {
     );
     buttonPad.setAttribute('buttons', JSON.stringify(StandardKeyboard));
     buttonPad.onclick = (ev: Event) => {
-      if (ev.target.tagName === 'RD-BUTTON') {
-        console.dir(form[16].value);
+      if ((ev.target as HTMLElement).tagName === 'RD-BUTTON') {
+        console.dir((form[16] as HTMLInputElement).value);
       }
     };
     buttonNumberPad.setAttribute(
@@ -174,8 +169,8 @@ class LibraryComponent extends CustomElement {
       JSON.stringify(StandardKeyboardNumPad)
     );
     buttonNumberPad.onclick = (ev: Event) => {
-      if (ev.target.tagName === 'RD-BUTTON') {
-        console.dir(form[17].value);
+      if ((ev.target as HTMLElement).tagName === 'RD-BUTTON') {
+        console.dir((form[17] as HTMLInputElement).value);
       }
     };
     joystick.oninput = (ev: CustomEvent) => {
@@ -201,7 +196,7 @@ class LibraryComponent extends CustomElement {
     submit.onclick = (ev: Event) => {
       ev.preventDefault();
       const values = Array.from(
-        this.shadowRoot.querySelectorAll('.form__item')
+        this.shadowRoot?.querySelectorAll('.form__item')
       ).map((item: any) => {
         if (item.onValidate) {
           item.onValidate();
@@ -260,10 +255,18 @@ class LibraryComponent extends CustomElement {
   toggleTheme() {
     this.theme = this.theme === 'light' ? 'dark' : 'light';
     document.body.setAttribute('data-theme', this.theme);
-    this.shadowRoot.querySelector('.theme__toggle').classList.remove('light');
-    this.shadowRoot.querySelector('.theme__toggle').classList.remove('dark');
-    this.shadowRoot.querySelector('.theme__toggle').classList.add(this.theme);
+    this.shadowRoot?.querySelector('.theme__toggle').classList.remove('light');
+    this.shadowRoot?.querySelector('.theme__toggle').classList.remove('dark');
+    this.shadowRoot?.querySelector('.theme__toggle').classList.add(this.theme);
   }
 }
 
-export { LibraryComponent };
+const template = () => `
+<app-library>
+  <template shadowroot="open">
+  ${resolve(html)}
+  </template>
+</app-library>
+`;
+
+export { LibraryComponent, template };

@@ -171,10 +171,12 @@ function Listen(eventName: string, channelName?: string) {
         this.emitter = new EventDispatcher(this, chan ? chan : null);
       }
 
-      this.elementMeta.eventMap[prop] = {
-        key: name,
-        handler: key
-      };
+      if (this.elementMeta) {
+        this.elementMeta.eventMap[prop] = {
+          key: name,
+          handler: key
+        };
+      }
 
       this.addEventListener(name, handler);
     }

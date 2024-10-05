@@ -128,8 +128,8 @@ export class BodyComponent extends HTMLBodyElement {
   constructor() {
     super();
     attachShadow(this, {
-      mode: this.elementMeta.mode || 'open',
-      delegatesFocus: this.elementMeta.delegatesFocus || false
+      mode: this.elementMeta?.mode || 'open',
+      delegatesFocus: this.elementMeta?.delegatesFocus || false
     });
     if (this.bindEmitters) {
       this.bindEmitters();
@@ -300,8 +300,8 @@ export class DivComponent extends HTMLDivElement {
   constructor() {
     super();
     attachShadow(this, {
-      mode: this.elementMeta.mode || 'open',
-      delegatesFocus: this.elementMeta.delegatesFocus || false
+      mode: this.elementMeta?.mode || 'open',
+      delegatesFocus: this.elementMeta?.delegatesFocus || false
     });
     if (this.bindEmitters) {
       this.bindEmitters();
@@ -459,8 +459,8 @@ export class HeadingComponent extends HTMLHeadingElement {
   constructor() {
     super();
     attachShadow(this, {
-      mode: this.elementMeta.mode || 'open',
-      delegatesFocus: this.elementMeta.delegatesFocus || false
+      mode: this.elementMeta?.mode || 'open',
+      delegatesFocus: this.elementMeta?.delegatesFocus || false
     });
     if (this.bindEmitters) {
       this.bindEmitters();
@@ -947,8 +947,8 @@ export class ParagraphComponent extends HTMLParagraphElement {
   constructor() {
     super();
     attachShadow(this, {
-      mode: this.elementMeta.mode || 'open',
-      delegatesFocus: this.elementMeta.delegatesFocus || false
+      mode: this.elementMeta?.mode || 'open',
+      delegatesFocus: this.elementMeta?.delegatesFocus || false
     });
     if (this.bindEmitters) {
       this.bindEmitters();
@@ -1177,8 +1177,8 @@ export class SpanComponent extends HTMLSpanElement {
   constructor() {
     super();
     attachShadow(this, {
-      mode: this.elementMeta.mode || 'open',
-      delegatesFocus: this.elementMeta.delegatesFocus || false
+      mode: this.elementMeta?.mode || 'open',
+      delegatesFocus: this.elementMeta?.delegatesFocus || false
     });
     if (this.bindEmitters) {
       this.bindEmitters();

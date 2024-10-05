@@ -1,10 +1,15 @@
 import { Component, State, CustomElement } from './../../../modules/core';
 
+
+const CounterState = {
+  count: 0
+};
+
 @Component({
   selector: 'my-counter',
   template: `
     <button id="dec">-</button>
-    <span>{{ c }}</span>
+    <span>{{ count }}</span>
     <button id="inc">+</button>
   `,
   style: `
@@ -30,9 +35,7 @@ import { Component, State, CustomElement } from './../../../modules/core';
 	`
 })
 export class MyCounter extends CustomElement {
-  private $state: {
-    c: '0';
-  };
+
   connectedCallback() {
     this.shadowRoot
       .querySelector('#inc')
@@ -41,21 +44,19 @@ export class MyCounter extends CustomElement {
       .querySelector('#dec')
       .addEventListener('click', this.dec.bind(this));
   }
-
-  get count() {
-    return Number.parseInt(this.$state.c);
+  
+  @State()
+  public getState() {
+    return CounterState;
   }
 
   inc() {
-    this.setState('c', this.count + 1);
+    this.setState('count', this.getState().count + 1);
   }
 
   dec() {
-    this.setState('c', this.count - 1);
+    this.setState('count', this.getState().count - 1);
   }
 
-  @State()
-  public getState() {
-    return { c: '0' };
-  }
+
 }

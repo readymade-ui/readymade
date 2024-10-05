@@ -1,5 +1,5 @@
 import { ElementMeta, EMIT_KEY, LISTEN_KEY } from '../decorator';
-import { attachDOM, attachShadow, attachStyle, wait$ } from '../element';
+import { attachDOM, attachShadow, attachStyle } from '../element';
 import { EventDispatcher } from '../event';
 
 export type OnInit = () => void;
@@ -138,7 +138,7 @@ export class StructuralElement extends HTMLElement {
       ? this.shadowRoot.querySelectorAll(selector)
       : this.querySelectorAll(selector);
   }
-  public wait$(selector: string, timeout = 60000): Promise<any, Error> {
+  public wait$(selector: string, timeout = 60000): Promise<any> {
     return new Promise((resolve, reject) => {
       const startTime = Date.now();
       const interval = 100; // Check every 100 milliseconds
@@ -161,7 +161,7 @@ export class StructuralElement extends HTMLElement {
       checkForElement();
     });
   }
-  public waitAll$(selector: string, timeout = 60000): Promise<any, Error> {
+  public waitAll$(selector: string, timeout = 60000): Promise<any> {
     return new Promise((resolve, reject) => {
       const startTime = Date.now();
       const interval = 100; // Check every 100 milliseconds
@@ -220,7 +220,7 @@ export class PseudoElement extends HTMLElement {
       ? this.shadowRoot.querySelectorAll(selector)
       : this.querySelectorAll(selector);
   }
-  public wait$(selector: string, timeout = 60000): Promise<any, Error> {
+  public wait$(selector: string, timeout = 60000): Promise<any> {
     return new Promise((resolve, reject) => {
       const startTime = Date.now();
       const interval = 100; // Check every 100 milliseconds
@@ -243,7 +243,7 @@ export class PseudoElement extends HTMLElement {
       checkForElement();
     });
   }
-  public waitAll$(selector: string, timeout = 60000): Promise<any, Error> {
+  public waitAll$(selector: string, timeout = 60000): Promise<any> {
     return new Promise((resolve, reject) => {
       const startTime = Date.now();
       const interval = 100; // Check every 100 milliseconds
@@ -274,8 +274,8 @@ export class CustomElement extends HTMLElement {
   constructor() {
     super();
     attachShadow(this, {
-      mode: this.elementMeta.mode || 'open',
-      delegatesFocus: this.elementMeta.delegatesFocus || false
+      mode: this.elementMeta?.mode || 'open',
+      delegatesFocus: this.elementMeta?.delegatesFocus || false
     });
     if (this.bindEmitters) {
       this.bindEmitters();
@@ -304,7 +304,7 @@ export class CustomElement extends HTMLElement {
       ? this.shadowRoot.querySelectorAll(selector)
       : this.querySelectorAll(selector);
   }
-  public wait$(selector: string, timeout = 60000): Promise<any, Error> {
+  public wait$(selector: string, timeout = 60000): Promise<any> {
     return new Promise((resolve, reject) => {
       const startTime = Date.now();
       const interval = 100; // Check every 100 milliseconds
@@ -327,7 +327,7 @@ export class CustomElement extends HTMLElement {
       checkForElement();
     });
   }
-  public waitAll$(selector: string, timeout = 60000): Promise<any, Error> {
+  public waitAll$(selector: string, timeout = 60000): Promise<any> {
     return new Promise((resolve, reject) => {
       const startTime = Date.now();
       const interval = 100; // Check every 100 milliseconds
@@ -354,7 +354,6 @@ export class CustomElement extends HTMLElement {
 
 export class FormElement extends CustomElement {
   $internals?: IElementInternals;
-  public attachInternals: () => IElementInternals;
   static get formAssociated() {
     return true;
   }

@@ -1,6 +1,6 @@
 import { Component, CustomElement, State } from './../../../../modules/core';
-import template from './test.html';
-import style from './test.scss';
+import html from './test.html?raw';
+import style from './test.scss?raw';
 
 const objectModel = [
   {
@@ -30,7 +30,7 @@ const arrayModel = [1, 'two', 3, 4, 'five'];
 @Component({
   selector: 'app-testbed',
   style: style,
-  template: template
+  template: html
 })
 class TestBedComponent extends CustomElement {
   constructor() {
@@ -47,4 +47,6 @@ class TestBedComponent extends CustomElement {
   }
 }
 
-export { TestBedComponent };
+const template = () => html;
+
+export { TestBedComponent, template };

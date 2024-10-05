@@ -3,8 +3,8 @@ import commonjsResolve from '@rollup/plugin-commonjs';
 import html from 'rollup-plugin-string-html';
 import nodeResolve from '@rollup/plugin-node-resolve';
 import postcss from 'rollup-plugin-postcss';
-import { terser } from 'rollup-plugin-terser';
-import typescript from 'rollup-plugin-typescript2';
+import terser from '@rollup/plugin-terser';
+import typescript from '@rollup/plugin-typescript';
 
 const plugins = [
   nodeResolve({
@@ -30,8 +30,7 @@ const plugins = [
     minifier: {}
   }),
   typescript({
-    experimentalDecorators: true,
-    target: 'es5'
+    experimentalDecorators: true
   }),
   commonjsResolve(),
   terser(),

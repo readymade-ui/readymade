@@ -5,7 +5,7 @@ import postcss from 'rollup-plugin-postcss';
 import html from 'rollup-plugin-string-html';
 import json from '@rollup/plugin-json';
 import cleanup from 'rollup-plugin-cleanup';
-import { terser } from 'rollup-plugin-terser';
+import terser from '@rollup/plugin-terser';
 
 export default [
   {

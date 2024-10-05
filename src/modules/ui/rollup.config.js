@@ -1,9 +1,12 @@
 import resolve from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
-import minifyHTML from 'rollup-plugin-minify-html-literals';
-import inlinePostCSS from 'rollup-plugin-inline-postcss';
+import pkgMinifyHTML from 'rollup-plugin-minify-html-literals';
+import pkgInlinePostCSS from 'rollup-plugin-inline-postcss';
 import cleanup from 'rollup-plugin-cleanup';
-import { terser } from 'rollup-plugin-terser';
+import terser from '@rollup/plugin-terser';
+
+const minifyHTML = pkgMinifyHTML.default;
+const inlinePostCSS = pkgInlinePostCSS.default;
 
 const clean = {
   comments: ['none'],
@@ -29,7 +32,7 @@ export default [
     output: {
       file: 'packages/@readymade/ui/fesm2015/index.js',
       format: 'esm',
-      sourcemap: false
+      sourcemap: true
     }
   },
   {

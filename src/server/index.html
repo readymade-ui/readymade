@@ -9,11 +9,9 @@
       content="Readymade: JavaScript library for coding Web Components with TypeScript Decorators"
     />
     <title>Readymade</title>
-    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
-    <link rel="stylesheet"  href="./style/style.scss" />
+    <link rel="stylesheet" href="./style/style.scss" />
     <script src="./polyfill.ts" type="module"></script>
     <script src="./vendor.ts" type="module"></script>
-    <!--head-script-outlet-->
   </head>
   <body data-theme="dark">
     <template id="object-repeater" items="item of {{items}}">
@@ -33,6 +31,5 @@
       <!--ssr-outlet-->
     </div>
     <script src="./index.ts" type="module"></script>
-    <!--body-script-outlet-->
   </body>
 </html>
