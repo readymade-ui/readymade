@@ -1,13 +1,17 @@
 name: End-to-end tests
-on: [push]
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
 jobs:
   cypress-run:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v4.2.0
       - name: Cypress
-        uses: cypress-io/github-action@v2
+        uses: cypress-io/github-action@v6.7.6
         with:
           build: yarn build
           start: yarn serve
