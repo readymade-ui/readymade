@@ -25,6 +25,12 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
+      - name: Run lint
+        run: yarn lint
+
+      - name: Check prettier formatting
+        run: yarn pretty:check
+
       - name: Cypress
         uses: cypress-io/github-action@v6.7.6
         with:
