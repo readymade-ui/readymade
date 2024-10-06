@@ -14,10 +14,16 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: '18' # or the version defined in your project's engines field in package.json
+
+      - name: Enable Corepack
+        run: corepack enable
 
       - name: Install Yarn
-        run: npm install -g yarn@4.5.0
+        run: corepack prepare yarn@4.5.0 --activate
+
+      - name: Install dependencies
+        run: yarn install
 
       - name: Cypress
         uses: cypress-io/github-action@v6.7.6
