@@ -74,6 +74,18 @@ function changeNode(protoNode: Element, key: string, value: any) {
   protoNode.parentNode.appendChild(node);
 }
 
+function isJSON(str) {
+    if (typeof str !== 'string') {
+        return false;
+    }
+    try {
+        JSON.parse(str);
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
+
 function renderTemplate(
   elem: any,
   template: HTMLTemplateElement,
@@ -98,7 +110,7 @@ function renderTemplate(
 
   for (; $elem && $elem !== document; $elem = $elem.parentNode) {
     if ($elem?.host && $elem?.host?.$state && $elem?.host?.$state[bound[2]]) {
-      model = JSON.parse($elem.host.$state[bound[2]]);
+      model = isJSON($elem.host.$state[bound[2]]) ? JSON.parse($elem.host.$state[bound[2]]) : $elem.host.$state[bound[2]];
       elem.$key = bound[2];
       $elem.host.ɵɵstate.$changes.addEventListener(
         'change',
@@ -107,7 +119,7 @@ function renderTemplate(
         }
       );
     } else if ($elem?.$state && $elem?.$state[bound[2]]) {
-      model = JSON.parse($elem.$state[bound[2]]);
+      model = isJSON($elem.$state[bound[2]]) ? JSON.parse($elem.$state[bound[2]]) : $elem.$state[bound[2]];
       elem.$key = bound[2];
       $elem.ɵɵstate.$changes.addEventListener('change', (ev: CustomEvent) => {
         elem.onChange(ev.detail);

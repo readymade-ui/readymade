@@ -14,6 +14,15 @@ class PerformanceTestComponent extends CustomElement {
   }
 }
 
-const template = () => html;
+const template = () => `
+<app-perftest>
+  <template shadowroot="open">
+    <style>
+    ${style}
+    </style>
+    ${html}
+  </template>
+</app-perftest>
+`;
 
 export { PerformanceTestComponent, template };

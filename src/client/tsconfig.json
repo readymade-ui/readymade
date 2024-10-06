@@ -2,6 +2,7 @@
   "compilerOptions": {
     "baseUrl": "./",
     "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "allowSyntheticDefaultImports": true,
     "module": "ESNext",
     "target": "ESNext",

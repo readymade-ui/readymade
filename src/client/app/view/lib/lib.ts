@@ -7,7 +7,6 @@ import {
 import { RdSlider } from './../../../../modules/ui';
 import html from './lib.html?raw';
 import style from './lib.scss?raw';
-import resolve from 'es6-template-strings';
 import {
   StandardKeyboard,
   StandardKeyboardNumPad
@@ -264,7 +263,10 @@ class LibraryComponent extends CustomElement {
 const template = () => `
 <app-library>
   <template shadowroot="open">
-  ${resolve(html)}
+    <style>
+    ${style}
+    </style>
+    ${html}
   </template>
 </app-library>
 `;

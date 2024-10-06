@@ -129,7 +129,7 @@ export class BodyComponent extends HTMLBodyElement {
     super();
     attachShadow(this, {
       mode: this.elementMeta?.mode || 'open',
-      delegatesFocus: this.elementMeta?.delegatesFocus || false
+      delegatesFocus: this.elementMeta?.delegatesFocus || false,
     });
     if (this.bindEmitters) {
       this.bindEmitters();
@@ -301,7 +301,7 @@ export class DivComponent extends HTMLDivElement {
     super();
     attachShadow(this, {
       mode: this.elementMeta?.mode || 'open',
-      delegatesFocus: this.elementMeta?.delegatesFocus || false
+      delegatesFocus: this.elementMeta?.delegatesFocus || false,
     });
     if (this.bindEmitters) {
       this.bindEmitters();
@@ -460,7 +460,7 @@ export class HeadingComponent extends HTMLHeadingElement {
     super();
     attachShadow(this, {
       mode: this.elementMeta?.mode || 'open',
-      delegatesFocus: this.elementMeta?.delegatesFocus || false
+      delegatesFocus: this.elementMeta?.delegatesFocus || false,
     });
     if (this.bindEmitters) {
       this.bindEmitters();
@@ -948,7 +948,7 @@ export class ParagraphComponent extends HTMLParagraphElement {
     super();
     attachShadow(this, {
       mode: this.elementMeta?.mode || 'open',
-      delegatesFocus: this.elementMeta?.delegatesFocus || false
+      delegatesFocus: this.elementMeta?.delegatesFocus || false,
     });
     if (this.bindEmitters) {
       this.bindEmitters();
@@ -1178,7 +1178,7 @@ export class SpanComponent extends HTMLSpanElement {
     super();
     attachShadow(this, {
       mode: this.elementMeta?.mode || 'open',
-      delegatesFocus: this.elementMeta?.delegatesFocus || false
+      delegatesFocus: this.elementMeta?.delegatesFocus || false,
     });
     if (this.bindEmitters) {
       this.bindEmitters();

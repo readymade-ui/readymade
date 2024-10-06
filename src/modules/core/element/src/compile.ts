@@ -20,17 +20,17 @@ interface Node {
   $init?: boolean;
 }
 
-const isObject = function(val) {
+const isObject = function (val) {
   if (val === null) {
     return false;
   }
   return typeof val === 'function' || typeof val === 'object';
 };
 
-const findValueByString = function(o: any, s: string) {
+const findValueByString = function (o: any, s: string) {
   s = s.replace(STRING_VALUE_REGEX, '.$1');
   s = s.replace(STRING_DOT_REGEX, '');
-  const a = s.split(DOT_BRACKET_NOTATION_REGEX).filter(s => s.length > 0);
+  const a = s.split(DOT_BRACKET_NOTATION_REGEX).filter((s) => s.length > 0);
   for (let i = 0, n = a.length; i < n; ++i) {
     const k = a[i];
     if (k in o) {
@@ -77,7 +77,7 @@ function templateId() {
 
 /* tslint:disable */
 function uuidv4(): string {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
     const r = (Math.random() * 16) | 0,
       v = c == 'x' ? r : (r & 0x3) | 0x8;
     return v.toString(24);
@@ -125,7 +125,7 @@ function getElementByAttribute(node: Element) {
   for (let i = 0; i < node.attributes.length; i++) {
     if (
       /[A-Za-z0-9]{3}-[A-Za-z0-9]{6}/gm.test(
-        node.attributes[i].nodeName || node.attributes[i].name
+        node.attributes[i].nodeName || node.attributes[i].name,
       )
     ) {
       matches.push(node.attributes[i]);
@@ -151,17 +151,17 @@ class NodeTree {
     const clone = node.cloneNode(true);
     if (!(node as Element).setAttribute) {
       // tslint:disable-next-line: only-arrow-functions, no-empty
-      (node as Element).setAttribute = function(i: string, v: string) {};
+      (node as Element).setAttribute = function (i: string, v: string) {};
     }
     (node as Element).setAttribute(id, '');
     if (!(clone as Element).setAttribute) {
       // tslint:disable-next-line: only-arrow-functions, no-empty
-      (clone as Element).setAttribute = function(i: string, v: string) {};
+      (clone as Element).setAttribute = function (i: string, v: string) {};
     }
     (clone as Element).setAttribute(id, '');
     this.$flatMap[id] = {
       id,
-      node: clone
+      node: clone,
     };
     node.$init = true;
     return this.$flatMap[id];
@@ -175,7 +175,7 @@ class NodeTree {
         if (textNode.parentNode === protoNode) {
           (node as Element).textContent = protoNode.textContent.replace(
             regex,
-            value
+            value,
           );
         }
       }
@@ -195,11 +195,11 @@ class NodeTree {
           }
           if (!protoNode.setAttribute) {
             // tslint:disable-next-line: only-arrow-functions, no-empty
-            protoNode.setAttribute = function(i: string, v: string) {};
+            protoNode.setAttribute = function (i: string, v: string) {};
           }
           protoNode.setAttribute(
             attr,
-            attribute.nodeValue.replace(TEMPLATE_BIND_REGEX, '')
+            attribute.nodeValue.replace(TEMPLATE_BIND_REGEX, ''),
           );
           const remove = attribute.nodeName || attribute.name;
           (node as Element).removeAttribute(remove);
@@ -210,11 +210,11 @@ class NodeTree {
         if ((node as Element).getAttribute(attr) !== value) {
           if (!(node as Element).setAttribute) {
             // tslint:disable-next-line: only-arrow-functions, no-empty
-            (node as Element).setAttribute = function(i: string, v: string) {};
+            (node as Element).setAttribute = function (i: string, v: string) {};
           }
           (node as Element).setAttribute(
             attr,
-            attributeValue.replace(regex, value)
+            attributeValue.replace(regex, value),
           );
         }
       }
@@ -246,7 +246,7 @@ class NodeTree {
     for (let index = 0; index < templateStrings.length; index++) {
       templateStrings[index] = stripTemplateString(templateStrings[index]);
     }
-    let matches = filter(str => str.startsWith(key), templateStrings);
+    let matches = filter((str) => str.startsWith(key), templateStrings);
     if (matches.length === 0) {
       return;
     }
@@ -258,10 +258,10 @@ class NodeTree {
           findValueByString(
             value,
             templateStrings[index].substring(
-              templateStrings[index].search(DOT_BRACKET_NOTATION_REGEX)
-            )
+              templateStrings[index].search(DOT_BRACKET_NOTATION_REGEX),
+            ),
           ),
-          protoNode
+          protoNode,
         );
       }
     } else {
@@ -275,8 +275,8 @@ class NodeTree {
       {
         acceptNode(node) {
           return NodeFilter.FILTER_ACCEPT;
-        }
-      }
+        },
+      },
     );
     while (walk.nextNode()) {
       this.updateNode(walk.currentNode, key, value);
@@ -321,8 +321,8 @@ class BoundHandler {
     const change = {
       [key]: {
         previousValue: target[key],
-        newValue: value
-      }
+        newValue: value,
+      },
     };
 
     if (capturedGroup) {
@@ -343,7 +343,7 @@ class BoundHandler {
 
     if (!isNode) {
       this.$parent.ɵɵstate.$changes.dispatchEvent(
-        new CustomEvent('change', { detail: change })
+        new CustomEvent('change', { detail: change }),
       );
     }
 
@@ -366,20 +366,21 @@ function setState(prop: string, model: any) {
   this.ɵɵstate[NODE_KEY].update(prop, model);
 }
 
-function compileTemplate(elementMeta: ElementMeta, target: any) {
+function compileTemplate(elementMeta: ElementMeta, target: any): any {
   if (!elementMeta.style) {
-    elementMeta.style = '';
+    elementMeta.style = [''];
   }
   if (!elementMeta.template) {
-    elementMeta.template = '';
+    elementMeta.template = [''];
   }
   target.prototype.elementMeta = Object.assign(
     target.elementMeta ? target.elementMeta : {},
-    elementMeta
+    elementMeta,
   );
   target.prototype.elementMeta.eventMap = {};
   target.prototype.template = `<style>${elementMeta.style}</style>${elementMeta.template}`;
   target.prototype.bindTemplate = bindTemplate;
+  return target;
 }
 
 export {
@@ -397,5 +398,5 @@ export {
   getElementByAttribute,
   setState,
   BoundHandler,
-  BoundNode
+  BoundNode,
 };

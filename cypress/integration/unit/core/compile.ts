@@ -1,5 +1,12 @@
 /// <reference types="cypress" />
-import { isObject, findValueByString, setValueByString, uuidv4, templateId, compileTemplate, DOT_BRACKET_NOTATION_REGEX } from '../../../../src/modules/core/element/src/compile';
+import {
+  isObject,
+  findValueByString,
+  setValueByString,
+  uuidv4,
+  templateId,
+  compileTemplate,
+} from '../../../../src/modules/core/element/src/compile';
 import { ElementMeta } from './../../../../src/modules/core/decorator';
 
 interface ReadymadeElement extends HTMLElement {
@@ -12,20 +19,19 @@ interface ReadymadeElement extends HTMLElement {
 let element: ReadymadeElement;
 
 describe('Compile Test', () => {
-
   beforeEach(() => {
     element = document.createElement('div');
     element.bindTemplate = () => {};
     element.template = `
     <div>Readymade Test</div>
-    `
+    `;
   });
 
   it('identifies object', () => {
-     const obj = {
-       foo: 'bar'
-     };
-     expect(isObject(obj)).equal(true);
+    const obj = {
+      foo: 'bar',
+    };
+    expect(isObject(obj)).equal(true);
   });
 
   it('identifies function', () => {
@@ -47,32 +53,34 @@ describe('Compile Test', () => {
     const obj = {
       foo: {
         bar: {
-          baz: 'bravo'
-        }
-      }
-    }
+          baz: 'bravo',
+        },
+      },
+    };
     expect(findValueByString(obj, 'foo.bar.baz')).equal('bravo');
   });
 
   it('finds a value in mixed object', () => {
     let obj = {
       foo: {
-        bar: [{
-          baz: 'bravo'
-        }]
-      }
-    }
+        bar: [
+          {
+            baz: 'bravo',
+          },
+        ],
+      },
+    };
     expect(findValueByString(obj, 'foo.bar[0].baz')).equal('bravo');
   });
 
   it('finds a value in nested array', () => {
     let arr = [
       [
-       {
-         baz: 'bravo'
-       }
-      ]
-    ]
+        {
+          baz: 'bravo',
+        },
+      ],
+    ];
     expect(findValueByString(arr, '[0][0].baz')).equal('bravo');
   });
 
@@ -80,10 +88,10 @@ describe('Compile Test', () => {
     const obj = {
       foo: {
         bar: {
-          baz: 'bravo'
-        }
-      }
-    }
+          baz: 'bravo',
+        },
+      },
+    };
     setValueByString(obj, 'foo.bar.baz', 'zulu');
     expect(findValueByString(obj, 'foo.bar.baz')).equal('zulu');
   });
@@ -97,19 +105,18 @@ describe('Compile Test', () => {
 
   it('creates uuid', () => {
     const id = uuidv4();
-    const regex = /[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/;
+    const regex =
+      /[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/;
     expect(regex.test(id)).equal(true);
   });
 
   it('compileTemplate adds methods to element', () => {
-    class Element {};
+    class Element {}
     compileTemplate({ selector: 'x-element' }, Element);
     const compiled: ReadymadeElement = new Element() as ReadymadeElement;
-    expect(compiled.elementMeta.selector).equal('x-element');
-    expect(compiled.elementMeta.eventMap).does.not.equal(undefined);
+    expect(compiled.elementMeta?.selector).equal('x-element');
+    expect(compiled.elementMeta?.eventMap).does.not.equal(undefined);
     expect(compiled.template).does.not.equal(undefined);
     expect(compiled.bindTemplate).does.not.equal(undefined);
   });
-
-
 });

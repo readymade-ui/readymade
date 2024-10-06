@@ -25,6 +25,15 @@ class QueryComponent extends CustomElement {
   }
 }
 
-const template = () => html;
+const template = () => `
+<app-query>
+  <template shadowroot="open">
+    <style>
+    ${style}
+    </style>
+    ${html}
+  </template>
+</app-query>
+`;
 
 export { QueryComponent, template };

@@ -5,7 +5,7 @@ import {
   Emitter,
   html,
   Listen,
-  State
+  State,
 } from './../../../modules/core';
 
 export class SideNavState {
@@ -146,7 +146,7 @@ export class SideNavState {
         </li>
       </ul>
     </nav>
-  `
+  `,
 })
 class RSideNavComponent extends CustomElement {
   public direction: string;
@@ -175,14 +175,14 @@ class RSideNavComponent extends CustomElement {
       tri: {
         a: 34,
         b: 24,
-        c: 22
+        c: 22,
       },
       shadow: {
         a: 34,
         b: 24,
         c: 22,
-        d: 32
-      }
+        d: 32,
+      },
     };
   }
   @State()
@@ -194,17 +194,17 @@ class RSideNavComponent extends CustomElement {
     this.nav = this.shadowRoot.querySelector('nav');
     this.background = this.shadowRoot.querySelector('.background');
     this.shadow = this.shadowRoot.querySelector('.shadow');
-    Array.from(this.shadowRoot.querySelectorAll('a')).forEach(a => {
-      a.addEventListener('click', ev => {
+    Array.from(this.shadowRoot.querySelectorAll('a')).forEach((a) => {
+      a.addEventListener('click', (ev) => {
         document
           .querySelector('app-home')
           .shadowRoot.querySelector(
-            (ev.target as Element).getAttribute('data-link')
+            (ev.target as Element).getAttribute('data-link'),
           )
           .scrollIntoView({
             behavior: 'smooth',
             block: 'start',
-            inline: 'nearest'
+            inline: 'nearest',
           });
         this.close();
       });
@@ -221,7 +221,7 @@ class RSideNavComponent extends CustomElement {
     this.player = this.animate([{ x: 0 }, { x: 100 }], {
       duration: 150,
       fill: 'forwards',
-      easing: 'cubic-bezier(0.42, 0, 0.88, 1)'
+      easing: 'cubic-bezier(0.42, 0, 0.88, 1)',
     });
     setTimeout(() => {
       this.classList.remove('is--active');
@@ -236,7 +236,7 @@ class RSideNavComponent extends CustomElement {
     this.update();
   }
   @Listen('open', 'sidenav')
-  public open(ev) {
+  public open() {
     if (this.status === 'is--active') {
       return;
     }
@@ -245,7 +245,7 @@ class RSideNavComponent extends CustomElement {
     this.player = this.animate([{ x: 100 }, { x: 0 }], {
       duration: 1500,
       fill: 'forwards',
-      easing: 'cubic-bezier(0.42, 0, 0.88, 1)'
+      easing: 'cubic-bezier(0.42, 0, 0.88, 1)',
     });
     this.classList.add('is--active');
     this.shadow.classList.add('is--hidden');
@@ -259,7 +259,7 @@ class RSideNavComponent extends CustomElement {
     min: number,
     max: number,
     gmin: number,
-    gmax: number
+    gmax: number,
   ) {
     return ((v - min) / (max - min)) * (gmax - gmin) + gmin;
   }
@@ -281,11 +281,11 @@ class RSideNavComponent extends CustomElement {
 
     this.setState(
       'triPoints',
-      `7,9 7,${this.points.tri.a} ${this.points.tri.b},${this.points.tri.c}`
+      `7,9 7,${this.points.tri.a} ${this.points.tri.b},${this.points.tri.c}`,
     );
     this.setState(
       'shadowPoints',
-      `7,${this.points.tri.a} ${this.points.tri.c},${this.points.shadow.d} ${this.points.tri.b},${this.points.tri.c}`
+      `7,${this.points.tri.a} ${this.points.tri.c},${this.points.shadow.d} ${this.points.tri.b},${this.points.tri.c}`,
     );
 
     if (

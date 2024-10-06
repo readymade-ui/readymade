@@ -6,11 +6,6 @@ import {
   State
 } from './../../../../modules/core';
 
-export class NodeState {
-  public astate;
-}
-
-export const _nodeState = new NodeState();
 
 @Component({
   selector: 'x-atom',
@@ -30,7 +25,9 @@ class AtomComponent extends CustomElement {
 
   @State()
   public getState() {
-    return _nodeState;
+    return {
+      astate: ''
+    };
   }
 
   static get observedAttributes() {

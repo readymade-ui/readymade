@@ -5,7 +5,7 @@ import {
   Emitter,
   html,
   Listen,
-  State
+  State,
 } from './../../../modules/core';
 
 export class MainNavState {
@@ -112,7 +112,7 @@ export class MainNavState {
         </li>
       </ul>
     </nav>
-  `
+  `,
 })
 class RMainNavComponent extends CustomElement {
   public isNavOpen: boolean;
@@ -147,6 +147,7 @@ class RMainNavComponent extends CustomElement {
       }
     });
   }
+
   @Listen('close', 'sidenav')
   public onClose() {
     this.shadowRoot

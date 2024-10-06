@@ -23,8 +23,10 @@ export default {
     rollupOptions: {
       input: await glob(['src/client/app/view/**/index.ts']),
       output: {
+        name: 'window',
         format: 'esm',
-        exports: 'named',
+        sourcemap: false,
+        extend: true,
       },
       plugins: [
         minifyHTML(),

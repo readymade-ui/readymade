@@ -39,9 +39,9 @@ async function createServer(root = process.cwd(), hmrPort = 24678) {
   const app = express();
   const resolve = (p) => path.resolve(__dirname, p);
   const indexProd = fs.readFileSync(resolve('../client/index.html'), 'utf-8');
-  const rootManifest = JSON.parse(
-    fs.readFileSync(resolve('../client/root-manifest.json'), 'utf-8'),
-  );
+  // const rootManifest = JSON.parse(
+  //   fs.readFileSync(resolve('../client/root-manifest.json'), 'utf-8'),
+  // );
   const routeManifest = JSON.parse(
     fs.readFileSync(resolve('../client/route-manifest.json'), 'utf-8'),
   );
@@ -86,7 +86,7 @@ async function createServer(root = process.cwd(), hmrPort = 24678) {
         'utf-8',
       );
       let routeDirectoryName = req.baseUrl;
-      if (req.baseUrl === '/') {
+      if (!req.baseUrl.length) {
         routeDirectoryName = '/home';
       }
       if (req.baseUrl === '/home') {
@@ -104,30 +104,10 @@ async function createServer(root = process.cwd(), hmrPort = 24678) {
         view = await import(routeTemplateFilePath);
       }
       const $ = cheerio.load(indexTemplate);
-      $('script').each((index, element) => {
-        $(element).remove();
-      });
+      // $('script').each((index, element) => {
+      //   $(element).removeAttr('type');
+      // });
       let modifiedIndexTemplate = $.html();
-      const headScriptTags = ['polyfill.ts', 'vendor.ts']
-        .map((fileName) => {
-          const file = rootManifest[fileName].file;
-          return `<script src="./${file}" type="module"></script>`;
-        })
-        .join('');
-      modifiedIndexTemplate = modifiedIndexTemplate.replace(
-        HEAD_SCRIPT_OUTLET_MARKER,
-        headScriptTags,
-      );
-      const bodyScriptTags = ['index.ts']
-        .map((fileName) => {
-          const file = rootManifest[fileName].file;
-          return `<script src="./${file}" type="module"></script>`;
-        })
-        .join('');
-      modifiedIndexTemplate = modifiedIndexTemplate.replace(
-        BODY_SCRIPT_OUTLET_MARKER,
-        bodyScriptTags,
-      );
       const index = modifiedIndexTemplate.indexOf(SSR_OUTLET_MARKER);
       const pre = Readable.from(modifiedIndexTemplate.substring(0, index));
       const post = Readable.from(

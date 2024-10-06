@@ -4,7 +4,7 @@ import {
   BoundNode,
   HANDLER_KEY,
   NODE_KEY,
-  setState
+  setState,
 } from '../element/src/compile';
 import { compileTemplate } from './../element';
 import { EventDispatcher, ReadymadeEventTarget } from './../event';
@@ -74,19 +74,19 @@ function State(property?: string) {
   return function decorator(
     target: any,
     key: string | symbol,
-    descriptor: PropertyDescriptor
+    descriptor: PropertyDescriptor,
   ) {
     async function bindState() {
       this.$state = this[key]();
       this.ɵɵstate = {};
       this.ɵɵstate[HANDLER_KEY] = new BoundHandler(this);
       this.ɵɵstate[NODE_KEY] = new BoundNode(
-        this.shadowRoot ? this.shadowRoot : this
+        this.shadowRoot ? this.shadowRoot : this,
       );
       this.ɵɵstate.$changes = new ReadymadeEventTarget();
       this.ɵstate = new Proxy(
         this.$state,
-        this.ɵɵstate['handler' + BIND_SUFFIX]
+        this.ɵɵstate['handler' + BIND_SUFFIX],
       );
       for (const prop in this.$state) {
         this.ɵstate[prop] = this.$state[prop];
@@ -103,7 +103,7 @@ function Emitter(eventName?: string, options?: any, channelName?: string) {
   return function decorator(
     target: any,
     key: string | symbol,
-    descriptor: PropertyDescriptor
+    descriptor: PropertyDescriptor,
   ) {
     const channel = channelName ? channelName : 'default';
     let prop: string = '';
@@ -135,7 +135,7 @@ function Emitter(eventName?: string, options?: any, channelName?: string) {
     }
 
     if (!target[prop]) {
-      target[prop] = function() {
+      target[prop] = function () {
         addEvent.call(this, eventName, channelName);
       };
     }
@@ -150,7 +150,7 @@ function Listen(eventName: string, channelName?: string) {
   return function decorator(
     target: any,
     key: string | number,
-    descriptor: PropertyDescriptor
+    descriptor: PropertyDescriptor,
   ) {
     const symbolHandler = Symbol(key);
 
@@ -166,23 +166,24 @@ function Listen(eventName: string, channelName?: string) {
       const handler = (this[symbolHandler] = (...args) => {
         descriptor.value.apply(this, args);
       });
-
       if (!this.emitter) {
         this.emitter = new EventDispatcher(this, chan ? chan : null);
       }
-
       if (this.elementMeta) {
         this.elementMeta.eventMap[prop] = {
           key: name,
-          handler: key
+          handler: key,
         };
       }
-
-      this.addEventListener(name, handler);
+      if (this.addEventListener) {
+        this.addEventListener(name, handler);
+      }
     }
 
     function removeListener() {
-      this.removeEventListener(eventName, this[symbolHandler]);
+      if (this.removeEventListener) {
+        this.removeEventListener(eventName, this[symbolHandler]);
+      }
     }
 
     function addListeners() {
@@ -218,5 +219,5 @@ export {
   Listen,
   html,
   css,
-  noop
+  noop,
 };

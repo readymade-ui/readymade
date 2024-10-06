@@ -58,7 +58,7 @@ interface IElementInternals extends ElementInternals {
    */
   setFormValue(
     value: File | string | FormData | null,
-    state?: File | string | FormData | null
+    state?: File | string | FormData | null,
   ): void;
   /**
    * Marks internals's target element as suffering from the constraints indicated by the flags argument, and sets the element's validation message to message. If anchor is specified, the user agent might use it to indicate problems with the constraints of internals's target element when the form owner is validated interactively or reportValidity() is called.
@@ -66,7 +66,7 @@ interface IElementInternals extends ElementInternals {
   setValidity(
     flags: ValidityStateFlags,
     message?: string,
-    anchor?: HTMLElement
+    anchor?: HTMLElement,
   ): void;
 }
 
@@ -84,7 +84,7 @@ export interface StateChange {
 
 export type OnStateChange = (
   change: StateChange,
-  cb: (change: StateChange) => void
+  cb: (change: StateChange) => void,
 ) => void;
 
 export type SetState = (property: string, model: any) => void;
@@ -151,8 +151,8 @@ export class StructuralElement extends HTMLElement {
         } else if (elapsedTime >= timeout) {
           reject(
             new Error(
-              `Element with selector "${selector}" did not appear within ${timeout} milliseconds`
-            )
+              `Element with selector "${selector}" did not appear within ${timeout} milliseconds`,
+            ),
           );
         } else {
           setTimeout(checkForElement, interval);
@@ -174,8 +174,8 @@ export class StructuralElement extends HTMLElement {
         } else if (elapsedTime >= timeout) {
           reject(
             new Error(
-              `Elements with selector "${selector}" did not appear within ${timeout} milliseconds`
-            )
+              `Elements with selector "${selector}" did not appear within ${timeout} milliseconds`,
+            ),
           );
         } else {
           setTimeout(checkForElement, interval);
@@ -233,8 +233,8 @@ export class PseudoElement extends HTMLElement {
         } else if (elapsedTime >= timeout) {
           reject(
             new Error(
-              `Element with selector "${selector}" did not appear within ${timeout} milliseconds`
-            )
+              `Element with selector "${selector}" did not appear within ${timeout} milliseconds`,
+            ),
           );
         } else {
           setTimeout(checkForElement, interval);
@@ -256,8 +256,8 @@ export class PseudoElement extends HTMLElement {
         } else if (elapsedTime >= timeout) {
           reject(
             new Error(
-              `Elements with selector "${selector}" did not appear within ${timeout} milliseconds`
-            )
+              `Elements with selector "${selector}" did not appear within ${timeout} milliseconds`,
+            ),
           );
         } else {
           setTimeout(checkForElement, interval);
@@ -275,7 +275,7 @@ export class CustomElement extends HTMLElement {
     super();
     attachShadow(this, {
       mode: this.elementMeta?.mode || 'open',
-      delegatesFocus: this.elementMeta?.delegatesFocus || false
+      delegatesFocus: this.elementMeta?.delegatesFocus || false,
     });
     if (this.bindEmitters) {
       this.bindEmitters();
@@ -317,8 +317,8 @@ export class CustomElement extends HTMLElement {
         } else if (elapsedTime >= timeout) {
           reject(
             new Error(
-              `Element with selector "${selector}" did not appear within ${timeout} milliseconds`
-            )
+              `Element with selector "${selector}" did not appear within ${timeout} milliseconds`,
+            ),
           );
         } else {
           setTimeout(checkForElement, interval);
@@ -340,8 +340,8 @@ export class CustomElement extends HTMLElement {
         } else if (elapsedTime >= timeout) {
           reject(
             new Error(
-              `Elements with selector "${selector}" did not appear within ${timeout} milliseconds`
-            )
+              `Elements with selector "${selector}" did not appear within ${timeout} milliseconds`,
+            ),
           );
         } else {
           setTimeout(checkForElement, interval);

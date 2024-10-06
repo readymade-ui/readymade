@@ -2,15 +2,10 @@ import {
   Component,
   css,
   html,
-  PseudoElement,
+  CustomElement,
   State
 } from './../../../../modules/core';
 
-export class NodeState {
-  public xnode;
-}
-
-export const _nodeState = new NodeState();
 
 @Component({
   selector: 'x-node',
@@ -23,14 +18,16 @@ export const _nodeState = new NodeState();
     <x-atom model="{{xnode}}"></x-atom>
   `
 })
-class NodeComponent extends PseudoElement {
+class NodeComponent extends CustomElement {
   constructor() {
     super();
   }
 
   @State()
   public getState() {
-    return _nodeState;
+    return {
+      xnode: ''
+    };
   }
 
   static get observedAttributes() {
@@ -38,6 +35,7 @@ class NodeComponent extends PseudoElement {
   }
 
   public attributeChangedCallback(name, oldValue, newValue) {
+
     switch (name) {
       case 'model':
         this.setModel(newValue);

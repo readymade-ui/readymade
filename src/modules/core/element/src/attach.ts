@@ -12,6 +12,9 @@ function closestRoot(base: Element) {
 }
 
 function attachShadow(instance: any, options?: any) {
+  if (!instance.template) {
+    return;
+  }
   const shadowRoot: ShadowRoot = instance.attachShadow(options || {});
   const t = document.createElement('template');
   t.innerHTML = instance.template;
@@ -20,6 +23,9 @@ function attachShadow(instance: any, options?: any) {
 }
 
 function attachDOM(instance: any, options?: any) {
+  if (!instance.elementMeta) {
+    return;
+  }
   const t = document.createElement('template');
   t.innerHTML = instance.elementMeta.template;
   instance.appendChild(t.content.cloneNode(true));
@@ -27,6 +33,9 @@ function attachDOM(instance: any, options?: any) {
 }
 
 function attachStyle(instance: any, options?: any) {
+  if (!instance.elementMeta) {
+    return;
+  }
   const id = `${instance.elementMeta.selector}`;
   const closest: any = closestRoot(instance);
   if (closest.tagName === 'HEAD' && document.getElementById(`${id}-x`)) {

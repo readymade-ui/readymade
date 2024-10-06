@@ -50,8 +50,6 @@ export class TreeState {
   };
 }
 
-export const _treeState = new TreeState();
-
 @Component({
   selector: 'x-tree',
   autoDefine: false,
@@ -81,7 +79,49 @@ class TreeComponent extends CustomElement {
 
   @State()
   public getState() {
-    return new TreeState();
+    return {
+      arrayModel: [
+        'aaa',
+        'Node 1',
+        'Node 2',
+        'Node 3',
+        'Node 4',
+        'Node 5',
+        'Node 6',
+        'Node 7',
+        ['far', 'fiz', 'faz', 'fuz']
+      ],
+      objectModel: {
+        foo: {
+          bar: {
+            baz: 'bbb'
+          },
+          far: {
+            fiz: {
+              faz: {
+                fuz: 'fuz'
+              }
+            }
+          },
+          mar: {
+            maz: 'mmm'
+          }
+        }
+      },
+      ax: 'aaa',
+      bx: 'bbb',
+      cx: 'ccc',
+      dx: 'ddd',
+      ex: 'eee',
+      fx: 'fff',
+      gx: 'ggg',
+      hx: 'hhh',
+      state: {
+        foo: {
+          bar: 'x'
+        }
+      }
+    }
   }
 
   static get observedAttributes() {

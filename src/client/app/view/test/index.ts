@@ -1,1 +1,1 @@
-export { TestBedComponent } from './test';
+export { TestBedComponent, template } from './test';

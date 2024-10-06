@@ -4,7 +4,7 @@ import {
   Emitter,
   html,
   Listen,
-  State
+  State,
 } from './../../../modules/core';
 
 import { ButtonComponent } from './../../../modules/dom';
@@ -24,9 +24,7 @@ class ButtonState {
       font-weight: 400;
     }
   `,
-  template: html`
-    <span>{{model}}</span>
-  `
+  template: html` <span>{{model}}</span> `,
 })
 class MyButtonComponent extends ButtonComponent {
   constructor() {
@@ -35,7 +33,9 @@ class MyButtonComponent extends ButtonComponent {
 
   @State()
   public getState() {
-    return new ButtonState();
+    return {
+      model: 'Click',
+    };
   }
 
   @Emitter('bang', { bubbles: true, composed: true })
