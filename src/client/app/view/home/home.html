@@ -413,11 +413,11 @@ public getState() {
 
 <r-code language="javascript" type="javascript">
   <span hidden>
-&lt;template is="r-repeat" items="item of items">
-  &lt;ul class="is--large">
+&lt;ul class="is--large">
+  &lt;template is="r-repeat" items="item of items">
     &lt;li repeat="item" foo="{{item}}">{{item}}&lt;/li>
-  &lt;/ul>
-&lt;/template>
+  &lt;/template>
+&lt;/ul>
   </span>
 </r-code>
 
@@ -449,11 +449,13 @@ public getState() {
 
 <r-code language="javascript" type="javascript">
   <span hidden>
-&lt;template id="object-repeater" items="item of items">
-  &lt;ul class="is--large">
+
+&lt;ul class="is--large">
+  &lt;template id="object-repeater" items="item of items">
     &lt;li repeat="item" foo="{{item.index}}">{{item.title}}&lt;/li>
-  &lt;/ul>
-&lt;/template>
+  &lt;/template>
+&lt;/ul>
+
 
 &lt;r-repeatr template="object-repeater" items="item of items">
 &lt;/r-repeatr>
