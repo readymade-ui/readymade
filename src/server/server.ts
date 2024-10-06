@@ -4,47 +4,30 @@ installShimOnGlobal();
 
 import fs from 'fs';
 import path from 'path';
+import chalk from 'chalk';
 import express from 'express';
 import helmet from 'helmet';
-import crypto from 'crypto';
-// import * as cheerio from 'cheerio';
-import { Readable } from 'stream';
+import cors from 'cors';
 import { fileURLToPath } from 'url';
-import { html } from 'lit';
-import { unsafeHTML } from 'lit-html/directives/unsafe-html.js';
-import { render } from '@lit-labs/ssr';
 
-const SSR_OUTLET_MARKER = '<!--ssr-outlet-->';
-// const HEAD_SCRIPT_OUTLET_MARKER = '<!--head-script-outlet-->';
-// const BODY_SCRIPT_OUTLET_MARKER = '<!--body-script-outlet-->';
+import { config } from './config';
+
+import nonce from './middleware/nonce';
+import errorHandler from './middleware/error-handler';
+import ssr from './middleware/ssr';
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
-async function* concatStreams(...readables) {
-  for (const readable of readables) {
-    for await (const chunk of readable) {
-      yield chunk;
-    }
-  }
-}
-
-export const sanitizeTemplate = async (template) => {
-  return html`${unsafeHTML(template)}`;
-};
-
-async function* renderView(template) {
-  yield* render(template);
-}
+const resolve = (p) => path.resolve(__dirname, p);
 
 async function createServer(root = process.cwd(), hmrPort = 24678) {
-  const app = express();
-  const resolve = (p) => path.resolve(__dirname, p);
-  const indexProd = fs.readFileSync(resolve('../client/index.html'), 'utf-8');
-  // const rootManifest = JSON.parse(
-  //   fs.readFileSync(resolve('../client/root-manifest.json'), 'utf-8'),
-  // );
-  const routeManifest = JSON.parse(
-    fs.readFileSync(resolve('../client/route-manifest.json'), 'utf-8'),
-  );
+  const app: express.Application = express();
+  const env: string = process.env.NODE_ENV || 'development';
+
+  const corsOptions =
+    env === 'production'
+      ? { origin: `${config.protocol}://${config.host}` }
+      : {};
+
   const helmetConfig = {
     crossOriginEmbedderPolicy: false,
     contentSecurityPolicy: {
@@ -59,77 +42,32 @@ async function createServer(root = process.cwd(), hmrPort = 24678) {
     },
   };
 
-  app.use((req, res, next) => {
-    res.locals.nonce = crypto.randomBytes(16).toString('base64');
-    next();
-  });
-
   app.use(helmet(helmetConfig));
+  app.use(cors(corsOptions));
+  app.use(nonce);
+  app.use(errorHandler);
 
-  app.use((await import('compression')).default());
-  app.use(
-    (await import('serve-static')).default(resolve('../client'), {
-      index: false,
-    }),
-  );
-
-  app.use('*', async (req, res, next) => {
-    const url = req.originalUrl;
-    try {
-      let template: string,
-        render: string,
-        view = {
-          template: () => '',
-        };
-      const indexTemplate = fs.readFileSync(
-        resolve('../client/index.html'),
-        'utf-8',
-      );
-      let routeDirectoryName = req.baseUrl;
-      if (!req.baseUrl.length) {
-        routeDirectoryName = '/home';
-      }
-      if (req.baseUrl === '/home') {
-        return res.redirect('/');
-      }
-      if (
-        routeManifest &&
-        routeManifest[`app/view${routeDirectoryName}/index.ts`]
-      ) {
-        let routeTemplateFilePath = '';
-        const filePath =
-          routeManifest[`app/view${routeDirectoryName}/index.ts`].file;
-        routeTemplateFilePath = resolve(`../client/${filePath}`);
-        template = indexProd;
-        view = await import(routeTemplateFilePath);
-      }
-      // const $ = cheerio.load(indexTemplate);
-      // $('script').each((index, element) => {
-      //   $(element).removeAttr('type');
-      // });
-      let modifiedIndexTemplate = indexTemplate; //$.html();
-      const index = modifiedIndexTemplate.indexOf(SSR_OUTLET_MARKER);
-      const pre = Readable.from(modifiedIndexTemplate.substring(0, index));
-      const post = Readable.from(
-        modifiedIndexTemplate.substring(index + SSR_OUTLET_MARKER.length + 1),
-      );
-      const viewTemplate = await sanitizeTemplate(view.template());
-      const ssrResult = renderView(viewTemplate);
-      const viewResult = Readable.from(ssrResult);
-      const output = Readable.from(concatStreams(pre, viewResult, post));
-      res.status(200).set({ 'Content-Type': 'text/html' });
-      output.pipe(res);
-    } catch (e) {
-      console.log(e.stack);
-      res.status(500).end(e.stack);
-    }
-  });
+  if (env === 'production') {
+    app.use((await import('compression')).default());
+    app.use(
+      (await import('serve-static')).default(resolve('../client'), {
+        index: false,
+      }),
+    );
+    app.use('*', ssr);
+  }
 
   return { app };
 }
 
-createServer(process.cwd(), 24678).then(({ app }) =>
-  app.listen(4444, () => {
-    console.log('Serving http://localhost:4444');
-  }),
-);
+createServer(process.cwd(), 24678).then(({ app }) => {
+  const port: string = process.env.PORT || config.port || '4443';
+  app.listen(port, (): void => {
+    const addr = `${config.protocol === 'HTTPS' ? 'https' : 'http'}://localhost:${port}`;
+    process.stdout.write(
+      `\n [${new Date().toISOString()}] ${chalk.green(
+        'Server running:',
+      )} ${chalk.blue(addr)} \n`,
+    );
+  });
+});

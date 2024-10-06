@@ -4,7 +4,7 @@ import {
   html,
   Emitter,
   FormElement,
-  Listen
+  Listen,
 } from './../../../core';
 import { RdControl } from './../control';
 
@@ -159,7 +159,7 @@ import { RdControl } from './../control';
         </div>
       </div>
     </div>
-  `
+  `,
 })
 class RdSlider extends FormElement {
   private _rect: ClientRect | DOMRect;
@@ -462,7 +462,7 @@ class RdSlider extends FormElement {
     if (this._joystickType && this.control.snapToCenter === true) {
       const center = this.getCenter(
         [0, this.control.width - this.$handle.offsetWidth],
-        [0, this.control.height - this.$handle.offsetHeight]
+        [0, this.control.height - this.$handle.offsetHeight],
       );
       this.control.x = center[0];
       this.control.y = center[1];
@@ -479,7 +479,7 @@ class RdSlider extends FormElement {
     const event = new CustomEvent('input', {
       bubbles: true,
       composed: true,
-      detail: this.control
+      detail: this.control,
     });
     this.emitter.emit(event);
     if (this.onchange) {
@@ -522,7 +522,7 @@ class RdSlider extends FormElement {
       const radians = Math.atan2(y, x);
       return [
         Math.cos(radians) * radius + center[0],
-        Math.sin(radians) * radius + center[1]
+        Math.sin(radians) * radius + center[1],
       ];
     }
   }
@@ -610,8 +610,8 @@ class RdSlider extends FormElement {
           0,
           this.control.width - 44,
           <number>this.control.min,
-          <number>this.control.max
-        )
+          <number>this.control.max,
+        ),
       );
     }
     if (this.control.orient === 'is--vert') {
@@ -621,8 +621,8 @@ class RdSlider extends FormElement {
           0,
           this.control.height - 44,
           <number>this.control.min,
-          <number>this.control.max
-        )
+          <number>this.control.max,
+        ),
       );
     }
     if (this._joystickType) {
@@ -633,8 +633,8 @@ class RdSlider extends FormElement {
             0,
             this.control.width - 44,
             this.control.min[0],
-            this.control.max[0]
-          )
+            this.control.max[0],
+          ),
         ),
         this.clampJoystickY(
           this.scale(
@@ -642,9 +642,9 @@ class RdSlider extends FormElement {
             0,
             this.control.height - 44,
             this.control.min[1],
-            this.control.max[1]
-          )
-        )
+            this.control.max[1],
+          ),
+        ),
       ];
     }
   }
@@ -663,15 +663,15 @@ class RdSlider extends FormElement {
         this.control.x,
         this.control.y,
         [0, this.control.width - this.$handle.offsetWidth],
-        [0, this.control.height - this.$handle.offsetHeight]
+        [0, this.control.height - this.$handle.offsetHeight],
       );
       this.control.x = this.clamp(this._joystickPos[0], [
         0,
-        this.control.width - this.$handle.offsetWidth
+        this.control.width - this.$handle.offsetWidth,
       ]);
       this.control.y = this.clamp(this._joystickPos[1], [
         0,
-        this.control.height - this.$handle.offsetHeight
+        this.control.height - this.$handle.offsetHeight,
       ]);
 
       this.control.position =
@@ -721,14 +721,14 @@ class RdSlider extends FormElement {
         this.control.min[0],
         this.control.max[0],
         0,
-        this.clientWidth
+        this.clientWidth,
       );
       this.control.y = this.scale(
         controlValue[1] as number,
         this.control.min[1],
         this.control.max[1],
         0,
-        this.clientHeight
+        this.clientHeight,
       );
     }
 
@@ -738,7 +738,7 @@ class RdSlider extends FormElement {
         this.control.min as number,
         this.control.max as number,
         0,
-        this.clientWidth
+        this.clientWidth,
       );
       this.control.y = 0;
     }
@@ -750,7 +750,7 @@ class RdSlider extends FormElement {
         this.control.min as number,
         this.control.max as number,
         0,
-        this.clientHeight
+        this.clientHeight,
       );
     }
 

@@ -6,7 +6,7 @@ import html from './perf.html?raw';
 @Component({
   selector: 'app-perftest',
   style: style,
-  template: html
+  template: html,
 })
 class PerformanceTestComponent extends CustomElement {
   constructor() {

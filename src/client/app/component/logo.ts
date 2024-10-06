@@ -3,7 +3,7 @@ import {
   css,
   CustomElement,
   html,
-  State
+  State,
 } from './../../../modules/core';
 
 export class LogoState {
@@ -26,7 +26,7 @@ export const _logoState = new LogoState();
   template: html`
     <r-headline headline="{{heading}}" size="{{size}}"></r-headline>
     <r-headline headline="{{heading2}}"></r-headline>
-  `
+  `,
 })
 class RLogoComponent extends CustomElement {
   public letters: string[];
@@ -54,7 +54,6 @@ class RLogoComponent extends CustomElement {
   public setSize(size: string) {
     this.setState('size', size);
   }
-  
 }
 
 export { RLogoComponent };

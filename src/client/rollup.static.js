@@ -15,8 +15,8 @@ export default [
       typescript({ declaration: false }),
       terser(),
       cleanup({
-        comments: 'none'
-      })
+        comments: 'none',
+      }),
     ],
     onwarn: (warning, next) => {
       if (warning.code === 'THIS_IS_UNDEFINED') return;
@@ -27,8 +27,8 @@ export default [
       file: 'dist/client/static-polyfill.js',
       format: 'iife',
       sourcemap: false,
-      extend: true
-    }
+      extend: true,
+    },
   },
   {
     input: 'src/client/index.ts',
@@ -36,11 +36,11 @@ export default [
     external: ['path', 'html-minifier-terser'],
     output: {
       file: 'dist/client/static-index.js',
-      format: 'esm'
+      format: 'esm',
     },
     plugins: [
       resolve({
-        mainFields: ['module', 'jsnext']
+        mainFields: ['module', 'jsnext'],
       }),
       json(),
       postcss({
@@ -50,29 +50,29 @@ export default [
           [
             'sass',
             {
-              includePaths: ['src/client/style']
-            }
-          ]
+              includePaths: ['src/client/style'],
+            },
+          ],
         ],
         minimize: true,
-        extensions: ['.scss', '.css']
+        extensions: ['.scss', '.css'],
       }),
       html({
         include: ['**/*.html'],
         exclude: ['**/index.html'],
-        minifier: {}
+        minifier: {},
       }),
       typescript({
-        experimentalDecorators: true
+        experimentalDecorators: true,
       }),
       commonjsResolve(),
       terser(),
       cleanup({
-        comments: 'none'
-      })
+        comments: 'none',
+      }),
     ],
-    onwarn: function(message) {
+    onwarn: function (message) {
       console.log(message);
-    }
-  }
+    },
+  },
 ];

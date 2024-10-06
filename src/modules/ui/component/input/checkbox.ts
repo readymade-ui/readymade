@@ -4,7 +4,7 @@ import {
   EventDispatcher,
   FormElement,
   html,
-  css
+  css,
 } from './../../../core';
 
 @Component({
@@ -73,9 +73,7 @@ import {
       box-shadow: none;
     }
   `,
-  template: html`
-    <input type="checkbox" />
-  `
+  template: html` <input type="checkbox" /> `,
 })
 class RdCheckBox extends FormElement {
   constructor() {
@@ -122,8 +120,8 @@ class RdCheckBox extends FormElement {
           new CustomEvent('change', {
             bubbles: true,
             composed: true,
-            detail: 'composed'
-          })
+            detail: 'composed',
+          }),
         );
       }
     };

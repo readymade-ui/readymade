@@ -3,9 +3,8 @@ import {
   css,
   html,
   CustomElement,
-  State
+  State,
 } from './../../../../modules/core';
-
 
 @Component({
   selector: 'x-node',
@@ -14,9 +13,7 @@ import {
       display: flex;
     }
   `,
-  template: html`
-    <x-atom model="{{xnode}}"></x-atom>
-  `
+  template: html` <x-atom model="{{xnode}}"></x-atom> `,
 })
 class NodeComponent extends CustomElement {
   constructor() {
@@ -26,7 +23,7 @@ class NodeComponent extends CustomElement {
   @State()
   public getState() {
     return {
-      xnode: ''
+      xnode: '',
     };
   }
 
@@ -35,7 +32,6 @@ class NodeComponent extends CustomElement {
   }
 
   public attributeChangedCallback(name, oldValue, newValue) {
-
     switch (name) {
       case 'model':
         this.setModel(newValue);

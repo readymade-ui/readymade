@@ -5,7 +5,7 @@ import {
   getElementIndex,
   getSiblings,
   html,
-  Listen
+  Listen,
 } from './../../../modules/core';
 
 @Component({
@@ -21,9 +21,7 @@ import {
       border-radius: 8px;
     }
   `,
-  template: html`
-    <slot name="menu"></slot>
-  `
+  template: html` <slot name="menu"></slot> `,
 })
 class MyListComponent extends CustomElement {
   public currentIndex: number;
@@ -62,7 +60,7 @@ class MyListComponent extends CustomElement {
   @Listen('keydown')
   public onKeydown(ev: KeyboardEvent) {
     const currentElement = this.querySelector(
-      '[tabindex]:not([tabindex="-1"])'
+      '[tabindex]:not([tabindex="-1"])',
     );
     const siblings = getSiblings(currentElement);
     this.currentIndex = getElementIndex(currentElement);

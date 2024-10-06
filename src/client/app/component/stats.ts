@@ -16,14 +16,14 @@ const env = process.env.NODE_ENV || 'development';
       font-weight: 300;
     }
   `,
-  template: html`
-    <slot></slot>
-  `
+  template: html` <slot></slot> `,
 })
 class RStatsComponent extends CustomElement {
   constructor() {
     super();
-    this.shadowRoot?.querySelector('slot')?.addEventListener('slotchange', event => this.onSlotChange(event));
+    this.shadowRoot
+      ?.querySelector('slot')
+      ?.addEventListener('slotchange', (event) => this.onSlotChange(event));
   }
   public onSlotChange(ev: any) {
     this.animateIn();
@@ -38,11 +38,11 @@ class RStatsComponent extends CustomElement {
           [
             { opacity: '0', color: '#000' },
             { opacity: '0', offset: index * 0.1 },
-            { opacity: '1', color: '#fff' }
+            { opacity: '1', color: '#fff' },
           ],
           {
-            duration: 2000
-          }
+            duration: 2000,
+          },
         );
       });
     }

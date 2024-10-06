@@ -3,7 +3,7 @@ import {
   css,
   CustomElement,
   html,
-  State
+  State,
 } from './../../../modules/core';
 
 @Component({
@@ -38,9 +38,7 @@ import {
       padding-left: 0em;
     }
   `,
-  template: html`
-    <h1 class="{{model.size}}">{{ model.copy }}</h1>
-  `
+  template: html` <h1 class="{{model.size}}">{{ model.copy }}</h1> `,
 })
 class RHeadlineComponent extends CustomElement {
   public hyperNode: any;
@@ -58,8 +56,8 @@ class RHeadlineComponent extends CustomElement {
     return {
       model: {
         size: '',
-        copy: ''
-      }
+        copy: '',
+      },
     };
   }
 

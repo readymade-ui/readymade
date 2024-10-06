@@ -121,7 +121,7 @@ export function getElementByAttribute(node: Element) {
   if (!node.attributes) {
     return [];
   }
-  let matches = [];
+  const matches = [];
   for (let i = 0; i < node.attributes.length; i++) {
     if (
       /[A-Za-z0-9]{3}-[A-Za-z0-9]{6}/gm.test(
@@ -227,8 +227,8 @@ export class NodeTree {
   public updateNode(node: Node | Element, key: string, value: any) {
     const attr = getElementByAttribute(node as Element)[0];
     const attrId = attr ? attr.nodeName || attr.name : null;
-    let entry = this.setNode(node, key, value, attrId);
-    let protoNode = entry.node;
+    const entry = this.setNode(node, key, value, attrId);
+    const protoNode = entry.node;
     let templateStrings = null;
 
     if (protoNode.outerHTML) {
@@ -246,7 +246,7 @@ export class NodeTree {
     for (let index = 0; index < templateStrings.length; index++) {
       templateStrings[index] = stripTemplateString(templateStrings[index]);
     }
-    let matches = filter((str) => str.startsWith(key), templateStrings);
+    const matches = filter((str) => str.startsWith(key), templateStrings);
     if (matches.length === 0) {
       return;
     }

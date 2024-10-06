@@ -1,8 +1,7 @@
 import { Component, State, CustomElement } from './../../../modules/core';
 
-
 const CounterState = {
-  count: 0
+  count: 0,
 };
 
 @Component({
@@ -32,10 +31,9 @@ const CounterState = {
 		background-color: seagreen;
 		color: white;
 	}
-	`
+	`,
 })
 export class MyCounter extends CustomElement {
-
   connectedCallback() {
     this.shadowRoot
       .querySelector('#inc')
@@ -44,7 +42,7 @@ export class MyCounter extends CustomElement {
       .querySelector('#dec')
       .addEventListener('click', this.dec.bind(this));
   }
-  
+
   @State()
   public getState() {
     return CounterState;
@@ -57,6 +55,4 @@ export class MyCounter extends CustomElement {
   dec() {
     this.setState('count', this.getState().count - 1);
   }
-
-
 }

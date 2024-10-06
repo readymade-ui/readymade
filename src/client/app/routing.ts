@@ -7,7 +7,7 @@ const routing = [
   {
     path: '/perf',
     component: 'app-perftest',
-    title: 'Readymade Performance Test'
+    title: 'Readymade Performance Test',
   },
   {
     path: '/router',
@@ -15,10 +15,10 @@ const routing = [
     queryParams: {
       contentType: 'post',
       page: '1',
-      header: '1'
+      header: '1',
     },
-    title: 'Readymade Router Test'
-  }
+    title: 'Readymade Router Test',
+  },
 ];
 
 export { Router, routing };

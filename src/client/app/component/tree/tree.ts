@@ -3,7 +3,7 @@ import {
   css,
   CustomElement,
   html,
-  State
+  State,
 } from './../../../../modules/core';
 
 export class TreeState {
@@ -16,24 +16,24 @@ export class TreeState {
     'Node 5',
     'Node 6',
     'Node 7',
-    ['far', 'fiz', 'faz', 'fuz']
+    ['far', 'fiz', 'faz', 'fuz'],
   ];
   public objectModel = {
     foo: {
       bar: {
-        baz: 'bbb'
+        baz: 'bbb',
       },
       far: {
         fiz: {
           faz: {
-            fuz: 'fuz'
-          }
-        }
+            fuz: 'fuz',
+          },
+        },
       },
       mar: {
-        maz: 'mmm'
-      }
-    }
+        maz: 'mmm',
+      },
+    },
   };
   public ax = 'aaa';
   public bx = 'bbb';
@@ -70,7 +70,7 @@ export class TreeState {
     <x-node model="{{gx}}"></x-node>
     <x-node model="{{hx}}"></x-node>
     <x-node model="{{state.foo.bar}}"></x-node>
-  `
+  `,
 })
 class TreeComponent extends CustomElement {
   constructor() {
@@ -89,24 +89,24 @@ class TreeComponent extends CustomElement {
         'Node 5',
         'Node 6',
         'Node 7',
-        ['far', 'fiz', 'faz', 'fuz']
+        ['far', 'fiz', 'faz', 'fuz'],
       ],
       objectModel: {
         foo: {
           bar: {
-            baz: 'bbb'
+            baz: 'bbb',
           },
           far: {
             fiz: {
               faz: {
-                fuz: 'fuz'
-              }
-            }
+                fuz: 'fuz',
+              },
+            },
           },
           mar: {
-            maz: 'mmm'
-          }
-        }
+            maz: 'mmm',
+          },
+        },
       },
       ax: 'aaa',
       bx: 'bbb',
@@ -118,10 +118,10 @@ class TreeComponent extends CustomElement {
       hx: 'hhh',
       state: {
         foo: {
-          bar: 'x'
-        }
-      }
-    }
+          bar: 'x',
+        },
+      },
+    };
   }
 
   static get observedAttributes() {

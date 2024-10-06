@@ -4,7 +4,7 @@ import {
   html,
   State,
   Emitter,
-  Listen
+  Listen,
 } from './../../../modules/core';
 
 class HelloState {
@@ -13,9 +13,7 @@ class HelloState {
 
 @Component({
   selector: 'hello-state',
-  template: html`
-    <span>{{model}}</span>
-  `
+  template: html` <span>{{model}}</span> `,
 })
 class HelloStateComponent extends CustomElement {
   constructor() {

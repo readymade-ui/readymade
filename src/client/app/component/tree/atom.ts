@@ -3,9 +3,8 @@ import {
   css,
   CustomElement,
   html,
-  State
+  State,
 } from './../../../../modules/core';
-
 
 @Component({
   selector: 'x-atom',
@@ -14,9 +13,7 @@ import {
       display: flex;
     }
   `,
-  template: html`
-    <span>{{astate}}</span>
-  `
+  template: html` <span>{{astate}}</span> `,
 })
 class AtomComponent extends CustomElement {
   constructor() {
@@ -26,7 +23,7 @@ class AtomComponent extends CustomElement {
   @State()
   public getState() {
     return {
-      astate: ''
+      astate: '',
     };
   }
 

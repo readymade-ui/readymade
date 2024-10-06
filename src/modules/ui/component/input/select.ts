@@ -4,7 +4,7 @@ import {
   Emitter,
   FormElement,
   css,
-  html
+  html,
 } from './../../../core';
 
 @Component({
@@ -33,7 +33,9 @@ import {
       appearance: none;
       background-image: var(--icon-menu);
       background-repeat: no-repeat;
-      background-position: right 0.7em top 50%, 0 0;
+      background-position:
+        right 0.7em top 50%,
+        0 0;
       background-size: 10px 9px;
     }
     ::slotted(select:hover),
@@ -46,7 +48,9 @@ import {
     *[dir='rtl'] ::slotted(select),
     :root:lang(ar) ::slotted(select),
     :root:lang(iw) ::slotted(select) {
-      background-position: left 0.7em top 50%, 0 0;
+      background-position:
+        left 0.7em top 50%,
+        0 0;
       padding: 0.3em 0.8em 0.3em 1.4em;
     }
     ::slotted(select::-ms-expand) {
@@ -57,7 +61,9 @@ import {
       background: var(--color-disabled);
       background-image: var(--icon-menu);
       background-repeat: no-repeat;
-      background-position: right 0.7em top 50%, 0 0;
+      background-position:
+        right 0.7em top 50%,
+        0 0;
       background-size: 10px 9px;
       cursor: not-allowed;
     }
@@ -77,9 +83,7 @@ import {
       box-shadow: none;
     }
   `,
-  template: html`
-    <slot></slot>
-  `
+  template: html` <slot></slot> `,
 })
 class RdDropdown extends FormElement {
   constructor() {
@@ -93,8 +97,8 @@ class RdDropdown extends FormElement {
         new CustomEvent('select', {
           bubbles: true,
           composed: true,
-          detail: 'composed'
-        })
+          detail: 'composed',
+        }),
       );
       if (this.onselect) {
         this.onselect(ev);
@@ -157,11 +161,11 @@ class RdDropdown extends FormElement {
   }
 
   get $elem(): HTMLSelectElement {
-    return (this.shadowRoot
-      .querySelector('slot')
-      .assignedNodes() as HTMLSelectElement[]).filter(
-      elem => elem.tagName === 'SELECT'
-    )[0];
+    return (
+      this.shadowRoot
+        .querySelector('slot')
+        .assignedNodes() as HTMLSelectElement[]
+    ).filter((elem) => elem.tagName === 'SELECT')[0];
   }
 }
 

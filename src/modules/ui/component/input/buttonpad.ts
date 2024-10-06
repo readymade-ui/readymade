@@ -6,7 +6,7 @@ import {
   FormElement,
   html,
   css,
-  State
+  State,
 } from './../../../core';
 
 export const StandardKeyboardModifiers = {
@@ -56,7 +56,7 @@ export const StandardKeyboardModifiers = {
   'Shift+KeyV': { key: 'V', code: 'KeyV', label: 'v' },
   'Shift+KeyB': { key: 'B', code: 'KeyB', label: 'b' },
   'Shift+KeyN': { key: 'N', code: 'KeyN', label: 'n' },
-  'Shift+KeyM': { key: 'M', code: 'KeyM', label: 'm' }
+  'Shift+KeyM': { key: 'M', code: 'KeyM', label: 'm' },
 };
 
 export const StandardKeyboard = [
@@ -126,7 +126,7 @@ export const StandardKeyboard = [
   { key: '', code: 'NULL', label: '' },
   { key: 'ArrowLeft', code: 'ArrowLeft', label: '←' },
   { key: 'ArrowDown', code: 'ArrowDown', label: '↓' },
-  { key: 'ArrowRight', code: 'ArrowRight', label: '→' }
+  { key: 'ArrowRight', code: 'ArrowRight', label: '→' },
 ];
 
 export const StandardKeyboardNumPad = [
@@ -147,7 +147,7 @@ export const StandardKeyboardNumPad = [
   { key: '3', code: 'Numpad3', label: '3' },
   { key: 'Enter', code: 'NumpadEnter', label: '↵' },
   { key: '0', code: 'Numpad0', label: '0' },
-  { key: '.', code: 'NumpadDecimal', label: '.' }
+  { key: '.', code: 'NumpadDecimal', label: '.' },
 ];
 
 export const StandardKeyboardModifierCodeKeyMap = {
@@ -158,7 +158,7 @@ export const StandardKeyboardModifierCodeKeyMap = {
   AltLeft: 'Alt',
   AltRight: 'Alt',
   MetaLeft: 'Meta',
-  MetaRight: 'Meta'
+  MetaRight: 'Meta',
 };
 
 export function buttonPadKeyPress(elem: Element) {
@@ -208,7 +208,7 @@ export function buttonPadKeyPress(elem: Element) {
         code="{{item.code}}"
       ></rd-button>
     </template>
-  `
+  `,
 })
 class RdButtonPad extends FormElement {
   currentKey: string | null = null;
@@ -254,10 +254,10 @@ class RdButtonPad extends FormElement {
       grid: JSON.stringify({
         gap: '4px',
         columns: {
-          count: 4
-        }
+          count: 4,
+        },
       }),
-      buttons: []
+      buttons: [],
     };
   }
 
@@ -270,17 +270,17 @@ class RdButtonPad extends FormElement {
 
   connectedCallback() {
     this.waitAll$('rd-button')
-      .then(elems => {
+      .then((elems) => {
         for (let i = 0; i < elems.length; i++) {
           elems[i].addEventListener('click', this.click$.bind(this));
           elems[i].addEventListener(
             'touchstart',
-            this.buttonPressModifier$.bind(this)
+            this.buttonPressModifier$.bind(this),
           );
           elems[i].addEventListener('touchend', this.buttonPress$.bind(this));
         }
       })
-      .catch(err => console.error(err));
+      .catch((err) => console.error(err));
   }
 
   updateVisualGrid(elem: HTMLElement, grid: any) {
@@ -294,7 +294,7 @@ class RdButtonPad extends FormElement {
       for (let i = 0; i < grid.cells.length; i++) {
         const cell = grid.cells[i];
         const cellElem = this.shadowRoot.querySelector(cell.selector);
-        for (let styleProp in cell.styles) {
+        for (const styleProp in cell.styles) {
           // check for cellElem.style.hasOwnProperty(styleProp) fails in Safari and breaks layout
           if (cell.styles.hasOwnProperty(styleProp)) {
             if (styleProp === 'width' || styleProp === 'height') {
@@ -345,7 +345,7 @@ class RdButtonPad extends FormElement {
   }
   set grid(grid: any) {
     setTimeout(() => {
-      this.wait$('[target]').then(elem => {
+      this.wait$('[target]').then((elem) => {
         this.updateVisualGrid(elem, grid);
         this.setState('grid', JSON.stringify(grid));
       });
@@ -366,14 +366,14 @@ class RdButtonPad extends FormElement {
         this.currentModifier &&
         StandardKeyboardModifiers[
           `${this.currentModifier}+${(ev.target as HTMLElement).getAttribute(
-            'code'
+            'code',
           )}`
         ]
       ) {
         value =
           StandardKeyboardModifiers[
             `${this.currentModifier}+${(ev.target as HTMLElement).getAttribute(
-              'code'
+              'code',
             )}`
           ].key;
       }
@@ -403,14 +403,14 @@ class RdButtonPad extends FormElement {
       this.value = ev.key;
       const keyElem = this.get$(`[code="${code}"]`);
       keyElem?.dispatchEvent(
-        new CustomEvent('press', { detail: { modifier } })
+        new CustomEvent('press', { detail: { modifier } }),
       );
     }
   }
 
   @Listen('keydown')
   pressModifier$(ev: KeyboardEvent) {
-    let code = ev.code;
+    const code = ev.code;
     if (StandardKeyboardModifierCodeKeyMap[code]) {
       this.currentModifier = StandardKeyboardModifierCodeKeyMap[code];
       const keyElem = this.get$(`[code="${code}"]`);
@@ -438,13 +438,13 @@ class RdButtonPad extends FormElement {
       this.value = (ev.target as HTMLElement).getAttribute('key');
       const keyElem = ev.target;
       keyElem?.dispatchEvent(
-        new CustomEvent('press', { detail: { modifier } })
+        new CustomEvent('press', { detail: { modifier } }),
       );
     }
   }
 
   buttonPressModifier$(ev: TouchEvent) {
-    let code = (ev.target as HTMLElement).getAttribute('code');
+    const code = (ev.target as HTMLElement).getAttribute('code');
     if (StandardKeyboardModifierCodeKeyMap[code]) {
       this.currentModifier = StandardKeyboardModifierCodeKeyMap[code];
     }

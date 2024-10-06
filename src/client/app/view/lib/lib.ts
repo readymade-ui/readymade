@@ -2,20 +2,20 @@ import {
   Component,
   CustomElement,
   FormElement,
-  State
+  State,
 } from './../../../../modules/core';
 import { RdSlider } from './../../../../modules/ui';
 import html from './lib.html?raw';
 import style from './lib.scss?raw';
 import {
   StandardKeyboard,
-  StandardKeyboardNumPad
+  StandardKeyboardNumPad,
 } from './../../../../modules/ui/component/input/buttonpad';
 
 @Component({
   selector: 'app-library',
   style: style,
-  template: html
+  template: html,
 })
 class LibraryComponent extends CustomElement {
   theme: string = 'dark';
@@ -112,25 +112,25 @@ class LibraryComponent extends CustomElement {
       JSON.stringify({
         gap: '4px',
         columns: {
-          count: 14
+          count: 14,
         },
         cells: [
           {
             selector: '[key="Space"]',
             styles: {
               width: '100%',
-              gridColumn: 'span 3'
-            }
+              gridColumn: 'span 3',
+            },
           },
           {
             selector: '[key="Enter"]',
             styles: {
               width: '100%',
-              gridColumn: 'span 2'
-            }
-          }
-        ]
-      })
+              gridColumn: 'span 2',
+            },
+          },
+        ],
+      }),
     );
     buttonPad.setAttribute('buttons', JSON.stringify(StandardKeyboard));
     buttonPad.onclick = (ev: Event) => {
@@ -143,29 +143,29 @@ class LibraryComponent extends CustomElement {
       JSON.stringify({
         gap: '4px',
         columns: {
-          count: 4
+          count: 4,
         },
         cells: [
           {
             selector: '[key="0"]',
             styles: {
               width: '100%',
-              gridColumn: 'span 2'
-            }
+              gridColumn: 'span 2',
+            },
           },
           {
             selector: '[key="Enter"]',
             styles: {
               height: '100%',
-              gridRow: 'span 2'
-            }
-          }
-        ]
-      })
+              gridRow: 'span 2',
+            },
+          },
+        ],
+      }),
     );
     buttonNumberPad.setAttribute(
       'buttons',
-      JSON.stringify(StandardKeyboardNumPad)
+      JSON.stringify(StandardKeyboardNumPad),
     );
     buttonNumberPad.onclick = (ev: Event) => {
       if ((ev.target as HTMLElement).tagName === 'RD-BUTTON') {
@@ -195,7 +195,7 @@ class LibraryComponent extends CustomElement {
     submit.onclick = (ev: Event) => {
       ev.preventDefault();
       const values = Array.from(
-        this.shadowRoot?.querySelectorAll('.form__item')
+        this.shadowRoot?.querySelectorAll('.form__item'),
       ).map((item: any) => {
         if (item.onValidate) {
           item.onValidate();
@@ -203,7 +203,7 @@ class LibraryComponent extends CustomElement {
         return {
           tag: item.tagName,
           value: item.value,
-          validity: item.checkValidity ? item.checkValidity() : null
+          validity: item.checkValidity ? item.checkValidity() : null,
         };
       });
       console.log(values);
@@ -220,7 +220,7 @@ class LibraryComponent extends CustomElement {
         min: 0,
         max: 255,
         size: 'small',
-        gridArea: '1 / 1 / span 3 / span 1'
+        gridArea: '1 / 1 / span 3 / span 1',
       }),
       horControl: JSON.stringify({
         type: 'slider',
@@ -228,7 +228,7 @@ class LibraryComponent extends CustomElement {
         orient: 'is--hor',
         min: 0,
         max: 1000,
-        gridArea: '1 / 3 / span 1 / span 3'
+        gridArea: '1 / 3 / span 1 / span 3',
       }),
       joyControl: JSON.stringify({
         type: 'slider',
@@ -237,7 +237,7 @@ class LibraryComponent extends CustomElement {
         min: [0.0, 0.0],
         max: [255.0, 255.0],
         snapToCenter: false,
-        gridArea: '1 / 2 / span 4 / span 1'
+        gridArea: '1 / 2 / span 4 / span 1',
       }),
       joySquareControl: JSON.stringify({
         type: 'slider',
@@ -247,8 +247,8 @@ class LibraryComponent extends CustomElement {
         max: [12, 12],
         snapToCenter: false,
         gridArea: '1 / 2 / span 4 / span 1',
-        numberType: 'int'
-      })
+        numberType: 'int',
+      }),
     };
   }
   toggleTheme() {

@@ -1,6 +1,6 @@
 {
   "name": "@readymade/ui",
-  "version": "3.0.0",
+  "version": "3.0.0-beta.0",
   "description": "UI library of standard elements built with Readymade",
   "type": "module",
   "module": "./fesm2022/index.js",
@@ -24,11 +24,11 @@
     "url": "git+https://github.com/readymade-ui/readymade.git"
   },
   "keywords": [
-   "custom elements",
-   "web components",
-   "typescript",
-   "decorators",
-   "javascript"
+    "custom elements",
+    "web components",
+    "typescript",
+    "decorators",
+    "javascript"
   ],
   "author": "Steve Belovarich",
   "license": "MIT",

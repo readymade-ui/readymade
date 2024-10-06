@@ -3,7 +3,7 @@ import {
   css,
   CustomElement,
   html,
-  Listen
+  Listen,
 } from './../../../modules/core';
 
 @Component({
@@ -23,7 +23,7 @@ import {
     <p>
       <span><slot name="msg">item</slot></span>
     </p>
-  `
+  `,
 })
 class MyItemComponent extends CustomElement {
   constructor() {

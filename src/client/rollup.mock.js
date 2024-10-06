@@ -8,7 +8,7 @@ import typescript from '@rollup/plugin-typescript';
 
 const plugins = [
   nodeResolve({
-    mainFields: ['module', 'jsnext']
+    mainFields: ['module', 'jsnext'],
   }),
   postcss({
     extract: false,
@@ -17,29 +17,29 @@ const plugins = [
       [
         'sass',
         {
-          includePaths: ['src/client/style']
-        }
-      ]
+          includePaths: ['src/client/style'],
+        },
+      ],
     ],
     minimize: true,
-    extensions: ['.scss', '.css']
+    extensions: ['.scss', '.css'],
   }),
   html({
     include: ['**/*.html'],
     exclude: ['**/index.html'],
-    minifier: {}
+    minifier: {},
   }),
   typescript({
-    experimentalDecorators: true
+    experimentalDecorators: true,
   }),
   commonjsResolve(),
   terser(),
   cleanup({
-    comments: 'none'
-  })
+    comments: 'none',
+  }),
 ];
 
-const onwarn = function(message) {
+const onwarn = function (message) {
   console.log(message);
 };
 
@@ -49,47 +49,47 @@ export default [
     output: {
       name: 'counter',
       file: 'dist/client/counter.js',
-      format: 'iife'
+      format: 'iife',
     },
     treeshake: true,
     external: ['path', 'html-minifier-terser'],
     plugins: plugins,
-    onwarn: onwarn
+    onwarn: onwarn,
   },
   {
     input: 'src/client/app/component/hello.ts',
     output: {
       name: 'hello',
       file: 'dist/client/hello-world.js',
-      format: 'iife'
+      format: 'iife',
     },
     treeshake: true,
     external: ['path', 'html-minifier-terser'],
     plugins: plugins,
-    onwarn: onwarn
+    onwarn: onwarn,
   },
   {
     input: 'src/client/app/component/hello.state.ts',
     output: {
       name: 'statetest',
       file: 'dist/client/hello-state.js',
-      format: 'iife'
+      format: 'iife',
     },
     treeshake: true,
     external: ['path', 'html-minifier-terser'],
     plugins: plugins,
-    onwarn: onwarn
+    onwarn: onwarn,
   },
   {
     input: 'src/client/app/component/button.ts',
     output: {
       name: 'button',
       file: 'dist/client/button.js',
-      format: 'iife'
+      format: 'iife',
     },
     treeshake: true,
     external: ['path', 'html-minifier-terser'],
     plugins: plugins,
-    onwarn: onwarn
-  }
+    onwarn: onwarn,
+  },
 ];

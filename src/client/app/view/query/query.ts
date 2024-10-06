@@ -6,7 +6,7 @@ import style from './query.scss?raw';
 @Component({
   selector: 'app-query',
   style: style,
-  template: html
+  template: html,
 })
 class QueryComponent extends CustomElement {
   constructor() {
@@ -16,7 +16,7 @@ class QueryComponent extends CustomElement {
   @State()
   public getState() {
     return {
-      params: {}
+      params: {},
     };
   }
 

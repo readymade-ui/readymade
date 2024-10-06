@@ -6,13 +6,13 @@ function BroadcastChannel(channel: any) {}
 // @ts-ignore
 global['BroadcastChannel'] = BroadcastChannel;
 global['observer$'] = {
-  observe: () => {}
+  observe: () => {},
 };
 
 const routes = [
   { path: '/', component: HomeComponent },
   { path: '/test', component: TestBedComponent },
-  { path: '/perf', component: PerformanceTestComponent }
+  { path: '/perf', component: PerformanceTestComponent },
 ];
 
 export { routes };

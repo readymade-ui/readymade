@@ -5,7 +5,7 @@ import {
   EventDispatcher,
   FormElement,
   html,
-  css
+  css,
 } from './../../../core';
 
 @Component({
@@ -102,7 +102,7 @@ import {
       <span class="icon"><slot name="icon"></slot></span>
       <span class="label"><slot name="label"></slot></span>
     </button>
-  `
+  `,
 })
 class RdButton extends FormElement {
   constructor() {
@@ -122,9 +122,8 @@ class RdButton extends FormElement {
         this.value = next;
         break;
       case 'label':
-        (this.shadowRoot.querySelector(
-          '.label'
-        ) as HTMLSpanElement).innerText = next;
+        (this.shadowRoot.querySelector('.label') as HTMLSpanElement).innerText =
+          next;
         break;
       case 'width':
         this.shadowRoot.querySelector('button').style.width = next;
@@ -140,7 +139,7 @@ class RdButton extends FormElement {
   }
 
   connectedCallback() {
-    this.shadowRoot.querySelectorAll('span').forEach(spanElem => {
+    this.shadowRoot.querySelectorAll('span').forEach((spanElem) => {
       const slot = spanElem.querySelector('slot');
       if (slot && slot.assignedNodes().length === 0) {
         spanElem.classList.add('is--empty');
@@ -152,8 +151,8 @@ class RdButton extends FormElement {
           new CustomEvent('submit', {
             bubbles: true,
             composed: true,
-            detail: 'composed'
-          })
+            detail: 'composed',
+          }),
         );
         if (this.onsubmit) {
           this.onsubmit(ev as SubmitEvent);

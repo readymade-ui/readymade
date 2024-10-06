@@ -3,7 +3,7 @@ import {
   css,
   CustomElement,
   html,
-  State
+  State,
 } from './../../../modules/core';
 
 export class GridState {
@@ -152,7 +152,7 @@ export const _gridState = new GridState();
     <div no-attr>{{grid[125]}}</div>
     <div no-attr>{{grid[126]}}</div>
     <div no-attr>{{grid[127]}}</div>
-  `
+  `,
 })
 class RGridComponent extends CustomElement {
   constructor() {

@@ -4,7 +4,7 @@ import {
   EventDispatcher,
   FormElement,
   html,
-  css
+  css,
 } from './../../../core';
 
 import { RdInput } from './input';
@@ -64,9 +64,7 @@ import { RdInput } from './input';
       display: none;
     }
   `,
-  template: html`
-    <textarea></textarea>
-  `
+  template: html` <textarea></textarea> `,
 })
 class RdTextArea extends RdInput {
   constructor() {

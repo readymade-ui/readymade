@@ -4,7 +4,7 @@ export {
   bindTemplate,
   compileTemplate,
   templateId,
-  uuidv4
+  uuidv4,
 } from './src/compile';
 
 export {
@@ -13,5 +13,5 @@ export {
   getParent,
   querySelector,
   querySelectorAll,
-  getChildNodes
+  getChildNodes,
 } from './src/util';

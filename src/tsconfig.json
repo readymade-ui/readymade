@@ -8,9 +8,8 @@
     "target": "ES2022",
     "sourceMap": false,
     "typeRoots": ["node_modules/@types"],
-    "lib": ["ES2022", "dom", "dom.iterable"]
+    "lib": ["ES2022", "dom", "dom.iterable"],
+    "types": ["node"]
   },
-  "include": [
-    "./**/*.ts"
-  ]
+  "include": ["./**/*.ts"]
 }

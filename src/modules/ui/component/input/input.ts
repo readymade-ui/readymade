@@ -4,7 +4,7 @@ import {
   EventDispatcher,
   FormElement,
   html,
-  css
+  css,
 } from './../../../core';
 
 @Component({
@@ -53,9 +53,7 @@ import {
       box-shadow: none;
     }
   `,
-  template: html`
-    <input type="text" />
-  `
+  template: html` <input type="text" /> `,
 })
 class RdInput extends FormElement {
   constructor() {
@@ -69,8 +67,8 @@ class RdInput extends FormElement {
         new CustomEvent('change', {
           bubbles: true,
           composed: true,
-          detail: 'composed'
-        })
+          detail: 'composed',
+        }),
       );
       if (this.onchange) {
         this.onchange(ev);

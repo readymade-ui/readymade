@@ -12,11 +12,11 @@ export default [
     external: ['path', 'html-minifier-terser'],
     output: {
       file: 'src/server/view/index.js',
-      format: 'esm'
+      format: 'esm',
     },
     plugins: [
       nodeResolve({
-        mainFields: ['module', 'jsnext']
+        mainFields: ['module', 'jsnext'],
       }),
       json(),
       postcss({
@@ -26,25 +26,25 @@ export default [
           [
             'sass',
             {
-              includePaths: ['src/client/style']
-            }
-          ]
+              includePaths: ['src/client/style'],
+            },
+          ],
         ],
         minimize: true,
-        extensions: ['.scss', '.css']
+        extensions: ['.scss', '.css'],
       }),
       html({
         include: ['**/*.html'],
         exclude: ['**/index.html'],
-        minifier: {}
+        minifier: {},
       }),
       typescript({
-        experimentalDecorators: true
+        experimentalDecorators: true,
       }),
-      commonjsResolve()
+      commonjsResolve(),
     ],
-    onwarn: function(message) {
+    onwarn: function (message) {
       console.log(message);
-    }
-  }
+    },
+  },
 ];

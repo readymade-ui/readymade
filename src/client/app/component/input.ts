@@ -11,7 +11,7 @@ import { InputComponent } from './../../../modules/dom';
       border: 0px none;
       color: white;
     }
-  `
+  `,
 })
 class MyInputComponent extends InputComponent {
   constructor() {

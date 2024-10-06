@@ -5,7 +5,7 @@ import terser from '@rollup/plugin-terser';
 
 const clean = {
   comments: ['none'],
-  extensions: ['ts', 'js']
+  extensions: ['ts', 'js'],
 };
 
 export default [
@@ -15,7 +15,7 @@ export default [
       resolve(),
       typescript({
         sourceMap: false,
-        declarationDir: 'packages/@readymade/core/fesm2022/typings'
+        declarationDir: 'packages/@readymade/core/fesm2022/typings',
       }),
       cleanup(clean),
     ],
@@ -26,7 +26,7 @@ export default [
     output: {
       file: 'packages/@readymade/core/fesm2022/index.js',
       format: 'esm',
-      sourcemap: true
-    }
-  }
+      sourcemap: true,
+    },
+  },
 ];

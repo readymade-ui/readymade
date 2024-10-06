@@ -5,7 +5,7 @@ import html from './home.html?raw';
 @Component({
   selector: 'app-home',
   style: style,
-  template: html
+  template: html,
 })
 class HomeComponent extends CustomElement {
   constructor() {

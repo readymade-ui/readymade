@@ -4,7 +4,7 @@ import {
   EventDispatcher,
   FormElement,
   html,
-  css
+  css,
 } from './../../../core';
 
 import { RdCheckBox } from './checkbox';
@@ -92,9 +92,7 @@ import { RdCheckBox } from './checkbox';
       box-shadow: none;
     }
   `,
-  template: html`
-    <input type="checkbox" />
-  `
+  template: html` <input type="checkbox" /> `,
 })
 class RdSwitch extends RdCheckBox {
   constructor() {

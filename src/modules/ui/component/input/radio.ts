@@ -71,9 +71,7 @@ import { Component, FormElement, Emitter, html, css } from './../../../core';
      transform: translateX(-1px) translateY(3px);
     }
   `,
-  template: html`
-    <div class="group"><slot></slot></div>
-  `
+  template: html` <div class="group"><slot></slot></div> `,
 })
 class RdRadioGroup extends FormElement {
   constructor() {
@@ -115,12 +113,14 @@ class RdRadioGroup extends FormElement {
 
   get value(): any {
     const checked = this.$elem.filter(
-      (elem: HTMLInputElement) => elem.checked
+      (elem: HTMLInputElement) => elem.checked,
     )[0];
     if (checked) {
-      return (this.$elem.filter(
-        (elem: HTMLInputElement) => elem.checked
-      )[0] as HTMLInputElement).value;
+      return (
+        this.$elem.filter(
+          (elem: HTMLInputElement) => elem.checked,
+        )[0] as HTMLInputElement
+      ).value;
     } else {
       return undefined;
     }
@@ -141,11 +141,13 @@ class RdRadioGroup extends FormElement {
   }
 
   get $elem(): HTMLInputElement[] {
-    return (this.shadowRoot
-      .querySelector('slot')
-      .assignedNodes() as HTMLInputElement[]).filter(
+    return (
+      this.shadowRoot
+        .querySelector('slot')
+        .assignedNodes() as HTMLInputElement[]
+    ).filter(
       (elem: HTMLInputElement) =>
-        elem.tagName === 'INPUT' && elem.type === 'radio'
+        elem.tagName === 'INPUT' && elem.type === 'radio',
     );
   }
 }

@@ -72,7 +72,7 @@ class Router {
           .replace(/"/g, '\\"')
           .replace(/&/g, '","')
           .replace(/=/g, '":"') +
-        '"}'
+        '"}',
     );
   }
 
@@ -81,7 +81,7 @@ class Router {
   }
 
   matchRoute(path: string) {
-    return this.routes.find(route => route.path === path);
+    return this.routes.find((route) => route.path === path);
   }
 
   navigate(path: string) {
@@ -96,7 +96,7 @@ class Router {
   resolve(route: Route) {
     const locationParams = this.decodeQuery();
     const component: RouteComponent = document.createElement(
-      route.component as string
+      route.component as string,
     );
 
     if (Object.keys(locationParams).length) {
@@ -105,7 +105,7 @@ class Router {
       window.history.replaceState(
         {},
         '',
-        `${location.pathname}?${this.parseQuery(route)}`
+        `${location.pathname}?${this.parseQuery(route)}`,
       );
     }
 
