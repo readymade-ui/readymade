@@ -5,75 +5,28 @@ import terser from '@rollup/plugin-terser';
 
 const clean = {
   comments: ['none'],
-  extensions: ['ts', 'js']
+  extensions: ['ts', 'js'],
 };
 
 export default [
   {
     input: 'src/modules/dom/index.ts',
-    plugins: [resolve(), typescript({ declaration: false }), cleanup(clean)],
-    onwarn: (warning, next) => {
-      if (warning.code === 'THIS_IS_UNDEFINED') return;
-      next(warning);
-    },
-    output: {
-      file: 'packages/@readymade/dom/fesm2015/dom.js',
-      format: 'esm',
-      sourcemap: false
-    }
-  },
-  {
-    input: 'src/modules/dom/index.ts',
     plugins: [
       resolve(),
       typescript({
-        sourceMap: true
+        sourceMap: false,
+        declarationDir: 'packages/@readymade/dom/fesm2022/typings',
       }),
       cleanup(clean),
-      terser()
     ],
     onwarn: (warning, next) => {
       if (warning.code === 'THIS_IS_UNDEFINED') return;
       next(warning);
     },
     output: {
-      file: 'packages/@readymade/dom/fesm2015/dom.min.js',
+      file: 'packages/@readymade/dom/fesm2022/index.js',
       format: 'esm',
-      sourcemap: true
-    }
-  },
-  {
-    input: 'src/modules/dom/index.ts',
-    plugins: [resolve(), typescript({ declaration: false }), cleanup(clean)],
-    onwarn: (warning, next) => {
-      if (warning.code === 'THIS_IS_UNDEFINED') return;
-      next(warning);
+      sourcemap: true,
     },
-    output: {
-      file: 'packages/@readymade/dom/bundles/dom.js',
-      format: 'cjs',
-      sourcemap: false
-    }
   },
-  {
-    input: 'src/modules/dom/index.ts',
-    plugins: [
-      resolve(),
-      typescript({
-        declaration: false,
-        sourceMap: true
-      }),
-      cleanup(clean),
-      terser()
-    ],
-    onwarn: (warning, next) => {
-      if (warning.code === 'THIS_IS_UNDEFINED') return;
-      next(warning);
-    },
-    output: {
-      file: 'packages/@readymade/dom/bundles/dom.min.js',
-      format: 'cjs',
-      sourcemap: true
-    }
-  }
 ];

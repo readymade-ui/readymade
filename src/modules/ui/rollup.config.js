@@ -10,7 +10,7 @@ const inlinePostCSS = pkgInlinePostCSS.default;
 
 const clean = {
   comments: ['none'],
-  extensions: ['ts', 'js']
+  extensions: ['ts', 'js'],
 };
 
 export default [
@@ -19,84 +19,19 @@ export default [
     plugins: [
       resolve(),
       typescript({
-        sourceMap: true
+        sourceMap: false,
+        declarationDir: 'packages/@readymade/ui/fesm2022/typings',
       }),
-      minifyHTML(),
-      inlinePostCSS(),
-      cleanup(clean)
-    ],
-    onwarn: (warning, next) => {
-      if (warning.code === 'THIS_IS_UNDEFINED') return;
-      next(warning);
-    },
-    output: {
-      file: 'packages/@readymade/ui/fesm2015/index.js',
-      format: 'esm',
-      sourcemap: true
-    }
-  },
-  {
-    input: 'src/modules/ui/index.ts',
-    plugins: [
-      resolve(),
-      typescript({
-        sourceMap: true
-      }),
-      minifyHTML(),
-      inlinePostCSS(),
       cleanup(clean),
-      terser()
     ],
     onwarn: (warning, next) => {
       if (warning.code === 'THIS_IS_UNDEFINED') return;
       next(warning);
     },
     output: {
-      file: 'packages/@readymade/ui/fesm2015/index.min.js',
+      file: 'packages/@readymade/ui/fesm2022/index.js',
       format: 'esm',
-      sourcemap: true
-    }
-  },
-  {
-    input: 'src/modules/ui/index.ts',
-    plugins: [
-      resolve(),
-      typescript({ declaration: false }),
-      minifyHTML(),
-      inlinePostCSS(),
-      cleanup(clean)
-    ],
-    onwarn: (warning, next) => {
-      if (warning.code === 'THIS_IS_UNDEFINED') return;
-      next(warning);
+      sourcemap: true,
     },
-    output: {
-      file: 'packages/@readymade/ui/bundles/index.js',
-      format: 'cjs',
-      sourcemap: false
-    }
   },
-  {
-    input: 'src/modules/ui/index.ts',
-    plugins: [
-      resolve(),
-      typescript({
-        declaration: false,
-        sourceMap: true
-      }),
-      minifyHTML(),
-      inlinePostCSS(),
-      cleanup(clean),
-      terser()
-    ],
-    onwarn: (warning, next) => {
-      if (warning.code === 'THIS_IS_UNDEFINED') return;
-      next(warning);
-    },
-    output: {
-      file: 'packages/@readymade/ui/bundles/index.min.js',
-      format: 'cjs',
-      sourcemap: true
-    }
-  }
 ];

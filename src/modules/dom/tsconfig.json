@@ -11,8 +11,7 @@
     "typeRoots": ["node_modules/@types"],
     "lib": ["ES2022", "dom", "dom.iterable"],
     "declaration": true,
-    "declarationDir": "typings",
-    "emitDeclarationOnly": true
+    "declarationDir": "typings"
   },
   "include": ["./**/*.ts"]
 }
