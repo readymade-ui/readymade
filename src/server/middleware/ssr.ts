@@ -33,7 +33,6 @@ export default async (req, res) => {
   const routeManifest = JSON.parse(
     fs.readFileSync(resolve('../client/route-manifest.json'), 'utf-8'),
   );
-  const indexProd = fs.readFileSync(resolve('../client/index.html'), 'utf-8');
   try {
     let view = {
       template: () => '',
