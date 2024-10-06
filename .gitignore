@@ -15,3 +15,4 @@ src/client/asset
 cypress/videos
 cypress/screenshots
 packages/
+.yarn

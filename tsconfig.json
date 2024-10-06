@@ -1,15 +1,16 @@
 {
   "compilerOptions": {
-    "baseUrl": "./",
+    "declaration": true,
+    "target": "ES2022",
+    "useDefineForClassFields": false,
+    "module": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "skipLibCheck": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
-    "module": "ESNext",
-    "target": "ES2022",
-    "sourceMap": false,
-    "typeRoots": ["node_modules/@types"],
-    "lib": ["ES2022", "dom", "dom.iterable"],
-    "types": ["node", "vite/client"]
-  }
+    "isolatedModules": false,
+    "noEmit": true
+  },
+  "include": ["src"]
 }

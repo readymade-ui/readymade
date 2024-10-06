@@ -1,5 +1,5 @@
 // test components
-export { ButtonState, MyButtonComponent } from './component/button';
+export { MyButtonComponent } from './component/button';
 export { RCodeComponent } from './component/code';
 export { MyCounter } from './component/counter';
 export { RHeadlineComponent } from './component/headline';
@@ -25,7 +25,7 @@ export {
   RdSlider,
   RdSwitch,
   RdDropdown,
-  RdButtonPad
+  RdButtonPad,
 } from './../../modules/ui';
 // views
 export { HomeComponent } from './view/home';
@@ -33,4 +33,4 @@ export { PerformanceTestComponent } from './view/perf';
 export { QueryComponent } from './view/query';
 export { TestBedComponent } from './view/test';
 export { LibraryComponent } from './view/lib';
-export { Router, routing } from './routing'
+export { Router, routing } from './routing';

@@ -13,12 +13,12 @@ export type EventHandler = () => void;
 export const EMIT_KEY = '$emit';
 export const LISTEN_KEY = '$listen';
 
-interface EventMeta {
+export interface EventMeta {
   key: string;
   handler: EventHandler;
 }
 
-interface ElementMeta {
+export interface ElementMeta {
   autoDefine?: boolean;
   custom?: {
     extends: string;
@@ -31,20 +31,20 @@ interface ElementMeta {
   template?: string | any[];
 }
 
-const html = (...args) => {
+export const html = (...args) => {
   return args;
 };
 
-const css = (...args) => {
+export const css = (...args) => {
   return args;
 };
 
 // tslint:disable-next-line
-const noop = () => {};
+export const noop = () => {};
 
 // Decorators
 
-function Component(meta: ElementMeta) {
+export function Component(meta: ElementMeta) {
   if (!meta) {
     console.error('Component must include ElementMeta to compile');
     return;
@@ -70,7 +70,7 @@ function Component(meta: ElementMeta) {
   };
 }
 
-function State(property?: string) {
+export function State(property?: string) {
   return function decorator(
     target: any,
     key: string | symbol,
@@ -99,7 +99,11 @@ function State(property?: string) {
   };
 }
 
-function Emitter(eventName?: string, options?: any, channelName?: string) {
+export function Emitter(
+  eventName?: string,
+  options?: any,
+  channelName?: string,
+) {
   return function decorator(
     target: any,
     key: string | symbol,
@@ -146,7 +150,7 @@ function Emitter(eventName?: string, options?: any, channelName?: string) {
   };
 }
 
-function Listen(eventName: string, channelName?: string) {
+export function Listen(eventName: string, channelName?: string) {
   return function decorator(
     target: any,
     key: string | number,
@@ -168,6 +172,14 @@ function Listen(eventName: string, channelName?: string) {
       });
       if (!this.emitter) {
         this.emitter = new EventDispatcher(this, chan ? chan : null);
+      }
+      if (!this.elementMeta) {
+        this.elementMeta = {
+          eventMap: {},
+        };
+      }
+      if (!this.elementMeta.eventMap) {
+        this.elementMeta.eventMap = {};
       }
       if (this.elementMeta) {
         this.elementMeta.eventMap[prop] = {
@@ -209,15 +221,3 @@ function Listen(eventName: string, channelName?: string) {
     };
   };
 }
-
-export {
-  EventMeta,
-  ElementMeta,
-  Component,
-  State,
-  Emitter,
-  Listen,
-  html,
-  css,
-  noop,
-};

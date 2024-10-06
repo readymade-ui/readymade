@@ -15,19 +15,19 @@ export const BIND_SUFFIX = '__state';
 export const NODE_KEY = 'node' + BIND_SUFFIX;
 export const HANDLER_KEY = 'handler' + BIND_SUFFIX;
 
-interface Node {
+export interface Node {
   cloneNode(deep?: boolean): this;
   $init?: boolean;
 }
 
-const isObject = function (val) {
+export const isObject = function (val) {
   if (val === null) {
     return false;
   }
   return typeof val === 'function' || typeof val === 'object';
 };
 
-const findValueByString = function (o: any, s: string) {
+export const findValueByString = function (o: any, s: string) {
   s = s.replace(STRING_VALUE_REGEX, '.$1');
   s = s.replace(STRING_DOT_REGEX, '');
   const a = s.split(DOT_BRACKET_NOTATION_REGEX).filter((s) => s.length > 0);
@@ -42,7 +42,7 @@ const findValueByString = function (o: any, s: string) {
   return o;
 };
 
-function setValueByString(obj: any, path: string, value: any) {
+export function setValueByString(obj: any, path: string, value: any) {
   const pList = path.split(DOT_BRACKET_NOTATION_REGEX);
   const len = pList.length;
   for (let i = 0; i < len - 1; i++) {
@@ -56,7 +56,7 @@ function setValueByString(obj: any, path: string, value: any) {
   return obj;
 }
 
-function filter(fn: any, a: Array<any>) {
+export function filter(fn: any, a: Array<any>) {
   const f = [];
   for (let i = 0; i < a.length; i++) {
     if (fn(a[i])) {
@@ -66,7 +66,7 @@ function filter(fn: any, a: Array<any>) {
   return f;
 }
 
-function templateId() {
+export function templateId() {
   let str = '';
   const alphabet = 'abcdefghijklmnopqrstuvwxyz';
   while (str.length < 3) {
@@ -76,7 +76,7 @@ function templateId() {
 }
 
 /* tslint:disable */
-function uuidv4(): string {
+export function uuidv4(): string {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
     const r = (Math.random() * 16) | 0,
       v = c == 'x' ? r : (r & 0x3) | 0x8;
@@ -85,23 +85,23 @@ function uuidv4(): string {
 }
 /* tslint:enable */
 
-function stripKey(key: string): string {
+export function stripKey(key: string): string {
   key = key.replace(BRACKET_START_REGEX, `\\[`);
   key = key.replace(BRACKET_END_REGEX, `\\]`);
   return key;
 }
 
-function stripTemplateString(key: string): string {
+export function stripTemplateString(key: string): string {
   key = key.replace(TEMPLATE_START_REGEX, ``);
   key = key.replace(TEMPLATE_END_REGEX, ``);
   return key;
 }
 
-function templateRegExp(key: string): RegExp {
+export function templateRegExp(key: string): RegExp {
   return new RegExp(`\\{\\{\\s*(${key})\\s*\\}\\}`, 'g');
 }
 
-function getTextNodesByContent(node: Element, key: string) {
+export function getTextNodesByContent(node: Element, key: string) {
   if (!node.childNodes) {
     return [];
   }
@@ -117,7 +117,7 @@ function getTextNodesByContent(node: Element, key: string) {
   return nodes;
 }
 
-function getElementByAttribute(node: Element) {
+export function getElementByAttribute(node: Element) {
   if (!node.attributes) {
     return [];
   }
@@ -134,7 +134,7 @@ function getElementByAttribute(node: Element) {
   return matches;
 }
 
-class NodeTree {
+export class NodeTree {
   public $parent: Node;
   public $parentId: string;
   public $flatMap: any = {};
@@ -285,7 +285,7 @@ class NodeTree {
   }
 }
 
-class BoundNode {
+export class BoundNode {
   public $elem: CustomElement | Element;
   public $tree: NodeTree;
   public templateTree: NodeTree;
@@ -304,7 +304,7 @@ class BoundNode {
   }
 }
 
-class BoundHandler {
+export class BoundHandler {
   public $prop: string;
   public $parent: any;
   public onStateChange: OnStateChange;
@@ -355,18 +355,18 @@ class BoundHandler {
   }
 }
 
-function bindTemplate() {
+export function bindTemplate() {
   if (this.bindState) {
     this.bindState();
   }
 }
 
-function setState(prop: string, model: any) {
+export function setState(prop: string, model: any) {
   setValueByString(this.ɵstate, prop, model);
   this.ɵɵstate[NODE_KEY].update(prop, model);
 }
 
-function compileTemplate(elementMeta: ElementMeta, target: any): any {
+export function compileTemplate(elementMeta: ElementMeta, target: any): any {
   if (!elementMeta.style) {
     elementMeta.style = [''];
   }
@@ -382,21 +382,3 @@ function compileTemplate(elementMeta: ElementMeta, target: any): any {
   target.prototype.bindTemplate = bindTemplate;
   return target;
 }
-
-export {
-  isObject,
-  findValueByString,
-  setValueByString,
-  templateId,
-  uuidv4,
-  stripKey,
-  stripTemplateString,
-  templateRegExp,
-  bindTemplate,
-  compileTemplate,
-  getTextNodesByContent,
-  getElementByAttribute,
-  setState,
-  BoundHandler,
-  BoundNode,
-};

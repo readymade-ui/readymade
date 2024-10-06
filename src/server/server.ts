@@ -7,7 +7,7 @@ import path from 'path';
 import express from 'express';
 import helmet from 'helmet';
 import crypto from 'crypto';
-import * as cheerio from 'cheerio';
+// import * as cheerio from 'cheerio';
 import { Readable } from 'stream';
 import { fileURLToPath } from 'url';
 import { html } from 'lit';
@@ -15,8 +15,8 @@ import { unsafeHTML } from 'lit-html/directives/unsafe-html.js';
 import { render } from '@lit-labs/ssr';
 
 const SSR_OUTLET_MARKER = '<!--ssr-outlet-->';
-const HEAD_SCRIPT_OUTLET_MARKER = '<!--head-script-outlet-->';
-const BODY_SCRIPT_OUTLET_MARKER = '<!--body-script-outlet-->';
+// const HEAD_SCRIPT_OUTLET_MARKER = '<!--head-script-outlet-->';
+// const BODY_SCRIPT_OUTLET_MARKER = '<!--body-script-outlet-->';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 async function* concatStreams(...readables) {
@@ -103,11 +103,11 @@ async function createServer(root = process.cwd(), hmrPort = 24678) {
         template = indexProd;
         view = await import(routeTemplateFilePath);
       }
-      const $ = cheerio.load(indexTemplate);
+      // const $ = cheerio.load(indexTemplate);
       // $('script').each((index, element) => {
       //   $(element).removeAttr('type');
       // });
-      let modifiedIndexTemplate = $.html();
+      let modifiedIndexTemplate = indexTemplate; //$.html();
       const index = modifiedIndexTemplate.indexOf(SSR_OUTLET_MARKER);
       const pre = Readable.from(modifiedIndexTemplate.substring(0, index));
       const post = Readable.from(

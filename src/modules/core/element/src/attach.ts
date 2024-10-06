@@ -1,6 +1,6 @@
 import { ElementMeta } from './../../decorator';
 
-function closestRoot(base: Element) {
+export function closestRoot(base: Element) {
   function __closestFrom(el: any): Element | HTMLHeadElement {
     if (el.getRootNode()) {
       return el.getRootNode();
@@ -11,7 +11,7 @@ function closestRoot(base: Element) {
   return __closestFrom(base);
 }
 
-function attachShadow(instance: any, options?: any) {
+export function attachShadow(instance: any, options?: any) {
   if (!instance.template) {
     return;
   }
@@ -22,7 +22,7 @@ function attachShadow(instance: any, options?: any) {
   instance.bindTemplate();
 }
 
-function attachDOM(instance: any, options?: any) {
+export function attachDOM(instance: any, options?: any) {
   if (!instance.elementMeta) {
     return;
   }
@@ -32,7 +32,7 @@ function attachDOM(instance: any, options?: any) {
   instance.bindTemplate();
 }
 
-function attachStyle(instance: any, options?: any) {
+export function attachStyle(instance: any, options?: any) {
   if (!instance.elementMeta) {
     return;
   }
@@ -51,7 +51,7 @@ function attachStyle(instance: any, options?: any) {
   closest.appendChild(t);
 }
 
-function define(instance: any, meta: ElementMeta) {
+export function define(instance: any, meta: ElementMeta) {
   if (meta.autoDefine === true) {
     if (meta.selector && !meta.custom) {
       customElements.define(meta.selector, instance.contructor);
@@ -62,5 +62,3 @@ function define(instance: any, meta: ElementMeta) {
     }
   }
 }
-
-export { attachDOM, attachStyle, attachShadow, define };
