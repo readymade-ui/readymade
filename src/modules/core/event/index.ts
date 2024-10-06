@@ -1,10 +1,15 @@
 // events
+import { ElementMeta } from '../decorator';
 
 export interface EmitterEvents {
   [key: string]: any;
 }
 
 export class ReadymadeEventTarget extends EventTarget {}
+
+interface ReadymadeElementTarget extends Element {
+  elementMeta?: ElementMeta;
+}
 
 export class EventDispatcher {
   public target: Element;
@@ -14,6 +19,7 @@ export class EventDispatcher {
   public channels: {
     [key: string]: BroadcastChannel;
   };
+
   constructor(context: any, channelName?: string) {
     this.target = context;
     this.channels = {
@@ -27,6 +33,7 @@ export class EventDispatcher {
   public get(eventName: string) {
     return this.events[eventName];
   }
+
   public set(eventName: string, ev: CustomEvent<any> | Event) {
     this.events[eventName] = ev;
     return this.get(eventName);
@@ -37,6 +44,7 @@ export class EventDispatcher {
     }
     this.target.dispatchEvent(ev);
   }
+
   public broadcast(ev: CustomEvent<any> | Event | string, name?: string) {
     if (typeof ev === 'string') {
       ev = this.events[ev];
@@ -51,14 +59,17 @@ export class EventDispatcher {
       timeStamp: ev.timeStamp,
       type: ev.type,
     };
-    name
-      ? this.channels[name].postMessage(evt)
-      : this.channels.default.postMessage(evt);
+    if (name) {
+      this.channels[name].postMessage(evt);
+    } else {
+      this.channels.default.postMessage(evt);
+    }
   }
   public setChannel(name: string) {
     this.channels[name] = new BroadcastChannel(name);
     this.channels[name].onmessage = (ev) => {
-      for (const prop in (this.target as any).elementMeta?.eventMap) {
+      for (const prop in (this.target as ReadymadeElementTarget).elementMeta
+        ?.eventMap) {
         if (prop.includes(name) && prop.includes(ev.data.type)) {
           this.target[(this.target as any).elementMeta?.eventMap[prop].handler](
             ev.data,

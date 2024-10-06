@@ -30,10 +30,12 @@ class MyItemComponent extends CustomElement {
     super();
   }
   @Listen('bang', 'default')
-  public onBang(event) {
-    this.getAttribute('state') === '--selected'
-      ? this.setAttribute('state', '')
-      : this.setAttribute('state', '--selected');
+  public onBang() {
+    if (this.getAttribute('state') === '--selected') {
+      this.setAttribute('state', '');
+    } else {
+      this.setAttribute('state', '--selected');
+    }
   }
 }
 

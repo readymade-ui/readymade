@@ -26,7 +26,7 @@ class HelloStateComponent extends CustomElement {
   }
   @Emitter('bang')
   @Listen('click')
-  public onClick(event) {
+  public onClick() {
     this.emitter.broadcast('bang');
   }
   @Listen('keyup')

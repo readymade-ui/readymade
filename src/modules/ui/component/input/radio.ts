@@ -1,4 +1,4 @@
-import { Component, FormElement, Emitter, html, css } from './../../../core';
+import { Component, FormElement, html, css } from './../../../core';
 
 @Component({
   selector: 'rd-radiogroup',
@@ -79,7 +79,7 @@ class RdRadioGroup extends FormElement {
   }
   connectedCallback() {
     this.$elem.forEach((elem: HTMLInputElement) => {
-      elem.onblur = (ev: Event) => {
+      elem.onblur = () => {
         this.onValidate();
       };
     });
@@ -111,7 +111,7 @@ class RdRadioGroup extends FormElement {
     }
   }
 
-  get value(): any {
+  get value(): string | undefined {
     const checked = this.$elem.filter(
       (elem: HTMLInputElement) => elem.checked,
     )[0];

@@ -27,7 +27,9 @@ export interface ElementMeta {
   eventMap?: { [key: string]: EventMeta };
   mode?: 'closed' | 'open';
   selector: string;
+
   style?: string | any[];
+
   template?: string | any[];
 }
 
@@ -39,7 +41,6 @@ export const css = (...args) => {
   return args;
 };
 
-// tslint:disable-next-line
 export const noop = () => {};
 
 // Decorators
@@ -49,6 +50,7 @@ export function Component(meta: ElementMeta) {
     console.error('Component must include ElementMeta to compile');
     return;
   }
+
   return (target: any) => {
     compileTemplate(meta, target);
     if (meta.autoDefine === undefined) {
@@ -70,12 +72,8 @@ export function Component(meta: ElementMeta) {
   };
 }
 
-export function State(property?: string) {
-  return function decorator(
-    target: any,
-    key: string | symbol,
-    descriptor: PropertyDescriptor,
-  ) {
+export function State() {
+  return function decorator(target: any, key: string | symbol) {
     async function bindState() {
       this.$state = this[key]();
       this.ɵɵstate = {};
@@ -101,14 +99,11 @@ export function State(property?: string) {
 
 export function Emitter(
   eventName?: string,
+
   options?: any,
   channelName?: string,
 ) {
-  return function decorator(
-    target: any,
-    key: string | symbol,
-    descriptor: PropertyDescriptor,
-  ) {
+  return function decorator(target: any) {
     const channel = channelName ? channelName : 'default';
     let prop: string = '';
 

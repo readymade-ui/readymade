@@ -1,11 +1,4 @@
-import {
-  Component,
-  Emitter,
-  EventDispatcher,
-  FormElement,
-  html,
-  css,
-} from './../../../core';
+import { Component, Emitter, FormElement, html, css } from './../../../core';
 
 @Component({
   selector: 'rd-checkbox',
@@ -125,7 +118,7 @@ class RdCheckBox extends FormElement {
         );
       }
     };
-    this.$elem.onblur = (ev: Event) => {
+    this.$elem.onblur = () => {
       this.onValidate();
     };
   }

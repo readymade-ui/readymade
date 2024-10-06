@@ -75,7 +75,7 @@ export function templateId() {
   return str;
 }
 
-/* tslint:disable */
+/* eslint:disable */
 export function uuidv4(): string {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
     const r = (Math.random() * 16) | 0,
@@ -83,7 +83,7 @@ export function uuidv4(): string {
     return v.toString(24);
   });
 }
-/* tslint:enable */
+/* eslint:enable */
 
 export function stripKey(key: string): string {
   key = key.replace(BRACKET_START_REGEX, `\\[`);
@@ -137,12 +137,14 @@ export function getElementByAttribute(node: Element) {
 export class NodeTree {
   public $parent: Node;
   public $parentId: string;
+
   public $flatMap: any = {};
   constructor(parentNode?: Node) {
     this.$parent = parentNode;
     this.$flatMap = {};
     this.$parentId = templateId();
   }
+
   public setNode(node: Node, key?: string, value?: any, attrID?: string) {
     if (this.$flatMap[attrID]) {
       return this.$flatMap[attrID];
@@ -150,13 +152,11 @@ export class NodeTree {
     const id = attrID ? attrID : this.$parentId + '-' + uuidv4().slice(0, 6);
     const clone = node.cloneNode(true);
     if (!(node as Element).setAttribute) {
-      // tslint:disable-next-line: only-arrow-functions, no-empty
-      (node as Element).setAttribute = function (i: string, v: string) {};
+      (node as Element).setAttribute = function () {};
     }
     (node as Element).setAttribute(id, '');
     if (!(clone as Element).setAttribute) {
-      // tslint:disable-next-line: only-arrow-functions, no-empty
-      (clone as Element).setAttribute = function (i: string, v: string) {};
+      (clone as Element).setAttribute = function () {};
     }
     (clone as Element).setAttribute(id, '');
     this.$flatMap[id] = {
@@ -166,6 +166,7 @@ export class NodeTree {
     node.$init = true;
     return this.$flatMap[id];
   }
+
   public changeNode(node: Node, key: string, value: any, protoNode: any) {
     key = stripKey(key);
     const regex = templateRegExp(key);
@@ -194,8 +195,7 @@ export class NodeTree {
             attr = attribute.name.replace('attr.', '');
           }
           if (!protoNode.setAttribute) {
-            // tslint:disable-next-line: only-arrow-functions, no-empty
-            protoNode.setAttribute = function (i: string, v: string) {};
+            protoNode.setAttribute = function () {};
           }
           protoNode.setAttribute(
             attr,
@@ -209,8 +209,7 @@ export class NodeTree {
       if (attributeValue.match(regex, 'gi')) {
         if ((node as Element).getAttribute(attr) !== value) {
           if (!(node as Element).setAttribute) {
-            // tslint:disable-next-line: only-arrow-functions, no-empty
-            (node as Element).setAttribute = function (i: string, v: string) {};
+            (node as Element).setAttribute = function () {};
           }
           (node as Element).setAttribute(
             attr,
@@ -224,6 +223,7 @@ export class NodeTree {
       }
     }
   }
+
   public updateNode(node: Node | Element, key: string, value: any) {
     const attr = getElementByAttribute(node as Element)[0];
     const attrId = attr ? attr.nodeName || attr.name : null;
@@ -268,12 +268,13 @@ export class NodeTree {
       this.changeNode(node, key, value, protoNode);
     }
   }
+
   public update(key: string, value: any) {
     const walk = document.createTreeWalker(
       this.$parent as Element,
       NodeFilter.SHOW_ELEMENT,
       {
-        acceptNode(node) {
+        acceptNode() {
           return NodeFilter.FILTER_ACCEPT;
         },
       },
@@ -293,6 +294,7 @@ export class BoundNode {
     this.$elem = elem;
     this.$tree = new NodeTree(this.$elem);
   }
+
   public update(key: string, value: any) {
     if (value == undefined) {
       return;
@@ -306,11 +308,13 @@ export class BoundNode {
 
 export class BoundHandler {
   public $prop: string;
+
   public $parent: any;
   public onStateChange: OnStateChange;
   constructor(obj: Element) {
     this.$parent = obj;
   }
+
   public set(target: any, key: string, value: any) {
     if (value === 'undefined') {
       return true;

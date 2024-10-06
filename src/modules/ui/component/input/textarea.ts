@@ -1,11 +1,4 @@
-import {
-  Component,
-  Emitter,
-  EventDispatcher,
-  FormElement,
-  html,
-  css,
-} from './../../../core';
+import { Component, html, css } from './../../../core';
 
 import { RdInput } from './input';
 

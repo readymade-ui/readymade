@@ -168,7 +168,7 @@ class RdSlider extends FormElement {
   private _handle: HTMLElement;
   private _timeout: number;
   private _animation: Animation;
-  private _lastPos: any;
+  private _lastPos: { transform: string };
   private _joystickType: 'circle' | 'square';
   private _numberType: 'int' | 'float';
   public control: RdControl;
@@ -299,12 +299,12 @@ class RdSlider extends FormElement {
   }
 
   @Listen('mouseleave')
-  onMouseLeave(e: MouseEvent) {
+  onMouseLeave() {
     // this.control.hasUserInput = false;
   }
 
   @Listen('mouseenter')
-  onMouseEnter(e: MouseEvent) {
+  onMouseEnter() {
     if (this.control.isActive) {
       this.control.hasUserInput = true;
     }
@@ -446,7 +446,7 @@ class RdSlider extends FormElement {
 
   // Unbind drag events
   @Listen('mouseup')
-  onMouseUp(e: MouseEvent | TouchEvent) {
+  onMouseUp() {
     this.control.isActive = false;
     this.control.hasUserInput = false;
     this.$elem.classList.remove('active');

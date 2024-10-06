@@ -1,11 +1,4 @@
-import {
-  Component,
-  CustomElement,
-  Emitter,
-  FormElement,
-  css,
-  html,
-} from './../../../core';
+import { Component, Emitter, FormElement, css, html } from './../../../core';
 
 @Component({
   selector: 'rd-dropdown',
@@ -104,7 +97,7 @@ class RdDropdown extends FormElement {
         this.onselect(ev);
       }
     };
-    this.$elem.onblur = (ev: Event) => {
+    this.$elem.onblur = () => {
       this.onValidate();
     };
   }

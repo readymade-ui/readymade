@@ -18,7 +18,7 @@ class MyInputComponent extends InputComponent {
     super();
   }
   @Listen('focus')
-  public onFocus(event) {
+  public onFocus() {
     this.value = 'input';
   }
 }

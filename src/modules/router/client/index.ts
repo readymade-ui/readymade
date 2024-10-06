@@ -7,6 +7,7 @@ export interface RouteComponent extends HTMLElement {
   bindEmitters?(): void;
   bindListeners?(): void;
   bindState?(): void;
+
   setState?(property: string, model: any): void;
   onNavigate?(route: Route): void;
   onUpdate?(): void;
@@ -19,12 +20,13 @@ export interface Route {
   queryParams?: { [key: string]: string };
   title?: string;
   description?: string;
+
   schema?: any;
 }
 
 class Router {
   rootElement: Element;
-  routes: any[];
+  routes: Array<Route>;
   currentRoute: Route;
   constructor(root: string, routes: Route[]) {
     if (document.querySelector(root) === null) {

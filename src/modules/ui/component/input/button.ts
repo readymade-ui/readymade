@@ -1,12 +1,4 @@
-import {
-  Component,
-  Emitter,
-  Listen,
-  EventDispatcher,
-  FormElement,
-  html,
-  css,
-} from './../../../core';
+import { Component, Listen, FormElement, html, css } from './../../../core';
 
 @Component({
   selector: 'rd-button',

@@ -70,7 +70,7 @@ interface IElementInternals extends ElementInternals {
   ): void;
 }
 
-export declare var IElementInternals: {
+export declare const IElementInternals: {
   prototype: IElementInternals;
   new (): IElementInternals;
 };

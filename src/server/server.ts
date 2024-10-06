@@ -2,7 +2,6 @@ import { installShimOnGlobal } from './shim';
 
 installShimOnGlobal();
 
-import fs from 'fs';
 import path from 'path';
 import chalk from 'chalk';
 import express from 'express';
@@ -12,14 +11,12 @@ import { fileURLToPath } from 'url';
 
 import { config } from './config';
 
-import nonce from './middleware/nonce';
-import errorHandler from './middleware/error-handler';
 import ssr from './middleware/ssr';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const resolve = (p) => path.resolve(__dirname, p);
 
-async function createServer(root = process.cwd(), hmrPort = 24678) {
+async function createServer() {
   const app: express.Application = express();
   const env: string = process.env.NODE_ENV || 'development';
 
@@ -36,7 +33,7 @@ async function createServer(root = process.cwd(), hmrPort = 24678) {
         fontSrc: ["'self'", 'https://fonts.gstatic.com'],
         scriptSrc: [
           "'self'",
-          (req, res) => `'sha256-5+YTmTcBwCYdJ8Jetbr6kyjGp0Ry/H7ptpoun6CrSwQ='`,
+          () => `'sha256-5+YTmTcBwCYdJ8Jetbr6kyjGp0Ry/H7ptpoun6CrSwQ='`,
         ],
       },
     },
@@ -44,8 +41,6 @@ async function createServer(root = process.cwd(), hmrPort = 24678) {
 
   app.use(helmet(helmetConfig));
   app.use(cors(corsOptions));
-  app.use(nonce);
-  app.use(errorHandler);
 
   if (env === 'production') {
     app.use((await import('compression')).default());
@@ -60,7 +55,7 @@ async function createServer(root = process.cwd(), hmrPort = 24678) {
   return { app };
 }
 
-createServer(process.cwd(), 24678).then(({ app }) => {
+createServer().then(({ app }) => {
   const port: string = process.env.PORT || config.port || '4443';
   app.listen(port, (): void => {
     const addr = `${config.protocol === 'HTTPS' ? 'https' : 'http'}://localhost:${port}`;

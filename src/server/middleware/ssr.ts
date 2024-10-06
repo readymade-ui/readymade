@@ -29,18 +29,15 @@ export const sanitizeTemplate = async (template) => {
 async function* renderView(template) {
   yield* render(template);
 }
-export default async (req, res, next) => {
-  const url = req.originalUrl;
+export default async (req, res) => {
   const routeManifest = JSON.parse(
     fs.readFileSync(resolve('../client/route-manifest.json'), 'utf-8'),
   );
   const indexProd = fs.readFileSync(resolve('../client/index.html'), 'utf-8');
   try {
-    let template: string,
-      render: string,
-      view = {
-        template: () => '',
-      };
+    let view = {
+      template: () => '',
+    };
     const indexTemplate = fs.readFileSync(
       resolve('../client/index.html'),
       'utf-8',
@@ -60,7 +57,6 @@ export default async (req, res, next) => {
       const filePath =
         routeManifest[`app/view${routeDirectoryName}/index.ts`].file;
       routeTemplateFilePath = resolve(`../client/${filePath}`);
-      template = indexProd;
       view = await import(routeTemplateFilePath);
     }
     // const $ = cheerio.load(indexTemplate);

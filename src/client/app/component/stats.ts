@@ -23,9 +23,9 @@ class RStatsComponent extends CustomElement {
     super();
     this.shadowRoot
       ?.querySelector('slot')
-      ?.addEventListener('slotchange', (event) => this.onSlotChange(event));
+      ?.addEventListener('slotchange', () => this.onSlotChange());
   }
-  public onSlotChange(ev: any) {
+  public onSlotChange() {
     this.animateIn();
   }
   public animateIn() {

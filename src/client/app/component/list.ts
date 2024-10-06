@@ -41,7 +41,7 @@ class MyListComponent extends CustomElement {
     this.setAttribute('tabindex', '0');
   }
   @Listen('focus')
-  public onFocus(ev: FocusEvent) {
+  public onFocus() {
     for (const li of this.children[0].children) {
       if (li === this.children[0].children[this.currentIndex]) {
         this.activateElement(li);
@@ -98,7 +98,7 @@ class MyListComponent extends CustomElement {
       });
     }
   }
-  public onSubmit(event) {
+  public onSubmit() {
     // console.log(this, event);
   }
 }

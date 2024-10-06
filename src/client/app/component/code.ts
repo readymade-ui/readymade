@@ -204,7 +204,7 @@ class RCodeComponent extends CustomElement {
     super();
   }
 
-  connectedCallback(event) {
+  connectedCallback() {
     this.onSlotChange();
   }
 

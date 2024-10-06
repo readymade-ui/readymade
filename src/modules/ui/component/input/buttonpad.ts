@@ -1,13 +1,31 @@
 import {
   Component,
-  Emitter,
   Listen,
-  EventDispatcher,
   FormElement,
   html,
   css,
   State,
 } from './../../../core';
+
+export interface ButtonGridModifier {
+  gap?: string;
+  columns?: {
+    count?: number;
+  };
+  cells?: Array<{
+    selector?: string;
+    styles?: {
+      width?: string;
+      gridColumn?: string;
+    };
+  }>;
+}
+
+export interface Button {
+  key: string;
+  code: string;
+  label: string;
+}
 
 export const StandardKeyboardModifiers = {
   'Shift+Backquote': { key: '~', code: 'Shift+Backquote', label: '~' },
@@ -283,7 +301,7 @@ class RdButtonPad extends FormElement {
       .catch((err) => console.error(err));
   }
 
-  updateVisualGrid(elem: HTMLElement, grid: any) {
+  updateVisualGrid(elem: HTMLElement, grid: ButtonGridModifier) {
     if (grid.gap) {
       elem.style.gridGap = grid.gap;
     }
@@ -296,11 +314,12 @@ class RdButtonPad extends FormElement {
         const cellElem = this.shadowRoot.querySelector(cell.selector);
         for (const styleProp in cell.styles) {
           // check for cellElem.style.hasOwnProperty(styleProp) fails in Safari and breaks layout
-          if (cell.styles.hasOwnProperty(styleProp)) {
+          if (cell.styles[styleProp]) {
             if (styleProp === 'width' || styleProp === 'height') {
               cellElem.setAttribute(styleProp, cell.styles[styleProp]);
             } else {
-              cellElem.style[styleProp] = cell.styles[styleProp];
+              (cellElem as HTMLElement).style[styleProp] =
+                cell.styles[styleProp];
             }
           }
         }
@@ -343,10 +362,10 @@ class RdButtonPad extends FormElement {
   get grid() {
     return this.getState().grid;
   }
-  set grid(grid: any) {
+  set grid(grid: ButtonGridModifier | string) {
     setTimeout(() => {
       this.wait$('[target]').then((elem) => {
-        this.updateVisualGrid(elem, grid);
+        this.updateVisualGrid(elem, grid as ButtonGridModifier);
         this.setState('grid', JSON.stringify(grid));
       });
     });
@@ -355,7 +374,7 @@ class RdButtonPad extends FormElement {
   get buttons() {
     return this.getState().buttons;
   }
-  set buttons(buttons: any) {
+  set buttons(buttons: Array<Button>) {
     this.setState('buttons', JSON.stringify(buttons));
   }
 

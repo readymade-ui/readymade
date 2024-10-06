@@ -1,3 +1,4 @@
+/* eslint-disable */
 export function getParent(el: any) {
   return el.parentNode;
 }

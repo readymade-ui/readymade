@@ -22,7 +22,7 @@ export function attachShadow(instance: any, options?: any) {
   instance.bindTemplate();
 }
 
-export function attachDOM(instance: any, options?: any) {
+export function attachDOM(instance: any) {
   if (!instance.elementMeta) {
     return;
   }
@@ -32,11 +32,12 @@ export function attachDOM(instance: any, options?: any) {
   instance.bindTemplate();
 }
 
-export function attachStyle(instance: any, options?: any) {
+export function attachStyle(instance: any) {
   if (!instance.elementMeta) {
     return;
   }
   const id = `${instance.elementMeta.selector}`;
+
   const closest: any = closestRoot(instance);
   if (closest.tagName === 'HEAD' && document.getElementById(`${id}-x`)) {
     return;

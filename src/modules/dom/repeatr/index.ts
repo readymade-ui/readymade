@@ -82,15 +82,23 @@ function isJSON(str) {
     JSON.parse(str);
     return true;
   } catch (e) {
+    console.error(e);
     return false;
   }
 }
 
+interface ReadymadeElement extends Element {
+  $id: string;
+  $key: string;
+
+  onChange(change: any): void;
+}
+
 function renderTemplate(
-  elem: any,
+  elem: ReadymadeElement,
   template: HTMLTemplateElement,
   items: string,
-  previousNode?: any,
+  previousNode?: Element,
 ): void {
   if (!elem.parentNode) {
     return;
@@ -106,6 +114,7 @@ function renderTemplate(
   const protoNode = (clone as Element).querySelector(`[repeat="${bound[1]}"]`);
 
   let $elem: any = elem;
+
   let model: any;
 
   for (; $elem && $elem !== document; $elem = $elem.parentNode) {
