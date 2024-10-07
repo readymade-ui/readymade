@@ -8,10 +8,15 @@ import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
 import { glob } from 'glob';
+import { InlineConfig } from 'vite';
 
-import { config } from './config';
+import { config } from './config.js';
 
-import { ssrMiddleware } from './middleware/ssr';
+import { ssrMiddleware } from './middleware/ssr.js';
+
+const env: string = process.env.NODE_ENV || 'development';
+const port: string = process.env.PORT || config.port || '4443';
+const hmrPort: string = process.env.HMR_PORT || config.hmrPort || '7443';
 
 // import { fileURLToPath } from 'url';
 // const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -19,11 +24,15 @@ import { ssrMiddleware } from './middleware/ssr';
 async function createServer(root = process.cwd()) {
   const resolve = (p) => path.resolve(root, p);
   const app: express.Application = express();
-  const env: string = process.env.NODE_ENV || 'development';
 
   const corsOptions =
     env === 'production'
       ? { origin: `${config.protocol}://${config.host}` }
+      : {};
+
+  const hmrOptions =
+    env === 'development'
+      ? { connectSrc: ["'self'", `ws://localhost:${hmrPort}`] }
       : {};
 
   const helmetConfig = {
@@ -36,6 +45,7 @@ async function createServer(root = process.cwd()) {
           "'self'",
           () => `'sha256-5+YTmTcBwCYdJ8Jetbr6kyjGp0Ry/H7ptpoun6CrSwQ='`,
         ],
+        ...hmrOptions,
       },
     },
   };
@@ -57,18 +67,16 @@ async function createServer(root = process.cwd()) {
       appType: 'custom',
       server: {
         middlewareMode: true,
-        port: config.port,
-        strictPort: true,
+        port, // <-- same as express
         hmr: {
           protocol: 'ws',
-          port: Number(config.port) + 1000,
-          clientPort: config.port,
-          overlay: true,
-          timeout: 60000,
+          port: hmrPort,
         },
       },
     };
-    const vite = await (await import('vite')).createServer(viteServerConfig);
+    const vite = await (
+      await import('vite')
+    ).createServer((<unknown>viteServerConfig) as InlineConfig);
     app.use(vite.middlewares);
     app.use('*', ssrMiddleware({ vite }));
   }

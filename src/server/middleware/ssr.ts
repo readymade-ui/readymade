@@ -39,7 +39,7 @@ function isRoute(req): boolean {
 const ssrMiddleware = (options?: { vite?: ViteDevServer }) => {
   return async (req, res, next) => {
     let routeDirectoryName: string;
-    console.log(req.baseUrl);
+
     if (req.baseUrl === '/home') {
       return res.redirect('/');
     }

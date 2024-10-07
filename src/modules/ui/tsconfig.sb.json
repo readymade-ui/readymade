@@ -1,12 +1,12 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../../../tsconfig.json",
   "compilerOptions": {
     "baseUrl": "./",
     "outDir": "../../../dist",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "moduleResolution": "node",
-    "module": "ES2015",
+    "module": "ES2022",
     "target": "ES2022",
     "sourceMap": false,
     "typeRoots": ["node_modules/@types"],

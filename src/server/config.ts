@@ -5,6 +5,7 @@ let config: {
   host: string;
   protocol: string;
   port: string;
+  hmrPort?: string;
 };
 
 if (env === 'development') {
@@ -13,6 +14,7 @@ if (env === 'development') {
     host: 'http://localhost:4443',
     protocol: 'http',
     port: '4443',
+    hmrPort: '7443',
   };
 }
 

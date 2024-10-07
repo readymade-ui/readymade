@@ -10,8 +10,7 @@
     "emitDecoratorMetadata": true,
     "moduleResolution": "node",
     "isolatedModules": false,
-    "types": ["node"],
-
+    "allowSyntheticDefaultImports": true
   },
   "include": ["src"]
 }

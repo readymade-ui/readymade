@@ -1,5 +1,5 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../../../tsconfig.json",
   "compilerOptions": {
     "baseUrl": "./",
     "experimentalDecorators": true,
@@ -9,7 +9,7 @@
     "target": "ES2022",
     "sourceMap": false,
     "typeRoots": ["node_modules/@types"],
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "lib": ["ES2022", "dom", "dom.iterable"],
     "declaration": true,
     "declarationDir": "typings"
   },
