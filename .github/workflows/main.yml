@@ -1,4 +1,4 @@
-name: End-to-end tests
+name: Test
 on:
   push:
     branches: [main]
@@ -14,7 +14,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20' # or the version defined in your project's engines field in package.json
+          node-version: '20'
 
       - name: Enable Corepack
         run: corepack enable
@@ -22,13 +22,13 @@ jobs:
       - name: Install Yarn
         run: corepack prepare yarn@4.5.0 --activate
 
-      - name: Install dependencies
+      - name: Install Dependencies
         run: yarn install
 
-      - name: Run lint
+      - name: Run Lint
         run: yarn lint
 
-      - name: Check prettier formatting
+      - name: Check Format
         run: yarn pretty:check
 
       - name: Cypress
