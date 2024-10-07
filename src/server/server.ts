@@ -7,7 +7,6 @@ import chalk from 'chalk';
 import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
-import { glob } from 'glob';
 import { InlineConfig } from 'vite';
 
 import { config } from './config.js';
