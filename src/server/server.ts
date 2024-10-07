@@ -1,4 +1,4 @@
-import { installShimOnGlobal } from './shim';
+import { installShimOnGlobal } from './shim.js';
 
 installShimOnGlobal();
 
@@ -7,16 +7,17 @@ import chalk from 'chalk';
 import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
-import { fileURLToPath } from 'url';
+import { glob } from 'glob';
 
 import { config } from './config';
 
-import ssr from './middleware/ssr';
+import { ssrMiddleware } from './middleware/ssr';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const resolve = (p) => path.resolve(__dirname, p);
+// import { fileURLToPath } from 'url';
+// const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-async function createServer() {
+async function createServer(root = process.cwd()) {
+  const resolve = (p) => path.resolve(root, p);
   const app: express.Application = express();
   const env: string = process.env.NODE_ENV || 'development';
 
@@ -45,11 +46,31 @@ async function createServer() {
   if (env === 'production') {
     app.use((await import('compression')).default());
     app.use(
-      (await import('serve-static')).default(resolve('../client'), {
+      (await import('serve-static')).default(resolve('dist/client'), {
         index: false,
       }),
     );
-    app.use('*', ssr);
+    app.use('*', ssrMiddleware({}));
+  } else {
+    const viteServerConfig = {
+      root: resolve('src/client'),
+      appType: 'custom',
+      server: {
+        middlewareMode: true,
+        port: config.port,
+        strictPort: true,
+        hmr: {
+          protocol: 'ws',
+          port: Number(config.port) + 1000,
+          clientPort: config.port,
+          overlay: true,
+          timeout: 60000,
+        },
+      },
+    };
+    const vite = await (await import('vite')).createServer(viteServerConfig);
+    app.use(vite.middlewares);
+    app.use('*', ssrMiddleware({ vite }));
   }
 
   return { app };
@@ -58,7 +79,9 @@ async function createServer() {
 createServer().then(({ app }) => {
   const port: string = process.env.PORT || config.port || '4443';
   app.listen(port, (): void => {
-    const addr = `${config.protocol === 'HTTPS' ? 'https' : 'http'}://localhost:${port}`;
+    const addr = `${
+      config.protocol === 'HTTPS' ? 'https' : 'http'
+    }://localhost:${port}`;
     process.stdout.write(
       `\n [${new Date().toISOString()}] ${chalk.green(
         'Server running:',

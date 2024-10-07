@@ -12,7 +12,7 @@ if (env === 'development') {
     env: 'development',
     host: 'http://localhost:4443',
     protocol: 'http',
-    port: '4444',
+    port: '4443',
   };
 }
 

@@ -30,7 +30,7 @@ export function getSiblings(el: Element) {
 }
 
 export function querySelector(selector: string) {
-  return document.querySelector(selector);
+  return document?.querySelector(selector);
 }
 
 export function querySelectorAll(selector: string) {
@@ -45,4 +45,4 @@ export const isNode =
   typeof process === 'object' && String(process) === '[object process]';
 
 export const isBrowser =
-  typeof window !== undefined && typeof window.document !== undefined;
+  typeof window !== undefined && typeof window?.document !== undefined;

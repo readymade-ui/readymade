@@ -21,7 +21,7 @@ export default {
     },
   ],
   build: {
-    minify: false,
+    minify: true,
     rollupOptions: {
       output: {
         format: 'esm',

@@ -19,7 +19,7 @@ export default {
   build: {
     ssr: true,
     minify: true,
-    manifest: 'route-manifest.json',
+    manifest: 'manifest.json',
     rollupOptions: {
       input: await glob(['src/client/app/view/**/index.ts']),
       output: {
