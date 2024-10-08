@@ -150,6 +150,9 @@
     "vite-plugin-node-polyfills": "^0.22.0",
     "vite-plugin-standard-css-modules": "^0.0.11"
   },
+  "resolutions": {
+    "lit-html": "^3.2.0"
+  },
   "browserslist": "> 0.5%, last 2 versions, not dead",
   "externals": [
     "./src/server/config.js"

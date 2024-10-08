@@ -15,6 +15,7 @@ export class CodeState {
 
 @Component({
   selector: 'r-code',
+  declarative: true,
   style: css`
     :host {
       display: block;

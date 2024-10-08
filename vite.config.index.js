@@ -22,6 +22,7 @@ export default {
   ],
   build: {
     minify: true,
+    manifest: 'manifest-index.json',
     rollupOptions: {
       output: {
         format: 'esm',

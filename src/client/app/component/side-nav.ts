@@ -17,136 +17,140 @@ export class SideNavState {
   public size: string = '10000px';
 }
 
+const template = html`
+  <svg class="background" width="54px" height="60px">
+    <clipPath id="c1">
+      <polygon
+        stroke-width="3"
+        class="polygon"
+        attr.points="{{triPoints}}"
+      ></polygon>
+    </clipPath>
+    <g stroke="none" fill="none" fill-rule="evenodd">
+      <polygon
+        fill="{{shadowColor}}"
+        stroke-width="0"
+        class="shadow"
+        attr.points="{{shadowPoints}}"
+      ></polygon>
+      <polygon
+        fill="{{fillColor}}"
+        stroke-width="0"
+        class="polygon"
+        attr.points="{{triPoints}}"
+      ></polygon>
+    </g>
+  </svg>
+  <nav>
+    <ul class="top">
+      <li>
+        <span><a data-link="#intro">Intro</a></span>
+      </li>
+      <li>
+        <span><a data-link="#started">Getting Started</a></span>
+      </li>
+      <li>
+        <span><a data-link="#docs">Using Readymade</a></span>
+      </li>
+      <li>
+        <span><a data-link="#resources">Resources</a></span>
+      </li>
+    </ul>
+  </nav>
+`;
+
+const style = css`
+  :host {
+    display: block;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    width: 0px;
+    max-width: 320px;
+    z-index: 8888;
+    color: #000;
+    overflow: visible;
+  }
+  :host.is--active {
+    width: 320px;
+  }
+  .is--hidden {
+    display: none;
+  }
+  svg {
+    overflow: visible;
+    transform: translateX(0px);
+  }
+  nav {
+    display: block;
+    position: relative;
+    width: 0%;
+    height: 100%;
+    -webkit-clip-path: url(#c1);
+    overflow: hidden;
+  }
+  nav.is--active {
+    width: 1400px;
+  }
+  ul {
+    margin-block-start: 0em;
+    margin-block-end: 0em;
+    padding-inline-start: 0px;
+    width: 100%;
+    display: block;
+  }
+  ul li {
+    display: block;
+    cursor: pointer;
+    width: 100%;
+    opacity: 0.8;
+    cursor: pointer;
+    padding-inline-start: 0px;
+    width: 100%;
+    max-width: 320px;
+    font-weight: 700;
+  }
+  ul li > span {
+    display: inline-block;
+    position: relative;
+    height: 22px;
+    width: calc(100% - 56px);
+    margin-left: 20px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+  ul li a:link,
+  ul li a:visited {
+    opacity: 0.8;
+    color: #000000;
+    text-decoration: none;
+  }
+  ul li:hover a:link,
+  ul li:hover a:visited {
+    opacity: 1;
+    color: #ffffff;
+  }
+  ul.top {
+    position: absolute;
+    top: 0px;
+    margin-top: 240px;
+  }
+  ul.bottom {
+    position: absolute;
+    bottom: 0px;
+  }
+  ul.bottom li {
+    margin-bottom: 10px;
+  }
+`;
+
 @Component({
   selector: 'r-side-nav',
-  style: css`
-    :host {
-      display: block;
-      position: fixed;
-      top: 0px;
-      left: 0px;
-      height: 100%;
-      width: 0px;
-      max-width: 320px;
-      z-index: 8888;
-      color: #000;
-      overflow: visible;
-    }
-    :host.is--active {
-      width: 320px;
-    }
-    .is--hidden {
-      display: none;
-    }
-    svg {
-      overflow: visible;
-      transform: translateX(0px);
-    }
-    nav {
-      display: block;
-      position: relative;
-      width: 0%;
-      height: 100%;
-      -webkit-clip-path: url(#c1);
-      overflow: hidden;
-    }
-    nav.is--active {
-      width: 1400px;
-    }
-    ul {
-      margin-block-start: 0em;
-      margin-block-end: 0em;
-      padding-inline-start: 0px;
-      width: 100%;
-      display: block;
-    }
-    ul li {
-      display: block;
-      cursor: pointer;
-      width: 100%;
-      opacity: 0.8;
-      cursor: pointer;
-      padding-inline-start: 0px;
-      width: 100%;
-      max-width: 320px;
-      font-weight: 700;
-    }
-    ul li > span {
-      display: inline-block;
-      position: relative;
-      height: 22px;
-      width: calc(100% - 56px);
-      margin-left: 20px;
-      padding-top: 8px;
-      padding-bottom: 8px;
-      padding-left: 0px;
-      padding-right: 0px;
-    }
-    ul li a:link,
-    ul li a:visited {
-      opacity: 0.8;
-      color: #000000;
-      text-decoration: none;
-    }
-    ul li:hover a:link,
-    ul li:hover a:visited {
-      opacity: 1;
-      color: #ffffff;
-    }
-    ul.top {
-      position: absolute;
-      top: 0px;
-      margin-top: 240px;
-    }
-    ul.bottom {
-      position: absolute;
-      bottom: 0px;
-    }
-    ul.bottom li {
-      margin-bottom: 10px;
-    }
-  `,
-  template: html`
-    <svg class="background" width="54px" height="60px">
-      <clipPath id="c1">
-        <polygon
-          stroke-width="3"
-          class="polygon"
-          attr.points="{{triPoints}}"
-        ></polygon>
-      </clipPath>
-      <g stroke="none" fill="none" fill-rule="evenodd">
-        <polygon
-          fill="{{shadowColor}}"
-          stroke-width="0"
-          class="shadow"
-          attr.points="{{shadowPoints}}"
-        ></polygon>
-        <polygon
-          fill="{{fillColor}}"
-          stroke-width="0"
-          class="polygon"
-          attr.points="{{triPoints}}"
-        ></polygon>
-      </g>
-    </svg>
-    <nav>
-      <ul class="top">
-        <li>
-          <span><a data-link="#intro">Intro</a></span>
-        </li>
-        <li>
-          <span><a data-link="#started">Getting Started</a></span>
-        </li>
-        <li>
-          <span><a data-link="#docs">Using Readymade</a></span>
-        </li>
-        <li>
-          <span><a data-link="#resources">Resources</a></span>
-        </li>
-      </ul>
-    </nav>
-  `,
+  style,
+  template,
 })
 class RSideNavComponent extends CustomElement {
   public direction: string;
@@ -297,4 +301,15 @@ class RSideNavComponent extends CustomElement {
   }
 }
 
-export { RSideNavComponent };
+const render = () => `
+  <r-side-nav>
+    <template shadowrootmode="open">
+      <style>
+      ${style}
+      </style>
+      ${template}
+    </template>
+  </r-side-nav>
+`;
+
+export { RSideNavComponent, render };

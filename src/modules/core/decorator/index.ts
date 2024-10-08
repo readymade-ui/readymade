@@ -27,9 +27,7 @@ export interface ElementMeta {
   eventMap?: { [key: string]: EventMeta };
   mode?: 'closed' | 'open';
   selector: string;
-
   style?: string | any[];
-
   template?: string | any[];
 }
 
@@ -99,7 +97,6 @@ export function State() {
 
 export function Emitter(
   eventName?: string,
-
   options?: any,
   channelName?: string,
 ) {

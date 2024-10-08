@@ -1,9 +1,4 @@
-import minifyHTMLPkg from 'rollup-plugin-minify-html-literals';
-import inlinePostCSSPkg from 'rollup-plugin-inline-postcss';
 import { glob } from 'glob';
-
-const minifyHTML = minifyHTMLPkg.default;
-const inlinePostCSS = inlinePostCSSPkg.default;
 
 export default {
   css: {
@@ -29,7 +24,7 @@ export default {
         sourcemap: false,
         extend: true,
       },
-      plugins: [minifyHTML(), inlinePostCSS()],
+      plugins: [],
     },
   },
 };

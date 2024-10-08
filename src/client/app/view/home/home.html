@@ -30,17 +30,17 @@
 @Component({
   selector: 'my-button',
   custom: { extends: 'button' },
-  template:`
+  template:&#96;
   &lt;span>Click&lt;/span>
-  `,
-  style:`
+  &#96;,
+  style:&#96;
     :host {
         background: rgba(24, 24, 24, 1);
         cursor: pointer;
         color: white;
         font-weight: 400;
     }
-  `,
+  &#96;,
 })
             </span>
     </r-code>
@@ -76,17 +76,17 @@ import {
 @Component({
   selector: 'my-button',
   custom: { extends: 'button' },
-  template:`
+  template:&#96;
   &lt;span>{{buttonCopy}}&lt;/span>
-  `,
-  style:`
+  &#96;,
+  style:&#96;
       :host {
           background: rgba(24, 24, 24, 1);
           cursor: pointer;
           color: white;
           font-weight: 400;
       }
-  `,
+  &#96;,
 })
 class MyButtonComponent extends ButtonComponent {
   constructor() {
@@ -198,17 +198,17 @@ import template from './button.html';
 @Component({
   selector: 'my-button',
   custom: { extends: 'button' },
-  template:`
+  template:&#96;
   &lt;span>{{buttonCopy}}&lt;/span>
-  `,
-  style:`
+  &#96;,
+  style:&#96;
       :host {
           background: rgba(24, 24, 24, 1);
           cursor: pointer;
           color: white;
           font-weight: 400;
       }
-  `,
+  &#96;,
 })
 class MyButtonComponent extends CustomElement
             </span>
@@ -262,9 +262,9 @@ public onKeyUp(event) {
     <r-code type="javascript">
       <span hidden>
 @Component({
-  template:`
+  template:&#96;
     &lt;span>{{buttonCopy}}&lt;/span>
-  `,
+  &#96;,
 })
 class MyButtonComponent extends HTMLButtonElement {
   constructor() {
@@ -298,12 +298,12 @@ export class TreeState {
 }
 @Component({
   selector: 'r-tree',
-  template: html`
+  template: html&#96;
   &lt;x-node data-model="{{arrayModel[0][1]}}">&lt;/x-node>
   &lt;x-node>{{objectModel['foo'].bar}}&lt;/x-node>
   &lt;x-node model="{{stringModel}}">&lt;/x-node>
   &lt;x-node>{{numberModel}}&lt;/x-node>
-  `
+  &#96;
 })
 class TreeComponent extends CustomElement {
   constructor() {
@@ -368,14 +368,14 @@ import { InputComponent } from 'readymade/dom';
 @Component({
   selector: 'my-input',
   custom: { extends: 'input' },
-  style:`
+  style:&#96;
       :host {
           background: rgba(24, 24, 24, 1);
           cursor: pointer;
           color: white;
           font-weight: 400;
       }
-  `,
+  &#96;,
 })
 
 class MyInputComponent extends InputComponent

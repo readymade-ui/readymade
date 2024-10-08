@@ -15,10 +15,12 @@ export function attachShadow(instance: any, options?: any) {
   if (!instance.template) {
     return;
   }
-  const shadowRoot: ShadowRoot = instance.attachShadow(options || {});
-  const t = document.createElement('template');
-  t.innerHTML = instance.template;
-  shadowRoot.appendChild(t.content.cloneNode(true));
+  if (!instance.shadowRoot) {
+    const shadowRoot: ShadowRoot = instance.attachShadow(options || {});
+    const t = document.createElement('template');
+    t.innerHTML = instance.template;
+    shadowRoot.appendChild(t.content.cloneNode(true));
+  }
   instance.bindTemplate();
 }
 
