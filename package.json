@@ -127,8 +127,6 @@
     "husky": "^9.1.6",
     "lint-staged": "^15.2.10",
     "postcss": "^8.2.15",
-    "posthtml": "^0.16.6",
-    "posthtml-inline": "^1.0.0",
     "prettier": "^3.3.3",
     "rollup": "4.24.0",
     "rollup-plugin-cleanup": "^3.2.1",
@@ -149,9 +147,6 @@
     "vite-plugin-html": "^3.2.2",
     "vite-plugin-node-polyfills": "^0.22.0",
     "vite-plugin-standard-css-modules": "^0.0.11"
-  },
-  "resolutions": {
-    "lit-html": "^3.2.0"
   },
   "browserslist": "> 0.5%, last 2 versions, not dead",
   "externals": [

@@ -8391,17 +8391,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"posthtml-inline@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "posthtml-inline@npm:1.0.0"
-  peerDependencies:
-    posthtml: ^0.11.3
-  bin:
-    posthtml-inline: cli.js
-  checksum: 10c0/75fa7d8c62a0d0da1a37afec9b9eb636abca84b2a287853afdd2960565a4f39bc43e3518b8bee84fbb268b50e8cd436ba949382ef83fa8af43ab73bc5dac4f29
-  languageName: node
-  linkType: hard
-
 "posthtml-parser@npm:^0.11.0":
   version: 0.11.0
   resolution: "posthtml-parser@npm:0.11.0"
@@ -8420,7 +8409,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"posthtml@npm:^0.16.5, posthtml@npm:^0.16.6":
+"posthtml@npm:^0.16.5":
   version: 0.16.6
   resolution: "posthtml@npm:0.16.6"
   dependencies:
@@ -8775,8 +8764,6 @@ __metadata:
     node-fetch: "npm:2.6.7"
     node-window-polyfill: "npm:^1.0.2"
     postcss: "npm:^8.2.15"
-    posthtml: "npm:^0.16.6"
-    posthtml-inline: "npm:^1.0.0"
     prettier: "npm:^3.3.3"
     prismjs: "npm:^1.29.0"
     rimraf: "npm:^6.0.1"
