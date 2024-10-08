@@ -23,7 +23,7 @@ jobs:
         run: corepack prepare yarn@4.5.0 --activate
 
       - name: Install Dependencies
-        run: yarn install
+        run: yarn install --immutable
 
       - name: Run Lint
         run: yarn lint
