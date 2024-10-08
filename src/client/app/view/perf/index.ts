@@ -1,2 +1,2 @@
 export { MyCounter } from '../../component/counter';
-export { PerformanceTestComponent, template } from './perf';
+export { PerformanceTestComponent, render } from './perf';

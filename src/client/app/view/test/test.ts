@@ -1,5 +1,5 @@
 import { Component, CustomElement, State } from './../../../../modules/core';
-import html from './test.html?raw';
+import template from './test.html?raw';
 import style from './test.scss?raw';
 
 const objectModel = [
@@ -29,8 +29,8 @@ const arrayModel = [1, 'two', 3, 4, 'five'];
 
 @Component({
   selector: 'app-testbed',
-  style: style,
-  template: html,
+  style,
+  template,
 })
 class TestBedComponent extends CustomElement {
   constructor() {
@@ -47,15 +47,15 @@ class TestBedComponent extends CustomElement {
   }
 }
 
-const template = () => `
+const render = () => `
 <app-testbed>
   <template shadowroot="open">
     <style>
     ${style}
     </style>
-    ${html}
+    ${template}
   </template>
 </app-testbed>
 `;
 
-export { TestBedComponent, template };
+export { TestBedComponent, render };

@@ -1,8 +1,9 @@
-import { standardCssModules } from 'vite-plugin-standard-css-modules';
-import pkgMinifyHTML from 'rollup-plugin-minify-html-literals';
+import minifyHTMLPkg from 'rollup-plugin-minify-html-literals';
+import inlinePostCSSPkg from 'rollup-plugin-inline-postcss';
 import { glob } from 'glob';
 
-const minifyHTML = pkgMinifyHTML.default;
+const minifyHTML = minifyHTMLPkg.default;
+const inlinePostCSS = inlinePostCSSPkg.default;
 
 export default {
   css: {
@@ -28,13 +29,7 @@ export default {
         sourcemap: false,
         extend: true,
       },
-      plugins: [
-        minifyHTML(),
-        standardCssModules({
-          include: ['/**/*.css'],
-          minify: true,
-        }),
-      ],
+      plugins: [minifyHTML(), inlinePostCSS()],
     },
   },
 };

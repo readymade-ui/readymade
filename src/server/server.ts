@@ -7,7 +7,7 @@ import chalk from 'chalk';
 import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
-import { InlineConfig } from 'vite';
+import { UserConfig } from 'vite';
 
 import { config } from './config.js';
 
@@ -61,21 +61,22 @@ async function createServer(root = process.cwd()) {
     );
     app.use('*', ssrMiddleware({}));
   } else {
-    const viteServerConfig = {
+    const viteServerConfig: UserConfig = {
+      base: resolve('src/client/'),
       root: resolve('src/client'),
       appType: 'custom',
       server: {
         middlewareMode: true,
-        port, // <-- same as express
+        port: Number(port),
         hmr: {
           protocol: 'ws',
-          port: hmrPort,
+          port: Number(hmrPort),
         },
       },
     };
     const vite = await (
       await import('vite')
-    ).createServer((<unknown>viteServerConfig) as InlineConfig);
+    ).createServer((<unknown>viteServerConfig) as UserConfig);
     app.use(vite.middlewares);
     app.use('*', ssrMiddleware({ vite }));
   }

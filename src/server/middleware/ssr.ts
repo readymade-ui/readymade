@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import he from 'he';
 import { html } from 'lit';
 import { unsafeHTML } from 'lit-html/directives/unsafe-html.js';
 import { render } from '@lit-labs/ssr';
@@ -9,7 +10,7 @@ import { ViteDevServer } from 'vite';
 // import * as cheerio from 'cheerio';
 
 interface View {
-  template: () => string;
+  render: () => string;
 }
 
 const SSR_OUTLET_MARKER = '<!--ssr-outlet-->';
@@ -25,6 +26,18 @@ async function* concatStreams(...readables) {
 export const sanitizeTemplate = async (template) => {
   return html`${unsafeHTML(template)}`;
 };
+
+async function streamToString(stream) {
+  const chunks = [];
+  for await (const chunk of stream) {
+    chunks.push(Buffer.from(chunk));
+  }
+  return Buffer.concat(chunks).toString('utf-8');
+}
+
+async function renderStream(stream) {
+  return await streamToString(Readable.from(stream));
+}
 
 async function* renderView(template) {
   yield* render(template);
@@ -62,7 +75,7 @@ const ssrMiddleware = (options?: { vite?: ViteDevServer }) => {
 
     try {
       let view: View = {
-        template: () => '',
+        render: () => '',
       };
       let template: string, filePath: string, routeTemplateFilePath: string;
 
@@ -94,15 +107,14 @@ const ssrMiddleware = (options?: { vite?: ViteDevServer }) => {
         template.substring(index + SSR_OUTLET_MARKER.length + 1),
       );
       const viewTemplate =
-        env === 'development'
-          ? view.template()
-          : await sanitizeTemplate(view.template());
-      const ssrResult = renderView(viewTemplate);
-
-      const viewResult = Readable.from(ssrResult);
-      const output = Readable.from(concatStreams(pre, viewResult, post));
-      res.status(200).set({ 'Content-Type': 'text/html' });
-      output.pipe(res);
+        env === 'development' ? view.render() : view.render();
+      const ssrResult = await renderView(viewTemplate);
+      const viewResult = await renderStream(ssrResult);
+      let output = await renderStream(
+        Readable.from(concatStreams(pre, viewResult, post)),
+      );
+      output = he.decode(output);
+      res.status(200).set({ 'Content-Type': 'text/html' }).send(output);
     } catch (e) {
       console.log(e.stack);
       res.status(500).end(e.stack);

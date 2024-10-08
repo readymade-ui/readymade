@@ -1,12 +1,12 @@
 import { Component, CustomElement, State } from './../../../../modules/core';
 import { Route } from './../../../../modules/router';
-import html from './query.html?raw';
+import template from './query.html?raw';
 import style from './query.scss?raw';
 
 @Component({
   selector: 'app-query',
-  style: style,
-  template: html,
+  style,
+  template,
 })
 class QueryComponent extends CustomElement {
   constructor() {
@@ -25,15 +25,15 @@ class QueryComponent extends CustomElement {
   }
 }
 
-const template = () => `
+const render = () => `
 <app-query>
   <template shadowroot="open">
     <style>
     ${style}
     </style>
-    ${html}
+    ${template}
   </template>
 </app-query>
 `;
 
-export { QueryComponent, template };
+export { QueryComponent, render };

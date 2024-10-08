@@ -40,7 +40,7 @@
     "build:index": "vite build ./src/client/ --outDir ../../dist/client --config vite.config.index.js",
     "build:routes": "vite build ./src/client/ --outDir ../../dist/client --config vite.config.routes.js",
     "build:server": "vite build --outDir dist/server --ssr src/server/index.ts --config vite.config.server.js",
-    "pretty": "prettier \"src/**/*.{js,ts,html,css,scss}\" --write",
+    "pretty": "prettier --write \"src/**/*.{js,ts,html,css,scss}\"",
     "pretty:check": "prettier \"src/**/*.{js,ts,html,css,scss}\" --check",
     "serve": "cross-env NODE_ENV=production node dist/server/index.js",
     "test": "cypress run",

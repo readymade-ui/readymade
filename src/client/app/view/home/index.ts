@@ -14,4 +14,4 @@ export { RStatsComponent } from './../../component/stats';
 export { AtomComponent } from './../../component/tree/atom';
 export { NodeComponent } from './../../component/tree/node';
 export { TreeComponent } from './../../component/tree/tree';
-export { HomeComponent, template } from './home';
+export { HomeComponent, render } from './home';

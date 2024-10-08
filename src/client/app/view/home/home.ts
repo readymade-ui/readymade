@@ -1,11 +1,11 @@
 import { CustomElement, Component } from './../../../../modules/core';
+import template from './home.html?raw';
 import style from './home.scss?raw';
-import html from './home.html?raw';
 
 @Component({
   selector: 'app-home',
-  style: style,
-  template: html,
+  style,
+  template,
 })
 class HomeComponent extends CustomElement {
   constructor() {
@@ -13,15 +13,15 @@ class HomeComponent extends CustomElement {
   }
 }
 
-const template = () => `
-<app-home>
-  <template shadowroot="open">
-  <style>
-  ${style}
-  </style>
-  ${html}
-  </template>
-</app-home>
+const render = () => `
+  <app-home>
+    <template shadowroot="open">
+      <style>
+        ${style}
+      </style>
+      ${template}
+    </template>
+  </app-home>
 `;
 
-export { HomeComponent, template };
+export { HomeComponent, render };

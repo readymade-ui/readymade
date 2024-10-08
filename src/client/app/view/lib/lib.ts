@@ -5,7 +5,7 @@ import {
   State,
 } from './../../../../modules/core';
 import { RdSlider } from './../../../../modules/ui';
-import html from './lib.html?raw';
+import template from './lib.html?raw';
 import style from './lib.scss?raw';
 import {
   StandardKeyboard,
@@ -14,8 +14,8 @@ import {
 
 @Component({
   selector: 'app-library',
-  style: style,
-  template: html,
+  style,
+  template,
 })
 class LibraryComponent extends CustomElement {
   theme: string = 'dark';
@@ -260,15 +260,15 @@ class LibraryComponent extends CustomElement {
   }
 }
 
-const template = () => `
-<app-library>
-  <template shadowroot="open">
-    <style>
-    ${style}
-    </style>
-    ${html}
-  </template>
-</app-library>
+const render = () => `
+  <app-library>
+    <template shadowroot="open">
+      <style>
+        ${style}
+      </style>
+      ${template}
+    </template>
+  </app-library>
 `;
 
-export { LibraryComponent, template };
+export { LibraryComponent, render };
