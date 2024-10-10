@@ -1,10 +1,4 @@
-import {
-  Component,
-  css,
-  CustomElement,
-  html,
-  State,
-} from './../../../modules/core';
+import { Component, css, CustomElement, html, State } from '@readymade/core';
 
 export class GridState {
   public grid: string[] = [];

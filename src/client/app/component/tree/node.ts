@@ -1,10 +1,4 @@
-import {
-  Component,
-  css,
-  html,
-  CustomElement,
-  State,
-} from './../../../../modules/core';
+import { Component, css, html, CustomElement, State } from '@readymade/core';
 
 @Component({
   selector: 'x-node',

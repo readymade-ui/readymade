@@ -1,4 +1,4 @@
-import { Component, Emitter, FormElement, css, html } from './../../../core';
+import { Component, Emitter, FormElement, css, html } from '@readymade/core';
 
 @Component({
   selector: 'rd-dropdown',

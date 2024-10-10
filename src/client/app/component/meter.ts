@@ -1,4 +1,4 @@
-import { Component, CustomElement, css, html } from './../../../modules/core';
+import { Component, CustomElement, css, html } from '@readymade/core';
 
 @Component({
   selector: 'r-meter',

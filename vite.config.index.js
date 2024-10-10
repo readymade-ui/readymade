@@ -1,15 +1,12 @@
+import { tsconfigPaths } from 'vite-resolve-tsconfig-paths';
+
 export default {
-  css: {
-    preprocessorOptions: {
-      scss: {
-        api: 'modern-compiler',
-      },
-    },
-  },
   esbuild: {
+    format: 'esm',
     target: 'es2022',
   },
   plugins: [
+    tsconfigPaths(),
     {
       name: 'remove-type-module',
       transformIndexHtml(html) {
@@ -29,6 +26,7 @@ export default {
         sourcemap: false,
         extend: true,
       },
+      plugins: [],
     },
   },
 };

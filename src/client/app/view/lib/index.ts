@@ -1,2 +1,2 @@
-export * from './../../../../modules/ui';
+export * from '@readymade/ui';
 export { LibraryComponent, render } from './lib';

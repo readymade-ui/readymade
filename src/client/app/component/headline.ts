@@ -1,4 +1,4 @@
-import { Component, CustomElement, State } from './../../../modules/core';
+import { Component, CustomElement, State } from '@readymade/core';
 
 const style = `
   :host {

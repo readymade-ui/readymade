@@ -1,4 +1,4 @@
-import { Component, CustomElement } from './../../../modules/core';
+import { Component, CustomElement } from '@readymade/core';
 
 @Component({
   selector: 'hello-world',

@@ -7,7 +7,7 @@ import 'prismjs/components/prism-markup';
 import 'prismjs/components/prism-typescript';
 
 // ui library
-import '../modules/core';
-import '../modules/dom';
-import '../modules/router';
-import '../modules/ui';
+import '@readymade/core';
+import '@readymade/dom';
+import '@readymade/router';
+import '@readymade/ui';

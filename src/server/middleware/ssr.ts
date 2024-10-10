@@ -110,6 +110,10 @@ const ssrMiddleware = (options?: { vite?: ViteDevServer }) => {
           filePath = manifest[`app/view/${routeDirectoryName}/index.ts`].file;
           routeTemplateFilePath = resolve(`dist/client/${filePath}`);
           view = (await import(routeTemplateFilePath)) as View;
+        } else {
+          filePath = manifest[`app/view/404/index.ts`].file;
+          routeTemplateFilePath = resolve(`dist/client/${filePath}`);
+          view = (await import(routeTemplateFilePath)) as View;
         }
         if (indexManifest && indexManifest[`index.html`].css) {
           stylesheets = readFilesSync(

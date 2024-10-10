@@ -1,6 +1,6 @@
-import { CustomElement, Component } from './../../../../modules/core';
+import { CustomElement, Component } from '@readymade/core';
 import template from './home.html?raw';
-import style from './home.scss?raw';
+import style from './home.css?raw';
 
 import { render as renderSideNav } from '../../component/side-nav';
 import { render as renderMainNav } from '../../component/main-nav';

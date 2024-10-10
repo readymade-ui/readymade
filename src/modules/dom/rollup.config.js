@@ -15,7 +15,7 @@ export default [
       resolve(),
       typescript({
         sourceMap: false,
-        declarationDir: 'packages/@readymade/dom/fesm2022/typings',
+        declarationDir: 'dist/packages/@readymade/dom/fesm2022/typings',
       }),
       cleanup(clean),
     ],
@@ -24,7 +24,7 @@ export default [
       next(warning);
     },
     output: {
-      file: 'packages/@readymade/dom/fesm2022/index.js',
+      file: 'dist/packages/@readymade/dom/fesm2022/index.js',
       format: 'esm',
       sourcemap: true,
     },

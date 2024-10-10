@@ -1,4 +1,4 @@
-import { Router } from '../../modules/router';
+import { Router } from '@readymade/router';
 
 const routing = [
   { path: '/', component: 'app-home', title: 'Readymade' },
@@ -18,6 +18,11 @@ const routing = [
       header: '1',
     },
     title: 'Readymade Router Test',
+  },
+  {
+    path: '/404',
+    component: 'app-notfound',
+    title: 'File Not Found',
   },
 ];
 

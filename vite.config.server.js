@@ -1,17 +1,11 @@
-import { defineConfig } from 'vite';
+import { tsconfigPaths } from 'vite-resolve-tsconfig-paths';
 
-export default defineConfig({
-  css: {
-    preprocessorOptions: {
-      scss: {
-        api: 'modern-compiler',
-      },
-    },
-  },
+export default {
+  plugins: [tsconfigPaths()],
   build: {
     minify: true,
     rollupOptions: {
       external: ['crypto'],
     },
   },
-});
+};

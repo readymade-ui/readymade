@@ -1,17 +1,12 @@
 import { glob } from 'glob';
+import { tsconfigPaths } from 'vite-resolve-tsconfig-paths';
 
 export default {
-  css: {
-    preprocessorOptions: {
-      scss: {
-        api: 'modern-compiler',
-      },
-    },
-  },
+  plugins: [tsconfigPaths()],
   esbuild: {
+    format: 'esm',
     target: 'es2022',
   },
-  assetsInclude: ['**/*.html'],
   build: {
     ssr: true,
     minify: true,

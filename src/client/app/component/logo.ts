@@ -1,4 +1,4 @@
-import { Component, CustomElement, State } from './../../../modules/core';
+import { Component, CustomElement, State } from '@readymade/core';
 import { render as renderHeadline } from './headline';
 
 export class LogoState {

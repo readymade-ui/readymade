@@ -5,7 +5,7 @@ import {
   Emitter,
   FormElement,
   Listen,
-} from './../../../core';
+} from '@readymade/core';
 import { RdControl } from './../control';
 
 @Component({

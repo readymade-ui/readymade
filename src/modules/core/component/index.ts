@@ -271,6 +271,7 @@ export class PseudoElement extends HTMLElement {
 export class CustomElement extends HTMLElement {
   public emitter: EventDispatcher;
   public elementMeta: ElementMeta;
+  public shadowRoot: ShadowRoot;
   constructor() {
     super();
     attachShadow(this, {

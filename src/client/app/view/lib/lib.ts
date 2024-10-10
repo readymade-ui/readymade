@@ -1,16 +1,7 @@
-import {
-  Component,
-  CustomElement,
-  FormElement,
-  State,
-} from './../../../../modules/core';
-import { RdSlider } from './../../../../modules/ui';
+import { Component, CustomElement, FormElement, State } from '@readymade/core';
 import template from './lib.html?raw';
-import style from './lib.scss?raw';
-import {
-  StandardKeyboard,
-  StandardKeyboardNumPad,
-} from './../../../../modules/ui/component/input/buttonpad';
+import style from './lib.css?raw';
+import { StandardKeyboard, StandardKeyboardNumPad } from '@readymade/ui';
 
 @Component({
   selector: 'app-library',

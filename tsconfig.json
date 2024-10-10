@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": "./",
     "declaration": true,
     "target": "ES2022",
     "useDefineForClassFields": false,
@@ -10,7 +11,12 @@
     "emitDecoratorMetadata": true,
     "moduleResolution": "node",
     "isolatedModules": false,
-    "allowSyntheticDefaultImports": true
-  },
-  "include": ["src"]
+    "allowSyntheticDefaultImports": true,
+    "paths": {
+      "@readymade/core": ["src/modules/core"],
+      "@readymade/dom": ["src/modules/dom"],
+      "@readymade/router": ["src/modules/router"],
+      "@readymade/ui": ["src/modules/ui"]
+    }
+  }
 }

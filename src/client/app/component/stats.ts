@@ -1,4 +1,4 @@
-import { Component, css, CustomElement, html } from './../../../modules/core';
+import { Component, css, CustomElement, html } from '@readymade/core';
 
 const env = process.env.NODE_ENV || 'development';
 

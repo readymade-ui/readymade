@@ -1,10 +1,4 @@
-import {
-  Component,
-  css,
-  CustomElement,
-  html,
-  State,
-} from './../../../modules/core';
+import { Component, css, CustomElement, html, State } from '@readymade/core';
 
 declare let Prism: any;
 
@@ -15,7 +9,6 @@ export class CodeState {
 
 @Component({
   selector: 'r-code',
-  declarative: true,
   style: css`
     :host {
       display: block;

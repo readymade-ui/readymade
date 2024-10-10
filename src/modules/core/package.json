@@ -1,6 +1,6 @@
 {
   "name": "@readymade/core",
-  "version": "3.0.0-beta.1",
+  "version": "3.0.0-beta.3",
   "description": "JavaScript microlibrary for developing Web Components with TypeScript and Decorators",
   "type": "module",
   "module": "./fesm2022/index.js",

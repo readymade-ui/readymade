@@ -5,7 +5,7 @@ if (import.meta.env.DEV) {
 }
 
 export { Router, routing } from './app/routing';
-export { TemplateRepeater, Repeater } from './../modules/dom/repeatr';
+export { TemplateRepeater, Repeater } from '@readymade/dom';
 export {
   MyButtonComponent,
   RCodeComponent,

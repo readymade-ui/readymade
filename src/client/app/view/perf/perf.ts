@@ -1,6 +1,6 @@
-import { CustomElement, Component } from './../../../../modules/core';
+import { CustomElement, Component } from '@readymade/core';
 
-import style from './perf.scss?raw';
+import style from './perf.css?raw';
 import template from './perf.html?raw';
 
 @Component({

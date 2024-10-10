@@ -1,4 +1,4 @@
-import { Component, FormElement, html, css } from './../../../core';
+import { Component, FormElement, html, css } from '@readymade/core';
 
 @Component({
   selector: 'rd-radiogroup',

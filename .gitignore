@@ -9,9 +9,6 @@ node_modules
 .out/
 dist/
 out-tsc/
-src/client/index.js
-src/server/view/index.js
-src/client/asset
 cypress/videos
 cypress/screenshots
 packages/

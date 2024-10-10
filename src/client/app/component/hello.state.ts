@@ -5,7 +5,7 @@ import {
   State,
   Emitter,
   Listen,
-} from './../../../modules/core';
+} from '@readymade/core';
 
 class HelloState {
   public model: string = 'Hello World';

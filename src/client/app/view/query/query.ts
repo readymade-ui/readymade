@@ -1,7 +1,7 @@
-import { Component, CustomElement, State } from './../../../../modules/core';
-import { Route } from './../../../../modules/router';
+import { Component, CustomElement, State } from '@readymade/core';
+import { Route } from '@readymade/router';
 import template from './query.html?raw';
-import style from './query.scss?raw';
+import style from './query.css?raw';
 
 @Component({
   selector: 'app-query',

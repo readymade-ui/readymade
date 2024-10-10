@@ -1,4 +1,4 @@
-import { Component, Emitter, FormElement, html, css } from './../../../core';
+import { Component, Emitter, FormElement, html, css } from '@readymade/core';
 
 @Component({
   selector: 'rd-checkbox',

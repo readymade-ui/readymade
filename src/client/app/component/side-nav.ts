@@ -6,7 +6,7 @@ import {
   html,
   Listen,
   State,
-} from './../../../modules/core';
+} from '@readymade/core';
 
 export class SideNavState {
   public shadowPoints: string = `7,34 22,32 24,22`;
@@ -54,6 +54,9 @@ const template = html`
       </li>
       <li>
         <span><a data-link="#resources">Resources</a></span>
+      </li>
+      <li>
+        <span><a href="/lib">@readymade/ui</a></span>
       </li>
     </ul>
   </nav>

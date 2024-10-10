@@ -1,4 +1,4 @@
-import { Component, State, CustomElement } from './../../../modules/core';
+import { Component, State, CustomElement } from '@readymade/core';
 
 const CounterState = {
   count: 0,

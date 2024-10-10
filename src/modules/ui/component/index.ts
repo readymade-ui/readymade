@@ -1,5 +1,11 @@
 export { RdButton } from './input/button';
-export { RdButtonPad } from './input/buttonpad';
+export {
+  RdButtonPad,
+  StandardKeyboard,
+  StandardKeyboardModifiers,
+  StandardKeyboardNumPad,
+  StandardKeyboardModifierCodeKeyMap,
+} from './input/buttonpad';
 export { RdSwitch } from './input/switch';
 export { RdInput } from './input/input';
 export { RdRadioGroup } from './input/radio';

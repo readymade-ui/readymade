@@ -4,7 +4,7 @@ import {
   Emitter,
   Listen,
   State,
-} from './../../../modules/core';
+} from '@readymade/core';
 
 export class MainNavState {
   public resourceLinkFillColor: string = '#cfcfcf';

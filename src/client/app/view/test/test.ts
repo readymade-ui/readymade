@@ -1,7 +1,7 @@
-import { Component, CustomElement, State } from './../../../../modules/core';
+import { Component, CustomElement, State } from '@readymade/core';
 import { render as renderLogo } from '../../component/logo';
 import template from './test.html?raw';
-import style from './test.scss?raw';
+import style from './test.css?raw';
 
 const objectModel = [
   {

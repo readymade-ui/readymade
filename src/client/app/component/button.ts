@@ -1,13 +1,5 @@
-import {
-  Component,
-  css,
-  Emitter,
-  html,
-  Listen,
-  State,
-} from './../../../modules/core';
-
-import { ButtonComponent } from './../../../modules/dom';
+import { Component, css, Emitter, html, Listen, State } from '@readymade/core';
+import { ButtonComponent } from '@readymade/dom';
 
 class ButtonState {
   public model: string = 'Click';

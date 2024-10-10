@@ -26,11 +26,12 @@ export {
   RdSwitch,
   RdDropdown,
   RdButtonPad,
-} from './../../modules/ui';
+} from '@readymade/ui';
 // views
 export { HomeComponent } from './view/home';
 export { PerformanceTestComponent } from './view/perf';
 export { QueryComponent } from './view/query';
 export { TestBedComponent } from './view/test';
 export { LibraryComponent } from './view/lib';
+export { NotFoundComponent } from './view/404';
 export { Router, routing } from './routing';

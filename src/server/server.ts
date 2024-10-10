@@ -8,6 +8,7 @@ import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
 import { UserConfig } from 'vite';
+import { tsconfigPaths } from 'vite-resolve-tsconfig-paths';
 
 import { config } from './config.js';
 
@@ -73,6 +74,7 @@ async function createServer(root = process.cwd()) {
           port: Number(hmrPort),
         },
       },
+      plugins: [tsconfigPaths()],
     };
     const vite = await (
       await import('vite')

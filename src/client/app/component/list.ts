@@ -6,7 +6,7 @@ import {
   getSiblings,
   html,
   Listen,
-} from './../../../modules/core';
+} from '@readymade/core';
 
 @Component({
   selector: 'my-list',

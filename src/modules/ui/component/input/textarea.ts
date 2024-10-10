@@ -1,5 +1,4 @@
-import { Component, html, css } from './../../../core';
-
+import { Component, html, css } from '@readymade/core';
 import { RdInput } from './input';
 
 @Component({

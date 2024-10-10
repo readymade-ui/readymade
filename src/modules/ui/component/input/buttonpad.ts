@@ -5,7 +5,7 @@ import {
   html,
   css,
   State,
-} from './../../../core';
+} from '@readymade/core';
 
 export interface ButtonGridModifier {
   gap?: string;

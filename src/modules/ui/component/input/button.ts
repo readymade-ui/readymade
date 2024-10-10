@@ -1,4 +1,4 @@
-import { Component, Listen, FormElement, html, css } from './../../../core';
+import { Component, Listen, FormElement, html, css } from '@readymade/core';
 
 @Component({
   selector: 'rd-button',
@@ -108,7 +108,7 @@ class RdButton extends FormElement {
   attributeChangedCallback(name: string, old: string, next: string) {
     switch (name) {
       case 'type':
-        this.type = next;
+        this.type = next as 'submit' | 'reset' | 'button';
         break;
       case 'value':
         this.value = next;
