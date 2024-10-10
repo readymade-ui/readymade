@@ -1,5 +1,5 @@
 import { tsconfigPaths } from 'vite-resolve-tsconfig-paths';
-import { viteStaticCopy } from 'vite-plugin-static-copy';
+// import { viteStaticCopy } from 'vite-plugin-static-copy';
 
 export default {
   esbuild: {
@@ -8,14 +8,14 @@ export default {
   },
   plugins: [
     tsconfigPaths(),
-    viteStaticCopy({
-      targets: [
-        {
-          src: 'public/images',
-          dest: 'images',
-        },
-      ],
-    }),
+    // viteStaticCopy({
+    //   targets: [
+    //     {
+    //       src: 'public/images',
+    //       dest: 'images',
+    //     },
+    //   ],
+    // }),
     {
       name: 'remove-type-module',
       transformIndexHtml(html) {
