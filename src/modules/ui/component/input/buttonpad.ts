@@ -198,8 +198,8 @@ export function buttonPadKeyPress(elem: Element) {
       border-radius: 14px;
     }
     :host([disabled]) {
-      opacity: var(--opacity-disabled);
-      background: var(--color-disabled);
+      opacity: var(--ready-opacity-disabled);
+      background: var(--ready-color-disabled);
       cursor: not-allowed;
       pointer-events: none;
     }
@@ -207,7 +207,7 @@ export function buttonPadKeyPress(elem: Element) {
     :host([disabled]):focus,
     :host([disabled]):active,
     :host([disabled]).active {
-      border: 2px solid var(--color-border);
+      border: 2px solid var(--ready-color-border);
       outline: none;
       box-shadow: none;
     }

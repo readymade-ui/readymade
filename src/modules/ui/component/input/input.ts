@@ -10,10 +10,10 @@ import { Component, Emitter, FormElement, html, css } from '@readymade/core';
     }
     :host input {
       width: 100%;
-      background-color: var(--color-bg);
-      border: 2px solid var(--color-border);
+      background-color: var(--ready-color-bg);
+      border: 2px solid var(--ready-color-border);
       border-radius: 1em;
-      color: var(--color-default);
+      color: var(--ready-color-default);
       font: var(--font-family);
       min-height: 2em;
       padding: 0em 1em;
@@ -21,19 +21,19 @@ import { Component, Emitter, FormElement, html, css } from '@readymade/core';
     :host input:hover,
     :host input:focus,
     :host input:active {
-      border: 2px solid var(--color-highlight);
+      border: 2px solid var(--ready-color-highlight);
       outline: none;
       box-shadow: none;
     }
     :host input[disabled] {
-      opacity: var(--opacity-disabled);
-      background: var(--color-disabled);
+      opacity: var(--ready-opacity-disabled);
+      background: var(--ready-color-disabled);
       cursor: not-allowed;
     }
     :host input[disabled]:hover,
     :host input[disabled]:focus,
     :host input[disabled]:active {
-      border: 2px solid var(--color-border);
+      border: 2px solid var(--ready-color-border);
       outline: none;
       box-shadow: none;
     }
@@ -41,7 +41,7 @@ import { Component, Emitter, FormElement, html, css } from '@readymade/core';
     :host input.required:hover,
     :host input.required:focus,
     :host input.required:active {
-      border: 2px solid var(--color-error);
+      border: 2px solid var(--ready-color-error);
       outline: none;
       box-shadow: none;
     }

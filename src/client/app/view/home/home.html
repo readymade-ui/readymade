@@ -149,7 +149,7 @@ npm i typescript --save
       "experimentalDecorators": true,
       "moduleResolution": "node",
       "typeRoots": ["node_modules/@types"],
-      "lib": ["es2017", "dom", "dom.iterable"],
+      "lib": ["ES2022", "DOM", "DOM.iterable"],
   }
 }
             </span>
@@ -162,7 +162,7 @@ npx primr my-app
             </span>
     </r-code>
 
-    <p>The above command generates a project called my-app. primr separates template and styling into separate files out of the box. Support for SCSS and PostCSS is baked in. The development environment is built with Parcel.</p>
+    <p>The above command generates a project called my-app. primr separates template and styling into separate files out of the box. Support for PostCSS is baked in, although CSS preprocessors and Lightning CSS are optional. The development environment is built with Vite.</p>
     <r-code type="javascript">
       <span hidden>
 import style from './button.scss';
@@ -175,14 +175,14 @@ import template from './button.html';
 })
       </span>
 </r-code>
-    <p>primr bootstraps the necessary polyfill for Web Components to work in IE11, provides a client-side router and has the option to server-side render with @skatejs/ssr.</p>
+    <p>primr bootstraps the necessary polyfill for Customized built-in elements to work in Safari, provides a client-side only router and has the option to server-side render using Express, @lit-labs/ssr and Vite.</p>
 </section>
 
 <section id="docs">
     <h1>Using Readymade</h1>
     <h2 id="decorators">Decorators</h2>
-    <p>Readymade implements UI components using a decorator pattern. Decorators are currently in [stage 2 proposal](https://github.com/tc39/proposal-decorators) for the ECMAScript Internationalization API Specification. Readymade implements decorators now with TypeScript.</p>
-    <p>A class decorator called <span class="i__c">@Component</span> provides an interface for declaring styles and template for custom elements. The <span class="i__c">@Emitter</span> method decorator declares how CustomEvents that can be emitted or broadcasted. The <span class="i__c">@Listen</span> method decorator is a wrapper around <span class="i__c">addEventListener</span>, making the method it decorates the callback function for event handling. <span class="i__c">@State</span> method decorator returns a State that is bound to a template.</p>
+    <p>Readymade implements UI components using a decorator pattern. Decorators are currently in [stage 3 proposal](https://github.com/tc39/proposal-decorators) for the ECMAScript Internationalization API Specification. Readymade implements decorators now with TypeScript and plans to adopt the newer specification at a later date.</p>
+    <p>A class decorator called <span class="i__c">@Component</span> provides an interface for declaring styles and template for custom elements. The <span class="i__c">@Emitter</span> method decorator declares how <span class="i__c">CustomEvent</span> that can be emitted or broadcasted. The <span class="i__c">@Listen</span> method decorator is a wrapper around <span class="i__c">addEventListener</span>, making the method it decorates the callback function for event handling. <span class="i__c">@State</span> method decorator returns a State that is bound to a template.</p>
     <h3>Readymade Decorators</h3>
     <ul class="definition__list">
         <li><span class="definition__title">@Component</span> metadata class decorator for defining template and styling</li>

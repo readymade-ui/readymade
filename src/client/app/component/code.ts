@@ -12,8 +12,8 @@ export class CodeState {
   style: css`
     :host {
       display: block;
-      padding-top: 1em;
-      padding-bottom: 1em;
+      padding: 1em;
+      background: var(--ready-color-container-bg);
     }
     code[class*='language-'],
     pre[class*='language-'] {
@@ -29,7 +29,7 @@ export class CodeState {
       word-wrap: normal;
       font-family: 'Source Code Pro', 'Courier New', monospace;
       font-size: 14px;
-      font-weight: 500;
+      font-weight: 400;
       color: #e0e2e4;
       text-shadow: none;
     }

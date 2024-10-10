@@ -1,6 +1,5 @@
-import path from 'path';
 import { tsconfigPaths } from 'vite-resolve-tsconfig-paths';
-const resolve = (p) => path.resolve(process.cwd(), p);
+import { viteStaticCopy } from 'vite-plugin-static-copy';
 
 export default {
   plugins: [

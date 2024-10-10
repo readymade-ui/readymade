@@ -21,12 +21,12 @@ import { Component, Emitter, FormElement, html, css } from '@readymade/core';
       display: block;
       width: 24px;
       height: 24px;
-      border: 2px solid var(--color-border);
+      border: 2px solid var(--ready-color-border);
       border-radius: 6px;
-      background: var(--color-bg);
+      background: var(--ready-color-bg);
     }
     :host input[type='checkbox']:checked:before {
-      background-image: var(--icon-check);
+      background-image: var(--ready-icon-check);
       background-repeat: no-repeat;
       background-position: center;
     }
@@ -38,22 +38,22 @@ import { Component, Emitter, FormElement, html, css } from '@readymade/core';
     :host input[type='checkbox']:hover:before,
     :host input[type='checkbox']:focus:before,
     :host input[type='checkbox']:active:before {
-      border: 2px solid var(--color-highlight);
+      border: 2px solid var(--ready-color-highlight);
     }
     :host input[type='checkbox'][disabled]:before {
-      opacity: var(--opacity-disabled);
-      background: var(--color-disabled);
+      opacity: var(--ready-opacity-disabled);
+      background: var(--ready-color-disabled);
       cursor: not-allowed;
     }
     :host input[type='checkbox'][disabled]:checked:before {
-      background-image: var(--icon-check);
+      background-image: var(--ready-icon-check);
       background-repeat: no-repeat;
       background-position: center;
     }
     :host input[type='checkbox'][disabled]:hover:before,
     :host input[type='checkbox'][disabled]:focus:before,
     :host input[type='checkbox'][disabled]:active:before {
-      border: 2px solid var(--color-border);
+      border: 2px solid var(--ready-color-border);
       outline: none;
       box-shadow: none;
     }
@@ -61,7 +61,7 @@ import { Component, Emitter, FormElement, html, css } from '@readymade/core';
     :host input[type='checkbox'].required:hover:before,
     :host input[type='checkbox'].required:focus:before,
     :host input[type='checkbox'].required:active:before {
-      border: 2px solid var(--color-error);
+      border: 2px solid var(--ready-color-error);
       outline: none;
       box-shadow: none;
     }

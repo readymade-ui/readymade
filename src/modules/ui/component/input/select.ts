@@ -11,10 +11,10 @@ import { Component, Emitter, FormElement, css, html } from '@readymade/core';
     ::slotted(select) {
       display: block;
       width: 100%;
-      background-color: var(--color-bg);
-      border: 2px solid var(--color-border);
+      background-color: var(--ready-color-bg);
+      border: 2px solid var(--ready-color-border);
       border-radius: 1em;
-      color: var(--color-default);
+      color: var(--ready-color-default);
       font: var(--font-family);
       line-height: 1.3;
       padding: 0.3em 1.6em 0.3em 0.8em;
@@ -24,7 +24,7 @@ import { Component, Emitter, FormElement, css, html } from '@readymade/core';
       -moz-appearance: none;
       -webkit-appearance: none;
       appearance: none;
-      background-image: var(--icon-menu);
+      background-image: var(--ready-icon-menu);
       background-repeat: no-repeat;
       background-position:
         right 0.7em top 50%,
@@ -34,7 +34,7 @@ import { Component, Emitter, FormElement, css, html } from '@readymade/core';
     ::slotted(select:hover),
     ::slotted(select:focus),
     ::slotted(select:active) {
-      border: 2px solid var(--color-highlight);
+      border: 2px solid var(--ready-color-highlight);
       outline: none;
       box-shadow: none;
     }
@@ -50,9 +50,9 @@ import { Component, Emitter, FormElement, css, html } from '@readymade/core';
       display: none;
     }
     ::slotted(select[disabled]) {
-      opacity: var(--opacity-disabled);
-      background: var(--color-disabled);
-      background-image: var(--icon-menu);
+      opacity: var(--ready-opacity-disabled);
+      background: var(--ready-color-disabled);
+      background-image: var(--ready-icon-menu);
       background-repeat: no-repeat;
       background-position:
         right 0.7em top 50%,
@@ -63,7 +63,7 @@ import { Component, Emitter, FormElement, css, html } from '@readymade/core';
     ::slotted(select[disabled]:hover),
     ::slotted(select[disabled]:focus),
     ::slotted(select[disabled]:active) {
-      border: 2px solid var(--color-border);
+      border: 2px solid var(--ready-color-border);
       outline: none;
       box-shadow: none;
     }
@@ -71,7 +71,7 @@ import { Component, Emitter, FormElement, css, html } from '@readymade/core';
     ::slotted(select.required:hover),
     ::slotted(select.required:focus),
     ::slotted(select.required:active) {
-      border: 2px solid var(--color-error);
+      border: 2px solid var(--ready-color-error);
       outline: none;
       box-shadow: none;
     }

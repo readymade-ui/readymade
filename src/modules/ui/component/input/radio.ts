@@ -10,7 +10,7 @@ import { Component, FormElement, html, css } from '@readymade/core';
       -moz-appearance: none;
       -webkit-appearance: none;
       appearance: none;
-      margin: 0px 4px 0px 0px;
+      margin: 0px 4px 0px 8px;
       transform: translateY(4px);
     }
     ::slotted(input[type='radio']):before {
@@ -18,18 +18,18 @@ import { Component, FormElement, html, css } from '@readymade/core';
       display: block;
       width: 16px;
       height: 16px;
-      border: 2px solid var(--color-border);
+      border: 2px solid var(--ready-color-border);
       border-radius: 50%;
-      background: var(--color-bg);
+      background: var(--ready-color-bg);
     }
     ::slotted(input[type='radio']:checked):before {
       background: radial-gradient(
-        var(--color-border) 0%,
-        var(--color-border) 50%,
+        var(--ready-color-border) 0%,
+        var(--ready-color-border) 50%,
         transparent 50%,
         transparent
       );
-      border-color: var(--color-highlight);
+      border-color: var(--ready-color-highlight);
     }
     ::slotted(input[type='radio']:focus),
     ::slotted(input[type='radio']:active) {
@@ -39,17 +39,17 @@ import { Component, FormElement, html, css } from '@readymade/core';
     ::slotted(input[type='radio']:hover):before,
     ::slotted(input[type='radio']:focus):before,
     ::slotted(input[type='radio']:active):before {
-      border: 2px solid var(--color-highlight);
+      border: 2px solid var(--ready-color-highlight);
     }
     ::slotted(input[type='radio'][disabled]):before {
-      opacity: var(--opacity-disabled);
-      background: var(--color-disabled);
+      opacity: var(--ready-opacity-disabled);
+      background: var(--ready-color-disabled);
       cursor: not-allowed;
     }
     ::slotted(input[type='radio'][disabled]:hover):before,
     ::slotted(input[type='radio'][disabled]:focus):before,
     ::slotted(input[type='radio'][disabled]:active):before {
-      border: 2px solid var(--color-border);
+      border: 2px solid var(--ready-color-border);
       outline: none;
       box-shadow: none;
     }
@@ -65,7 +65,7 @@ import { Component, FormElement, html, css } from '@readymade/core';
       border-radius: 14px;
     }
     .group.required {
-      border: 2px solid var(--color-error);
+      border: 2px solid var(--ready-color-error);
     }
     .group.required ::slotted(input[type='radio']) {
      transform: translateX(-1px) translateY(3px);

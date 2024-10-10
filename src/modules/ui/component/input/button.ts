@@ -11,10 +11,10 @@ import { Component, Listen, FormElement, html, css } from '@readymade/core';
     :host button {
       width: 72px;
       height: 36px;
-      border: 2px solid var(--color-border);
-      background-color: var(--color-bg);
+      border: 2px solid var(--ready-color-border);
+      background-color: var(--ready-color-bg);
       border-radius: 14px;
-      color: var(--color-default);
+      color: var(--ready-color-default);
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -59,32 +59,32 @@ import { Component, Listen, FormElement, html, css } from '@readymade/core';
       height: 32px;
     }
     :host button:hover {
-      background-color: var(--color-bg);
-      border: 2px solid var(--color-highlight);
+      background-color: var(--ready-color-bg);
+      border: 2px solid var(--ready-color-highlight);
     }
     :host button:focus {
       outline: 0px;
       outline-offset: 0px;
-      background-color: var(--color-bg);
-      border: 2px solid var(--color-highlight);
+      background-color: var(--ready-color-bg);
+      border: 2px solid var(--ready-color-highlight);
     }
     :host button:active,
     :host button.active {
       outline: 0px;
       outline-offset: 0px;
-      background-color: var(--color-selected);
-      border: 2px solid var(--color-highlight);
+      background-color: var(--ready-color-selected);
+      border: 2px solid var(--ready-color-highlight);
     }
     :host button[disabled] {
-      opacity: var(--opacity-disabled);
-      background: var(--color-disabled);
+      opacity: var(--ready-opacity-disabled);
+      background: var(--ready-color-disabled);
       cursor: not-allowed;
     }
     :host button[disabled]:hover,
     :host button[disabled]:focus,
     :host button[disabled]:active,
     :host button[disabled].active {
-      border: 2px solid var(--color-border);
+      border: 2px solid var(--ready-color-border);
       outline: none;
       box-shadow: none;
     }

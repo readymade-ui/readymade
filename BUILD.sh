@@ -25,3 +25,4 @@ npx rollup -c src/modules/ui/rollup.config.js
 cp src/modules/ui/package.json dist/packages/@readymade/ui/package.json
 cp src/modules/ui/LICENSE.txt dist/packages/@readymade/ui/LICENSE.txt
 cp src/modules/ui/README.md dist/packages/@readymade/ui/README.md
+cp src/client/style/readymade-ui.css dist/packages/@readymade/ui/readymade-ui.css

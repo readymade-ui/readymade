@@ -22,8 +22,8 @@ import { RdControl } from './../control';
     .draggable {
       display: block;
       z-index: 1000;
-      background-color: var(--color-bg);
-      border: 2px solid var(--color-border);
+      background-color: var(--ready-color-bg);
+      border: 2px solid var(--ready-color-border);
     }
     .draggable .range {
       width: 100%;
@@ -34,7 +34,7 @@ import { RdControl } from './../control';
       width: 32px;
       height: 32px;
       border-radius: 50%;
-      background: var(--icon-joy);
+      background: var(--ready-icon-joy);
       background-repeat: no-repeat;
       transition: transform 0.175;
       pointer-events: none;
@@ -57,7 +57,7 @@ import { RdControl } from './../control';
       border-radius: 14px;
     }
     .slider.hor .draggable .handle {
-      background: var(--icon-hor);
+      background: var(--ready-icon-hor);
       background-position: 50% 0px;
       background-repeat: no-repeat;
       background-size: 100% 100%;
@@ -84,7 +84,7 @@ import { RdControl } from './../control';
       border-radius: 14px;
     }
     .slider.vert .draggable .handle {
-      background: var(--icon-vert);
+      background: var(--ready-icon-vert);
       background-position: 0px 50%;
       background-repeat: no-repeat;
       height: 32px;
@@ -106,7 +106,7 @@ import { RdControl } from './../control';
     .slider.joystick .draggable {
       width: 200px;
       height: 200px;
-      cursor: var(--icon-handle-bg) 0 0, pointer;
+      cursor: var(--ready-icon-handle-bg) 0 0, pointer;
     }
     .slider.joystick.circle .draggable {
       border-radius: 50%;
@@ -122,7 +122,7 @@ import { RdControl } from './../control';
     }
     .slider .draggable:hover, 
     .slider .draggable.active {
-      border: 2px solid var(--color-highlight);
+      border: 2px solid var(--ready-color-highlight);
       outline: none;
       box-shadow: none;
     }
@@ -132,20 +132,20 @@ import { RdControl } from './../control';
       filter: grayscale(100%) brightness(5); 
     }
     .slider .draggable[disabled] {
-      opacity: var(--opacity-disabled);
-      background: var(--color-disabled);
+      opacity: var(--ready-opacity-disabled);
+      background: var(--ready-color-disabled);
       cursor: not-allowed;
     }
     .slider .draggable[disabled]:hover, 
     .slider .draggable[disabled].active {
-      border: 2px solid var(--color-border);
+      border: 2px solid var(--ready-color-border);
       outline: none;
       box-shadow: none;
     }
     :host.required .slider .draggable,
     :host.required .slider .draggable[disabled]:hover, 
     :host.required .slider .draggable[disabled].active {
-      border: 2px solid var(--color-error);
+      border: 2px solid var(--ready-color-error);
       outline: none;
       box-shadow: none;
     }
