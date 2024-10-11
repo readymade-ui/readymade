@@ -25,10 +25,11 @@ interface Route {
 }
 
 class Router {
+  hashMode: boolean;
   rootElement: Element;
   routes: Array<Route>;
   currentRoute: Route;
-  constructor(root: string, routes: Route[]) {
+  constructor(root: string, routes: Route[], useHash?: boolean) {
     if (document.querySelector(root) === null) {
       console.error(`[Router] Root element '${root}' does not exist.`);
     }
@@ -37,6 +38,11 @@ class Router {
     }
     this.rootElement = document.querySelector(root);
     this.routes = routes;
+    if (useHash === true) {
+      this.hashMode = true;
+    } else {
+      this.hashMode = false;
+    }
     this.listen();
   }
 
@@ -54,7 +60,21 @@ class Router {
   }
 
   onLocationChange() {
-    let path: string = window.location.pathname.replace(/\/$/, '');
+    let path: string;
+    if (this.hashMode && window.location.hash.length) {
+      if (window.location.hash === '/#/') {
+        window.location.href = window.location.origin + `/#`;
+      } else {
+        path = window.location.hash.replace(/^#/, '');
+      }
+    } else {
+      if (this.hashMode && !window.location.hash.length) {
+        window.location.href =
+          window.location.origin + `/#${window.location.pathname}`;
+      } else {
+        path = window.location.pathname.replace(/\/$/, '');
+      }
+    }
     if (path === '') {
       path = '/';
     }
@@ -64,10 +84,10 @@ class Router {
   }
 
   decodeQuery() {
-    if (location.search.length === 0) {
+    if (window.location.search.length === 0) {
       return {};
     }
-    const search = location.search.substring(1);
+    const search = window.location.search.substring(1);
     return JSON.parse(
       '{"' +
         decodeURI(search)
