@@ -69,18 +69,22 @@ import { Component, Emitter, FormElement, html, css } from '@readymade/core';
   template: html` <input type="checkbox" /> `,
 })
 class RdCheckBox extends FormElement {
+  channel: BroadcastChannel;
   constructor() {
     super();
   }
 
   static get observedAttributes() {
-    return ['checked'];
+    return ['checked', 'channel'];
   }
 
   attributeChangedCallback(name: string, old: string, next: string) {
     switch (name) {
       case 'checked':
         this.checked = next === 'true' || next === '' ? true : false;
+        break;
+      case 'channel':
+        this.setChannel(next);
         break;
     }
   }
@@ -116,6 +120,13 @@ class RdCheckBox extends FormElement {
             detail: 'composed',
           }),
         );
+      }
+      if (this.channel) {
+        this.channel.postMessage({
+          type: this.type,
+          name: this.name,
+          value: (ev.target as HTMLInputElement).checked,
+        });
       }
     };
     this.$elem.onblur = () => {
@@ -171,6 +182,10 @@ class RdCheckBox extends FormElement {
 
   get $elem(): HTMLInputElement {
     return this.shadowRoot.querySelector('input');
+  }
+
+  setChannel(name: string) {
+    this.channel = new BroadcastChannel(name);
   }
 }
 

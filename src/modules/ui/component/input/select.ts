@@ -79,13 +79,26 @@ import { Component, Emitter, FormElement, css, html } from '@readymade/core';
   template: html` <slot></slot> `,
 })
 class RdDropdown extends FormElement {
+  channel: BroadcastChannel;
   constructor() {
     super();
   }
 
+  static get observedAttributes() {
+    return ['channel'];
+  }
+
+  attributeChangedCallback(name: string, old: string, next: string) {
+    switch (name) {
+      case 'channel':
+        this.setChannel(next);
+        break;
+    }
+  }
+
   @Emitter('select')
   connectedCallback() {
-    this.$elem.onselect = (ev: Event) => {
+    this.$elem.oninput = (ev: Event) => {
       this.emitter.emit(
         new CustomEvent('select', {
           bubbles: true,
@@ -95,6 +108,16 @@ class RdDropdown extends FormElement {
       );
       if (this.onselect) {
         this.onselect(ev);
+      }
+      if (this.oninput) {
+        this.oninput(ev);
+      }
+      if (this.channel) {
+        this.channel.postMessage({
+          type: 'select',
+          name: this.name,
+          value: this.value,
+        });
       }
     };
     this.$elem.onblur = () => {
@@ -159,6 +182,10 @@ class RdDropdown extends FormElement {
         .querySelector('slot')
         .assignedNodes() as HTMLSelectElement[]
     ).filter((elem) => elem.tagName === 'SELECT')[0];
+  }
+
+  setChannel(name: string) {
+    this.channel = new BroadcastChannel(name);
   }
 }
 

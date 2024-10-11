@@ -97,17 +97,21 @@ import { Component, Listen, FormElement, html, css } from '@readymade/core';
   `,
 })
 class RdButton extends FormElement {
+  channel: BroadcastChannel;
+  _type: 'submit' | 'reset' | 'button' = 'button';
   constructor() {
     super();
+    this.type = 'button';
   }
 
   static get observedAttributes() {
-    return ['type', 'label', 'width', 'height'];
+    return ['type', 'label', 'width', 'height', 'channel'];
   }
 
   attributeChangedCallback(name: string, old: string, next: string) {
     switch (name) {
       case 'type':
+        this._type = next as 'submit' | 'reset' | 'button';
         this.type = next as 'submit' | 'reset' | 'button';
         break;
       case 'value':
@@ -123,6 +127,9 @@ class RdButton extends FormElement {
       case 'height':
         this.shadowRoot.querySelector('button').style.height = next;
         break;
+      case 'channel':
+        this.setChannel(next);
+        break;
     }
   }
 
@@ -137,6 +144,15 @@ class RdButton extends FormElement {
         spanElem.classList.add('is--empty');
       }
     });
+    this.$elem.onclick = (ev: Event) => {
+      if (this.channel) {
+        this.channel.postMessage({
+          type: this.type,
+          name: this.name,
+          value: this.value.length ? this.value : 'bang',
+        });
+      }
+    };
     if (this.type === 'submit') {
       this.$elem.onsubmit = (ev: Event) => {
         this.emitter.emit(
@@ -182,10 +198,10 @@ class RdButton extends FormElement {
   }
 
   get type() {
-    return this.$elem.type || 'button';
+    return this.$elem.type || this._type;
   }
 
-  set type(value) {
+  set type(value: 'submit' | 'reset' | 'button') {
     this.$elem.type = value;
   }
 
@@ -199,6 +215,10 @@ class RdButton extends FormElement {
 
   get $elem(): HTMLButtonElement {
     return this.shadowRoot.querySelector('button');
+  }
+
+  setChannel(name: string) {
+    this.channel = new BroadcastChannel(name);
   }
 
   simulatePress() {

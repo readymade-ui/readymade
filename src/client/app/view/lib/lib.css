@@ -13,6 +13,11 @@
   margin-bottom: 360px;
 }
 
+p {
+  max-width: 640px;
+  font-size: 1.2em;
+}
+
 .theme__toggle {
   width: 32px;
   height: 32px;

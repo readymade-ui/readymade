@@ -32,11 +32,11 @@ class NotFoundComponent extends CustomElement {
 
 const render = () => `
 <app-notfound>
-  <template shadowroot="open">
-  <style>
-  ${style}
-  </style>
-  ${template}
+  <template shadowrootmode="open">
+    <style>
+    ${style}
+    </style>
+    ${template}
   </template>
 </app-notfound>
 `;

@@ -14,4 +14,5 @@ export {
   querySelector,
   querySelectorAll,
   getChildNodes,
+  isNode,
 } from './src/util';

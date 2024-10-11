@@ -437,7 +437,7 @@ public getState() {
 &lt;ul class="is--large">
   &lt;template is="r-repeat" items="item of items">
     &lt;li repeat="item" foo="{{item}}">{{item}}&lt;/li>
-&lt;/template>
+  &lt;/template>
 &lt;/ul>
   </span>
 </r-code>
@@ -492,6 +492,67 @@ public getState() {
 
 </section>
 <section>
+  <h2 id="components">Server-Side Rendering (SSR)</h2>
+  <p>@readymade/core supports SSR out of the box because Readymade is built with web standards in mind. To server-side render a Component, create a Declarative Shadow DOM template. If you are using the Readymade Starter, this takes the form of a <span class="i__c">function</span> named  <span class="i__c">render</span>. After exporting  <span class="i__c">render</span>, you can build this view as it's own module and using Express and @lit-labs/ssr, render the template on the server.</p>
+  
+  <p>Below is an example of the 404 page built with this site that uses Declarative Shadow DOM with Readymade to server-side render the view. Once the browser loads, the declared animation starts. You can preview this by navigating to <a href="/404">/404</a></p>
+  <r-code type="javascript">
+    <span hidden>
+import { Component, CustomElement, html } from '@readymade/core';
+import template from './404.html?raw';
+import style from './404.css?raw';
+
+@Component({
+  selector: 'app-notfound',
+  style,
+  template,
+})
+class NotFoundComponent extends CustomElement {
+  constructor() {
+    super();
+  }
+  public connectedCallback() {
+    this.animateIn();
+  }
+  public animateIn() {
+    if (!this.shadowRoot.querySelector) return;
+    this.shadowRoot.querySelector('.app__icon').animate(
+      [
+        { opacity: '0', transform: 'translateZ(-1000px)' },
+        { opacity: '1', transform: 'translateZ(0px)' },
+      ],
+      {
+        duration: 2000,
+        easing: 'cubic-bezier(0.19, 1, 0.22, 1)',
+        fill: 'forwards',
+      },
+    );
+  }
+}
+
+const render = () => {
+  const declarativeShadowDOMTemplate = &#96;
+    &lt;app-notfound>
+      &lt;template shadowrootmode="open">
+        &lt;style>
+        &dollar;{style}
+        &lt;/style>
+        &dollar;{template}
+      &lt;/template>
+    &lt;/app-notfound>
+  &#96;
+  return declarativeShadowDOMTemplate;
+};
+
+export { NotFoundComponent, render };
+  </span>
+</r-code>
+
+<p> In the above example, <span class="i__c">template</span> is imported from a .html file with Vite and passed to the client-side and server-side versions of the Readymade custom element. Vite bundles each view like this one as separate JavaScript bundles which are server-side rendered with @lit-labs/ssr, Vite, and Express.</p>
+
+<p>By exporting the template via the <span class="i__c">render</span> function, you can opt to pass in dynamic models server-side.</p>
+</section>
+<section>
   <h2 id="components">Router</h2>
   <p>@readymade/router exports a client-side router that handles swapping out views on a root element in DOM.</p>
   <r-code type="javascript">
@@ -523,17 +584,7 @@ const router = new Router('#root', routing);
     <li><span class="definition__title">schema</span>JSON-LD</li>
   </ul>
   
-  <p>* description and JSON-LD schema require the appropriate meta and script tags, respectively to already be available in DOM.</p>
-  
-  <h2>Server Side Rendering</h2>
-  
-  <p>Readymade is server side renderable with @skatejs/ssr and Express.</p>
-     
-  <p>There is one limitation: the implementation can only extend from CustomElement (ShadowDOM). Customized built-in elements are not server side renderable by @skatejs/ssr.</p>
-  
-  <p>For more information, read <a href="https://dev.to/steveblue/server-side-rendering-web-components-320g" target="_blank" rel="noreferrer" >Server Side Render Web Components</a> and follow the link to the source code for an example of Express middleware. <a href="https://gist.github.com/steveblue/d003740efd08983f78d9d3e49e61072d" target="_blank" rel="noreferrer" >Advanced example of server side rendering web components with SEO</a> is available in a gist.</p>
-  
-  
+  <p>* description and JSON-LD schema require the appropriate meta and script tags, respectively to already be available in DOM.</p>  
   
 </section>
 

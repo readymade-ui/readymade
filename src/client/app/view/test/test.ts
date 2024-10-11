@@ -50,7 +50,7 @@ class TestBedComponent extends CustomElement {
 
 const render = () => `
 <app-testbed>
-  <template shadowroot="open">
+  <template shadowrootmode="open">
     <style>
     ${style}
     </style>

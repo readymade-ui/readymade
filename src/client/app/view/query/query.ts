@@ -27,7 +27,7 @@ class QueryComponent extends CustomElement {
 
 const render = () => `
 <app-query>
-  <template shadowroot="open">
+  <template shadowrootmode="open">
     <style>
     ${style}
     </style>

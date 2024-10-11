@@ -1,7 +1,12 @@
 import { Component, CustomElement, FormElement, State } from '@readymade/core';
 import template from './lib.html?raw';
 import style from './lib.css?raw';
-import { StandardKeyboard, StandardKeyboardNumPad } from '@readymade/ui';
+import {
+  StandardKeyboard,
+  StandardKeyboardNumPad,
+  RdSlider,
+  RdRadioGroup,
+} from '@readymade/ui';
 
 @Component({
   selector: 'app-library',
@@ -10,6 +15,9 @@ import { StandardKeyboard, StandardKeyboardNumPad } from '@readymade/ui';
 })
 class LibraryComponent extends CustomElement {
   theme: string = 'dark';
+  mode: 'form' | 'channel' = 'form';
+  channelName = 'rd-messages';
+  channel: BroadcastChannel;
   constructor() {
     super();
   }
@@ -20,28 +28,16 @@ class LibraryComponent extends CustomElement {
       ?.addEventListener('click', () => {
         this.toggleTheme();
       });
-    const form = this.shadowRoot?.querySelector('form');
-    const radio = (<unknown>(
-      this.shadowRoot?.querySelector('rd-radiogroup')
+
+    const modeRadio = (<unknown>(
+      this.shadowRoot?.querySelectorAll('rd-radiogroup')[0]
     )) as FormElement;
-    const toggle = (<unknown>(
-      this.shadowRoot?.querySelector('rd-switch')
-    )) as FormElement;
-    const checkbox = (<unknown>(
-      this.shadowRoot?.querySelector('rd-checkbox')
-    )) as FormElement;
-    const input = (<unknown>(
-      this.shadowRoot?.querySelector('rd-input')
-    )) as FormElement;
-    const textarea = (<unknown>(
-      this.shadowRoot?.querySelector('rd-textarea')
-    )) as FormElement;
-    const select = (<unknown>(
-      this.shadowRoot?.querySelector('rd-dropdown')
-    )) as FormElement;
-    const button = (<unknown>(
-      this.shadowRoot?.querySelector('rd-button')
-    )) as FormElement;
+
+    modeRadio.onchange = (ev: Event) => {
+      this.mode = (ev.target as any).value;
+      this.onModeChange();
+    };
+
     const buttonPad = (<unknown>(
       this.shadowRoot?.querySelector('rd-buttonpad')
     )) as FormElement;
@@ -60,44 +56,7 @@ class LibraryComponent extends CustomElement {
     const horizontalSlider = (<unknown>(
       this.shadowRoot?.querySelector('[type="hor"]')
     )) as RdSlider;
-    const submit = (<unknown>(
-      this.shadowRoot?.querySelector('[type="submit"]')
-    )) as FormElement;
-    radio.onchange = (ev: Event) => {
-      console.log((ev.target as any).value);
-    };
-    toggle.onchange = (ev: Event) => {
-      console.log((ev.target as any).checked);
-      // console.dir(form);
-    };
-    checkbox.onchange = (ev: Event) => {
-      console.log((ev.target as any).checked);
-      // console.dir(form);
-    };
-    input.oninput = (ev: Event) => {
-      console.log((ev.target as any).value);
-      // console.dir(form);
-    };
-    input.onchange = (ev: Event) => {
-      console.log((ev.target as any).value);
-      // console.dir(form);
-    };
-    textarea.oninput = (ev: Event) => {
-      console.log((ev.target as any).value);
-      // console.dir(form);
-    };
-    textarea.onchange = (ev: Event) => {
-      console.log((ev.target as any).value);
-      // console.dir(form);
-    };
-    select.onchange = (ev: Event) => {
-      console.log((ev.target as any).value);
-      // console.dir(form);
-    };
-    button.onclick = (ev: Event) => {
-      console.log(ev);
-      // console.dir(form);
-    };
+
     buttonPad.setAttribute(
       'grid',
       JSON.stringify({
@@ -124,11 +83,7 @@ class LibraryComponent extends CustomElement {
       }),
     );
     buttonPad.setAttribute('buttons', JSON.stringify(StandardKeyboard));
-    buttonPad.onclick = (ev: Event) => {
-      if ((ev.target as HTMLElement).tagName === 'RD-BUTTON') {
-        console.dir((form[16] as HTMLInputElement).value);
-      }
-    };
+
     buttonNumberPad.setAttribute(
       'grid',
       JSON.stringify({
@@ -158,48 +113,14 @@ class LibraryComponent extends CustomElement {
       'buttons',
       JSON.stringify(StandardKeyboardNumPad),
     );
-    buttonNumberPad.onclick = (ev: Event) => {
-      if ((ev.target as HTMLElement).tagName === 'RD-BUTTON') {
-        console.dir((form[17] as HTMLInputElement).value);
-      }
-    };
-    joystick.oninput = (ev: CustomEvent) => {
-      console.log((ev.target as any).value);
-      // console.dir(form);
-    };
-    squareJoystick.oninput = (ev: CustomEvent) => {
-      console.log((ev.target as any).value);
-      // console.dir(form);
-    };
-    vertSlider.oninput = (ev: CustomEvent) => {
-      console.log((ev.target as any).value);
-      // console.dir(form);
-    };
-    horizontalSlider.oninput = (ev: CustomEvent) => {
-      console.log((ev.target as any).value);
-      // console.dir(form);
-    };
-    setTimeout(() => (vertSlider.value = 100), 0);
-    setTimeout(() => (horizontalSlider.value = 1000), 0);
-    setTimeout(() => (joystick.value = [140, 140]), 0);
-    setTimeout(() => (squareJoystick.value = [140, 140]), 0);
-    submit.onclick = (ev: Event) => {
-      ev.preventDefault();
-      const values = Array.from(
-        this.shadowRoot?.querySelectorAll('.form__item'),
-      ).map((item: any) => {
-        if (item.onValidate) {
-          item.onValidate();
-        }
-        return {
-          tag: item.tagName,
-          value: item.value,
-          validity: item.checkValidity ? item.checkValidity() : null,
-        };
-      });
-      console.log(values);
-      // console.dir(form);
-    };
+
+    setTimeout(() => (vertSlider.value = 100));
+    setTimeout(() => (horizontalSlider.value = 1000));
+    setTimeout(() => (joystick.value = [140, 140]));
+    setTimeout(() => (squareJoystick.value = [140, 140]));
+
+    this.onModeChange();
+    (modeRadio as RdRadioGroup).value = this.mode;
   }
   @State()
   public getState() {
@@ -249,11 +170,160 @@ class LibraryComponent extends CustomElement {
     this.shadowRoot?.querySelector('.theme__toggle').classList.remove('dark');
     this.shadowRoot?.querySelector('.theme__toggle').classList.add(this.theme);
   }
+  onModeChange() {
+    const form = this.shadowRoot?.querySelector('form');
+    const radio = (<unknown>(
+      this.shadowRoot?.querySelectorAll('rd-radiogroup')[1]
+    )) as FormElement;
+    const toggle = (<unknown>(
+      this.shadowRoot?.querySelector('rd-switch')
+    )) as FormElement;
+    const checkbox = (<unknown>(
+      this.shadowRoot?.querySelector('rd-checkbox')
+    )) as FormElement;
+    const input = (<unknown>(
+      this.shadowRoot?.querySelector('rd-input')
+    )) as FormElement;
+    const textarea = (<unknown>(
+      this.shadowRoot?.querySelector('rd-textarea')
+    )) as FormElement;
+    const select = (<unknown>(
+      this.shadowRoot?.querySelector('rd-dropdown')
+    )) as FormElement;
+    const button = (<unknown>(
+      this.shadowRoot?.querySelector('rd-button')
+    )) as FormElement;
+    const buttonPad = (<unknown>(
+      this.shadowRoot?.querySelector('rd-buttonpad')
+    )) as FormElement;
+    const buttonNumberPad = (<unknown>(
+      this.shadowRoot?.querySelectorAll('rd-buttonpad')[1]
+    )) as FormElement;
+    const joystick = (<unknown>(
+      this.shadowRoot?.querySelector('[type="joystick"]')
+    )) as RdSlider;
+    const squareJoystick = (<unknown>(
+      this.shadowRoot?.querySelectorAll('[type="joystick"]')[1]
+    )) as RdSlider;
+    const vertSlider = (<unknown>(
+      this.shadowRoot?.querySelector('[type="vert"]')
+    )) as RdSlider;
+    const horizontalSlider = (<unknown>(
+      this.shadowRoot?.querySelector('[type="hor"]')
+    )) as RdSlider;
+    const submit = (<unknown>(
+      this.shadowRoot?.querySelector('[type="submit"]')
+    )) as FormElement;
+    if (this.mode === 'form') {
+      this.channel?.close();
+      radio.onchange = (ev: Event) => {
+        console.log((ev.target as any).value);
+      };
+      toggle.onchange = (ev: Event) => {
+        console.log((ev.target as any).checked);
+      };
+      checkbox.onchange = (ev: Event) => {
+        console.log((ev.target as any).checked);
+      };
+      input.oninput = (ev: Event) => {
+        console.log((ev.target as any).value);
+      };
+      input.onchange = (ev: Event) => {
+        console.log((ev.target as any).value);
+      };
+      textarea.oninput = (ev: Event) => {
+        console.log((ev.target as any).value);
+      };
+      textarea.onchange = (ev: Event) => {
+        console.log((ev.target as any).value);
+      };
+      select.onchange = (ev: Event) => {
+        console.log((ev.target as any).value);
+      };
+      button.onclick = (ev: Event) => {
+        console.log(ev);
+      };
+      buttonPad.onclick = (ev: Event) => {
+        if ((ev.target as HTMLElement).tagName === 'RD-BUTTON') {
+          console.dir((form[16] as HTMLInputElement).value);
+        }
+      };
+      buttonNumberPad.onclick = (ev: Event) => {
+        if ((ev.target as HTMLElement).tagName === 'RD-BUTTON') {
+          console.dir((form[17] as HTMLInputElement).value);
+        }
+      };
+      joystick.oninput = (ev: CustomEvent) => {
+        console.log((ev.target as any).value);
+      };
+      squareJoystick.oninput = (ev: CustomEvent) => {
+        console.log((ev.target as any).value);
+      };
+      vertSlider.oninput = (ev: CustomEvent) => {
+        console.log((ev.target as any).value);
+      };
+      horizontalSlider.oninput = (ev: CustomEvent) => {
+        console.log((ev.target as any).value);
+      };
+      submit.onclick = (ev: Event) => {
+        ev.preventDefault();
+        const values = Array.from(
+          this.shadowRoot?.querySelectorAll('.form__item'),
+        ).map((item: any) => {
+          if (item.onValidate) {
+            item.onValidate();
+          }
+          return {
+            tag: item.tagName,
+            value: item.value,
+            validity: item.checkValidity ? item.checkValidity() : null,
+          };
+        });
+        console.log(values);
+      };
+    }
+    if (this.mode === 'channel') {
+      this.channel = new BroadcastChannel(this.channelName);
+      radio.setAttribute('channel', this.channelName);
+      toggle.setAttribute('channel', this.channelName);
+      checkbox.setAttribute('channel', this.channelName);
+      input.setAttribute('channel', this.channelName);
+      textarea.setAttribute('channel', this.channelName);
+      select.setAttribute('channel', this.channelName);
+      button.setAttribute('channel', this.channelName);
+      buttonPad.setAttribute('channel', this.channelName);
+      buttonNumberPad.setAttribute('channel', this.channelName);
+      joystick.setAttribute('channel', this.channelName);
+      squareJoystick.setAttribute('channel', this.channelName);
+      vertSlider.setAttribute('channel', this.channelName);
+      horizontalSlider.setAttribute('channel', this.channelName);
+      submit.setAttribute('channel', this.channelName);
+      this.channel.onmessage = (event) => {
+        console.log(event.data);
+      };
+      radio.onchange = () => {};
+      toggle.onchange = () => {};
+      checkbox.onchange = () => {};
+      input.oninput = () => {};
+      input.onchange = () => {};
+      textarea.oninput = () => {};
+      textarea.onchange = () => {};
+      select.onchange = () => {};
+      button.onclick = () => {};
+      buttonPad.onclick = () => {};
+      buttonNumberPad.onclick = () => {};
+      joystick.oninput = () => {};
+      squareJoystick.oninput = () => {};
+      vertSlider.oninput = () => {};
+      horizontalSlider.oninput = () => {};
+      submit.onclick = () => {};
+    }
+  }
 }
 
 const render = () => `
   <app-library>
-    <template shadowroot="open">
+    <template shadowrootmode="open">
       <style>
         ${style}
       </style>

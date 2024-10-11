@@ -151,8 +151,7 @@ const ssrMiddleware = (options?: { vite?: ViteDevServer }) => {
       const postSSR = Readable.from(
         template.substring(ssrIndex + SSR_OUTLET_MARKER.length + 1),
       );
-      const viewTemplate =
-        env === 'development' ? view.render() : view.render();
+      const viewTemplate = view.render();
       const ssrResult = await renderView(viewTemplate);
       const viewResult = await renderStream(ssrResult);
 

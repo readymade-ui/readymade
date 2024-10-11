@@ -171,20 +171,22 @@ class RdSlider extends FormElement {
   private _lastPos: { transform: string };
   private _joystickType: 'circle' | 'square';
   private _numberType: 'int' | 'float';
+  private _type: 'joystick' | 'slider';
   public control: RdControl;
-
+  public channel: BroadcastChannel;
   constructor() {
     super();
   }
 
   static get observedAttributes() {
-    return ['type', 'size', 'control'];
+    return ['type', 'size', 'control', 'channel'];
   }
 
   public attributeChangedCallback(name, old, next) {
     switch (name) {
       case 'type':
         this.shadowRoot.querySelector('.slider').classList.add(next);
+        this._type = next === 'vert' || next === 'hor' ? 'slider' : 'joystick';
         break;
       case 'size':
         this.shadowRoot.querySelector('.slider').classList.add(next);
@@ -194,6 +196,9 @@ class RdSlider extends FormElement {
           this.control = JSON.parse(next);
           this.onSliderInit();
         }
+        break;
+      case 'channel':
+        this.setChannel(next);
         break;
     }
   }
@@ -218,6 +223,14 @@ class RdSlider extends FormElement {
       this.$internals.setValidity({});
       this.$elem.classList.remove('required');
     }
+  }
+
+  get type() {
+    return this._type;
+  }
+
+  set type(value) {
+    this._type = value;
   }
 
   get form() {
@@ -295,6 +308,7 @@ class RdSlider extends FormElement {
     }
     this._lastPos = { transform: this.control.position };
     this.setActualPosition(this.control.position);
+
     // TODO init based on this.control.currentValue
   }
 
@@ -406,6 +420,13 @@ class RdSlider extends FormElement {
       this.setPosition(this.control.x, this.control.y);
       this.mapValue();
       this.control.timeStamp = e.timeStamp;
+      if (this.channel) {
+        this.channel.postMessage({
+          type: this.type,
+          name: this.name,
+          value: this.control.currentValue,
+        });
+      }
       this.onEvent();
     }
   }
@@ -440,6 +461,13 @@ class RdSlider extends FormElement {
       this.setPosition(this.control.x, this.control.y);
       this.mapValue();
       this.control.timeStamp = e.timeStamp;
+      if (this.channel) {
+        this.channel.postMessage({
+          type: this.type,
+          name: this.name,
+          value: this.control.currentValue,
+        });
+      }
       this.onEvent();
     }
   }
@@ -471,8 +499,8 @@ class RdSlider extends FormElement {
   }
 
   @Listen('touchend')
-  onTouchEnd(e: TouchEvent) {
-    this.onMouseUp(e);
+  onTouchEnd() {
+    this.onMouseUp();
   }
 
   onEvent() {
@@ -756,6 +784,10 @@ class RdSlider extends FormElement {
 
     this.setPosition(this.control.x, this.control.y);
     this.mapValue();
+  }
+
+  setChannel(name: string) {
+    this.channel = new BroadcastChannel(name);
   }
 }
 

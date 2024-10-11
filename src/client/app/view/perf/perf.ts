@@ -16,7 +16,7 @@ class PerformanceTestComponent extends CustomElement {
 
 const render = () => `
   <app-perftest>
-    <template shadowroot="open">
+    <template shadowrootmode="open">
       <style>
         ${style}
       </style>

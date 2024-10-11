@@ -70,17 +70,74 @@ import { Component, FormElement, html, css } from '@readymade/core';
     .group.required ::slotted(input[type='radio']) {
      transform: translateX(-1px) translateY(3px);
     }
+    .group.vertical {
+      display: flex;
+      flex-direction: column;
+      padding-top: 24px;
+      padding-right: 120px;
+      padding-bottom: 0px;
+      & ::slotted(input[type='radio']) {
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        margin: 0px 0px 0px 8px;
+        transform: translateY(-8px);
+      }
+      & ::slotted(label) {
+        display: block;
+        margin-top: 0px;
+        margin-right: 0px;
+        position: relative;
+        left: 42px;
+        top: -28px;
+      }
+      &.required {
+        
+      }
+    }
   `,
   template: html` <div class="group"><slot></slot></div> `,
 })
 class RdRadioGroup extends FormElement {
+  direction: 'horizontal' | 'vertical';
+  channel: BroadcastChannel;
   constructor() {
     super();
   }
+
+  static get observedAttributes() {
+    return ['direction', 'channel'];
+  }
+
+  attributeChangedCallback(name: string, old: string, next: string) {
+    switch (name) {
+      case 'direction':
+        this.direction = next as 'horizontal' | 'vertical';
+        if (this.direction === 'vertical') {
+          this.shadowRoot?.querySelector('.group').classList.add('vertical');
+        } else {
+          this.shadowRoot?.querySelector('.group').classList.remove('vertical');
+        }
+        break;
+      case 'channel':
+        this.setChannel(next);
+        break;
+    }
+  }
+
   connectedCallback() {
     this.$elem.forEach((elem: HTMLInputElement) => {
       elem.onblur = () => {
         this.onValidate();
+      };
+      elem.onclick = () => {
+        if (this.channel) {
+          this.channel.postMessage({
+            type: 'radio',
+            name: this.name,
+            value: this.value,
+          });
+        }
       };
     });
   }
@@ -136,6 +193,14 @@ class RdRadioGroup extends FormElement {
     });
   }
 
+  get form() {
+    return this.$internals.form;
+  }
+
+  get name() {
+    return this.getAttribute('name');
+  }
+
   get $group(): Element {
     return this.shadowRoot.querySelector('.group');
   }
@@ -149,6 +214,10 @@ class RdRadioGroup extends FormElement {
       (elem: HTMLInputElement) =>
         elem.tagName === 'INPUT' && elem.type === 'radio',
     );
+  }
+
+  setChannel(name: string) {
+    this.channel = new BroadcastChannel(name);
   }
 }
 

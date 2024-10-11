@@ -49,13 +49,31 @@ import { Component, Emitter, FormElement, html, css } from '@readymade/core';
   template: html` <input type="text" /> `,
 })
 class RdInput extends FormElement {
+  channel: BroadcastChannel;
   constructor() {
     super();
+  }
+
+  static get observedAttributes() {
+    return ['channel'];
+  }
+
+  attributeChangedCallback(name: string, old: string, next: string) {
+    switch (name) {
+      case 'channel':
+        this.setChannel(next);
+        break;
+    }
   }
 
   @Emitter('change')
   connectedCallback() {
     this.$elem.onchange = (ev: Event) => {
+      if (this.onchange) {
+        this.onchange(ev);
+      }
+    };
+    this.$elem.oninput = (ev: Event) => {
       this.emitter.emit(
         new CustomEvent('change', {
           bubbles: true,
@@ -63,13 +81,15 @@ class RdInput extends FormElement {
           detail: 'composed',
         }),
       );
-      if (this.onchange) {
-        this.onchange(ev);
-      }
-    };
-    this.$elem.oninput = (ev: Event) => {
       if (this.oninput) {
         this.oninput(ev);
+      }
+      if (this.channel) {
+        this.channel.postMessage({
+          type: this.type,
+          name: this.name,
+          value: this.value,
+        });
       }
     };
     this.$elem.onblur = () => {
@@ -134,6 +154,10 @@ class RdInput extends FormElement {
 
   get $elem(): HTMLInputElement | HTMLTextAreaElement {
     return this.shadowRoot.querySelector('input');
+  }
+
+  setChannel(name: string) {
+    this.channel = new BroadcastChannel(name);
   }
 }
 

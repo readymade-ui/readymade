@@ -229,6 +229,7 @@ export function buttonPadKeyPress(elem: Element) {
   `,
 })
 class RdButtonPad extends FormElement {
+  channel: BroadcastChannel;
   currentKey: string | null = null;
   currentModifier: string | null = null;
   disabled: boolean;
@@ -237,7 +238,7 @@ class RdButtonPad extends FormElement {
   }
 
   static get observedAttributes() {
-    return ['grid', 'buttons', 'disabled'];
+    return ['grid', 'buttons', 'disabled', 'channel'];
   }
 
   attributeChangedCallback(name: string, old: string, next: string) {
@@ -258,6 +259,9 @@ class RdButtonPad extends FormElement {
         break;
       case 'buttons':
         this.buttons = JSON.parse(next);
+        break;
+      case 'channel':
+        this.setChannel(next);
         break;
     }
   }
@@ -280,7 +284,7 @@ class RdButtonPad extends FormElement {
   }
 
   @Listen('click')
-  onClick(ev) {
+  onClick(ev: MouseEvent) {
     if (ev.target === this) {
       this.focus();
     }
@@ -314,7 +318,7 @@ class RdButtonPad extends FormElement {
         const cellElem = this.shadowRoot.querySelector(cell.selector);
         for (const styleProp in cell.styles) {
           // check for cellElem.style.hasOwnProperty(styleProp) fails in Safari and breaks layout
-          if (cell.styles[styleProp]) {
+          if (cell.styles[styleProp] && cellElem) {
             if (styleProp === 'width' || styleProp === 'height') {
               cellElem.setAttribute(styleProp, cell.styles[styleProp]);
             } else {
@@ -397,6 +401,13 @@ class RdButtonPad extends FormElement {
           ].key;
       }
       this.value = value;
+      if (this.channel) {
+        this.channel.postMessage({
+          type: this.type,
+          name: this.name,
+          value: this.currentKey,
+        });
+      }
       this.onclick(ev);
     }
   }
@@ -420,6 +431,13 @@ class RdButtonPad extends FormElement {
         modifier = this.currentModifier;
       }
       this.value = ev.key;
+      if (this.channel) {
+        this.channel.postMessage({
+          type: this.type,
+          name: this.name,
+          value: this.currentKey,
+        });
+      }
       const keyElem = this.get$(`[code="${code}"]`);
       keyElem?.dispatchEvent(
         new CustomEvent('press', { detail: { modifier } }),
@@ -455,6 +473,13 @@ class RdButtonPad extends FormElement {
         modifier = this.currentModifier;
       }
       this.value = (ev.target as HTMLElement).getAttribute('key');
+      if (this.channel) {
+        this.channel.postMessage({
+          type: this.type,
+          name: this.name,
+          value: this.currentKey,
+        });
+      }
       const keyElem = ev.target;
       keyElem?.dispatchEvent(
         new CustomEvent('press', { detail: { modifier } }),
@@ -467,6 +492,10 @@ class RdButtonPad extends FormElement {
     if (StandardKeyboardModifierCodeKeyMap[code]) {
       this.currentModifier = StandardKeyboardModifierCodeKeyMap[code];
     }
+  }
+
+  setChannel(name: string) {
+    this.channel = new BroadcastChannel(name);
   }
 }
 
