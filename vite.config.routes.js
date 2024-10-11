@@ -9,7 +9,7 @@ export default {
   },
   build: {
     ssr: true,
-    minify: true,
+    minify: false,
     manifest: 'manifest.json',
     rollupOptions: {
       input: await glob(['src/client/app/view/**/index.ts']),

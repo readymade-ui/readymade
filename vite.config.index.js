@@ -27,7 +27,7 @@ export default {
     },
   ],
   build: {
-    minify: true,
+    minify: false,
     manifest: 'manifest-index.json',
     rollupOptions: {
       output: {
