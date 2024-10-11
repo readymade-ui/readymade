@@ -144,7 +144,7 @@ class RdButton extends FormElement {
         spanElem.classList.add('is--empty');
       }
     });
-    this.$elem.onclick = (ev: Event) => {
+    this.$elem.onclick = () => {
       if (this.channel) {
         this.channel.postMessage({
           type: this.type,
