@@ -1,5 +1,87 @@
 # CHANGELOG
 
+### 3.0.0
+
+Readymade 3.0.0 Large Glass brings project dependencies up to date, adds new features and introduces several bugfixes and enhancements.
+
+### @readymade/core
+
+- new: class methods `get$` and `getAll$ `shorthand for `querySelector` and `querySelectorAll`
+- new: class methods `wait$` and `waitAll$` wait for elements that match the selector to attach to DOM until match is made with `Promise` like behavior.
+- new: basic Declarative Shadow DOM compatibility
+- fix: possible issues with setting template and state
+
+### @readymade/dom
+
+- fix: add `force` attribute to `TemplateRepeater` to fix an issue where the repeated template would not append inside `ShadowDOM`
+- fix: `repeatr` could error when used in `ShadowDOM`
+
+### @readymade/router
+
+- feat: support for hash routing
+
+### @readymade/ui
+
+- new: configure joystick for int or float
+- new: simulate a click on `RdButton`, making it controllable by another component
+- new: `RdButtonPad` displays a grid of buttons, delegates button events
+- new: add `channel` attribute set to the name of the `BroadcastChannel` to pipe form control values to a `BroadcastChannel` for dispatching to WebSocket, WebRTC, OSC
+- new: provide readymade-ui.css so users can get CSS Variables for styling components
+- new: `RdRadioGroup` has `vertical` attribute which displays the group vertically instead of horizontally
+- fix: `RdButton` could display empty area where icon would be
+- fix: `RdButton` label was user-selectable, making touch devices hard to use
+- fix: `RdButton` was not dispatching submit event when type set to submit
+- fix: `RdSlider` positioning in iOS
+- fix: height scaled correctly for joystick
+
+### Project
+
+- new: support SSR with vite
+- new: upgrade cypress
+- new: use yarn 4
+
+### BREAKING CHANGES
+
+#### TemplateRepeater
+
+`TemplateRepeater` became unstable over time and no longer supports nested template bindings.
+
+Where you had an example like this before:
+
+```
+
+<template id="object-repeater" items="item of items">
+  <ul class="is--large">
+    <li repeat="item" foo="{{item.index}}">{{item.title}}</li>
+  </ul>
+</template>
+
+```
+
+the HTML should be updated so the HTML Template immediately wraps the content that is being looped over.
+
+```
+  <ul class="is--large">
+    <template id="object-repeater" items="item of items">
+         <li repeat="item" foo="{{item.index}}">{{item.title}}</li>
+    </template>
+  </ul>
+```
+
+#### primr
+
+`primr` now scaffolds new projects with Vite 5 instead of parcel. Run `npx primr my-app` to start a new Readymade project in a directory named `my-app`.
+
+Readymade is now built with a version of TypeScript that supports the proposed Decorator spec in ECMAScript. This project is still built with `experimentalDecorators` so you shouldn't see any breaking changes until Readymade migrates to the new spec. The project is now built with `typescript@~5.5.0`.
+
+Readymade should support older versions of `node>15`. The project is now built with `node@20` and only actively tested with this version.
+
+### Legacy
+
+This version of Readymade is named ofter the work of Marcel Duchamp, an installation named "The Bridge Stripped Bare By Her Bachelors, Even", often referred to as "The Large Glass". Considered by many one of Duchamp's finest works, art handlers dropped the installation, cracking the glass. When questioned about it, Marcel Duchamp said he liked the work even more now that it was cracked. The installation hangs in the Philadelphia Museum of Art.
+
+![Large Glass by Marcel Duchamp](https://github.com/user-attachments/assets/63bd08ff-15cd-4d2d-8864-13a35025ed7f)
+
 ## 2.1.0
 
 - NEW @readymade/ui package includes UI library built with Web Components
@@ -155,14 +237,14 @@ export class TreeState {
     'Node 4',
     'Node 5',
     'Node 6',
-    'Node 7'
+    'Node 7',
   ];
   public objectModel = {
     foo: {
       bar: {
-        baz: 'bbb'
-      }
-    }
+        baz: 'bbb',
+      },
+    },
   };
 }
 ```

@@ -41,8 +41,7 @@
     "serve": "cross-env NODE_ENV=production node dist/server/index.js",
     "test": "cypress run",
     "test:chrome": "cypress run --browser chrome",
-    "test:open": "cypress open --browser chrome",
-    "test:paint": "tach mock/paint/index.html --root=mock/paint --browser=chrome-headless --measure=fcp"
+    "test:open": "cypress open --browser chrome"
   },
   "repository": {
     "type": "git",
