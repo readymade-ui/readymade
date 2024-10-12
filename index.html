@@ -3785,13 +3785,13 @@ class Router {
     let path;
     if (this.hashMode && window.location.hash.length) {
       if (window.location.hash === "/#/") {
-        window.location.href = window.location.origin + `/#`;
+        window.location.href = window.location.href + `/#`;
       } else {
         path = window.location.hash.replace(/^#/, "");
       }
     } else {
       if (this.hashMode && !window.location.hash.length) {
-        window.location.href = window.location.origin + `/#${window.location.pathname}`;
+        window.location.href = window.location.origin + window.location.pathname + `/#/`;
       } else {
         path = window.location.pathname.replace(/\/$/, "");
       }
