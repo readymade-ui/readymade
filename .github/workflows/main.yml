@@ -1,11 +1,9 @@
-name: Test and Deploy
+name: Test
 on:
-  push:
-    branches: [main]
   pull_request:
     branches: [main]
 jobs:
-  cypress-run:
+  run:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -40,12 +38,3 @@ jobs:
 
       - name: Clean
         run: yarn clean:dist
-
-      - name: Build
-        run: yarn build:client
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: '${{ secrets.GITHUB_TOKEN }}'
-          publish_dir: ./dist/client
