@@ -42,7 +42,7 @@ npm install @readymade/ui
 
 ### Development
 
-This repo includes a development server built with Parcel.
+This repo includes a development server built with Vite.
 
 Fork and clone the repo. Install dependencies with yarn.
 
