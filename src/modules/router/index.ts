@@ -70,7 +70,9 @@ class Router {
     } else {
       if (this.hashMode && !window.location.hash.length) {
         window.location.href =
-          window.location.origin + window.location.pathname + `/#/`;
+          window.location.origin +
+          window.location.pathname.replace(/\/$/, '') +
+          `/#/`;
       } else {
         path = window.location.pathname.replace(/\/$/, '');
       }
@@ -94,7 +96,7 @@ class Router {
           .replace(/"/g, '\\"')
           .replace(/&/g, '","')
           .replace(/=/g, '":"') +
-        '"}',
+        '"}'
     );
   }
 
@@ -118,7 +120,7 @@ class Router {
   resolve(route: Route) {
     const locationParams = this.decodeQuery();
     const component: RouteComponent = document.createElement(
-      route.component as string,
+      route.component as string
     );
 
     if (Object.keys(locationParams).length) {
@@ -127,7 +129,7 @@ class Router {
       window.history.replaceState(
         {},
         '',
-        `${location.pathname}?${this.parseQuery(route)}`,
+        `${location.pathname}?${this.parseQuery(route)}`
       );
     }
 

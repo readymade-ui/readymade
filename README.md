@@ -12,6 +12,8 @@ JavaScript microlibrary for developing Web Components with Decorators that uses 
 
 Chat with us on [Dischord](https://discord.gg/xzsnBfD3fu).
 
+For more information, read the [Readymade documentation](https://readymade-ui.github.io/readymade).
+
 ### Getting Started
 
 Install Readymade:
