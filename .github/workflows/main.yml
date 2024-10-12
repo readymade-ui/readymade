@@ -38,6 +38,9 @@ jobs:
           start: yarn serve
           wait-on: http://localhost:4444
 
+      - name: Clean
+        run: yarn clean:dist
+
       - name: Build
         run: yarn build:client
 

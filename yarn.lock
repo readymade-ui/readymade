@@ -8340,7 +8340,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"micromatch@npm:^4.0.4, micromatch@npm:~4.0.8":
+"micromatch@npm:^4.0.4, micromatch@npm:^4.0.7, micromatch@npm:~4.0.8":
   version: 4.0.8
   resolution: "micromatch@npm:4.0.8"
   dependencies:
@@ -10777,6 +10777,7 @@ __metadata:
     vite-plugin-alias: "npm:^0.1.1"
     vite-plugin-html: "npm:^3.2.2"
     vite-plugin-node-polyfills: "npm:^0.22.0"
+    vite-plugin-singlefile: "npm:^2.0.2"
     vite-plugin-standard-css-modules: "npm:^0.0.11"
     vite-plugin-static-copy: "npm:^2.0.0"
     vite-plugin-tsconfig-paths: "npm:^1.4.1"
@@ -12819,6 +12820,18 @@ __metadata:
   peerDependencies:
     vite: ^2.0.0 || ^3.0.0 || ^4.0.0 || ^5.0.0
   checksum: 10c0/f8ddc452eb6fba280977d037f8a6406aa522e69590641ce72ce5bb31c3498856a9f63ab3671bc6a822dcd1ff9ba5cac02cacef4a0e170fd8500cdeeb38c81675
+  languageName: node
+  linkType: hard
+
+"vite-plugin-singlefile@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "vite-plugin-singlefile@npm:2.0.2"
+  dependencies:
+    micromatch: "npm:^4.0.7"
+  peerDependencies:
+    rollup: ^4.18.0
+    vite: ^5.3.1
+  checksum: 10c0/79b52e377e3c3502769f9c1d8590efeee6d7cf93232d83c49d8d8b50506f3dbd377311b97b2888729bfc2d3c7a033c71488ecad4688ff13a7d94fa42f51be5bf
   languageName: node
   linkType: hard
 

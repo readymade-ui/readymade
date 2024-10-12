@@ -33,15 +33,4 @@ export default {
       extend: true,
     },
   },
-  build: {
-    minify: false,
-    rollupOptions: {
-      output: {
-        name: 'window',
-        sourcemap: false,
-        extend: true,
-      },
-      plugins: [],
-    },
-  },
 };
