@@ -17,7 +17,7 @@ export default {
       transformIndexHtml(html) {
         return html.replace(
           /<script type="module" crossorigin src="(\/assets\/index-[A-Za-z0-9]+\.js)"><\/script>/g,
-          '<script src="$1"></script>',
+          '<script src="$1"></script>'
         );
       },
     },
@@ -31,6 +31,17 @@ export default {
       name: 'window',
       sourcemap: false,
       extend: true,
+    },
+  },
+  build: {
+    minify: false,
+    rollupOptions: {
+      output: {
+        name: 'window',
+        sourcemap: false,
+        extend: true,
+      },
+      plugins: [],
     },
   },
 };

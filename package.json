@@ -31,7 +31,7 @@
     "lint": "eslint src/**/*.ts --fix",
     "build": "cross-env NODE_ENV=production yarn clean:dist && yarn build:prod",
     "build:prod": "yarn clean:dist && concurrently \"yarn build:index\" \"yarn build:routes\" \"yarn build:server\"",
-    "build:gh-pages": "yarn build:dev && node pages.js",
+    "build:client": "cross-env NODE_ENV=development vite build ./src/client/ --config vite.config.js --outDir ../../dist/client",
     "build:library": "./BUILD.sh",
     "build:index": "vite build ./src/client/ --outDir ../../dist/client --config vite.config.index.js",
     "build:routes": "vite build ./src/client/ --outDir ../../dist/client --config vite.config.routes.js",
