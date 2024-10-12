@@ -52,6 +52,10 @@ yarn install
 
 To develop, run `yarn start`. This will spin up a local Parcel development server at http://localhost:4443.
 
+For working on the documentation portal use `yarn start:client`.
+
+Production is built with `yarn build`. This will generate a client and server that can be deployed.
+
 For unit and e2e tests, run `yarn build` then `yarn test`.
 
 Use `yarn test:open` to open a GUI and run tests interactively.
