@@ -3791,7 +3791,7 @@ class Router {
       }
     } else {
       if (this.hashMode && !window.location.hash.length) {
-        window.location.href = window.location.origin + window.location.pathname + `/#/`;
+        window.location.href = window.location.origin + window.location.pathname.replace(/\/$/, "") + `/#/`;
       } else {
         path = window.location.pathname.replace(/\/$/, "");
       }
