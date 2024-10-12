@@ -56,7 +56,7 @@ const template = html`
         <span><a data-link="#resources">Resources</a></span>
       </li>
       <li>
-        <span><a href="/lib">@readymade/ui</a></span>
+        <span><a href="#/lib">@readymade/ui</a></span>
       </li>
     </ul>
   </nav>
@@ -206,7 +206,7 @@ class RSideNavComponent extends CustomElement {
         document
           .querySelector('app-home')
           .shadowRoot.querySelector(
-            (ev.target as Element).getAttribute('data-link'),
+            (ev.target as Element).getAttribute('data-link')
           )
           .scrollIntoView({
             behavior: 'smooth',
@@ -266,7 +266,7 @@ class RSideNavComponent extends CustomElement {
     min: number,
     max: number,
     gmin: number,
-    gmax: number,
+    gmax: number
   ) {
     return ((v - min) / (max - min)) * (gmax - gmin) + gmin;
   }
@@ -288,11 +288,11 @@ class RSideNavComponent extends CustomElement {
 
     this.setState(
       'triPoints',
-      `7,9 7,${this.points.tri.a} ${this.points.tri.b},${this.points.tri.c}`,
+      `7,9 7,${this.points.tri.a} ${this.points.tri.b},${this.points.tri.c}`
     );
     this.setState(
       'shadowPoints',
-      `7,${this.points.tri.a} ${this.points.tri.c},${this.points.shadow.d} ${this.points.tri.b},${this.points.tri.c}`,
+      `7,${this.points.tri.a} ${this.points.tri.c},${this.points.shadow.d} ${this.points.tri.b},${this.points.tri.c}`
     );
 
     if (
