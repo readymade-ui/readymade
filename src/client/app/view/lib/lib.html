@@ -2,66 +2,137 @@
   <div class="theme__toggle"></div>
   <div>
     <h1>Readymade UI</h1>
+
+    <div>
+      <p>
+        Readymade UI is a specialized user-interface library for remote control
+        surfaces. Designed primarily for touch surfaces, Readymade UI is built
+        with web specifications, making them portable wherever browsers are
+        available. Many Readymade UI elements can participate in HTML forms,
+        however their real power is unlocked when using the elements as a remote
+        control. Every Readymade UI element can dispatch events to a global
+        event bus that can then transmit events over Touch OSC, WebSocket, or
+        WebRTC.
+      </p>
+
+      <p>
+        Examples of each Readymade UI element are below. Open DevTools console
+        to observe messages dispatched from each element.
+      </p>
+      <div>
+        <rd-radiogroup class="form__item">
+          <input type="radio" name="control" value="form" checked />
+          <label for="form">Form</label>
+          <input type="radio" name="control" value="channel" />
+          <label for="channel">Channel</label>
+        </rd-radiogroup>
+      </div>
+    </div>
+
     <form class="grid">
-    <div class="pane">
-      <h3>Button</h3>
-      <rd-button></rd-button>
-    </div>
-    <div class="pane">
-      <h3>Switch</h3>
-      <rd-switch class="form__item" disabled></rd-switch>
-    </div>
-    <div class="pane">
-      <h3>Input</h3>
-      <rd-input class="form__item" ></rd-input>
-    </div>
-    <div class="pane">
-      <h3>Text Area</h3>
-      <rd-textarea class="form__item" required></textarea>
-    </div>
-    <div class="pane">
-      <h3>Select</h3>
-      <rd-dropdown class="form__item" >
-        <select>
-          <option>Option 1</option>
-          <option>Option 2</option>
-          <option>Option With Very Long Title</option>
-        </select>
-      </rd-dropdown>
-    </div>
-    <div class="pane">
-      <h3>Radio</h3>
-      <rd-radiogroup class="form__item" >
-        <input type="radio" name="control" value="hue">
-        <label for="hue">Hue</label>
-        <input type="radio" name="control" value="saturation">
-        <label for="saturation">Saturation</label>
-        <input type="radio" name="control" value="brightness">
-        <label for="brightess">Brightness</label>
-      </rd-radiogroup>
-    </div>
-    <div class="pane">
-      <h3>Check Box</h3>
-      <rd-checkbox class="form__item" checked ></rd-checkbox>
-    </div>
-    <div class="pane">
-      <h3>Joystick</h3>
-      <rd-slider class="form__item" type="joystick" control="{{ joyControl }}"></rd-slider>
-    </div>
-    <div class="pane">
-      <h3>Slider (Vertical)</h3>
-      <rd-slider class="form__item" type="vert" control="{{ vertControl }}"></rd-slider>
-    </div>
-    <div class="pane">
-      <h3>Slider (Horizontal)</h3>
-      <rd-slider class="form__item" type="hor" control="{{ horControl }}"></rd-slider>
-    </div>
-    <div class="pane">
-      <h3>Form Submit</h3>
-      <rd-button type="submit"></rd-button>
-    </div>
-  </form>
-    
+      <div class="pane">
+        <h3>Button</h3>
+        <rd-button name="button"></rd-button>
+      </div>
+      <div class="pane">
+        <h3>Switch</h3>
+        <rd-switch name="switch" class="form__item"></rd-switch>
+      </div>
+      <div class="pane">
+        <h3>Input</h3>
+        <rd-input name="input" class="form__item"></rd-input>
+      </div>
+      <div class="pane">
+        <h3>Text Area</h3>
+        <rd-textarea name="textarea" class="form__item" required />
+      </div>
+      <div class="pane">
+        <h3>Select</h3>
+        <rd-dropdown name="dropdown" class="form__item">
+          <select>
+            <option>Option 1</option>
+            <option>Option 2</option>
+            <option>Option With Very Long Title</option>
+          </select>
+        </rd-dropdown>
+      </div>
+      <div class="pane">
+        <h3>Radio (Vertical)</h3>
+        <rd-radiogroup
+          name="radio"
+          class="form__item"
+          direction="vertical"
+          required
+        >
+          <input type="radio" name="control" value="hue" />
+          <label for="hue">Hue</label>
+          <input type="radio" name="control" value="saturation" />
+          <label for="saturation">Saturation</label>
+          <input type="radio" name="control" value="brightness" />
+          <label for="brightess">Brightness</label>
+        </rd-radiogroup>
+      </div>
+      <div class="pane">
+        <h3>Check Box</h3>
+        <rd-checkbox name="checkbox" class="form__item" checked></rd-checkbox>
+      </div>
+      <div class="pane">
+        <h3>Slider (Horizontal)</h3>
+        <rd-slider
+          class="form__item"
+          name="horizontal slider"
+          type="hor"
+          control="{{ horControl }}"
+        ></rd-slider>
+      </div>
+      <div class="pane">
+        <h3>Slider (Vertical)</h3>
+        <rd-slider
+          class="form__item"
+          name="vertical slider"
+          type="vert"
+          control="{{ vertControl }}"
+        ></rd-slider>
+      </div>
+      <div class="pane">
+        <h3>Joystick</h3>
+        <rd-slider
+          class="form__item"
+          name="joystick"
+          type="joystick"
+          control="{{ joyControl }}"
+        ></rd-slider>
+      </div>
+      <div class="pane">
+        <h3>Joystick (Square)</h3>
+        <rd-slider
+          class="form__item"
+          name="joystick square"
+          type="joystick"
+          control="{{ joySquareControl }}"
+        ></rd-slider>
+      </div>
+      <div class="pane">
+        <h3>Form Submit</h3>
+        <rd-button name="submit" type="submit"></rd-button>
+      </div>
+      <div class="pane full">
+        <h3>Button Pad (Keyboard)</h3>
+        <rd-buttonpad
+          name="keyboard"
+          tabindex="0"
+          class="form__item"
+        ></rd-buttonpad>
+      </div>
+      <div class="pane full">
+        <h3>Button Pad (Number)</h3>
+        <rd-buttonpad
+          name="numberpad"
+          tabindex="0"
+          class="form__item"
+        ></rd-buttonpad>
+      </div>
+    </form>
   </div>
   <div class="spacer"></div>
 </div>

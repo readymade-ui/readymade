@@ -1,11 +1,4 @@
-import {
-  Component,
-  Emitter,
-  EventDispatcher,
-  FormElement,
-  html,
-  css
-} from './../../../core';
+import { Component, html, css } from '@readymade/core';
 
 import { RdCheckBox } from './checkbox';
 
@@ -31,18 +24,18 @@ import { RdCheckBox } from './checkbox';
     :host input[type='checkbox']:before {
       content: '';
       width: 100%;
-      border: 2px solid var(--color-border);
-      background-color: var(--color-bg);
+      border: 2px solid var(--ready-color-border);
+      background-color: var(--ready-color-bg);
       border-radius: 1em;
-      color: var(--color-default);
+      color: var(--ready-color-default);
       padding: 1px 0px;
-      background-image: var(--icon-switch);
+      background-image: var(--ready-icon-switch);
       background-size: 22px 22px;
       background-repeat: no-repeat;
       background-position: left 2px top 50%;
     }
     :host input[type='checkbox']:checked:before {
-      background-image: var(--icon-switch);
+      background-image: var(--ready-icon-switch);
       background-size: 22px 22px;
       background-repeat: no-repeat;
       background-position: right 2px top 50%;
@@ -50,7 +43,7 @@ import { RdCheckBox } from './checkbox';
     :host input[type='checkbox']:hover:before,
     :host input[type='checkbox']:focus:before,
     :host input[type='checkbox']:active:before {
-      border: 2px solid var(--color-highlight);
+      border: 2px solid var(--ready-color-highlight);
     }
     :host input[type='checkbox']:focus,
     :host input[type='checkbox']:active {
@@ -58,20 +51,20 @@ import { RdCheckBox } from './checkbox';
       outline-offset: 0px;
     }
     :host input[type='checkbox']:active:before {
-      background-color: var(--color-selected);
-      border: 2px solid var(--color-highlight);
+      background-color: var(--ready-color-selected);
+      border: 2px solid var(--ready-color-highlight);
     }
     :host input[type='checkbox'][disabled]:before {
-      opacity: var(--opacity-disabled);
-      background: var(--color-disabled);
-      background-image: var(--icon-switch);
+      opacity: var(--ready-opacity-disabled);
+      background: var(--ready-color-disabled);
+      background-image: var(--ready-icon-switch);
       background-size: 22px 22px;
       background-repeat: no-repeat;
       background-position: left 2px top 50%;
       cursor: not-allowed;
     }
     :host input[type='checkbox'][disabled]:checked:before {
-      background-image: var(--icon-switch);
+      background-image: var(--ready-icon-switch);
       background-size: 22px 22px;
       background-repeat: no-repeat;
       background-position: right 2px top 50%;
@@ -79,7 +72,7 @@ import { RdCheckBox } from './checkbox';
     :host input[type='checkbox'][disabled]:hover:before,
     :host input[type='checkbox'][disabled]:focus:before,
     :host input[type='checkbox'][disabled]:active:before {
-      border: 2px solid var(--color-border);
+      border: 2px solid var(--ready-color-border);
       outline: none;
       box-shadow: none;
     }
@@ -87,14 +80,12 @@ import { RdCheckBox } from './checkbox';
     :host input[type='checkbox'].required:hover:before,
     :host input[type='checkbox'].required:focus:before,
     :host input[type='checkbox'].required:active:before {
-      border: 2px solid var(--color-error);
+      border: 2px solid var(--ready-color-error);
       outline: none;
       box-shadow: none;
     }
   `,
-  template: html`
-    <input type="checkbox" />
-  `
+  template: html` <input type="checkbox" /> `,
 })
 class RdSwitch extends RdCheckBox {
   constructor() {

@@ -1,12 +1,12 @@
-import { CustomElement, Component } from './../../../../modules/core';
+import { CustomElement, Component } from '@readymade/core';
 
-import style from './perf.scss';
-import template from './perf.html';
+import style from './perf.css?raw';
+import template from './perf.html?raw';
 
 @Component({
   selector: 'app-perftest',
-  style: style,
-  template: template
+  style,
+  template,
 })
 class PerformanceTestComponent extends CustomElement {
   constructor() {
@@ -14,4 +14,15 @@ class PerformanceTestComponent extends CustomElement {
   }
 }
 
-export { PerformanceTestComponent };
+const render = () => `
+  <app-perftest>
+    <template shadowrootmode="open">
+      <style>
+        ${style}
+      </style>
+      ${template}
+    </template>
+  </app-perftest>
+`;
+
+export { PerformanceTestComponent, render };

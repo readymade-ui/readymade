@@ -1,11 +1,4 @@
-import {
-  Component,
-  Emitter,
-  EventDispatcher,
-  FormElement,
-  html,
-  css
-} from './../../../core';
+import { Component, Emitter, FormElement, html, css } from '@readymade/core';
 
 @Component({
   selector: 'rd-input',
@@ -16,31 +9,31 @@ import {
       outline: none;
     }
     :host input {
-      background-color: var(--color-bg);
-      border: 2px solid var(--color-border);
+      width: 100%;
+      background-color: var(--ready-color-bg);
+      border: 2px solid var(--ready-color-border);
       border-radius: 1em;
-      color: var(--color-default);
+      color: var(--ready-color-default);
       font: var(--font-family);
-      max-width: 280px;
       min-height: 2em;
       padding: 0em 1em;
     }
     :host input:hover,
     :host input:focus,
     :host input:active {
-      border: 2px solid var(--color-highlight);
+      border: 2px solid var(--ready-color-highlight);
       outline: none;
       box-shadow: none;
     }
     :host input[disabled] {
-      opacity: var(--opacity-disabled);
-      background: var(--color-disabled);
+      opacity: var(--ready-opacity-disabled);
+      background: var(--ready-color-disabled);
       cursor: not-allowed;
     }
     :host input[disabled]:hover,
     :host input[disabled]:focus,
     :host input[disabled]:active {
-      border: 2px solid var(--color-border);
+      border: 2px solid var(--ready-color-border);
       outline: none;
       box-shadow: none;
     }
@@ -48,40 +41,58 @@ import {
     :host input.required:hover,
     :host input.required:focus,
     :host input.required:active {
-      border: 2px solid var(--color-error);
+      border: 2px solid var(--ready-color-error);
       outline: none;
       box-shadow: none;
     }
   `,
-  template: html`
-    <input type="text" />
-  `
+  template: html` <input type="text" /> `,
 })
 class RdInput extends FormElement {
+  channel: BroadcastChannel;
   constructor() {
     super();
+  }
+
+  static get observedAttributes() {
+    return ['channel'];
+  }
+
+  attributeChangedCallback(name: string, old: string, next: string) {
+    switch (name) {
+      case 'channel':
+        this.setChannel(next);
+        break;
+    }
   }
 
   @Emitter('change')
   connectedCallback() {
     this.$elem.onchange = (ev: Event) => {
-      this.emitter.emit(
-        new CustomEvent('change', {
-          bubbles: true,
-          composed: true,
-          detail: 'composed'
-        })
-      );
       if (this.onchange) {
         this.onchange(ev);
       }
     };
     this.$elem.oninput = (ev: Event) => {
+      this.emitter.emit(
+        new CustomEvent('change', {
+          bubbles: true,
+          composed: true,
+          detail: 'composed',
+        }),
+      );
       if (this.oninput) {
         this.oninput(ev);
       }
+      if (this.channel) {
+        this.channel.postMessage({
+          type: this.type,
+          name: this.name,
+          value: this.value,
+        });
+      }
     };
-    this.$elem.onblur = (ev: Event) => {
+    this.$elem.onblur = () => {
       this.onValidate();
     };
   }
@@ -143,6 +154,10 @@ class RdInput extends FormElement {
 
   get $elem(): HTMLInputElement | HTMLTextAreaElement {
     return this.shadowRoot.querySelector('input');
+  }
+
+  setChannel(name: string) {
+    this.channel = new BroadcastChannel(name);
   }
 }
 

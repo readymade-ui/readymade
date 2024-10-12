@@ -4,7 +4,7 @@ import {
   BoundNode,
   HANDLER_KEY,
   NODE_KEY,
-  setState
+  setState,
 } from '../element/src/compile';
 import { compileTemplate } from './../element';
 import { EventDispatcher, ReadymadeEventTarget } from './../event';
@@ -13,12 +13,12 @@ export type EventHandler = () => void;
 export const EMIT_KEY = '$emit';
 export const LISTEN_KEY = '$listen';
 
-interface EventMeta {
+export interface EventMeta {
   key: string;
   handler: EventHandler;
 }
 
-interface ElementMeta {
+export interface ElementMeta {
   autoDefine?: boolean;
   custom?: {
     extends: string;
@@ -31,24 +31,24 @@ interface ElementMeta {
   template?: string | any[];
 }
 
-const html = (...args) => {
+export const html = (...args) => {
   return args;
 };
 
-const css = (...args) => {
+export const css = (...args) => {
   return args;
 };
 
-// tslint:disable-next-line
-const noop = () => {};
+export const noop = () => {};
 
 // Decorators
 
-function Component(meta: ElementMeta) {
+export function Component(meta: ElementMeta) {
   if (!meta) {
     console.error('Component must include ElementMeta to compile');
     return;
   }
+
   return (target: any) => {
     compileTemplate(meta, target);
     if (meta.autoDefine === undefined) {
@@ -70,23 +70,19 @@ function Component(meta: ElementMeta) {
   };
 }
 
-function State(property?: string) {
-  return function decorator(
-    target: any,
-    key: string | symbol,
-    descriptor: PropertyDescriptor
-  ) {
+export function State() {
+  return function decorator(target: any, key: string | symbol) {
     async function bindState() {
       this.$state = this[key]();
       this.ɵɵstate = {};
       this.ɵɵstate[HANDLER_KEY] = new BoundHandler(this);
       this.ɵɵstate[NODE_KEY] = new BoundNode(
-        this.shadowRoot ? this.shadowRoot : this
+        this.shadowRoot ? this.shadowRoot : this,
       );
       this.ɵɵstate.$changes = new ReadymadeEventTarget();
       this.ɵstate = new Proxy(
         this.$state,
-        this.ɵɵstate['handler' + BIND_SUFFIX]
+        this.ɵɵstate['handler' + BIND_SUFFIX],
       );
       for (const prop in this.$state) {
         this.ɵstate[prop] = this.$state[prop];
@@ -99,12 +95,12 @@ function State(property?: string) {
   };
 }
 
-function Emitter(eventName?: string, options?: any, channelName?: string) {
-  return function decorator(
-    target: any,
-    key: string | symbol,
-    descriptor: PropertyDescriptor
-  ) {
+export function Emitter(
+  eventName?: string,
+  options?: any,
+  channelName?: string,
+) {
+  return function decorator(target: any) {
     const channel = channelName ? channelName : 'default';
     let prop: string = '';
 
@@ -135,7 +131,7 @@ function Emitter(eventName?: string, options?: any, channelName?: string) {
     }
 
     if (!target[prop]) {
-      target[prop] = function() {
+      target[prop] = function () {
         addEvent.call(this, eventName, channelName);
       };
     }
@@ -146,11 +142,11 @@ function Emitter(eventName?: string, options?: any, channelName?: string) {
   };
 }
 
-function Listen(eventName: string, channelName?: string) {
+export function Listen(eventName: string, channelName?: string) {
   return function decorator(
     target: any,
     key: string | number,
-    descriptor: PropertyDescriptor
+    descriptor: PropertyDescriptor,
   ) {
     const symbolHandler = Symbol(key);
 
@@ -166,21 +162,32 @@ function Listen(eventName: string, channelName?: string) {
       const handler = (this[symbolHandler] = (...args) => {
         descriptor.value.apply(this, args);
       });
-
       if (!this.emitter) {
         this.emitter = new EventDispatcher(this, chan ? chan : null);
       }
-
-      this.elementMeta.eventMap[prop] = {
-        key: name,
-        handler: key
-      };
-
-      this.addEventListener(name, handler);
+      if (!this.elementMeta) {
+        this.elementMeta = {
+          eventMap: {},
+        };
+      }
+      if (!this.elementMeta.eventMap) {
+        this.elementMeta.eventMap = {};
+      }
+      if (this.elementMeta) {
+        this.elementMeta.eventMap[prop] = {
+          key: name,
+          handler: key,
+        };
+      }
+      if (this.addEventListener) {
+        this.addEventListener(name, handler);
+      }
     }
 
     function removeListener() {
-      this.removeEventListener(eventName, this[symbolHandler]);
+      if (this.removeEventListener) {
+        this.removeEventListener(eventName, this[symbolHandler]);
+      }
     }
 
     function addListeners() {
@@ -206,15 +213,3 @@ function Listen(eventName: string, channelName?: string) {
     };
   };
 }
-
-export {
-  EventMeta,
-  ElementMeta,
-  Component,
-  State,
-  Emitter,
-  Listen,
-  html,
-  css,
-  noop
-};

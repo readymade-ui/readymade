@@ -1,11 +1,4 @@
-import {
-  Component,
-  CustomElement,
-  Emitter,
-  FormElement,
-  css,
-  html
-} from './../../../core';
+import { Component, Emitter, FormElement, css, html } from '@readymade/core';
 
 @Component({
   selector: 'rd-dropdown',
@@ -17,54 +10,60 @@ import {
     }
     ::slotted(select) {
       display: block;
-      background-color: var(--color-bg);
-      border: 2px solid var(--color-border);
+      width: 100%;
+      background-color: var(--ready-color-bg);
+      border: 2px solid var(--ready-color-border);
       border-radius: 1em;
-      color: var(--color-default);
+      color: var(--ready-color-default);
       font: var(--font-family);
       line-height: 1.3;
       padding: 0.3em 1.6em 0.3em 0.8em;
-      max-width: 280px;
       height: 36px;
       box-sizing: border-box;
       margin: 0;
       -moz-appearance: none;
       -webkit-appearance: none;
       appearance: none;
-      background-image: var(--icon-menu);
+      background-image: var(--ready-icon-menu);
       background-repeat: no-repeat;
-      background-position: right 0.7em top 50%, 0 0;
+      background-position:
+        right 0.7em top 50%,
+        0 0;
       background-size: 10px 9px;
     }
     ::slotted(select:hover),
     ::slotted(select:focus),
     ::slotted(select:active) {
-      border: 2px solid var(--color-highlight);
+      border: 2px solid var(--ready-color-highlight);
       outline: none;
       box-shadow: none;
     }
     *[dir='rtl'] ::slotted(select),
     :root:lang(ar) ::slotted(select),
     :root:lang(iw) ::slotted(select) {
-      background-position: left 0.7em top 50%, 0 0;
+      background-position:
+        left 0.7em top 50%,
+        0 0;
       padding: 0.3em 0.8em 0.3em 1.4em;
     }
     ::slotted(select::-ms-expand) {
       display: none;
     }
     ::slotted(select[disabled]) {
-      opacity: var(--opacity-disabled);
-      background: var(--color-disabled);
-      background-image: var(--icon-menu);
+      opacity: var(--ready-opacity-disabled);
+      background: var(--ready-color-disabled);
+      background-image: var(--ready-icon-menu);
       background-repeat: no-repeat;
-      background-position: right 0.7em top 50%, 0 0;
+      background-position:
+        right 0.7em top 50%,
+        0 0;
       background-size: 10px 9px;
       cursor: not-allowed;
     }
     ::slotted(select[disabled]:hover),
     ::slotted(select[disabled]:focus),
     ::slotted(select[disabled]:active) {
-      border: 2px solid var(--color-border);
+      border: 2px solid var(--ready-color-border);
       outline: none;
       box-shadow: none;
     }
@@ -72,35 +71,56 @@ import {
     ::slotted(select.required:hover),
     ::slotted(select.required:focus),
     ::slotted(select.required:active) {
-      border: 2px solid var(--color-error);
+      border: 2px solid var(--ready-color-error);
       outline: none;
       box-shadow: none;
     }
   `,
-  template: html`
-    <slot></slot>
-  `
+  template: html` <slot></slot> `,
 })
 class RdDropdown extends FormElement {
+  channel: BroadcastChannel;
   constructor() {
     super();
   }
 
+  static get observedAttributes() {
+    return ['channel'];
+  }
+
+  attributeChangedCallback(name: string, old: string, next: string) {
+    switch (name) {
+      case 'channel':
+        this.setChannel(next);
+        break;
+    }
+  }
+
   @Emitter('select')
   connectedCallback() {
-    this.$elem.onselect = (ev: Event) => {
+    this.$elem.oninput = (ev: Event) => {
       this.emitter.emit(
         new CustomEvent('select', {
           bubbles: true,
           composed: true,
-          detail: 'composed'
-        })
+          detail: 'composed',
+        }),
       );
       if (this.onselect) {
         this.onselect(ev);
       }
+      if (this.oninput) {
+        this.oninput(ev);
+      }
+      if (this.channel) {
+        this.channel.postMessage({
+          type: 'select',
+          name: this.name,
+          value: this.value,
+        });
+      }
     };
-    this.$elem.onblur = (ev: Event) => {
+    this.$elem.onblur = () => {
       this.onValidate();
     };
   }
@@ -157,11 +177,15 @@ class RdDropdown extends FormElement {
   }
 
   get $elem(): HTMLSelectElement {
-    return (this.shadowRoot
-      .querySelector('slot')
-      .assignedNodes() as HTMLSelectElement[]).filter(
-      elem => elem.tagName === 'SELECT'
-    )[0];
+    return (
+      this.shadowRoot
+        .querySelector('slot')
+        .assignedNodes() as HTMLSelectElement[]
+    ).filter((elem) => elem.tagName === 'SELECT')[0];
+  }
+
+  setChannel(name: string) {
+    this.channel = new BroadcastChannel(name);
   }
 }
 

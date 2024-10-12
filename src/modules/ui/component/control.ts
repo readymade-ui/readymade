@@ -7,7 +7,7 @@ export interface RdControl {
   isActive?: boolean;
   hasUserInput?: boolean;
   hasRemoteInput?: boolean;
-  currentValue?: any;
+  currentValue?: number | string | Array<number> | Array<string>;
   position?: string;
   x?: number;
   y?: number;
@@ -19,4 +19,5 @@ export interface RdControl {
   gridArea?: string;
   placeSelf?: string;
   transform?: string;
+  numberType?: 'int' | 'float';
 }

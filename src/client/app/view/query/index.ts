@@ -1,1 +1,1 @@
-export { QueryComponent } from './query';
+export { QueryComponent, render } from './query';

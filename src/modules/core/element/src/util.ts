@@ -1,8 +1,9 @@
-function getParent(el: any) {
+/* eslint-disable */
+export function getParent(el: any) {
   return el.parentNode;
 }
 
-function getChildNodes(template?: any) {
+export function getChildNodes(template?: any) {
   const elem = template ? template : this;
   if (!elem) {
     return [];
@@ -22,37 +23,26 @@ function getChildNodes(template?: any) {
   return nodes.filter((item, index) => nodes.indexOf(item) >= index);
 }
 
-function getSiblings(el: Element) {
+export function getSiblings(el: Element) {
   return Array.from(getParent(el).children).filter((elem: Element) => {
     return elem.tagName !== 'TEXT' && elem.tagName !== 'STYLE';
   });
 }
 
-function querySelector(selector: string) {
-  return document.querySelector(selector);
+export function querySelector(selector: string) {
+  return document?.querySelector(selector);
 }
 
-function querySelectorAll(selector: string) {
+export function querySelectorAll(selector: string) {
   return Array.from(document.querySelectorAll(selector));
 }
 
-function getElementIndex(el: any) {
+export function getElementIndex(el: any) {
   return getSiblings(el).indexOf(el);
 }
 
-const isNode =
+export const isNode =
   typeof process === 'object' && String(process) === '[object process]';
 
-const isBrowser =
-  typeof window !== undefined && typeof window.document !== undefined;
-
-export {
-  isBrowser,
-  isNode,
-  getParent,
-  getChildNodes,
-  getSiblings,
-  querySelector,
-  querySelectorAll,
-  getElementIndex
-};
+export const isBrowser =
+  typeof window !== undefined && typeof window?.document !== undefined;

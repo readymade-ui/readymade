@@ -1,16 +1,4 @@
-import {
-  Component,
-  css,
-  html,
-  PseudoElement,
-  State
-} from './../../../../modules/core';
-
-export class NodeState {
-  public xnode;
-}
-
-export const _nodeState = new NodeState();
+import { Component, css, html, CustomElement, State } from '@readymade/core';
 
 @Component({
   selector: 'x-node',
@@ -19,18 +7,18 @@ export const _nodeState = new NodeState();
       display: flex;
     }
   `,
-  template: html`
-    <x-atom model="{{xnode}}"></x-atom>
-  `
+  template: html` <x-atom model="{{xnode}}"></x-atom> `,
 })
-class NodeComponent extends PseudoElement {
+class NodeComponent extends CustomElement {
   constructor() {
     super();
   }
 
   @State()
   public getState() {
-    return _nodeState;
+    return {
+      xnode: '',
+    };
   }
 
   static get observedAttributes() {

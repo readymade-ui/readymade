@@ -1,4 +1,4 @@
-import { Component, FormElement, Emitter, html, css } from './../../../core';
+import { Component, FormElement, html, css } from '@readymade/core';
 
 @Component({
   selector: 'rd-radiogroup',
@@ -10,7 +10,7 @@ import { Component, FormElement, Emitter, html, css } from './../../../core';
       -moz-appearance: none;
       -webkit-appearance: none;
       appearance: none;
-      margin: 0px 4px 0px 0px;
+      margin: 0px 4px 0px 8px;
       transform: translateY(4px);
     }
     ::slotted(input[type='radio']):before {
@@ -18,18 +18,18 @@ import { Component, FormElement, Emitter, html, css } from './../../../core';
       display: block;
       width: 16px;
       height: 16px;
-      border: 2px solid var(--color-border);
+      border: 2px solid var(--ready-color-border);
       border-radius: 50%;
-      background: var(--color-bg);
+      background: var(--ready-color-bg);
     }
     ::slotted(input[type='radio']:checked):before {
       background: radial-gradient(
-        var(--color-border) 0%,
-        var(--color-border) 50%,
+        var(--ready-color-border) 0%,
+        var(--ready-color-border) 50%,
         transparent 50%,
         transparent
       );
-      border-color: var(--color-highlight);
+      border-color: var(--ready-color-highlight);
     }
     ::slotted(input[type='radio']:focus),
     ::slotted(input[type='radio']:active) {
@@ -39,21 +39,23 @@ import { Component, FormElement, Emitter, html, css } from './../../../core';
     ::slotted(input[type='radio']:hover):before,
     ::slotted(input[type='radio']:focus):before,
     ::slotted(input[type='radio']:active):before {
-      border: 2px solid var(--color-highlight);
+      border: 2px solid var(--ready-color-highlight);
     }
     ::slotted(input[type='radio'][disabled]):before {
-      opacity: var(--opacity-disabled);
-      background: var(--color-disabled);
+      opacity: var(--ready-opacity-disabled);
+      background: var(--ready-color-disabled);
       cursor: not-allowed;
     }
     ::slotted(input[type='radio'][disabled]:hover):before,
     ::slotted(input[type='radio'][disabled]:focus):before,
     ::slotted(input[type='radio'][disabled]:active):before {
-      border: 2px solid var(--color-border);
+      border: 2px solid var(--ready-color-border);
       outline: none;
       box-shadow: none;
     }
+    // this doesn't work in Safari
     ::slotted(label) {
+      margin-top: 5px;
       margin-right: 8px;
     }
     .group {
@@ -63,24 +65,79 @@ import { Component, FormElement, Emitter, html, css } from './../../../core';
       border-radius: 14px;
     }
     .group.required {
-      border: 2px solid var(--color-error);
+      border: 2px solid var(--ready-color-error);
     }
     .group.required ::slotted(input[type='radio']) {
      transform: translateX(-1px) translateY(3px);
     }
+    .group.vertical {
+      display: flex;
+      flex-direction: column;
+      padding-top: 24px;
+      padding-right: 120px;
+      padding-bottom: 0px;
+      & ::slotted(input[type='radio']) {
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        margin: 0px 0px 0px 8px;
+        transform: translateY(-8px);
+      }
+      & ::slotted(label) {
+        display: block;
+        margin-top: 0px;
+        margin-right: 0px;
+        position: relative;
+        left: 42px;
+        top: -28px;
+      }
+      &.required {
+        
+      }
+    }
   `,
-  template: html`
-    <div class="group"><slot></slot></div>
-  `
+  template: html` <div class="group"><slot></slot></div> `,
 })
 class RdRadioGroup extends FormElement {
+  direction: 'horizontal' | 'vertical';
+  channel: BroadcastChannel;
   constructor() {
     super();
   }
+
+  static get observedAttributes() {
+    return ['direction', 'channel'];
+  }
+
+  attributeChangedCallback(name: string, old: string, next: string) {
+    switch (name) {
+      case 'direction':
+        this.direction = next as 'horizontal' | 'vertical';
+        if (this.direction === 'vertical') {
+          this.shadowRoot?.querySelector('.group').classList.add('vertical');
+        } else {
+          this.shadowRoot?.querySelector('.group').classList.remove('vertical');
+        }
+        break;
+      case 'channel':
+        this.setChannel(next);
+        break;
+    }
+  }
+
   connectedCallback() {
     this.$elem.forEach((elem: HTMLInputElement) => {
-      elem.onblur = (ev: Event) => {
+      elem.onblur = () => {
         this.onValidate();
+      };
+      elem.onclick = () => {
+        if (this.channel) {
+          this.channel.postMessage({
+            type: 'radio',
+            name: this.name,
+            value: this.value,
+          });
+        }
       };
     });
   }
@@ -111,14 +168,16 @@ class RdRadioGroup extends FormElement {
     }
   }
 
-  get value(): any {
+  get value(): string | undefined {
     const checked = this.$elem.filter(
-      (elem: HTMLInputElement) => elem.checked
+      (elem: HTMLInputElement) => elem.checked,
     )[0];
     if (checked) {
-      return (this.$elem.filter(
-        (elem: HTMLInputElement) => elem.checked
-      )[0] as HTMLInputElement).value;
+      return (
+        this.$elem.filter(
+          (elem: HTMLInputElement) => elem.checked,
+        )[0] as HTMLInputElement
+      ).value;
     } else {
       return undefined;
     }
@@ -134,17 +193,31 @@ class RdRadioGroup extends FormElement {
     });
   }
 
+  get form() {
+    return this.$internals.form;
+  }
+
+  get name() {
+    return this.getAttribute('name');
+  }
+
   get $group(): Element {
     return this.shadowRoot.querySelector('.group');
   }
 
   get $elem(): HTMLInputElement[] {
-    return (this.shadowRoot
-      .querySelector('slot')
-      .assignedNodes() as HTMLInputElement[]).filter(
+    return (
+      this.shadowRoot
+        .querySelector('slot')
+        .assignedNodes() as HTMLInputElement[]
+    ).filter(
       (elem: HTMLInputElement) =>
-        elem.tagName === 'INPUT' && elem.type === 'radio'
+        elem.tagName === 'INPUT' && elem.type === 'radio',
     );
+  }
+
+  setChannel(name: string) {
+    this.channel = new BroadcastChannel(name);
   }
 }
 

@@ -1,10 +1,4 @@
-import {
-  Component,
-  css,
-  CustomElement,
-  html,
-  Listen
-} from './../../../modules/core';
+import { Component, css, CustomElement, html, Listen } from '@readymade/core';
 
 @Component({
   selector: 'my-item',
@@ -23,17 +17,19 @@ import {
     <p>
       <span><slot name="msg">item</slot></span>
     </p>
-  `
+  `,
 })
 class MyItemComponent extends CustomElement {
   constructor() {
     super();
   }
   @Listen('bang', 'default')
-  public onBang(event) {
-    this.getAttribute('state') === '--selected'
-      ? this.setAttribute('state', '')
-      : this.setAttribute('state', '--selected');
+  public onBang() {
+    if (this.getAttribute('state') === '--selected') {
+      this.setAttribute('state', '');
+    } else {
+      this.setAttribute('state', '--selected');
+    }
   }
 }
 

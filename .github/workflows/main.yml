@@ -1,13 +1,38 @@
-name: End-to-end tests
-on: [push]
+name: Test
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
 jobs:
   cypress-run:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v4.2.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install Yarn
+        run: corepack prepare yarn@4.5.0 --activate
+
+      - name: Install Dependencies
+        run: yarn install --immutable
+
+      - name: Run Lint
+        run: yarn lint
+
+      - name: Check Format
+        run: yarn pretty:check
+
       - name: Cypress
-        uses: cypress-io/github-action@v2
+        uses: cypress-io/github-action@v6.7.6
         with:
           build: yarn build
           start: yarn serve

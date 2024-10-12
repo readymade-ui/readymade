@@ -1,13 +1,5 @@
-import {
-  Component,
-  css,
-  Emitter,
-  html,
-  Listen,
-  State
-} from './../../../modules/core';
-
-import { ButtonComponent } from './../../../modules/dom';
+import { Component, css, Emitter, html, Listen, State } from '@readymade/core';
+import { ButtonComponent } from '@readymade/dom';
 
 class ButtonState {
   public model: string = 'Click';
@@ -24,9 +16,7 @@ class ButtonState {
       font-weight: 400;
     }
   `,
-  template: html`
-    <span>{{model}}</span>
-  `
+  template: html` <span>{{model}}</span> `,
 })
 class MyButtonComponent extends ButtonComponent {
   constructor() {
@@ -35,12 +25,14 @@ class MyButtonComponent extends ButtonComponent {
 
   @State()
   public getState() {
-    return new ButtonState();
+    return {
+      model: 'Click',
+    };
   }
 
   @Emitter('bang', { bubbles: true, composed: true })
   @Listen('click')
-  public onClick(event: MouseEvent) {
+  public onClick() {
     this.emitter.broadcast('bang');
   }
   @Listen('keyup')

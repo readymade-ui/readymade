@@ -1,4 +1,4 @@
-import { Component, CustomElement, css, html } from './../../../modules/core';
+import { Component, CustomElement, css, html } from '@readymade/core';
 
 @Component({
   selector: 'r-meter',
@@ -37,7 +37,7 @@ import { Component, CustomElement, css, html } from './../../../modules/core';
     <div class="meter">
       <div class="progress"></div>
     </div>
-  `
+  `,
 })
 class RMeterComponent extends CustomElement {
   min: number;
@@ -80,25 +80,25 @@ class RMeterComponent extends CustomElement {
 
   setValue() {
     if (this.canSet()) {
-      ((<unknown>(
-        this.shadowRoot.querySelector('.progress')
-      )) as HTMLElement).style.width = `${(this.value / this.max) * 100}%`;
-      ((<unknown>(
-        this.shadowRoot.querySelector('.value')
-      )) as HTMLElement).innerText = `${this.value}Kb`;
+      (
+        (<unknown>this.shadowRoot.querySelector('.progress')) as HTMLElement
+      ).style.width = `${(this.value / this.max) * 100}%`;
+      (
+        (<unknown>this.shadowRoot.querySelector('.value')) as HTMLElement
+      ).innerText = `${this.value}Kb`;
     }
   }
 
   setLabel(val: string) {
-    ((<unknown>(
-      this.shadowRoot.querySelector('.label')
-    )) as HTMLElement).innerText = val;
+    (
+      (<unknown>this.shadowRoot.querySelector('.label')) as HTMLElement
+    ).innerText = val;
   }
 
   setColor(val: string) {
-    ((<unknown>(
-      this.shadowRoot.querySelector('.progress')
-    )) as HTMLElement).style.background = val;
+    (
+      (<unknown>this.shadowRoot.querySelector('.progress')) as HTMLElement
+    ).style.background = val;
   }
 }
 

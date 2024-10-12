@@ -1,4 +1,4 @@
-import { Component, css, CustomElement, html } from './../../../modules/core';
+import { Component, css, CustomElement, html } from '@readymade/core';
 
 const env = process.env.NODE_ENV || 'development';
 
@@ -16,36 +16,36 @@ const env = process.env.NODE_ENV || 'development';
       font-weight: 300;
     }
   `,
-  template: html`
-    <slot></slot>
-  `
+  template: html` <slot></slot> `,
 })
 class RStatsComponent extends CustomElement {
   constructor() {
     super();
     this.shadowRoot
-      .querySelector('slot')
-      .addEventListener('slotchange', event => this.onSlotChange(event));
+      ?.querySelector('slot')
+      ?.addEventListener('slotchange', () => this.onSlotChange());
   }
-  public onSlotChange(ev: any) {
+  public onSlotChange() {
     this.animateIn();
   }
   public animateIn() {
-    const ul = this.shadowRoot.querySelector('slot').assignedNodes()[
+    const ul = this.shadowRoot?.querySelector('slot')?.assignedNodes()[
       env === 'production' ? 0 : 1
     ];
-    Array.from((ul as Element).children).forEach((li: Element, index) => {
-      li.animate(
-        [
-          { opacity: '0', color: '#000' },
-          { opacity: '0', offset: index * 0.1 },
-          { opacity: '1', color: '#fff' }
-        ],
-        {
-          duration: 2000
-        }
-      );
-    });
+    if (ul && (ul as Element).children) {
+      Array.from((ul as Element).children).forEach((li: Element, index) => {
+        li.animate(
+          [
+            { opacity: '0', color: '#000' },
+            { opacity: '0', offset: index * 0.1 },
+            { opacity: '1', color: '#fff' },
+          ],
+          {
+            duration: 2000,
+          },
+        );
+      });
+    }
   }
 }
 

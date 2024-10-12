@@ -4,8 +4,8 @@ import {
   html,
   State,
   Emitter,
-  Listen
-} from './../../../modules/core';
+  Listen,
+} from '@readymade/core';
 
 class HelloState {
   public model: string = 'Hello World';
@@ -13,9 +13,7 @@ class HelloState {
 
 @Component({
   selector: 'hello-state',
-  template: html`
-    <span>{{model}}</span>
-  `
+  template: html` <span>{{model}}</span> `,
 })
 class HelloStateComponent extends CustomElement {
   constructor() {
@@ -28,7 +26,7 @@ class HelloStateComponent extends CustomElement {
   }
   @Emitter('bang')
   @Listen('click')
-  public onClick(event) {
+  public onClick() {
     this.emitter.broadcast('bang');
   }
   @Listen('keyup')

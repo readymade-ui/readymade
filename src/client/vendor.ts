@@ -1,7 +1,13 @@
-export * from 'prismjs';
-export * from 'prismjs/plugins/toolbar/prism-toolbar';
-export * from 'prismjs/plugins/normalize-whitespace/prism-normalize-whitespace';
-export * from 'prismjs/components/prism-css';
-export * from 'prismjs/components/prism-javascript';
-export * from 'prismjs/components/prism-markup';
-export * from 'prismjs/components/prism-typescript';
+import 'prismjs';
+import 'prismjs/plugins/toolbar/prism-toolbar';
+import 'prismjs/plugins/normalize-whitespace/prism-normalize-whitespace';
+import 'prismjs/components/prism-css';
+import 'prismjs/components/prism-javascript';
+import 'prismjs/components/prism-markup';
+import 'prismjs/components/prism-typescript';
+
+// ui library
+import '@readymade/core';
+import '@readymade/dom';
+import '@readymade/router';
+import '@readymade/ui';

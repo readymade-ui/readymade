@@ -1,0 +1,16 @@
+@import url('./readymade-ui.css');
+
+body {
+  color: var(--ready-color-default);
+  background: var(--ready-color-body-bg);
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  padding: 0px;
+  margin: 0px;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  -webkit-font-smoothing: auto;
+  -moz-osx-font-smoothing: grayscale;
+}

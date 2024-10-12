@@ -1,6 +1,5 @@
-import { Component, css, Listen } from './../../../modules/core';
-
-import { InputComponent } from './../../../modules/dom';
+import { Component, css, Listen } from '@readymade/core';
+import { InputComponent } from '@readymade/dom';
 
 @Component({
   selector: 'my-input',
@@ -11,14 +10,14 @@ import { InputComponent } from './../../../modules/dom';
       border: 0px none;
       color: white;
     }
-  `
+  `,
 })
 class MyInputComponent extends InputComponent {
   constructor() {
     super();
   }
   @Listen('focus')
-  public onFocus(event) {
+  public onFocus() {
     this.value = 'input';
   }
 }

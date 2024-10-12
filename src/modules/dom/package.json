@@ -1,12 +1,21 @@
 {
   "name": "@readymade/dom",
-  "version": "2.1.1",
+  "version": "3.0.0",
   "description": "JavaScript microlibrary for developing Web Components with TypeScript and Decorators",
-  "umd": "./bundles/dom.js",
-  "main": "./fesm2015/dom.js",
-  "es2015": "./fesm2015/dom.js",
-  "fesm2015": "./fesm2015/dom.js",
-  "types": "./types/index.d.ts",
+  "type": "module",
+  "module": "./fesm2022/index.js",
+  "typings": "./typings/index.d.ts",
+  "exports": {
+    "./package.json": {
+      "default": "./package.json"
+    },
+    ".": {
+      "types": "./typings/index.d.ts",
+      "esm": "./esm2022/index.js",
+      "esm2022": "./esm2022/index.js",
+      "default": "./fesm2022/index.js"
+    }
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -15,8 +24,8 @@
     "url": "git+https://github.com/readymade-ui/readymade.git"
   },
   "keywords": [
-    "customelements",
-    "webcomponents",
+    "custom elements",
+    "web components",
     "typescript",
     "decorators",
     "javascript"

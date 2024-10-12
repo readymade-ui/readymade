@@ -5,8 +5,8 @@ import {
   getElementIndex,
   getSiblings,
   html,
-  Listen
-} from './../../../modules/core';
+  Listen,
+} from '@readymade/core';
 
 @Component({
   selector: 'my-list',
@@ -21,9 +21,7 @@ import {
       border-radius: 8px;
     }
   `,
-  template: html`
-    <slot name="menu"></slot>
-  `
+  template: html` <slot name="menu"></slot> `,
 })
 class MyListComponent extends CustomElement {
   public currentIndex: number;
@@ -43,7 +41,7 @@ class MyListComponent extends CustomElement {
     this.setAttribute('tabindex', '0');
   }
   @Listen('focus')
-  public onFocus(ev: FocusEvent) {
+  public onFocus() {
     for (const li of this.children[0].children) {
       if (li === this.children[0].children[this.currentIndex]) {
         this.activateElement(li);
@@ -62,7 +60,7 @@ class MyListComponent extends CustomElement {
   @Listen('keydown')
   public onKeydown(ev: KeyboardEvent) {
     const currentElement = this.querySelector(
-      '[tabindex]:not([tabindex="-1"])'
+      '[tabindex]:not([tabindex="-1"])',
     );
     const siblings = getSiblings(currentElement);
     this.currentIndex = getElementIndex(currentElement);
@@ -100,7 +98,7 @@ class MyListComponent extends CustomElement {
       });
     }
   }
-  public onSubmit(event) {
+  public onSubmit() {
     // console.log(this, event);
   }
 }

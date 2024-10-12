@@ -1,1 +1,2 @@
-export { LibraryComponent } from './lib';
+export * from '@readymade/ui';
+export { LibraryComponent, render } from './lib';

@@ -1,6 +1,30 @@
 import { Router, routing } from './app/routing';
 
-window['clientRouter'] = new Router('#root', routing);
+if (import.meta.env.DEV) {
+  window['clientRouter'] = new Router('#root', routing, true);
+}
 
-export { TemplateRepeater, Repeater } from './../modules/dom/repeatr';
-export * from './app';
+export { Router, routing } from './app/routing';
+export { TemplateRepeater, Repeater } from '@readymade/dom';
+export {
+  MyButtonComponent,
+  RCodeComponent,
+  MyCounter,
+  RHeadlineComponent,
+  MyInputComponent,
+  MyItemComponent,
+  MyListComponent,
+  RLogoComponent,
+  RMainNavComponent,
+  RMeterComponent,
+  RSideNavComponent,
+  RStatsComponent,
+  AtomComponent,
+  NodeComponent,
+  TreeComponent,
+  HomeComponent,
+  PerformanceTestComponent,
+  QueryComponent,
+  TestBedComponent,
+  LibraryComponent,
+} from './app';

@@ -1,10 +1,4 @@
-import {
-  Component,
-  css,
-  CustomElement,
-  html,
-  State
-} from './../../../modules/core';
+import { Component, css, CustomElement, html, State } from '@readymade/core';
 
 export class GridState {
   public grid: string[] = [];
@@ -152,7 +146,7 @@ export const _gridState = new GridState();
     <div no-attr>{{grid[125]}}</div>
     <div no-attr>{{grid[126]}}</div>
     <div no-attr>{{grid[127]}}</div>
-  `
+  `,
 })
 class RGridComponent extends CustomElement {
   constructor() {

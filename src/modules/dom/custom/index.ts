@@ -21,6 +21,7 @@ export class AllCollectionComponent extends HTMLAllCollection {
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+
   public setState?(property: string, model: any): void;
   public onUpdate?(): void;
   public onDestroy?(): void;
@@ -46,6 +47,7 @@ export class AnchorComponent extends HTMLAnchorElement {
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+
   public setState?(property: string, model: any): void;
   public onUpdate?(): void;
   public onDestroy?(): void;
@@ -70,6 +72,7 @@ export class AreaComponent extends HTMLAreaElement {
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+
   public setState?(property: string, model: any): void;
   public onUpdate?(): void;
   public onDestroy?(): void;
@@ -94,6 +97,7 @@ export class AudioComponent extends HTMLAudioElement {
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+
   public setState?(property: string, model: any): void;
   public onUpdate?(): void;
   public onDestroy?(): void;
@@ -118,6 +122,7 @@ export class BRComponent extends HTMLBRElement {
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+
   public setState?(property: string, model: any): void;
   public onUpdate?(): void;
   public onDestroy?(): void;
@@ -128,8 +133,8 @@ export class BodyComponent extends HTMLBodyElement {
   constructor() {
     super();
     attachShadow(this, {
-      mode: this.elementMeta.mode || 'open',
-      delegatesFocus: this.elementMeta.delegatesFocus || false
+      mode: this.elementMeta?.mode || 'open',
+      delegatesFocus: this.elementMeta?.delegatesFocus || false,
     });
     if (this.bindEmitters) {
       this.bindEmitters();
@@ -145,6 +150,7 @@ export class BodyComponent extends HTMLBodyElement {
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+
   public setState?(property: string, model: any): void;
   public onUpdate?(): void;
   public onDestroy?(): void;
@@ -170,6 +176,7 @@ export class ButtonComponent extends HTMLButtonElement {
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+
   public setState?(property: string, model: any): void;
   public onUpdate?(): void;
   public onDestroy?(): void;
@@ -194,6 +201,7 @@ export class CanvasComponent extends HTMLCanvasElement {
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+
   public setState?(property: string, model: any): void;
   public onUpdate?(): void;
   public onDestroy?(): void;
@@ -242,6 +250,7 @@ export class DListComponent extends HTMLDListElement {
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+
   public setState?(property: string, model: any): void;
   public onUpdate?(): void;
   public onDestroy?(): void;
@@ -289,6 +298,7 @@ export class DetailsComponent extends HTMLDetailsElement {
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+
   public setState?(property: string, model: any): void;
   public onUpdate?(): void;
   public onDestroy?(): void;
@@ -300,8 +310,8 @@ export class DivComponent extends HTMLDivElement {
   constructor() {
     super();
     attachShadow(this, {
-      mode: this.elementMeta.mode || 'open',
-      delegatesFocus: this.elementMeta.delegatesFocus || false
+      mode: this.elementMeta?.mode || 'open',
+      delegatesFocus: this.elementMeta?.delegatesFocus || false,
     });
     if (this.bindEmitters) {
       this.bindEmitters();
@@ -317,6 +327,7 @@ export class DivComponent extends HTMLDivElement {
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+
   public setState?(property: string, model: any): void;
   public onUpdate?(): void;
   public onDestroy?(): void;
@@ -342,6 +353,7 @@ export class EmbedComponent extends HTMLEmbedElement {
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+
   public setState?(property: string, model: any): void;
   public onUpdate?(): void;
   public onDestroy?(): void;
@@ -366,6 +378,7 @@ export class FieldSetComponent extends HTMLFieldSetElement {
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+
   public setState?(property: string, model: any): void;
   public onUpdate?(): void;
   public onDestroy?(): void;
@@ -412,6 +425,7 @@ export class FormComponent extends HTMLFormElement {
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+
   public setState?(property: string, model: any): void;
   public onUpdate?(): void;
   public onDestroy?(): void;
@@ -436,6 +450,7 @@ export class HRComponent extends HTMLHRElement {
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+
   public setState?(property: string, model: any): void;
   public onUpdate?(): void;
   public onDestroy?(): void;
@@ -459,8 +474,8 @@ export class HeadingComponent extends HTMLHeadingElement {
   constructor() {
     super();
     attachShadow(this, {
-      mode: this.elementMeta.mode || 'open',
-      delegatesFocus: this.elementMeta.delegatesFocus || false
+      mode: this.elementMeta?.mode || 'open',
+      delegatesFocus: this.elementMeta?.delegatesFocus || false,
     });
     if (this.bindEmitters) {
       this.bindEmitters();
@@ -476,6 +491,7 @@ export class HeadingComponent extends HTMLHeadingElement {
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+
   public setState?(property: string, model: any): void;
   public onUpdate?(): void;
   public onDestroy?(): void;
@@ -490,6 +506,7 @@ export class HtmlComponent extends HTMLHtmlElement {
     }
   }
   public onInit?(): void;
+
   public setState?(property: string, model: any): void;
   public onUpdate?(): void;
   public onDestroy?(): void;
@@ -514,6 +531,7 @@ export class IFrameComponent extends HTMLIFrameElement {
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+
   public setState?(property: string, model: any): void;
   public onUpdate?(): void;
   public onDestroy?(): void;
@@ -538,6 +556,7 @@ export class ImageComponent extends HTMLImageElement {
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+
   public setState?(property: string, model: any): void;
   public onUpdate?(): void;
   public onDestroy?(): void;
@@ -562,6 +581,7 @@ export class InputComponent extends HTMLInputElement {
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+
   public setState?(property: string, model: any): void;
   public onUpdate?(): void;
   public onDestroy?(): void;
@@ -587,6 +607,7 @@ export class LIComponent extends HTMLLIElement {
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+
   public setState?(property: string, model: any): void;
   public onUpdate?(): void;
   public onDestroy?(): void;
@@ -612,6 +633,7 @@ export class LabelComponent extends HTMLLabelElement {
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+
   public setState?(property: string, model: any): void;
   public onUpdate?(): void;
   public onDestroy?(): void;
@@ -636,6 +658,7 @@ export class LegendComponent extends HTMLLegendElement {
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+
   public setState?(property: string, model: any): void;
   public onUpdate?(): void;
   public onDestroy?(): void;
@@ -660,6 +683,7 @@ export class LinkComponent extends HTMLLinkElement {
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+
   public setState?(property: string, model: any): void;
   public onUpdate?(): void;
   public onDestroy?(): void;
@@ -685,6 +709,7 @@ export class MapComponent extends HTMLMapElement {
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+
   public setState?(property: string, model: any): void;
   public onUpdate?(): void;
   public onDestroy?(): void;
@@ -776,6 +801,7 @@ export class MeterComponent extends HTMLMeterElement {
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+
   public setState?(property: string, model: any): void;
   public onUpdate?(): void;
   public onDestroy?(): void;
@@ -823,6 +849,7 @@ export class OListComponent extends HTMLOListElement {
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+
   public setState?(property: string, model: any): void;
   public onUpdate?(): void;
   public onDestroy?(): void;
@@ -847,6 +874,7 @@ export class ObjectComponent extends HTMLObjectElement {
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+
   public setState?(property: string, model: any): void;
   public onUpdate?(): void;
   public onDestroy?(): void;
@@ -937,6 +965,7 @@ export class OutputComponent extends HTMLOutputElement {
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+
   public setState?(property: string, model: any): void;
   public onUpdate?(): void;
   public onDestroy?(): void;
@@ -947,8 +976,8 @@ export class ParagraphComponent extends HTMLParagraphElement {
   constructor() {
     super();
     attachShadow(this, {
-      mode: this.elementMeta.mode || 'open',
-      delegatesFocus: this.elementMeta.delegatesFocus || false
+      mode: this.elementMeta?.mode || 'open',
+      delegatesFocus: this.elementMeta?.delegatesFocus || false,
     });
     if (this.bindEmitters) {
       this.bindEmitters();
@@ -964,6 +993,7 @@ export class ParagraphComponent extends HTMLParagraphElement {
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+
   public setState?(property: string, model: any): void;
   public onUpdate?(): void;
   public onDestroy?(): void;
@@ -1033,6 +1063,7 @@ export class PreComponent extends HTMLPreElement {
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+
   public setState?(property: string, model: any): void;
   public onUpdate?(): void;
   public onDestroy?(): void;
@@ -1177,8 +1208,8 @@ export class SpanComponent extends HTMLSpanElement {
   constructor() {
     super();
     attachShadow(this, {
-      mode: this.elementMeta.mode || 'open',
-      delegatesFocus: this.elementMeta.delegatesFocus || false
+      mode: this.elementMeta?.mode || 'open',
+      delegatesFocus: this.elementMeta?.delegatesFocus || false,
     });
     if (this.bindEmitters) {
       this.bindEmitters();
@@ -1194,6 +1225,7 @@ export class SpanComponent extends HTMLSpanElement {
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+
   public setState?(property: string, model: any): void;
   public onUpdate?(): void;
   public onDestroy?(): void;
@@ -1307,6 +1339,7 @@ export class TableComponent extends HTMLTableElement {
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+
   public setState?(property: string, model: any): void;
   public onUpdate?(): void;
   public onDestroy?(): void;
@@ -1333,6 +1366,7 @@ export class TableRowComponent extends HTMLTableRowElement {
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+
   public setState?(property: string, model: any): void;
   public onUpdate?(): void;
   public onDestroy?(): void;
@@ -1358,6 +1392,7 @@ export class TableSectionComponent extends HTMLTableSectionElement {
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+
   public setState?(property: string, model: any): void;
   public onUpdate?(): void;
   public onDestroy?(): void;
@@ -1405,6 +1440,7 @@ export class TextAreaComponent extends HTMLTextAreaElement {
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+
   public setState?(property: string, model: any): void;
   public onUpdate?(): void;
   public onDestroy?(): void;
@@ -1430,6 +1466,7 @@ export class TimeComponent extends HTMLTimeElement {
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+
   public setState?(property: string, model: any): void;
   public onUpdate?(): void;
   public onDestroy?(): void;
@@ -1499,6 +1536,7 @@ export class UListComponent extends HTMLUListElement {
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+
   public setState?(property: string, model: any): void;
   public onUpdate?(): void;
   public onDestroy?(): void;
@@ -1546,6 +1584,7 @@ export class VideoComponent extends HTMLVideoElement {
   public bindEmitters?(): void;
   public bindListeners?(): void;
   public bindState?(): void;
+
   public setState?(property: string, model: any): void;
   public onUpdate?(): void;
   public onDestroy?(): void;

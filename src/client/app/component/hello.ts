@@ -1,9 +1,7 @@
-import { Component, CustomElement } from './../../../modules/core';
+import { Component, CustomElement } from '@readymade/core';
 
 @Component({
   selector: 'hello-world',
-  template: `
-    <span>Hello World</span>
-  `,
+  template: ` <span>Hello World</span> `,
 })
 export class HelloComponent extends CustomElement {}

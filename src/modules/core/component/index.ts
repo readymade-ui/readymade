@@ -58,7 +58,7 @@ interface IElementInternals extends ElementInternals {
    */
   setFormValue(
     value: File | string | FormData | null,
-    state?: File | string | FormData | null
+    state?: File | string | FormData | null,
   ): void;
   /**
    * Marks internals's target element as suffering from the constraints indicated by the flags argument, and sets the element's validation message to message. If anchor is specified, the user agent might use it to indicate problems with the constraints of internals's target element when the form owner is validated interactively or reportValidity() is called.
@@ -66,11 +66,11 @@ interface IElementInternals extends ElementInternals {
   setValidity(
     flags: ValidityStateFlags,
     message?: string,
-    anchor?: HTMLElement
+    anchor?: HTMLElement,
   ): void;
 }
 
-export declare var IElementInternals: {
+export declare const IElementInternals: {
   prototype: IElementInternals;
   new (): IElementInternals;
 };
@@ -84,7 +84,7 @@ export interface StateChange {
 
 export type OnStateChange = (
   change: StateChange,
-  cb: (change: StateChange) => void
+  cb: (change: StateChange) => void,
 ) => void;
 
 export type SetState = (property: string, model: any) => void;
@@ -128,6 +128,62 @@ export class StructuralElement extends HTMLElement {
   public bindState?(): void;
   public onUpdate?(): void;
   public onDestroy?(): void;
+  public get$(selector: string) {
+    return this.shadowRoot
+      ? this.shadowRoot.querySelector(selector)
+      : this.querySelector(selector);
+  }
+  public getAll$(selector: string) {
+    return this.shadowRoot
+      ? this.shadowRoot.querySelectorAll(selector)
+      : this.querySelectorAll(selector);
+  }
+  public wait$(selector: string, timeout = 60000): Promise<any> {
+    return new Promise((resolve, reject) => {
+      const startTime = Date.now();
+      const interval = 100; // Check every 100 milliseconds
+      const checkForElement = () => {
+        const elapsedTime = Date.now() - startTime;
+        const root = this.shadowRoot ? this.shadowRoot : this;
+        const element = root.querySelector(selector);
+        if (element) {
+          resolve(element);
+        } else if (elapsedTime >= timeout) {
+          reject(
+            new Error(
+              `Element with selector "${selector}" did not appear within ${timeout} milliseconds`,
+            ),
+          );
+        } else {
+          setTimeout(checkForElement, interval);
+        }
+      };
+      checkForElement();
+    });
+  }
+  public waitAll$(selector: string, timeout = 60000): Promise<any> {
+    return new Promise((resolve, reject) => {
+      const startTime = Date.now();
+      const interval = 100; // Check every 100 milliseconds
+      const checkForElement = () => {
+        const elapsedTime = Date.now() - startTime;
+        const root = this.shadowRoot ? this.shadowRoot : this;
+        const element = root.querySelectorAll(selector);
+        if (element && element.length) {
+          resolve(element);
+        } else if (elapsedTime >= timeout) {
+          reject(
+            new Error(
+              `Elements with selector "${selector}" did not appear within ${timeout} milliseconds`,
+            ),
+          );
+        } else {
+          setTimeout(checkForElement, interval);
+        }
+      };
+      checkForElement();
+    });
+  }
 }
 
 export class PseudoElement extends HTMLElement {
@@ -154,16 +210,73 @@ export class PseudoElement extends HTMLElement {
   public setState?(property: string, model: any): void;
   public onUpdate?(): void;
   public onDestroy?(): void;
+  public get$(selector: string) {
+    return this.shadowRoot
+      ? this.shadowRoot.querySelector(selector)
+      : this.querySelector(selector);
+  }
+  public getAll$(selector: string) {
+    return this.shadowRoot
+      ? this.shadowRoot.querySelectorAll(selector)
+      : this.querySelectorAll(selector);
+  }
+  public wait$(selector: string, timeout = 60000): Promise<any> {
+    return new Promise((resolve, reject) => {
+      const startTime = Date.now();
+      const interval = 100; // Check every 100 milliseconds
+      const checkForElement = () => {
+        const elapsedTime = Date.now() - startTime;
+        const root = this.shadowRoot ? this.shadowRoot : this;
+        const element = root.querySelector(selector);
+        if (element) {
+          resolve(element);
+        } else if (elapsedTime >= timeout) {
+          reject(
+            new Error(
+              `Element with selector "${selector}" did not appear within ${timeout} milliseconds`,
+            ),
+          );
+        } else {
+          setTimeout(checkForElement, interval);
+        }
+      };
+      checkForElement();
+    });
+  }
+  public waitAll$(selector: string, timeout = 60000): Promise<any> {
+    return new Promise((resolve, reject) => {
+      const startTime = Date.now();
+      const interval = 100; // Check every 100 milliseconds
+      const checkForElement = () => {
+        const elapsedTime = Date.now() - startTime;
+        const root = this.shadowRoot ? this.shadowRoot : this;
+        const element = root.querySelectorAll(selector);
+        if (element && element.length) {
+          resolve(element);
+        } else if (elapsedTime >= timeout) {
+          reject(
+            new Error(
+              `Elements with selector "${selector}" did not appear within ${timeout} milliseconds`,
+            ),
+          );
+        } else {
+          setTimeout(checkForElement, interval);
+        }
+      };
+      checkForElement();
+    });
+  }
 }
 
 export class CustomElement extends HTMLElement {
   public emitter: EventDispatcher;
   public elementMeta: ElementMeta;
+  public shadowRoot: ShadowRoot;
   constructor() {
     super();
     attachShadow(this, {
-      mode: this.elementMeta.mode || 'open',
-      delegatesFocus: this.elementMeta.delegatesFocus || false
+      mode: this.elementMeta?.mode || 'open',
+      delegatesFocus: this.elementMeta?.delegatesFocus || false,
     });
     if (this.bindEmitters) {
       this.bindEmitters();
@@ -182,11 +295,66 @@ export class CustomElement extends HTMLElement {
   public setState?(property: string, model: any): void;
   public onUpdate?(): void;
   public onDestroy?(): void;
+  public get$(selector: string) {
+    return this.shadowRoot
+      ? this.shadowRoot.querySelector(selector)
+      : this.querySelector(selector);
+  }
+  public getAll$(selector: string) {
+    return this.shadowRoot
+      ? this.shadowRoot.querySelectorAll(selector)
+      : this.querySelectorAll(selector);
+  }
+  public wait$(selector: string, timeout = 60000): Promise<any> {
+    return new Promise((resolve, reject) => {
+      const startTime = Date.now();
+      const interval = 100; // Check every 100 milliseconds
+      const checkForElement = () => {
+        const elapsedTime = Date.now() - startTime;
+        const root = this.shadowRoot ? this.shadowRoot : this;
+        const element = root.querySelector(selector);
+        if (element) {
+          resolve(element);
+        } else if (elapsedTime >= timeout) {
+          reject(
+            new Error(
+              `Element with selector "${selector}" did not appear within ${timeout} milliseconds`,
+            ),
+          );
+        } else {
+          setTimeout(checkForElement, interval);
+        }
+      };
+      checkForElement();
+    });
+  }
+  public waitAll$(selector: string, timeout = 60000): Promise<any> {
+    return new Promise((resolve, reject) => {
+      const startTime = Date.now();
+      const interval = 100; // Check every 100 milliseconds
+      const checkForElement = () => {
+        const elapsedTime = Date.now() - startTime;
+        const root = this.shadowRoot ? this.shadowRoot : this;
+        const element = root.querySelectorAll(selector);
+        if (element && element.length) {
+          resolve(element);
+        } else if (elapsedTime >= timeout) {
+          reject(
+            new Error(
+              `Elements with selector "${selector}" did not appear within ${timeout} milliseconds`,
+            ),
+          );
+        } else {
+          setTimeout(checkForElement, interval);
+        }
+      };
+      checkForElement();
+    });
+  }
 }
 
 export class FormElement extends CustomElement {
   $internals?: IElementInternals;
-  public attachInternals: () => IElementInternals;
   static get formAssociated() {
     return true;
   }

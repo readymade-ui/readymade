@@ -15,22 +15,22 @@ export const BIND_SUFFIX = '__state';
 export const NODE_KEY = 'node' + BIND_SUFFIX;
 export const HANDLER_KEY = 'handler' + BIND_SUFFIX;
 
-interface Node {
+export interface Node {
   cloneNode(deep?: boolean): this;
   $init?: boolean;
 }
 
-const isObject = function(val) {
+export const isObject = function (val) {
   if (val === null) {
     return false;
   }
   return typeof val === 'function' || typeof val === 'object';
 };
 
-const findValueByString = function(o: any, s: string) {
+export const findValueByString = function (o: any, s: string) {
   s = s.replace(STRING_VALUE_REGEX, '.$1');
   s = s.replace(STRING_DOT_REGEX, '');
-  const a = s.split(DOT_BRACKET_NOTATION_REGEX).filter(s => s.length > 0);
+  const a = s.split(DOT_BRACKET_NOTATION_REGEX).filter((s) => s.length > 0);
   for (let i = 0, n = a.length; i < n; ++i) {
     const k = a[i];
     if (k in o) {
@@ -42,7 +42,7 @@ const findValueByString = function(o: any, s: string) {
   return o;
 };
 
-function setValueByString(obj: any, path: string, value: any) {
+export function setValueByString(obj: any, path: string, value: any) {
   const pList = path.split(DOT_BRACKET_NOTATION_REGEX);
   const len = pList.length;
   for (let i = 0; i < len - 1; i++) {
@@ -56,7 +56,7 @@ function setValueByString(obj: any, path: string, value: any) {
   return obj;
 }
 
-function filter(fn: any, a: Array<any>) {
+export function filter(fn: any, a: Array<any>) {
   const f = [];
   for (let i = 0; i < a.length; i++) {
     if (fn(a[i])) {
@@ -66,7 +66,7 @@ function filter(fn: any, a: Array<any>) {
   return f;
 }
 
-function templateId() {
+export function templateId() {
   let str = '';
   const alphabet = 'abcdefghijklmnopqrstuvwxyz';
   while (str.length < 3) {
@@ -75,33 +75,33 @@ function templateId() {
   return str;
 }
 
-/* tslint:disable */
-function uuidv4(): string {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+/* eslint:disable */
+export function uuidv4(): string {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
     const r = (Math.random() * 16) | 0,
       v = c == 'x' ? r : (r & 0x3) | 0x8;
     return v.toString(24);
   });
 }
-/* tslint:enable */
+/* eslint:enable */
 
-function stripKey(key: string): string {
+export function stripKey(key: string): string {
   key = key.replace(BRACKET_START_REGEX, `\\[`);
   key = key.replace(BRACKET_END_REGEX, `\\]`);
   return key;
 }
 
-function stripTemplateString(key: string): string {
+export function stripTemplateString(key: string): string {
   key = key.replace(TEMPLATE_START_REGEX, ``);
   key = key.replace(TEMPLATE_END_REGEX, ``);
   return key;
 }
 
-function templateRegExp(key: string): RegExp {
+export function templateRegExp(key: string): RegExp {
   return new RegExp(`\\{\\{\\s*(${key})\\s*\\}\\}`, 'g');
 }
 
-function getTextNodesByContent(node: Element, key: string) {
+export function getTextNodesByContent(node: Element, key: string) {
   if (!node.childNodes) {
     return [];
   }
@@ -117,15 +117,15 @@ function getTextNodesByContent(node: Element, key: string) {
   return nodes;
 }
 
-function getElementByAttribute(node: Element) {
+export function getElementByAttribute(node: Element) {
   if (!node.attributes) {
     return [];
   }
-  let matches = [];
+  const matches = [];
   for (let i = 0; i < node.attributes.length; i++) {
     if (
       /[A-Za-z0-9]{3}-[A-Za-z0-9]{6}/gm.test(
-        node.attributes[i].nodeName || node.attributes[i].name
+        node.attributes[i].nodeName || node.attributes[i].name,
       )
     ) {
       matches.push(node.attributes[i]);
@@ -134,15 +134,17 @@ function getElementByAttribute(node: Element) {
   return matches;
 }
 
-class NodeTree {
+export class NodeTree {
   public $parent: Node;
   public $parentId: string;
+
   public $flatMap: any = {};
   constructor(parentNode?: Node) {
     this.$parent = parentNode;
     this.$flatMap = {};
     this.$parentId = templateId();
   }
+
   public setNode(node: Node, key?: string, value?: any, attrID?: string) {
     if (this.$flatMap[attrID]) {
       return this.$flatMap[attrID];
@@ -150,22 +152,21 @@ class NodeTree {
     const id = attrID ? attrID : this.$parentId + '-' + uuidv4().slice(0, 6);
     const clone = node.cloneNode(true);
     if (!(node as Element).setAttribute) {
-      // tslint:disable-next-line: only-arrow-functions, no-empty
-      (node as Element).setAttribute = function(i: string, v: string) {};
+      (node as Element).setAttribute = function () {};
     }
     (node as Element).setAttribute(id, '');
     if (!(clone as Element).setAttribute) {
-      // tslint:disable-next-line: only-arrow-functions, no-empty
-      (clone as Element).setAttribute = function(i: string, v: string) {};
+      (clone as Element).setAttribute = function () {};
     }
     (clone as Element).setAttribute(id, '');
     this.$flatMap[id] = {
       id,
-      node: clone
+      node: clone,
     };
     node.$init = true;
     return this.$flatMap[id];
   }
+
   public changeNode(node: Node, key: string, value: any, protoNode: any) {
     key = stripKey(key);
     const regex = templateRegExp(key);
@@ -175,7 +176,7 @@ class NodeTree {
         if (textNode.parentNode === protoNode) {
           (node as Element).textContent = protoNode.textContent.replace(
             regex,
-            value
+            value,
           );
         }
       }
@@ -194,12 +195,11 @@ class NodeTree {
             attr = attribute.name.replace('attr.', '');
           }
           if (!protoNode.setAttribute) {
-            // tslint:disable-next-line: only-arrow-functions, no-empty
-            protoNode.setAttribute = function(i: string, v: string) {};
+            protoNode.setAttribute = function () {};
           }
           protoNode.setAttribute(
             attr,
-            attribute.nodeValue.replace(TEMPLATE_BIND_REGEX, '')
+            attribute.nodeValue.replace(TEMPLATE_BIND_REGEX, ''),
           );
           const remove = attribute.nodeName || attribute.name;
           (node as Element).removeAttribute(remove);
@@ -209,12 +209,11 @@ class NodeTree {
       if (attributeValue.match(regex, 'gi')) {
         if ((node as Element).getAttribute(attr) !== value) {
           if (!(node as Element).setAttribute) {
-            // tslint:disable-next-line: only-arrow-functions, no-empty
-            (node as Element).setAttribute = function(i: string, v: string) {};
+            (node as Element).setAttribute = function () {};
           }
           (node as Element).setAttribute(
             attr,
-            attributeValue.replace(regex, value)
+            attributeValue.replace(regex, value),
           );
         }
       }
@@ -224,11 +223,12 @@ class NodeTree {
       }
     }
   }
+
   public updateNode(node: Node | Element, key: string, value: any) {
     const attr = getElementByAttribute(node as Element)[0];
     const attrId = attr ? attr.nodeName || attr.name : null;
-    let entry = this.setNode(node, key, value, attrId);
-    let protoNode = entry.node;
+    const entry = this.setNode(node, key, value, attrId);
+    const protoNode = entry.node;
     let templateStrings = null;
 
     if (protoNode.outerHTML) {
@@ -246,7 +246,7 @@ class NodeTree {
     for (let index = 0; index < templateStrings.length; index++) {
       templateStrings[index] = stripTemplateString(templateStrings[index]);
     }
-    let matches = filter(str => str.startsWith(key), templateStrings);
+    const matches = filter((str) => str.startsWith(key), templateStrings);
     if (matches.length === 0) {
       return;
     }
@@ -258,25 +258,26 @@ class NodeTree {
           findValueByString(
             value,
             templateStrings[index].substring(
-              templateStrings[index].search(DOT_BRACKET_NOTATION_REGEX)
-            )
+              templateStrings[index].search(DOT_BRACKET_NOTATION_REGEX),
+            ),
           ),
-          protoNode
+          protoNode,
         );
       }
     } else {
       this.changeNode(node, key, value, protoNode);
     }
   }
+
   public update(key: string, value: any) {
     const walk = document.createTreeWalker(
       this.$parent as Element,
       NodeFilter.SHOW_ELEMENT,
       {
-        acceptNode(node) {
+        acceptNode() {
           return NodeFilter.FILTER_ACCEPT;
-        }
-      }
+        },
+      },
     );
     while (walk.nextNode()) {
       this.updateNode(walk.currentNode, key, value);
@@ -285,7 +286,7 @@ class NodeTree {
   }
 }
 
-class BoundNode {
+export class BoundNode {
   public $elem: CustomElement | Element;
   public $tree: NodeTree;
   public templateTree: NodeTree;
@@ -293,6 +294,7 @@ class BoundNode {
     this.$elem = elem;
     this.$tree = new NodeTree(this.$elem);
   }
+
   public update(key: string, value: any) {
     if (value == undefined) {
       return;
@@ -304,13 +306,15 @@ class BoundNode {
   }
 }
 
-class BoundHandler {
+export class BoundHandler {
   public $prop: string;
+
   public $parent: any;
   public onStateChange: OnStateChange;
   constructor(obj: Element) {
     this.$parent = obj;
   }
+
   public set(target: any, key: string, value: any) {
     if (value === 'undefined') {
       return true;
@@ -321,8 +325,8 @@ class BoundHandler {
     const change = {
       [key]: {
         previousValue: target[key],
-        newValue: value
-      }
+        newValue: value,
+      },
     };
 
     if (capturedGroup) {
@@ -343,7 +347,7 @@ class BoundHandler {
 
     if (!isNode) {
       this.$parent.ɵɵstate.$changes.dispatchEvent(
-        new CustomEvent('change', { detail: change })
+        new CustomEvent('change', { detail: change }),
       );
     }
 
@@ -355,47 +359,30 @@ class BoundHandler {
   }
 }
 
-function bindTemplate() {
+export function bindTemplate() {
   if (this.bindState) {
     this.bindState();
   }
 }
 
-function setState(prop: string, model: any) {
+export function setState(prop: string, model: any) {
   setValueByString(this.ɵstate, prop, model);
   this.ɵɵstate[NODE_KEY].update(prop, model);
 }
 
-function compileTemplate(elementMeta: ElementMeta, target: any) {
+export function compileTemplate(elementMeta: ElementMeta, target: any): any {
   if (!elementMeta.style) {
-    elementMeta.style = '';
+    elementMeta.style = [''];
   }
   if (!elementMeta.template) {
-    elementMeta.template = '';
+    elementMeta.template = [''];
   }
   target.prototype.elementMeta = Object.assign(
     target.elementMeta ? target.elementMeta : {},
-    elementMeta
+    elementMeta,
   );
   target.prototype.elementMeta.eventMap = {};
   target.prototype.template = `<style>${elementMeta.style}</style>${elementMeta.template}`;
   target.prototype.bindTemplate = bindTemplate;
+  return target;
 }
-
-export {
-  isObject,
-  findValueByString,
-  setValueByString,
-  templateId,
-  uuidv4,
-  stripKey,
-  stripTemplateString,
-  templateRegExp,
-  bindTemplate,
-  compileTemplate,
-  getTextNodesByContent,
-  getElementByAttribute,
-  setState,
-  BoundHandler,
-  BoundNode
-};

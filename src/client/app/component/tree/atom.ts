@@ -1,16 +1,4 @@
-import {
-  Component,
-  css,
-  CustomElement,
-  html,
-  State
-} from './../../../../modules/core';
-
-export class NodeState {
-  public astate;
-}
-
-export const _nodeState = new NodeState();
+import { Component, css, CustomElement, html, State } from '@readymade/core';
 
 @Component({
   selector: 'x-atom',
@@ -19,9 +7,7 @@ export const _nodeState = new NodeState();
       display: flex;
     }
   `,
-  template: html`
-    <span>{{astate}}</span>
-  `
+  template: html` <span>{{astate}}</span> `,
 })
 class AtomComponent extends CustomElement {
   constructor() {
@@ -30,7 +16,9 @@ class AtomComponent extends CustomElement {
 
   @State()
   public getState() {
-    return _nodeState;
+    return {
+      astate: '',
+    };
   }
 
   static get observedAttributes() {

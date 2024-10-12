@@ -1,10 +1,5 @@
-import {
-  Component,
-  css,
-  CustomElement,
-  html,
-  State
-} from './../../../modules/core';
+import { Component, CustomElement, State } from '@readymade/core';
+import { render as renderHeadline } from './headline';
 
 export class LogoState {
   public heading: string = 'R';
@@ -15,18 +10,24 @@ export class LogoState {
 
 export const _logoState = new LogoState();
 
+const style = `
+  :host {
+    display: block;
+    user-select: none;
+    font-size: 16px;
+    font-family: Source Sans Pro, sans-serif;
+  }
+`;
+
+const template = `
+<r-headline headline="{{heading}}" size="{{size}}"></r-headline>
+<r-headline headline="{{heading2}}"></r-headline>
+`;
+
 @Component({
   selector: 'r-logo',
-  style: css`
-    :host {
-      display: block;
-      user-select: none;
-    }
-  `,
-  template: html`
-    <r-headline headline="{{heading}}" size="{{size}}"></r-headline>
-    <r-headline headline="{{heading2}}"></r-headline>
-  `
+  style,
+  template,
 })
 class RLogoComponent extends CustomElement {
   public letters: string[];
@@ -54,7 +55,18 @@ class RLogoComponent extends CustomElement {
   public setSize(size: string) {
     this.setState('size', size);
   }
-  
 }
 
-export { RLogoComponent };
+const render = ({ size, classes }: { size: string; classes?: string }) => `
+  <r-logo class="${classes ? classes : ''}">
+    <template shadowrootmode="open">
+      <style>
+      ${style}
+      </style>
+      ${renderHeadline({ size, copy: _logoState.heading })}
+      ${renderHeadline({ size: 'is--default', copy: _logoState.heading2 })}
+    </template>
+  </r-logo>
+`;
+
+export { RLogoComponent, render };

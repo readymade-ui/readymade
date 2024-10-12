@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,9 +10,10 @@
     />
     <title>Readymade</title>
     <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
-    <link rel="stylesheet" href="./style/style.scss" inline="inline" />
-    <script src="./polyfill.ts" inline="inline"></script>
-    <script src="./vendor.ts" inline="inline"></script>
+    <link id="global-style" rel="stylesheet" href="./style/style.css" />
+    <!--style-outlet-->
+    <script src="./polyfill.ts" type="module"></script>
+    <script src="./vendor.ts" type="module"></script>
   </head>
   <body data-theme="dark">
     <template id="object-repeater" items="item of {{items}}">
@@ -25,7 +26,12 @@
         <li repeat="sub" foo="{{sub}}">{{sub}}</li>
       </ul>
     </template>
-    <div id="root"></div>
-    <script src="./index.ts" inline="inline"></script>
+    <template id="buttonpad-repeater" items="button of {{buttons}}">
+      <rd-button></rd-button>
+    </template>
+    <div id="root">
+      <!--ssr-outlet-->
+    </div>
+    <script src="./index.ts" type="module"></script>
   </body>
 </html>

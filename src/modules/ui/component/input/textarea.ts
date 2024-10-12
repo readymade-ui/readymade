@@ -1,12 +1,4 @@
-import {
-  Component,
-  Emitter,
-  EventDispatcher,
-  FormElement,
-  html,
-  css
-} from './../../../core';
-
+import { Component, html, css } from '@readymade/core';
 import { RdInput } from './input';
 
 @Component({
@@ -18,10 +10,10 @@ import { RdInput } from './input';
       outline: none;
     }
     :host textarea {
-      background-color: var(--color-bg);
-      border: 2px solid var(--color-border);
+      background-color: var(--ready-color-bg);
+      border: 2px solid var(--ready-color-border);
       border-radius: 1em;
-      color: var(--color-default);
+      color: var(--ready-color-default);
       font: var(--font-family);
       outline: none;
       overflow: auto;
@@ -29,26 +21,26 @@ import { RdInput } from './input';
       -moz-appearance: none;
       -webkit-appearance: none;
       appearance: none;
-      background-image: var(--icon-expand);
+      background-image: var(--ready-icon-expand);
       background-position: bottom 0.5em right 0.5em;
       background-repeat: no-repeat;
     }
     :host textarea:hover,
     :host textarea:focus,
     :host textarea:active {
-      border: 2px solid var(--color-highlight);
+      border: 2px solid var(--ready-color-highlight);
       outline: none;
       box-shadow: none;
     }
     :host textarea[disabled] {
-      opacity: var(--opacity-disabled);
-      background: var(--color-disabled);
+      opacity: var(--ready-opacity-disabled);
+      background: var(--ready-color-disabled);
       cursor: not-allowed;
     }
     :host textarea[disabled]:hover,
     :host textarea[disabled]:focus,
     :host textarea[disabled]:active {
-      border: 2px solid var(--color-border);
+      border: 2px solid var(--ready-color-border);
       outline: none;
       box-shadow: none;
     }
@@ -56,7 +48,7 @@ import { RdInput } from './input';
     :host textarea.required:hover,
     :host textarea.required:focus,
     :host textarea.required:active {
-      border: 2px solid var(--color-error);
+      border: 2px solid var(--ready-color-error);
       outline: none;
       box-shadow: none;
     }
@@ -64,9 +56,7 @@ import { RdInput } from './input';
       display: none;
     }
   `,
-  template: html`
-    <textarea></textarea>
-  `
+  template: html` <textarea></textarea> `,
 })
 class RdTextArea extends RdInput {
   constructor() {
