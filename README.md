@@ -50,7 +50,7 @@ Fork and clone the repo. Install dependencies with yarn.
 yarn install
 ```
 
-To develop, run `yarn start`. This will spin up a local Parcel development server at http://localhost:4443.
+To develop, run `yarn start`. This will spin up a Vite development server at http://localhost:4443.
 
 For working on the documentation portal use `yarn start:client`.
 
