@@ -441,7 +441,7 @@ class RdDial extends FormElement {
     y = y - center[1];
     const radians = Math.atan2(y, x);
 
-    let angle = this.scale(
+    const angle = this.scale(
       this.radiansToDegrees(radians),
       -180,
       180,
@@ -527,7 +527,7 @@ class RdDial extends FormElement {
     const min = this.control.min as number;
     const max = this.control.max as number;
 
-    let value: number = this.scale(
+    const value: number = this.scale(
       rotationalValue,
       this.control.stops[0],
       this.control.stops[1],
