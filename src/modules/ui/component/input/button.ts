@@ -1,4 +1,5 @@
 import { Component, Listen, FormElement, html, css } from '@readymade/core';
+import { RdControl } from '../control';
 
 @Component({
   selector: 'rd-button',
@@ -105,7 +106,7 @@ class RdButton extends FormElement {
   }
 
   static get observedAttributes() {
-    return ['type', 'label', 'width', 'height', 'channel'];
+    return ['type', 'label', 'width', 'height', 'channel', 'control'];
   }
 
   attributeChangedCallback(name: string, old: string, next: string) {
@@ -129,6 +130,11 @@ class RdButton extends FormElement {
         break;
       case 'channel':
         this.setChannel(next);
+        break;
+      case 'control':
+        if (!next.startsWith('{{')) {
+          this.setControl(JSON.parse(next));
+        }
         break;
     }
   }
@@ -217,10 +223,6 @@ class RdButton extends FormElement {
     return this.shadowRoot.querySelector('button');
   }
 
-  setChannel(name: string) {
-    this.channel = new BroadcastChannel(name);
-  }
-
   simulatePress() {
     this.$elem.classList.add('active');
     this.$elem.click();
@@ -228,6 +230,18 @@ class RdButton extends FormElement {
       this.$elem.classList.remove('active');
       this.removeAttribute('modifier');
     }, 100);
+  }
+
+  setChannel(name: string) {
+    this.channel = new BroadcastChannel(name);
+  }
+
+  setControl(control: RdControl) {
+    this.setAttribute('name', control.name);
+    this.setAttribute('type', control.type);
+    if (control.currentValue && typeof control.currentValue === 'string') {
+      this.value = control.currentValue as string;
+    }
   }
 }
 

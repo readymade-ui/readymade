@@ -6,6 +6,7 @@ import {
   StandardKeyboardNumPad,
   RdSlider,
   RdRadioGroup,
+  RdDial,
 } from '@readymade/ui';
 
 @Component({
@@ -44,11 +45,11 @@ class LibraryComponent extends CustomElement {
     const buttonNumberPad = (<unknown>(
       this.shadowRoot?.querySelectorAll('rd-buttonpad')[1]
     )) as FormElement;
-    const joystick = (<unknown>(
-      this.shadowRoot?.querySelector('[type="joystick"]')
+    const dial = (<unknown>(
+      this.shadowRoot?.querySelector('[name="dial"]')
     )) as RdSlider;
     const squareJoystick = (<unknown>(
-      this.shadowRoot?.querySelectorAll('[type="joystick"]')[1]
+      this.shadowRoot?.querySelector('[type="joystick"]')
     )) as RdSlider;
     const vertSlider = (<unknown>(
       this.shadowRoot?.querySelector('[type="vert"]')
@@ -116,7 +117,7 @@ class LibraryComponent extends CustomElement {
 
     setTimeout(() => (vertSlider.value = 100));
     setTimeout(() => (horizontalSlider.value = 1000));
-    setTimeout(() => (joystick.value = [140, 140]));
+    setTimeout(() => (dial.value = 0.1));
     setTimeout(() => (squareJoystick.value = [140, 140]));
 
     this.onModeChange();
@@ -128,6 +129,7 @@ class LibraryComponent extends CustomElement {
       vertControl: JSON.stringify({
         type: 'slider',
         name: 'slider',
+        selector: 'rd-slider',
         orient: 'is--vert',
         min: 0,
         max: 255,
@@ -137,23 +139,24 @@ class LibraryComponent extends CustomElement {
       horControl: JSON.stringify({
         type: 'slider',
         name: 'h',
+        selector: 'rd-slider',
         orient: 'is--hor',
         min: 0,
         max: 1000,
         gridArea: '1 / 3 / span 1 / span 3',
       }),
-      joyControl: JSON.stringify({
-        type: 'slider',
-        name: 'joystick',
-        orient: 'is--joystick',
-        min: [0.0, 0.0],
-        max: [255.0, 255.0],
-        snapToCenter: false,
+      dialControl: JSON.stringify({
+        type: 'dial',
+        name: 'dial',
+        selector: 'rd-dial',
+        min: 0.0,
+        max: 1.0,
         gridArea: '1 / 2 / span 4 / span 1',
       }),
       joySquareControl: JSON.stringify({
         type: 'slider',
         name: 'square-joystick',
+        selector: 'rd-slider',
         orient: 'is--joystick--square',
         min: [0, 0],
         max: [12, 12],
@@ -199,11 +202,11 @@ class LibraryComponent extends CustomElement {
     const buttonNumberPad = (<unknown>(
       this.shadowRoot?.querySelectorAll('rd-buttonpad')[1]
     )) as FormElement;
-    const joystick = (<unknown>(
-      this.shadowRoot?.querySelector('[type="joystick"]')
-    )) as RdSlider;
+    const dial = (<unknown>(
+      this.shadowRoot?.querySelector('[name="dial"]')
+    )) as RdDial;
     const squareJoystick = (<unknown>(
-      this.shadowRoot?.querySelectorAll('[type="joystick"]')[1]
+      this.shadowRoot?.querySelector('[type="joystick"]')
     )) as RdSlider;
     const vertSlider = (<unknown>(
       this.shadowRoot?.querySelector('[type="vert"]')
@@ -253,7 +256,7 @@ class LibraryComponent extends CustomElement {
           console.dir((form[17] as HTMLInputElement).value);
         }
       };
-      joystick.oninput = (ev: CustomEvent) => {
+      dial.oninput = (ev: CustomEvent) => {
         console.log((ev.target as any).value);
       };
       squareJoystick.oninput = (ev: CustomEvent) => {
@@ -293,7 +296,7 @@ class LibraryComponent extends CustomElement {
       button.setAttribute('channel', this.channelName);
       buttonPad.setAttribute('channel', this.channelName);
       buttonNumberPad.setAttribute('channel', this.channelName);
-      joystick.setAttribute('channel', this.channelName);
+      dial.setAttribute('channel', this.channelName);
       squareJoystick.setAttribute('channel', this.channelName);
       vertSlider.setAttribute('channel', this.channelName);
       horizontalSlider.setAttribute('channel', this.channelName);
@@ -312,7 +315,7 @@ class LibraryComponent extends CustomElement {
       button.onclick = () => {};
       buttonPad.onclick = () => {};
       buttonNumberPad.onclick = () => {};
-      joystick.oninput = () => {};
+      dial.oninput = () => {};
       squareJoystick.oninput = () => {};
       vertSlider.oninput = () => {};
       horizontalSlider.oninput = () => {};

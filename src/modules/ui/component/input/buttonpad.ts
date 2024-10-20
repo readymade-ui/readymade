@@ -6,6 +6,7 @@ import {
   css,
   State,
 } from '@readymade/core';
+import { RdControl } from '../control';
 
 export interface ButtonGridModifier {
   gap?: string;
@@ -238,7 +239,7 @@ class RdButtonPad extends FormElement {
   }
 
   static get observedAttributes() {
-    return ['grid', 'buttons', 'disabled', 'channel'];
+    return ['grid', 'buttons', 'disabled', 'channel', 'control'];
   }
 
   attributeChangedCallback(name: string, old: string, next: string) {
@@ -262,6 +263,11 @@ class RdButtonPad extends FormElement {
         break;
       case 'channel':
         this.setChannel(next);
+        break;
+      case 'control':
+        if (!next.startsWith('{{')) {
+          this.setControl(JSON.parse(next));
+        }
         break;
     }
   }
@@ -496,6 +502,14 @@ class RdButtonPad extends FormElement {
 
   setChannel(name: string) {
     this.channel = new BroadcastChannel(name);
+  }
+
+  setControl(control: RdControl) {
+    this.setAttribute('name', control.name);
+    this.setAttribute('type', control.type);
+    if (control.currentValue && typeof control.currentValue === 'string') {
+      this.value = control.currentValue as string;
+    }
   }
 }
 

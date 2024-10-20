@@ -1,4 +1,5 @@
 import { Component, FormElement, html, css } from '@readymade/core';
+import { RdControl } from '../control';
 
 @Component({
   selector: 'rd-radiogroup',
@@ -106,7 +107,7 @@ class RdRadioGroup extends FormElement {
   }
 
   static get observedAttributes() {
-    return ['direction', 'channel'];
+    return ['direction', 'channel', 'control'];
   }
 
   attributeChangedCallback(name: string, old: string, next: string) {
@@ -121,6 +122,11 @@ class RdRadioGroup extends FormElement {
         break;
       case 'channel':
         this.setChannel(next);
+        break;
+      case 'control':
+        if (!next.startsWith('{{')) {
+          this.setControl(JSON.parse(next));
+        }
         break;
     }
   }
@@ -218,6 +224,14 @@ class RdRadioGroup extends FormElement {
 
   setChannel(name: string) {
     this.channel = new BroadcastChannel(name);
+  }
+
+  setControl(control: RdControl) {
+    this.setAttribute('name', control.name);
+    this.setAttribute('type', control.type);
+    if (control.currentValue && typeof control.currentValue === 'string') {
+      this.value = control.currentValue as string;
+    }
   }
 }
 

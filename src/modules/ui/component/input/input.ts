@@ -1,4 +1,5 @@
 import { Component, Emitter, FormElement, html, css } from '@readymade/core';
+import { RdControl } from '../control';
 
 @Component({
   selector: 'rd-input',
@@ -62,6 +63,11 @@ class RdInput extends FormElement {
     switch (name) {
       case 'channel':
         this.setChannel(next);
+        break;
+      case 'control':
+        if (!next.startsWith('{{')) {
+          this.setControl(JSON.parse(next));
+        }
         break;
     }
   }
@@ -158,6 +164,14 @@ class RdInput extends FormElement {
 
   setChannel(name: string) {
     this.channel = new BroadcastChannel(name);
+  }
+
+  setControl(control: RdControl) {
+    this.setAttribute('name', control.name);
+    this.setAttribute('type', control.type);
+    if (control.currentValue && typeof control.currentValue === 'string') {
+      this.value = control.currentValue as string;
+    }
   }
 }
 

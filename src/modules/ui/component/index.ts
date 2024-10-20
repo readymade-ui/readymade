@@ -13,3 +13,4 @@ export { RdCheckBox } from './input/checkbox';
 export { RdTextArea } from './input/textarea';
 export { RdDropdown } from './input/select';
 export { RdSlider } from './input/slider';
+export { RdDial } from './input/dial';

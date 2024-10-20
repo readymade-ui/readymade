@@ -162,13 +162,9 @@ import { RdControl } from './../control';
   `,
 })
 class RdSlider extends FormElement {
-  private _rect: ClientRect | DOMRect;
+  private _rect: DOMRect;
   private _joystickPos: number[];
   private _touchItem: number | null;
-  private _handle: HTMLElement;
-  private _timeout: number;
-  private _animation: Animation;
-  private _lastPos: { transform: string };
   private _joystickType: 'circle' | 'square';
   private _numberType: 'int' | 'float';
   private _type: 'joystick' | 'slider';
@@ -306,7 +302,6 @@ class RdSlider extends FormElement {
         .querySelector('.slider')
         .classList.add(this._joystickType);
     }
-    this._lastPos = { transform: this.control.position };
     this.setActualPosition(this.control.position);
 
     // TODO init based on this.control.currentValue
@@ -636,7 +631,7 @@ class RdSlider extends FormElement {
         this.scale(
           this.control.x as number,
           0,
-          this.control.width - 44,
+          this.control.width - this.$handle.offsetWidth,
           <number>this.control.min,
           <number>this.control.max,
         ),
@@ -647,7 +642,7 @@ class RdSlider extends FormElement {
         this.scale(
           this.control.y as number,
           0,
-          this.control.height - 44,
+          this.control.height - this.$handle.offsetHeight,
           <number>this.control.min,
           <number>this.control.max,
         ),

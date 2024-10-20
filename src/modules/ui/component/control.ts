@@ -1,7 +1,9 @@
 export interface RdControl {
   type: string;
   name: string;
+  selector: string;
   orient?: string;
+  stops?: number[];
   min?: number | number[];
   max?: number | number[];
   isActive?: boolean;
@@ -20,4 +22,5 @@ export interface RdControl {
   placeSelf?: string;
   transform?: string;
   numberType?: 'int' | 'float';
+  label?: string;
 }
