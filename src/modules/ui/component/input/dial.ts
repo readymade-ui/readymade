@@ -118,7 +118,6 @@ class RdDial extends FormElement {
   private _revolutions: number = 0;
   private _numberType: 'int' | 'float';
   private _type = 'dial';
-  private _lastPosition: number[];
   private _lastAngle: number;
   private _limit = false;
   public control: RdControl;
@@ -399,16 +398,14 @@ class RdDial extends FormElement {
   }
 
   onEvent() {
-    if (!this._limit) {
-      const event = new CustomEvent('input', {
-        bubbles: true,
-        composed: true,
-        detail: this.control,
-      });
-      this.emitter.emit(event);
-      if (this.onchange) {
-        this.onchange(event);
-      }
+    const event = new CustomEvent('input', {
+      bubbles: true,
+      composed: true,
+      detail: this.control,
+    });
+    this.emitter.emit(event);
+    if (this.onchange) {
+      this.onchange(event);
     }
   }
 
@@ -445,37 +442,23 @@ class RdDial extends FormElement {
       this.radiansToDegrees(radians),
       -180,
       180,
-      0.000000001,
-      359.9999999999,
+      0.000000000000000000000000001,
+      359.9999999999999999999999999,
     );
 
-    if (
-      !this._limit &&
-      radians < 0 &&
-      this._lastAngle > 0 &&
-      angle > 0 &&
-      angle < 10
-    ) {
+    if (radians < 0 && this._lastAngle > 0 && angle > 0 && angle < 10) {
       this._revolutions = this._revolutions + 1;
     }
-    if (
-      !this._limit &&
-      radians > 0 &&
-      this._lastAngle < 0 &&
-      angle < 365 &&
-      angle > 355
-    ) {
+    if (radians > 0 && this._lastAngle < 0 && angle < 365 && angle > 355) {
       this._revolutions = this._revolutions - 1;
     }
-
     this._angle = Math.round(angle);
     this._lastAngle = radians;
 
-    this._lastPosition = [
+    return [
       Math.cos(radians) * radius + center[0],
       Math.sin(radians) * radius + center[1],
     ];
-    return this._lastPosition;
   }
 
   radiansToDegrees(radians: number): number {

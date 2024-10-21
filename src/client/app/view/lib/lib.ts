@@ -117,7 +117,7 @@ class LibraryComponent extends CustomElement {
 
     setTimeout(() => (vertSlider.value = 100));
     setTimeout(() => (horizontalSlider.value = 1000));
-    setTimeout(() => (dial.value = 0.1));
+    setTimeout(() => (dial.value = 0.25));
     setTimeout(() => (squareJoystick.value = [140, 140]));
 
     this.onModeChange();
