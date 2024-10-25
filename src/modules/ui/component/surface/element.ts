@@ -1,4 +1,4 @@
-import { Component, html, css } from '@readymade/core';
+import { Component, css } from '@readymade/core';
 import { RdControlSurfaceElement } from '../control';
 import { BlockComponent } from '@readymade/dom';
 
@@ -13,7 +13,6 @@ import { BlockComponent } from '@readymade/dom';
       margin-bottom: 1em;
     }
   `,
-  // template: html`<slot></slot>`,
   custom: { extends: 'div' },
 })
 class RdSurfaceElement extends BlockComponent {
@@ -31,7 +30,7 @@ class RdSurfaceElement extends BlockComponent {
     }
 
     if (surface.style) {
-      for (let styleName in surface.style) {
+      for (const styleName in surface.style) {
         if (surface.style.hasOwnProperty(styleName)) {
           this.style[styleName] = surface.style[styleName];
         }

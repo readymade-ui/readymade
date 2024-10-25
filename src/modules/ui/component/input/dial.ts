@@ -560,7 +560,7 @@ class RdDial extends FormElement {
   }
 
   updateControl(controlValue: number | number[]) {
-    let angle = this.scale(
+    const angle = this.scale(
       controlValue as number,
       this.control.attributes.min as number,
       this.control.attributes.max as number,

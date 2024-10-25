@@ -21,7 +21,7 @@ class RdSurface extends StructuralElement {
     }
 
     if (surface.style) {
-      for (let styleName in surface.style) {
+      for (const styleName in surface.style) {
         if (surface.style.hasOwnProperty(styleName)) {
           this.style[styleName] = surface.style[styleName];
         }

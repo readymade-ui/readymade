@@ -2,7 +2,6 @@ import { Component, CustomElement, FormElement, State } from '@readymade/core';
 import template from './lib.html?raw';
 import style from './lib.css?raw';
 import {
-  StandardKeyboard,
   StandardKeyboardNumPad,
   RdSlider,
   RdRadioGroup,

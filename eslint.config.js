@@ -10,6 +10,8 @@ export default [
     files: ['**/*.{js,mjs,cjs,ts}'],
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
+      'no-loss-of-precision': 'off',
+      'no-prototype-builtins': 'off',
     },
   },
 ];

@@ -1,7 +1,9 @@
 import { Component, Emitter, FormElement, html, css } from '@readymade/core';
 import { RdControl } from '../control';
 
-export interface RdInputAttributes {}
+export interface RdInputAttributes {
+  value: string;
+}
 
 @Component({
   selector: 'rd-input',
@@ -95,6 +97,7 @@ class RdInput extends FormElement {
       }
       if (this.channel) {
         this.control.currentValue = this.value;
+        this.control.attributes.value = this.value;
         this.channel.postMessage(this.control);
       }
     };
@@ -158,6 +161,7 @@ class RdInput extends FormElement {
     this.$elem.value = value;
     if (this.control) {
       this.control.currentValue = value;
+      this.control.attributes.value = value;
     }
   }
 
