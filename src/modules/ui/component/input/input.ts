@@ -1,6 +1,8 @@
 import { Component, Emitter, FormElement, html, css } from '@readymade/core';
 import { RdControl } from '../control';
 
+export interface RdInputAttributes {}
+
 @Component({
   selector: 'rd-input',
   delegatesFocus: true,
@@ -51,6 +53,7 @@ import { RdControl } from '../control';
 })
 class RdInput extends FormElement {
   channel: BroadcastChannel;
+  control: RdControl<RdInputAttributes>;
   constructor() {
     super();
   }
@@ -91,11 +94,8 @@ class RdInput extends FormElement {
         this.oninput(ev);
       }
       if (this.channel) {
-        this.channel.postMessage({
-          type: this.type,
-          name: this.name,
-          value: this.value,
-        });
+        this.control.currentValue = this.value;
+        this.channel.postMessage(this.control);
       }
     };
     this.$elem.onblur = () => {
@@ -156,6 +156,9 @@ class RdInput extends FormElement {
 
   set value(value) {
     this.$elem.value = value;
+    if (this.control) {
+      this.control.currentValue = value;
+    }
   }
 
   get $elem(): HTMLInputElement | HTMLTextAreaElement {
@@ -166,7 +169,8 @@ class RdInput extends FormElement {
     this.channel = new BroadcastChannel(name);
   }
 
-  setControl(control: RdControl) {
+  setControl(control: RdControl<RdInputAttributes>) {
+    this.control = control;
     this.setAttribute('name', control.name);
     this.setAttribute('type', control.type);
     if (control.currentValue && typeof control.currentValue === 'string') {

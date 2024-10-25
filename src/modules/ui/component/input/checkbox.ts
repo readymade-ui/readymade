@@ -1,6 +1,10 @@
 import { Component, Emitter, FormElement, html, css } from '@readymade/core';
 import { RdControl } from '../control';
 
+export interface RdCheckboxAttributes {
+  checked?: boolean;
+}
+
 @Component({
   selector: 'rd-checkbox',
   delegatesFocus: true,
@@ -71,6 +75,7 @@ import { RdControl } from '../control';
 })
 class RdCheckBox extends FormElement {
   channel: BroadcastChannel;
+  control: RdControl<RdCheckboxAttributes>;
   constructor() {
     super();
   }
@@ -128,11 +133,13 @@ class RdCheckBox extends FormElement {
         );
       }
       if (this.channel) {
-        this.channel.postMessage({
-          type: this.type,
-          name: this.name,
-          value: (ev.target as HTMLInputElement).checked,
-        });
+        this.control.currentValue = (ev.target as HTMLInputElement).checked;
+        if (this.control.attributes) {
+          this.control.attributes.checked = (
+            ev.target as HTMLInputElement
+          ).checked;
+        }
+        this.channel.postMessage(this.control);
       }
     };
     this.$elem.onblur = () => {
@@ -183,6 +190,12 @@ class RdCheckBox extends FormElement {
   set value(value) {
     if (typeof value === 'boolean') {
       this.$elem.checked = value;
+      if (this.control) {
+        this.control.currentValue = value;
+        if (this.control.attributes.checked) {
+          this.control.attributes.checked = value;
+        }
+      }
     }
   }
 
@@ -194,11 +207,17 @@ class RdCheckBox extends FormElement {
     this.channel = new BroadcastChannel(name);
   }
 
-  setControl(control: RdControl) {
+  setControl(control: RdControl<RdCheckboxAttributes>) {
+    this.control = control;
     this.setAttribute('name', control.name);
     this.setAttribute('type', control.type);
-    if (control.currentValue && typeof control.currentValue === 'boolean') {
-      this.checked = control.currentValue as boolean;
+    if (
+      (control.currentValue && typeof control.currentValue === 'boolean') ||
+      control.attributes.checked
+    ) {
+      this.checked = control.currentValue
+        ? Boolean(control.currentValue)
+        : (control.attributes.checked as boolean);
     }
   }
 }

@@ -8,6 +8,20 @@ import {
 } from '@readymade/core';
 import { RdControl } from './../control';
 
+export interface RdDialAttributes {
+  stops?: number[];
+  min: number;
+  max: number;
+  size?: string;
+  position?: string;
+  x?: number;
+  y?: number;
+  transform?: string;
+  height?: number;
+  width?: number;
+  numberType?: 'int' | 'float';
+}
+
 @Component({
   selector: 'rd-dial',
   style: css`
@@ -120,7 +134,7 @@ class RdDial extends FormElement {
   private _type = 'dial';
   private _lastAngle: number;
   private _limit = false;
-  public control: RdControl;
+  public control: RdControl<RdDialAttributes>;
   public channel: BroadcastChannel;
   constructor() {
     super();
@@ -139,6 +153,7 @@ class RdDial extends FormElement {
         if (!next.startsWith('{{')) {
           this.control = JSON.parse(next);
           this.onSliderInit();
+          this.updateControl(this.value);
         }
         break;
       case 'channel':
@@ -202,7 +217,7 @@ class RdDial extends FormElement {
   }
 
   set value(controlValue: number | number[]) {
-    this.updateControl(controlValue);
+    setTimeout(() => this.updateControl(controlValue));
   }
 
   get $elem(): Element {
@@ -217,26 +232,21 @@ class RdDial extends FormElement {
   onSliderInit() {
     this._touchItem = null;
 
-    this.control.height = this.clientHeight;
-    this.control.width = this.clientWidth;
+    this._rect = this.getBoundingClientRect();
+    this.control.attributes.height = this.clientHeight;
+    this.control.attributes.width = this.clientWidth;
 
-    if (this.control.numberType) {
-      this._numberType = this.control.numberType;
+    if (this.control.attributes.numberType) {
+      this._numberType = this.control.attributes.numberType;
     } else {
       this._numberType = 'float';
     }
     this.style.maxWidth = '200px';
     this.style.maxHeight = '200px';
 
-    if (!this.control.stops) {
-      this.control.stops = [-90, 270];
+    if (!this.control.attributes.stops) {
+      this.control.attributes.stops = [-90, 270];
     }
-
-    this.control.currentValue = 0;
-    this.control.x = this.control.y = 76;
-    this.control.position = 'translate(' + 76 + 'px' + ',' + 76 + 'px' + ')';
-
-    this.setActualPosition(this.control.position);
 
     // TODO init based on this.control.currentValue
   }
@@ -248,7 +258,7 @@ class RdDial extends FormElement {
 
   @Listen('mouseenter')
   onMouseEnter() {
-    if (this.control.isActive) {
+    if (this.control?.isActive) {
       this.control.hasUserInput = true;
     }
   }
@@ -267,8 +277,8 @@ class RdDial extends FormElement {
     this.$elem.classList.add('active');
 
     this._rect = this.getBoundingClientRect();
-    this.control.height = this.clientHeight;
-    this.control.width = this.clientWidth;
+    this.control.attributes.height = this.clientHeight;
+    this.control.attributes.width = this.clientWidth;
 
     this.addEventListener('touchmove', this.onTouchMove.bind(this));
     this.addEventListener('touchend', this.onMouseUp.bind(this));
@@ -278,11 +288,11 @@ class RdDial extends FormElement {
       this._touchItem = e.touches.length - 1;
     }
 
-    this.control.x =
+    this.control.attributes.x =
       e.touches[this._touchItem].pageX -
       this._rect.left -
       this.$handle.clientWidth / 2;
-    this.control.y =
+    this.control.attributes.y =
       e.touches[this._touchItem].pageY -
       this._rect.top -
       this.$handle.clientHeight / 2;
@@ -299,10 +309,10 @@ class RdDial extends FormElement {
     this.$elem.classList.add('active');
 
     this._rect = this.getBoundingClientRect();
-    this.control.height = this.clientHeight;
-    this.control.width = this.clientWidth;
-    this.control.x = e.offsetX;
-    this.control.y = e.offsetY;
+    this.control.attributes.height = this.clientHeight;
+    this.control.attributes.width = this.clientWidth;
+    this.control.attributes.x = e.offsetX;
+    this.control.attributes.y = e.offsetY;
 
     this.addEventListener('mousemove', this.onMouseMove.bind(this));
     this.addEventListener('mouseup', this.onMouseUp.bind(this));
@@ -321,21 +331,18 @@ class RdDial extends FormElement {
       this._touchItem = e.touches.length - 1; // make this touch = the latest touch in the touches list instead of using event
     }
 
-    this.control.x =
+    this.control.attributes.x =
       (this.getBoundingClientRect().left - e.touches[this._touchItem].pageX) *
       -1;
-    this.control.y = (this.offsetTop - e.touches[this._touchItem].pageY) * -1;
+    this.control.attributes.y =
+      (this.offsetTop - e.touches[this._touchItem].pageY) * -1;
 
     if (this.control.hasUserInput && this.control.isActive) {
       this.setPosition();
       this.control.currentValue = this.mapValue();
       this.control.timeStamp = e.timeStamp;
       if (this.channel) {
-        this.channel.postMessage({
-          type: this.type,
-          name: this.name,
-          value: this.control.currentValue,
-        });
+        this.channel.postMessage(this.control);
       }
       this.onEvent();
     }
@@ -348,19 +355,16 @@ class RdDial extends FormElement {
 
     this.$elem.classList.add('active');
 
-    this.control.x = (this.getBoundingClientRect().left - e.pageX) * -1;
-    this.control.y = (this.offsetTop - e.pageY) * -1;
+    this.control.attributes.x =
+      (this.getBoundingClientRect().left - e.pageX) * -1;
+    this.control.attributes.y = (this.offsetTop - e.pageY) * -1;
 
     if (this.control.hasUserInput && this.control.isActive) {
       this.setPosition();
       this.control.currentValue = this.mapValue();
       this.control.timeStamp = e.timeStamp;
       if (this.channel) {
-        this.channel.postMessage({
-          type: this.type,
-          name: this.name,
-          value: this.control.currentValue,
-        });
+        this.channel.postMessage(this.control);
       }
       this.onEvent();
     }
@@ -379,16 +383,6 @@ class RdDial extends FormElement {
     } else {
       this.removeEventListener('mousemove', this.onMouseMove.bind(this));
       this.removeEventListener('mouseup', this.onMouseUp.bind(this));
-    }
-
-    if (this.control.snapToCenter === true) {
-      const center = this.getCenter(
-        [0, this.control.width - this.$handle.offsetWidth],
-        [0, this.control.height - this.$handle.offsetHeight],
-      );
-      this.control.x = center[0];
-      this.control.y = center[1];
-      this.setPosition();
     }
   }
 
@@ -507,13 +501,13 @@ class RdDial extends FormElement {
   mapValue() {
     const rotationalValue = 360 * this._revolutions + this._angle;
 
-    const min = this.control.min as number;
-    const max = this.control.max as number;
+    const min = this.control.attributes.min as number;
+    const max = this.control.attributes.max as number;
 
     const value: number = this.scale(
       rotationalValue,
-      this.control.stops[0],
-      this.control.stops[1],
+      this.control.attributes.stops[0],
+      this.control.attributes.stops[1],
       min,
       max,
     );
@@ -521,10 +515,10 @@ class RdDial extends FormElement {
     let currentValue: number;
 
     if (value > max) {
-      currentValue = this.control.max as number;
+      currentValue = this.control.attributes.max as number;
       this._limit = true;
     } else if (value < min) {
-      currentValue = this.control.min as number;
+      currentValue = this.control.attributes.min as number;
       this._limit = true;
     } else {
       currentValue = value;
@@ -541,35 +535,41 @@ class RdDial extends FormElement {
   // Move handle, within elem
   setPosition() {
     this._joystickPos = this.circularBounds(
-      this.control.x,
-      this.control.y,
+      this.control.attributes.x,
+      this.control.attributes.y,
       [0, this.clientWidth - this.$handle.offsetWidth],
       [0, this.clientHeight - this.$handle.offsetHeight],
     );
-    this.control.x = this.clamp(this._joystickPos[0], [
+    this.control.attributes.x = this.clamp(this._joystickPos[0], [
       0,
       this.clientWidth - this.$handle.offsetWidth,
     ]);
-    this.control.y = this.clamp(this._joystickPos[1], [
+    this.control.attributes.y = this.clamp(this._joystickPos[1], [
       0,
       this.clientHeight - this.$handle.offsetHeight,
     ]);
-    this.control.position =
-      'translate(' + this.control.x + 'px' + ',' + this.control.y + 'px' + ')';
-    this.setActualPosition(this.control.position);
+    this.control.attributes.position =
+      'translate(' +
+      this.control.attributes.x +
+      'px' +
+      ',' +
+      this.control.attributes.y +
+      'px' +
+      ')';
+    this.setActualPosition(this.control.attributes.position);
   }
 
   updateControl(controlValue: number | number[]) {
-    const angle = this.scale(
+    let angle = this.scale(
       controlValue as number,
-      this.control.min as number,
-      this.control.max as number,
-      this.control.stops[0],
-      this.control.stops[1],
+      this.control.attributes.min as number,
+      this.control.attributes.max as number,
+      this.control.attributes.stops[0],
+      this.control.attributes.stops[1],
     );
     const coords = this.degreesToCoordinates(angle as number);
-    this.control.x = coords[0];
-    this.control.y = coords[1];
+    this.control.attributes.x = coords[0];
+    this.control.attributes.y = coords[1];
     this.setPosition();
     this.control.currentValue = controlValue;
   }
@@ -578,9 +578,17 @@ class RdDial extends FormElement {
     this.channel = new BroadcastChannel(name);
   }
 
-  setControl(control: RdControl) {
+  setControl(control: RdControl<RdDialAttributes>) {
+    this.control = control;
+    this.onSliderInit();
     this.setAttribute('name', control.name);
-    this.setAttribute('type', control.type);
+    // this.setAttribute('type', control.type);
+    if (this.control.attributes.size) {
+      this.shadowRoot
+        .querySelector('.slider')
+        .classList.add(this.control.attributes.size);
+    }
+
     if (control.currentValue) {
       this.value = control.currentValue as number | number[];
     }

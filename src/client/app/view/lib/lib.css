@@ -23,8 +23,8 @@ p {
   height: 32px;
   border-radius: 50%;
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 40px;
+  right: 20px;
   cursor: pointer;
   &.dark {
     background: #ffffff;

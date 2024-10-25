@@ -1,6 +1,12 @@
 import { Component, FormElement, html, css } from '@readymade/core';
 import { RdControl } from '../control';
 
+export interface RdRadioGroupAttributes {
+  direction?: 'horizontal' | 'vertical';
+  checked?: boolean;
+  inputs?: Array<{ value: string; label: string }>;
+}
+
 @Component({
   selector: 'rd-radiogroup',
   style: css`
@@ -102,6 +108,7 @@ import { RdControl } from '../control';
 class RdRadioGroup extends FormElement {
   direction: 'horizontal' | 'vertical';
   channel: BroadcastChannel;
+  control: RdControl<RdRadioGroupAttributes>;
   constructor() {
     super();
   }
@@ -136,13 +143,10 @@ class RdRadioGroup extends FormElement {
       elem.onblur = () => {
         this.onValidate();
       };
-      elem.onclick = () => {
+      elem.onclick = (ev: MouseEvent) => {
         if (this.channel) {
-          this.channel.postMessage({
-            type: 'radio',
-            name: this.name,
-            value: this.value,
-          });
+          this.control.currentValue = (ev.target as HTMLInputElement).value;
+          this.channel.postMessage(this.control);
         }
       };
     });
@@ -197,6 +201,9 @@ class RdRadioGroup extends FormElement {
         elem.checked = false;
       }
     });
+    if (this.control) {
+      this.control.currentValue = value;
+    }
   }
 
   get form() {
@@ -226,9 +233,43 @@ class RdRadioGroup extends FormElement {
     this.channel = new BroadcastChannel(name);
   }
 
-  setControl(control: RdControl) {
+  setControl(control: RdControl<RdRadioGroupAttributes>) {
+    this.control = control;
     this.setAttribute('name', control.name);
     this.setAttribute('type', control.type);
+    if (control.attributes.direction) {
+      this.direction = control.attributes.direction;
+      if (this.direction === 'vertical') {
+        this.shadowRoot?.querySelector('.group').classList.add('vertical');
+      } else {
+        this.shadowRoot?.querySelector('.group').classList.remove('vertical');
+      }
+    }
+    if (control.attributes.inputs) {
+      this.innerHTML = '';
+      for (let i = control.attributes.inputs.length - 1; i >= 0; i--) {
+        const input = document.createElement('input');
+        const label = document.createElement('label');
+        input.setAttribute('type', 'radio');
+        input.setAttribute('name', 'control');
+        input.setAttribute('value', control.attributes.inputs[i].value);
+        label.setAttribute('for', control.attributes.inputs[i].value);
+        label.textContent = control.attributes.inputs[i].label;
+        this.appendChild(input);
+        this.appendChild(label);
+      }
+      this.$elem.forEach((elem: HTMLInputElement) => {
+        elem.onblur = () => {
+          this.onValidate();
+        };
+        elem.onclick = (ev: MouseEvent) => {
+          if (this.channel) {
+            this.control.currentValue = (ev.target as HTMLInputElement).value;
+            this.channel.postMessage(this.control);
+          }
+        };
+      });
+    }
     if (control.currentValue && typeof control.currentValue === 'string') {
       this.value = control.currentValue as string;
     }

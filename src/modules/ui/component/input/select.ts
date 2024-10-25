@@ -1,6 +1,10 @@
 import { Component, Emitter, FormElement, css, html } from '@readymade/core';
 import { RdControl } from '../control';
 
+export interface RdDropdownAttributes {
+  options?: Array<string>;
+}
+
 @Component({
   selector: 'rd-dropdown',
   delegatesFocus: true,
@@ -81,6 +85,7 @@ import { RdControl } from '../control';
 })
 class RdDropdown extends FormElement {
   channel: BroadcastChannel;
+  control: RdControl<RdDropdownAttributes>;
   constructor() {
     super();
   }
@@ -119,11 +124,8 @@ class RdDropdown extends FormElement {
         this.oninput(ev);
       }
       if (this.channel) {
-        this.channel.postMessage({
-          type: 'select',
-          name: this.name,
-          value: this.value,
-        });
+        this.control.currentValue = (ev.target as HTMLSelectElement).value;
+        this.channel.postMessage(this.control);
       }
     };
     this.$elem.onblur = () => {
@@ -180,6 +182,9 @@ class RdDropdown extends FormElement {
 
   set value(value) {
     this.$elem.value = value;
+    if (this.control) {
+      this.control.currentValue = value;
+    }
   }
 
   get $elem(): HTMLSelectElement {
@@ -194,9 +199,20 @@ class RdDropdown extends FormElement {
     this.channel = new BroadcastChannel(name);
   }
 
-  setControl(control: RdControl) {
+  setControl(control: RdControl<RdDropdownAttributes>) {
+    this.control = control;
     this.setAttribute('name', control.name);
     this.setAttribute('type', control.type);
+    if (control.attributes.options) {
+      this.innerHTML = '';
+      const select = document.createElement('select');
+      for (let i = 0; i <= control.attributes.options.length; i++) {
+        const option = document.createElement('option');
+        option.textContent = control.attributes.options[i];
+        select.appendChild(option);
+      }
+      this.appendChild(select);
+    }
     if (control.currentValue && typeof control.currentValue === 'string') {
       this.value = control.currentValue as string;
     }

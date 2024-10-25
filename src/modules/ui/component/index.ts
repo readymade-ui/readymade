@@ -1,3 +1,4 @@
+export * from './control';
 export { RdButton } from './input/button';
 export {
   RdButtonPad,
@@ -14,3 +15,4 @@ export { RdTextArea } from './input/textarea';
 export { RdDropdown } from './input/select';
 export { RdSlider } from './input/slider';
 export { RdDial } from './input/dial';
+export { RdSurface, RdSurfaceElement } from './surface';

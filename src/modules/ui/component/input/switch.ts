@@ -1,5 +1,4 @@
 import { Component, html, css } from '@readymade/core';
-
 import { RdCheckBox } from './checkbox';
 
 @Component({

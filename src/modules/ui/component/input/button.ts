@@ -1,6 +1,13 @@
 import { Component, Listen, FormElement, html, css } from '@readymade/core';
 import { RdControl } from '../control';
 
+export interface RdButtonAttributes {
+  value?: string;
+  label?: string;
+  width?: string;
+  height?: string;
+}
+
 @Component({
   selector: 'rd-button',
   delegatesFocus: true,
@@ -99,6 +106,7 @@ import { RdControl } from '../control';
 })
 class RdButton extends FormElement {
   channel: BroadcastChannel;
+  control: RdControl<RdButtonAttributes>;
   _type: 'submit' | 'reset' | 'button' = 'button';
   constructor() {
     super();
@@ -152,11 +160,8 @@ class RdButton extends FormElement {
     });
     this.$elem.onclick = () => {
       if (this.channel) {
-        this.channel.postMessage({
-          type: this.type,
-          name: this.name,
-          value: this.value.length ? this.value : 'bang',
-        });
+        this.control.currentValue = this.value ? this.value : 'bang';
+        this.channel.postMessage(this.control);
       }
     };
     if (this.type === 'submit') {
@@ -217,6 +222,9 @@ class RdButton extends FormElement {
 
   set value(value) {
     this.$elem.value = value;
+    if (this.control) {
+      this.control.currentValue = value;
+    }
   }
 
   get $elem(): HTMLButtonElement {
@@ -236,11 +244,29 @@ class RdButton extends FormElement {
     this.channel = new BroadcastChannel(name);
   }
 
-  setControl(control: RdControl) {
+  setControl(control: RdControl<RdButtonAttributes>) {
+    this.control = control;
     this.setAttribute('name', control.name);
     this.setAttribute('type', control.type);
-    if (control.currentValue && typeof control.currentValue === 'string') {
-      this.value = control.currentValue as string;
+    if (control.attributes.label) {
+      (this.shadowRoot.querySelector('.label') as HTMLSpanElement).innerText =
+        control.attributes.label;
+    }
+    if (control.attributes.width) {
+      this.shadowRoot.querySelector('button').style.width =
+        control.attributes.width;
+    }
+    if (control.attributes.height) {
+      this.shadowRoot.querySelector('button').style.width =
+        control.attributes.height;
+    }
+    if (
+      (control.currentValue && typeof control.currentValue === 'string') ||
+      control.attributes.value
+    ) {
+      this.value = control.currentValue
+        ? (control.currentValue as string)
+        : control.attributes.value;
     }
   }
 }

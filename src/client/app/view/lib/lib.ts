@@ -7,6 +7,15 @@ import {
   RdSlider,
   RdRadioGroup,
   RdDial,
+  RdButtonPad,
+  RdButton,
+  RdDropdown,
+  RdCheckBox,
+  RdSwitch,
+  RdInput,
+  RdTextArea,
+  RdSurface,
+  RdControlSurface,
 } from '@readymade/ui';
 
 @Component({
@@ -16,7 +25,7 @@ import {
 })
 class LibraryComponent extends CustomElement {
   theme: string = 'dark';
-  mode: 'form' | 'channel' = 'form';
+  mode: 'form' | 'channel' = 'channel';
   channelName = 'rd-messages';
   channel: BroadcastChannel;
   constructor() {
@@ -39,132 +48,204 @@ class LibraryComponent extends CustomElement {
       this.onModeChange();
     };
 
-    const buttonPad = (<unknown>(
-      this.shadowRoot?.querySelector('rd-buttonpad')
-    )) as FormElement;
-    const buttonNumberPad = (<unknown>(
-      this.shadowRoot?.querySelectorAll('rd-buttonpad')[1]
-    )) as FormElement;
-    const dial = (<unknown>(
-      this.shadowRoot?.querySelector('[name="dial"]')
-    )) as RdSlider;
-    const squareJoystick = (<unknown>(
-      this.shadowRoot?.querySelector('[type="joystick"]')
-    )) as RdSlider;
-    const vertSlider = (<unknown>(
-      this.shadowRoot?.querySelector('[type="vert"]')
-    )) as RdSlider;
-    const horizontalSlider = (<unknown>(
-      this.shadowRoot?.querySelector('[type="hor"]')
-    )) as RdSlider;
-
-    buttonPad.setAttribute(
-      'grid',
-      JSON.stringify({
-        gap: '4px',
-        columns: {
-          count: 14,
+    const controlSurface: RdControlSurface = {
+      style: {
+        display: 'grid',
+        gridTemplateColumns: 'repeat(3, 30% [col-start])',
+        columnGap: '88px',
+        rowGap: '44px',
+        paddingTop: '44px',
+        width: '100%',
+      },
+      controls: [
+        {
+          label: 'Input',
+          selector: 'rd-input',
+          channel: this.channelName,
+          style: {
+            width: '290px',
+          },
+          control: {
+            name: 'input',
+            attributes: {},
+          },
         },
-        cells: [
-          {
-            selector: '[key="Space"]',
-            styles: {
-              width: '100%',
-              gridColumn: 'span 3',
-            },
+        {
+          label: 'Textarea',
+          selector: 'rd-textarea',
+          channel: this.channelName,
+          control: {
+            name: 'textarea',
+            attributes: {},
           },
-          {
-            selector: '[key="Enter"]',
-            styles: {
-              width: '100%',
-              gridColumn: 'span 2',
-            },
-          },
-        ],
-      }),
-    );
-    buttonPad.setAttribute('buttons', JSON.stringify(StandardKeyboard));
-
-    buttonNumberPad.setAttribute(
-      'grid',
-      JSON.stringify({
-        gap: '4px',
-        columns: {
-          count: 4,
         },
-        cells: [
-          {
-            selector: '[key="0"]',
-            styles: {
-              width: '100%',
-              gridColumn: 'span 2',
+        {
+          label: 'Button',
+          selector: 'rd-button',
+          channel: this.channelName,
+          control: {
+            name: 'button',
+            attributes: {},
+          },
+        },
+        {
+          label: 'Select',
+          selector: 'rd-dropdown',
+          channel: this.channelName,
+          style: {
+            width: '320px',
+          },
+          control: {
+            name: 'dropdown',
+            attributes: {
+              options: [
+                'Option 1',
+                'Option 2',
+                'Option 3',
+                'Option With Really, Really, Really, Really, Really Long Name',
+              ],
             },
           },
-          {
-            selector: '[key="Enter"]',
-            styles: {
-              height: '100%',
-              gridRow: 'span 2',
+        },
+        {
+          label: 'Checkbox',
+          selector: 'rd-checkbox',
+          channel: this.channelName,
+          control: {
+            name: 'checkbox',
+            attributes: {},
+          },
+        },
+        {
+          label: 'Switch',
+          selector: 'rd-switch',
+          channel: this.channelName,
+          control: {
+            name: 'swtich',
+            attributes: {},
+          },
+        },
+        {
+          label: 'Radio Group',
+          selector: 'rd-radiogroup',
+          channel: this.channelName,
+          control: {
+            name: 'radio',
+            attributes: {
+              direction: 'vertical',
+              inputs: [
+                {
+                  value: 'hue',
+                  label: 'Hue',
+                },
+                {
+                  value: 'saturation',
+                  label: 'Saturation',
+                },
+                {
+                  value: 'brightness',
+                  label: 'Brightness',
+                },
+              ],
             },
           },
-        ],
-      }),
-    );
-    buttonNumberPad.setAttribute(
-      'buttons',
-      JSON.stringify(StandardKeyboardNumPad),
-    );
+        },
+        {
+          label: 'Slider',
+          selector: 'rd-slider',
+          channel: this.channelName,
+          control: {
+            type: 'vert',
+            name: 'slider',
+            currentValue: 100,
+            attributes: {
+              orient: 'is--vert',
+              min: 0,
+              max: 255,
+            },
+          },
+        },
+        {
+          label: 'Joystick',
+          selector: 'rd-slider',
+          channel: this.channelName,
+          control: {
+            type: 'joystick',
+            name: 'square-joystick',
+            currentValue: [0, 0],
+            attributes: {
+              orient: 'is--joystick',
+              min: [0, 0],
+              max: [1024, 1024],
+              snapToCenter: true,
+              numberType: 'int',
+            },
+          },
+        },
+        {
+          label: 'Dial',
+          selector: 'rd-dial',
+          channel: this.channelName,
+          control: {
+            type: 'dial',
+            name: 'dial',
+            currentValue: 0.25,
+            attributes: {
+              min: 0.0,
+              max: 1.0,
+            },
+          },
+        },
+        {
+          label: 'Button Pad',
+          selector: 'rd-buttonpad',
+          channel: this.channelName,
+          style: {
+            maxWidth: '200px',
+          },
+          control: {
+            name: 'numberpad',
+            attributes: {
+              buttons: StandardKeyboardNumPad,
+              grid: {
+                gap: '4px',
+                columns: {
+                  count: 4,
+                },
+                cells: [
+                  {
+                    selector: '[key="0"]',
+                    styles: {
+                      width: '100%',
+                      gridColumn: 'span 2',
+                    },
+                  },
+                  {
+                    selector: '[key="Enter"]',
+                    styles: {
+                      height: '100%',
+                      gridRow: 'span 2',
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        },
+      ],
+    };
+    const surface = this.shadowRoot?.querySelector('rd-surface') as RdSurface;
 
-    setTimeout(() => (vertSlider.value = 100));
-    setTimeout(() => (horizontalSlider.value = 1000));
-    setTimeout(() => (dial.value = 0.25));
-    setTimeout(() => (squareJoystick.value = [140, 140]));
+    setTimeout(() => {
+      surface.setControlSurface(controlSurface);
+      this.onModeChange();
+    });
 
-    this.onModeChange();
     (modeRadio as RdRadioGroup).value = this.mode;
   }
   @State()
   public getState() {
-    return {
-      vertControl: JSON.stringify({
-        type: 'slider',
-        name: 'slider',
-        selector: 'rd-slider',
-        orient: 'is--vert',
-        min: 0,
-        max: 255,
-        size: 'small',
-        gridArea: '1 / 1 / span 3 / span 1',
-      }),
-      horControl: JSON.stringify({
-        type: 'slider',
-        name: 'h',
-        selector: 'rd-slider',
-        orient: 'is--hor',
-        min: 0,
-        max: 1000,
-        gridArea: '1 / 3 / span 1 / span 3',
-      }),
-      dialControl: JSON.stringify({
-        type: 'dial',
-        name: 'dial',
-        selector: 'rd-dial',
-        min: 0.0,
-        max: 1.0,
-        gridArea: '1 / 2 / span 4 / span 1',
-      }),
-      joySquareControl: JSON.stringify({
-        type: 'slider',
-        name: 'square-joystick',
-        selector: 'rd-slider',
-        orient: 'is--joystick--square',
-        min: [0, 0],
-        max: [12, 12],
-        snapToCenter: false,
-        gridArea: '1 / 2 / span 4 / span 1',
-        numberType: 'int',
-      }),
-    };
+    return {};
   }
   toggleTheme() {
     this.theme = this.theme === 'light' ? 'dark' : 'light';
@@ -177,31 +258,31 @@ class LibraryComponent extends CustomElement {
     const form = this.shadowRoot?.querySelector('form');
     const radio = (<unknown>(
       this.shadowRoot?.querySelectorAll('rd-radiogroup')[1]
-    )) as FormElement;
+    )) as RdRadioGroup;
     const toggle = (<unknown>(
       this.shadowRoot?.querySelector('rd-switch')
-    )) as FormElement;
+    )) as RdSwitch;
     const checkbox = (<unknown>(
       this.shadowRoot?.querySelector('rd-checkbox')
-    )) as FormElement;
+    )) as RdCheckBox;
     const input = (<unknown>(
       this.shadowRoot?.querySelector('rd-input')
-    )) as FormElement;
+    )) as RdInput;
     const textarea = (<unknown>(
       this.shadowRoot?.querySelector('rd-textarea')
-    )) as FormElement;
+    )) as RdTextArea;
     const select = (<unknown>(
       this.shadowRoot?.querySelector('rd-dropdown')
-    )) as FormElement;
+    )) as RdDropdown;
     const button = (<unknown>(
       this.shadowRoot?.querySelector('rd-button')
-    )) as FormElement;
-    const buttonPad = (<unknown>(
-      this.shadowRoot?.querySelector('rd-buttonpad')
-    )) as FormElement;
+    )) as RdButton;
+    // const buttonPad = (<unknown>(
+    //   this.shadowRoot?.querySelector('rd-buttonpad')
+    // )) as RdButtonPad;
     const buttonNumberPad = (<unknown>(
-      this.shadowRoot?.querySelectorAll('rd-buttonpad')[1]
-    )) as FormElement;
+      this.shadowRoot?.querySelectorAll('rd-buttonpad')
+    )) as RdButtonPad;
     const dial = (<unknown>(
       this.shadowRoot?.querySelector('[name="dial"]')
     )) as RdDial;
@@ -211,12 +292,12 @@ class LibraryComponent extends CustomElement {
     const vertSlider = (<unknown>(
       this.shadowRoot?.querySelector('[type="vert"]')
     )) as RdSlider;
-    const horizontalSlider = (<unknown>(
-      this.shadowRoot?.querySelector('[type="hor"]')
-    )) as RdSlider;
-    const submit = (<unknown>(
-      this.shadowRoot?.querySelector('[type="submit"]')
-    )) as FormElement;
+    // const horizontalSlider = (<unknown>(
+    //   this.shadowRoot?.querySelector('[type="hor"]')
+    // )) as RdSlider;
+    // const submit = (<unknown>(
+    //   this.shadowRoot?.querySelector('[type="submit"]')
+    // )) as RdButton;
     if (this.mode === 'form') {
       this.channel?.close();
       radio.onchange = (ev: Event) => {
@@ -246,11 +327,11 @@ class LibraryComponent extends CustomElement {
       button.onclick = (ev: Event) => {
         console.log(ev);
       };
-      buttonPad.onclick = (ev: Event) => {
-        if ((ev.target as HTMLElement).tagName === 'RD-BUTTON') {
-          console.dir((form[16] as HTMLInputElement).value);
-        }
-      };
+      // buttonPad.onclick = (ev: Event) => {
+      //   if ((ev.target as HTMLElement).tagName === 'RD-BUTTON') {
+      //     console.dir((form[16] as HTMLInputElement).value);
+      //   }
+      // };
       buttonNumberPad.onclick = (ev: Event) => {
         if ((ev.target as HTMLElement).tagName === 'RD-BUTTON') {
           console.dir((form[17] as HTMLInputElement).value);
@@ -265,42 +346,28 @@ class LibraryComponent extends CustomElement {
       vertSlider.oninput = (ev: CustomEvent) => {
         console.log((ev.target as any).value);
       };
-      horizontalSlider.oninput = (ev: CustomEvent) => {
-        console.log((ev.target as any).value);
-      };
-      submit.onclick = (ev: Event) => {
-        ev.preventDefault();
-        const values = Array.from(
-          this.shadowRoot?.querySelectorAll('.form__item'),
-        ).map((item: any) => {
-          if (item.onValidate) {
-            item.onValidate();
-          }
-          return {
-            tag: item.tagName,
-            value: item.value,
-            validity: item.checkValidity ? item.checkValidity() : null,
-          };
-        });
-        console.log(values);
-      };
+      // horizontalSlider.oninput = (ev: CustomEvent) => {
+      //   console.log((ev.target as any).value);
+      // };
+      // submit.onclick = (ev: Event) => {
+      //   ev.preventDefault();
+      //   const values = Array.from(
+      //     this.shadowRoot?.querySelectorAll('.form__item'),
+      //   ).map((item: any) => {
+      //     if (item.onValidate) {
+      //       item.onValidate();
+      //     }
+      //     return {
+      //       tag: item.tagName,
+      //       value: item.value,
+      //       validity: item.checkValidity ? item.checkValidity() : null,
+      //     };
+      //   });
+      //   console.log(values);
+      // };
     }
     if (this.mode === 'channel') {
       this.channel = new BroadcastChannel(this.channelName);
-      radio.setAttribute('channel', this.channelName);
-      toggle.setAttribute('channel', this.channelName);
-      checkbox.setAttribute('channel', this.channelName);
-      input.setAttribute('channel', this.channelName);
-      textarea.setAttribute('channel', this.channelName);
-      select.setAttribute('channel', this.channelName);
-      button.setAttribute('channel', this.channelName);
-      buttonPad.setAttribute('channel', this.channelName);
-      buttonNumberPad.setAttribute('channel', this.channelName);
-      dial.setAttribute('channel', this.channelName);
-      squareJoystick.setAttribute('channel', this.channelName);
-      vertSlider.setAttribute('channel', this.channelName);
-      horizontalSlider.setAttribute('channel', this.channelName);
-      submit.setAttribute('channel', this.channelName);
       this.channel.onmessage = (event) => {
         console.log(event.data);
       };
@@ -313,13 +380,13 @@ class LibraryComponent extends CustomElement {
       textarea.onchange = () => {};
       select.onchange = () => {};
       button.onclick = () => {};
-      buttonPad.onclick = () => {};
+      // buttonPad.onclick = () => {};
       buttonNumberPad.onclick = () => {};
       dial.oninput = () => {};
       squareJoystick.oninput = () => {};
       vertSlider.oninput = () => {};
-      horizontalSlider.oninput = () => {};
-      submit.onclick = () => {};
+      // horizontalSlider.oninput = () => {};
+      // submit.onclick = () => {};
     }
   }
 }
