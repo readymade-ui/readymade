@@ -23,26 +23,26 @@ import { RdCheckBox } from './checkbox';
     :host input[type='checkbox']:before {
       content: '';
       width: 100%;
-      border: 2px solid var(--ready-color-border);
+      border: var(--ready-border-width) solid var(--ready-color-border);
       background-color: var(--ready-color-bg);
-      border-radius: 1em;
+      border-radius: var(--ready-border-radius);
       color: var(--ready-color-default);
       padding: 1px 0px;
       background-image: var(--ready-icon-switch);
       background-size: 22px 22px;
       background-repeat: no-repeat;
-      background-position: left 2px top 50%;
+      background-position: left var(--ready-border-width) top 50%;
     }
     :host input[type='checkbox']:checked:before {
       background-image: var(--ready-icon-switch);
       background-size: 22px 22px;
       background-repeat: no-repeat;
-      background-position: right 2px top 50%;
+      background-position: right var(--ready-border-width) top 50%;
     }
     :host input[type='checkbox']:hover:before,
     :host input[type='checkbox']:focus:before,
     :host input[type='checkbox']:active:before {
-      border: 2px solid var(--ready-color-highlight);
+      border: var(--ready-border-width) solid var(--ready-color-highlight);
     }
     :host input[type='checkbox']:focus,
     :host input[type='checkbox']:active {
@@ -51,7 +51,7 @@ import { RdCheckBox } from './checkbox';
     }
     :host input[type='checkbox']:active:before {
       background-color: var(--ready-color-selected);
-      border: 2px solid var(--ready-color-highlight);
+      border: var(--ready-border-width) solid var(--ready-color-highlight);
     }
     :host input[type='checkbox'][disabled]:before {
       opacity: var(--ready-opacity-disabled);
@@ -59,19 +59,19 @@ import { RdCheckBox } from './checkbox';
       background-image: var(--ready-icon-switch);
       background-size: 22px 22px;
       background-repeat: no-repeat;
-      background-position: left 2px top 50%;
+      background-position: left var(--ready-border-width) top 50%;
       cursor: not-allowed;
     }
     :host input[type='checkbox'][disabled]:checked:before {
       background-image: var(--ready-icon-switch);
       background-size: 22px 22px;
       background-repeat: no-repeat;
-      background-position: right 2px top 50%;
+      background-position: right var(--ready-border-width) top 50%;
     }
     :host input[type='checkbox'][disabled]:hover:before,
     :host input[type='checkbox'][disabled]:focus:before,
     :host input[type='checkbox'][disabled]:active:before {
-      border: 2px solid var(--ready-color-border);
+      border: var(--ready-border-width) solid var(--ready-color-border);
       outline: none;
       box-shadow: none;
     }
@@ -79,7 +79,7 @@ import { RdCheckBox } from './checkbox';
     :host input[type='checkbox'].required:hover:before,
     :host input[type='checkbox'].required:focus:before,
     :host input[type='checkbox'].required:active:before {
-      border: 2px solid var(--ready-color-error);
+      border: var(--ready-border-width) solid var(--ready-color-error);
       outline: none;
       box-shadow: none;
     }

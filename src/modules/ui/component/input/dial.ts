@@ -37,7 +37,7 @@ export interface RdDialAttributes {
       display: block;
       z-index: 1000;
       background-color: var(--ready-color-bg);
-      border: 2px solid var(--ready-color-border);
+      border: var(--ready-border-width) solid var(--ready-color-border);
     }
     .draggable .range {
       width: 100%;
@@ -85,7 +85,7 @@ export interface RdDialAttributes {
     }
     .slider .draggable:hover, 
     .slider .draggable.active {
-      border: 2px solid var(--ready-color-highlight);
+      border: var(--ready-border-width) solid var(--ready-color-highlight);
       outline: none;
       box-shadow: none;
     }
@@ -101,14 +101,14 @@ export interface RdDialAttributes {
     }
     .slider .draggable[disabled]:hover, 
     .slider .draggable[disabled].active {
-      border: 2px solid var(--ready-color-border);
+      border: var(--ready-border-width) solid var(--ready-color-border);
       outline: none;
       box-shadow: none;
     }
     :host.required .slider .draggable,
     :host.required .slider .draggable[disabled]:hover, 
     :host.required .slider .draggable[disabled].active {
-      border: 2px solid var(--ready-color-error);
+      border: var(--ready-border-width) solid var(--ready-color-error);
       outline: none;
       box-shadow: none;
     }
@@ -134,6 +134,8 @@ class RdDial extends FormElement {
   private _type = 'dial';
   private _lastAngle: number;
   private _limit = false;
+  private _belowRotationalLimit = false;
+  private _wasBelowLimit = false;
   public control: RdControl<RdDialAttributes>;
   public channel: BroadcastChannel;
   constructor() {
@@ -446,7 +448,13 @@ class RdDial extends FormElement {
     if (radians > 0 && this._lastAngle < 0 && angle < 365 && angle > 355) {
       this._revolutions = this._revolutions - 1;
     }
-    this._angle = Math.round(angle);
+
+    if (!this._belowRotationalLimit) {
+      this._angle = Math.round(angle) - 360;
+    } else {
+      this._angle = Math.round(angle);
+    }
+
     this._lastAngle = radians;
 
     return [
@@ -499,10 +507,23 @@ class RdDial extends FormElement {
   }
 
   mapValue() {
-    const rotationalValue = 360 * this._revolutions + this._angle;
+    let rotationalValue = 360 * this._revolutions + this._angle;
 
     const min = this.control.attributes.min as number;
     const max = this.control.attributes.max as number;
+
+    if (
+      this.control.attributes.stops[0] < 0 &&
+      this.control.attributes.stops[1] < 360 &&
+      rotationalValue > this.control.attributes.stops[1] &&
+      rotationalValue < 360 &&
+      this._revolutions === 0
+    ) {
+      rotationalValue = rotationalValue - 360;
+      this._belowRotationalLimit = true;
+    } else if (this._belowRotationalLimit === true && rotationalValue >= 360) {
+      this._belowRotationalLimit = false;
+    }
 
     const value: number = this.scale(
       rotationalValue,
@@ -514,7 +535,7 @@ class RdDial extends FormElement {
 
     let currentValue: number;
 
-    if (value > max) {
+    if (value > max && !this._belowRotationalLimit) {
       currentValue = this.control.attributes.max as number;
       this._limit = true;
     } else if (value < min) {
@@ -582,14 +603,12 @@ class RdDial extends FormElement {
     this.control = control;
     this.onSliderInit();
     this.setAttribute('name', control.name);
-    // this.setAttribute('type', control.type);
     if (this.control.attributes.size) {
       this.shadowRoot
         .querySelector('.slider')
         .classList.add(this.control.attributes.size);
     }
-
-    if (control.currentValue) {
+    if (control.currentValue !== undefined) {
       this.value = control.currentValue as number | number[];
     }
   }

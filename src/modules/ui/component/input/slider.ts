@@ -38,7 +38,7 @@ export interface RdSliderAttributes {
       display: block;
       z-index: 1000;
       background-color: var(--ready-color-bg);
-      border: 2px solid var(--ready-color-border);
+      border: var(--ready-border-width) solid var(--ready-color-border);
     }
     .draggable .range {
       width: 100%;
@@ -69,7 +69,7 @@ export interface RdSliderAttributes {
     }
     .slider.hor .draggable {
       width: 100%;
-      border-radius: 14px;
+      border-radius:  var(--ready-border-radius);
     }
     .slider.hor .draggable .handle {
       background: var(--ready-icon-hor);
@@ -96,7 +96,7 @@ export interface RdSliderAttributes {
       width: 32px;
       height: 100%;
       min-height: 208px;
-      border-radius: 14px;
+      border-radius:  var(--ready-border-radius);
     }
     .slider.vert .draggable .handle {
       background: var(--ready-icon-vert);
@@ -137,7 +137,7 @@ export interface RdSliderAttributes {
     }
     .slider .draggable:hover, 
     .slider .draggable.active {
-      border: 2px solid var(--ready-color-highlight);
+      border: var(--ready-border-width) solid var(--ready-color-highlight);
       outline: none;
       box-shadow: none;
     }
@@ -153,14 +153,14 @@ export interface RdSliderAttributes {
     }
     .slider .draggable[disabled]:hover, 
     .slider .draggable[disabled].active {
-      border: 2px solid var(--ready-color-border);
+      border: var(--ready-border-width) solid var(--ready-color-border);
       outline: none;
       box-shadow: none;
     }
     :host.required .slider .draggable,
     :host.required .slider .draggable[disabled]:hover, 
     :host.required .slider .draggable[disabled].active {
-      border: 2px solid var(--ready-color-error);
+      border: var(--ready-border-width) solid var(--ready-color-error);
       outline: none;
       box-shadow: none;
     }
@@ -810,7 +810,7 @@ class RdSlider extends FormElement {
         .querySelector('.slider')
         .classList.add(this.control.attributes.size);
     }
-    if (control.currentValue) {
+    if (control.currentValue !== undefined) {
       this.value = control.currentValue as number | number[];
     }
     this.onSliderInit();

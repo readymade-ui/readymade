@@ -7,7 +7,7 @@ import { Component, css, CustomElement, html } from '@readymade/core';
       display: block;
     }
   `,
-  template: html` <p>Hello World</p> `,
+  template: html`<p>Hello World</p>`,
 })
 class HelloWorldComponent extends CustomElement {
   constructor() {

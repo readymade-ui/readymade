@@ -19,9 +19,9 @@ export interface RdButtonAttributes {
     :host button {
       width: 72px;
       height: 36px;
-      border: 2px solid var(--ready-color-border);
+      border: var(--ready-border-width) solid var(--ready-color-border);
       background-color: var(--ready-color-bg);
-      border-radius: 14px;
+      border-radius: var(--ready-border-radius);
       color: var(--ready-color-default);
       cursor: pointer;
       display: flex;
@@ -50,7 +50,7 @@ export interface RdButtonAttributes {
     }
     :host button.is--medium {
       min-height: 32px;
-      border-radius: 14px;
+      border-radius: var(--ready-border-radius);
     }
     :host button.is--medium .icon:not(.is--empty) {
       display: inline-block;
@@ -59,7 +59,7 @@ export interface RdButtonAttributes {
     }
     :host button.is--large {
       min-height: 44px;
-      border-radius: 18px;
+      border-radius: var(--ready-border-radius);
     }
     :host button.is--large .icon:not(.is--empty) {
       display: inline-block;
@@ -68,20 +68,20 @@ export interface RdButtonAttributes {
     }
     :host button:hover {
       background-color: var(--ready-color-bg);
-      border: 2px solid var(--ready-color-highlight);
+      border: var(--ready-border-width) solid var(--ready-color-highlight);
     }
     :host button:focus {
       outline: 0px;
       outline-offset: 0px;
       background-color: var(--ready-color-bg);
-      border: 2px solid var(--ready-color-highlight);
+      border: var(--ready-border-width) solid var(--ready-color-highlight);
     }
     :host button:active,
     :host button.active {
       outline: 0px;
       outline-offset: 0px;
       background-color: var(--ready-color-selected);
-      border: 2px solid var(--ready-color-highlight);
+      border: var(--ready-border-width) solid var(--ready-color-highlight);
     }
     :host button[disabled] {
       opacity: var(--ready-opacity-disabled);
@@ -92,7 +92,7 @@ export interface RdButtonAttributes {
     :host button[disabled]:focus,
     :host button[disabled]:active,
     :host button[disabled].active {
-      border: 2px solid var(--ready-color-border);
+      border: var(--ready-border-width) solid var(--ready-color-border);
       outline: none;
       box-shadow: none;
     }

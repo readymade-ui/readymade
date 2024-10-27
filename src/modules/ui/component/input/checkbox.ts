@@ -26,7 +26,7 @@ export interface RdCheckboxAttributes {
       display: block;
       width: 24px;
       height: 24px;
-      border: 2px solid var(--ready-color-border);
+      border: var(--ready-border-width) solid var(--ready-color-border);
       border-radius: 6px;
       background: var(--ready-color-bg);
     }
@@ -43,7 +43,7 @@ export interface RdCheckboxAttributes {
     :host input[type='checkbox']:hover:before,
     :host input[type='checkbox']:focus:before,
     :host input[type='checkbox']:active:before {
-      border: 2px solid var(--ready-color-highlight);
+      border: var(--ready-border-width) solid var(--ready-color-highlight);
     }
     :host input[type='checkbox'][disabled]:before {
       opacity: var(--ready-opacity-disabled);
@@ -58,7 +58,7 @@ export interface RdCheckboxAttributes {
     :host input[type='checkbox'][disabled]:hover:before,
     :host input[type='checkbox'][disabled]:focus:before,
     :host input[type='checkbox'][disabled]:active:before {
-      border: 2px solid var(--ready-color-border);
+      border: var(--ready-border-width) solid var(--ready-color-border);
       outline: none;
       box-shadow: none;
     }
@@ -66,7 +66,7 @@ export interface RdCheckboxAttributes {
     :host input[type='checkbox'].required:hover:before,
     :host input[type='checkbox'].required:focus:before,
     :host input[type='checkbox'].required:active:before {
-      border: 2px solid var(--ready-color-error);
+      border: var(--ready-border-width) solid var(--ready-color-error);
       outline: none;
       box-shadow: none;
     }

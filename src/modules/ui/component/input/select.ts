@@ -17,8 +17,8 @@ export interface RdDropdownAttributes {
       display: block;
       width: 100%;
       background-color: var(--ready-color-bg);
-      border: 2px solid var(--ready-color-border);
-      border-radius: 1em;
+      border: var(--ready-border-width) solid var(--ready-color-border);
+      border-radius: var(--ready-border-radius);
       color: var(--ready-color-default);
       font: var(--font-family);
       line-height: 1.3;
@@ -39,7 +39,7 @@ export interface RdDropdownAttributes {
     ::slotted(select:hover),
     ::slotted(select:focus),
     ::slotted(select:active) {
-      border: 2px solid var(--ready-color-highlight);
+      border: var(--ready-border-width) solid var(--ready-color-highlight);
       outline: none;
       box-shadow: none;
     }
@@ -68,7 +68,7 @@ export interface RdDropdownAttributes {
     ::slotted(select[disabled]:hover),
     ::slotted(select[disabled]:focus),
     ::slotted(select[disabled]:active) {
-      border: 2px solid var(--ready-color-border);
+      border: var(--ready-border-width) solid var(--ready-color-border);
       outline: none;
       box-shadow: none;
     }
@@ -76,7 +76,7 @@ export interface RdDropdownAttributes {
     ::slotted(select.required:hover),
     ::slotted(select.required:focus),
     ::slotted(select.required:active) {
-      border: 2px solid var(--ready-color-error);
+      border: var(--ready-border-width) solid var(--ready-color-error);
       outline: none;
       box-shadow: none;
     }

@@ -16,8 +16,8 @@ export interface RdInputAttributes {
     :host input {
       width: 100%;
       background-color: var(--ready-color-bg);
-      border: 2px solid var(--ready-color-border);
-      border-radius: 1em;
+      border: var(--ready-border-width) solid var(--ready-color-border);
+      border-radius: var(--ready-border-radius);
       color: var(--ready-color-default);
       font: var(--font-family);
       min-height: 2em;
@@ -26,7 +26,7 @@ export interface RdInputAttributes {
     :host input:hover,
     :host input:focus,
     :host input:active {
-      border: 2px solid var(--ready-color-highlight);
+      border: var(--ready-border-width) solid var(--ready-color-highlight);
       outline: none;
       box-shadow: none;
     }
@@ -38,7 +38,7 @@ export interface RdInputAttributes {
     :host input[disabled]:hover,
     :host input[disabled]:focus,
     :host input[disabled]:active {
-      border: 2px solid var(--ready-color-border);
+      border: var(--ready-border-width) solid var(--ready-color-border);
       outline: none;
       box-shadow: none;
     }
@@ -46,7 +46,7 @@ export interface RdInputAttributes {
     :host input.required:hover,
     :host input.required:focus,
     :host input.required:active {
-      border: 2px solid var(--ready-color-error);
+      border: var(--ready-border-width) solid var(--ready-color-error);
       outline: none;
       box-shadow: none;
     }

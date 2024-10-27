@@ -11,8 +11,8 @@ import { RdInput } from './input';
     }
     :host textarea {
       background-color: var(--ready-color-bg);
-      border: 2px solid var(--ready-color-border);
-      border-radius: 1em;
+      border: var(--ready-border-width) solid var(--ready-color-border);
+      border-radius: var(--ready-border-radius);
       color: var(--ready-color-default);
       font: var(--font-family);
       outline: none;
@@ -28,7 +28,7 @@ import { RdInput } from './input';
     :host textarea:hover,
     :host textarea:focus,
     :host textarea:active {
-      border: 2px solid var(--ready-color-highlight);
+      border: var(--ready-border-width) solid var(--ready-color-highlight);
       outline: none;
       box-shadow: none;
     }
@@ -40,7 +40,7 @@ import { RdInput } from './input';
     :host textarea[disabled]:hover,
     :host textarea[disabled]:focus,
     :host textarea[disabled]:active {
-      border: 2px solid var(--ready-color-border);
+      border: var(--ready-border-width) solid var(--ready-color-border);
       outline: none;
       box-shadow: none;
     }
@@ -48,7 +48,7 @@ import { RdInput } from './input';
     :host textarea.required:hover,
     :host textarea.required:focus,
     :host textarea.required:active {
-      border: 2px solid var(--ready-color-error);
+      border: var(--ready-border-width) solid var(--ready-color-error);
       outline: none;
       box-shadow: none;
     }

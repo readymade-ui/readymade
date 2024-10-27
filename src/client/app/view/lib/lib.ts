@@ -2,7 +2,7 @@ import { Component, CustomElement, FormElement, State } from '@readymade/core';
 import template from './lib.html?raw';
 import style from './lib.css?raw';
 import {
-  StandardKeyboardNumPad,
+  StandardKeyboard,
   RdSlider,
   RdRadioGroup,
   RdDial,
@@ -39,7 +39,7 @@ class LibraryComponent extends CustomElement {
       });
 
     const modeRadio = (<unknown>(
-      this.shadowRoot?.querySelectorAll('rd-radiogroup')[0]
+      this.shadowRoot?.querySelectorAll('rd-radiogroup.form__item')[0]
     )) as FormElement;
 
     modeRadio.onchange = (ev: Event) => {
@@ -57,6 +57,20 @@ class LibraryComponent extends CustomElement {
         width: '100%',
       },
       controls: [
+        {
+          label: 'Dial',
+          selector: 'rd-dial',
+          channel: this.channelName,
+          control: {
+            type: 'dial',
+            name: 'dial',
+            currentValue: 0.0,
+            attributes: {
+              min: 0.0,
+              max: 1.0,
+            },
+          },
+        },
         {
           label: 'Input',
           selector: 'rd-input',
@@ -129,21 +143,24 @@ class LibraryComponent extends CustomElement {
           selector: 'rd-radiogroup',
           channel: this.channelName,
           control: {
-            name: 'radio',
+            name: 'radio-group',
             attributes: {
               direction: 'vertical',
               inputs: [
                 {
                   value: 'hue',
                   label: 'Hue',
+                  name: 'radio-group',
                 },
                 {
                   value: 'saturation',
                   label: 'Saturation',
+                  name: 'radio-group',
                 },
                 {
                   value: 'brightness',
                   label: 'Brightness',
+                  name: 'radio-group',
                 },
               ],
             },
@@ -182,20 +199,6 @@ class LibraryComponent extends CustomElement {
           },
         },
         {
-          label: 'Dial',
-          selector: 'rd-dial',
-          channel: this.channelName,
-          control: {
-            type: 'dial',
-            name: 'dial',
-            currentValue: 0.25,
-            attributes: {
-              min: 0.0,
-              max: 1.0,
-            },
-          },
-        },
-        {
           label: 'Button Pad',
           selector: 'rd-buttonpad',
           channel: this.channelName,
@@ -205,25 +208,25 @@ class LibraryComponent extends CustomElement {
           control: {
             name: 'numberpad',
             attributes: {
-              buttons: StandardKeyboardNumPad,
+              buttons: StandardKeyboard,
               grid: {
                 gap: '4px',
                 columns: {
-                  count: 4,
+                  count: 14,
                 },
                 cells: [
                   {
-                    selector: '[key="0"]',
+                    selector: '[key="Space"]',
                     styles: {
                       width: '100%',
-                      gridColumn: 'span 2',
+                      gridColumn: 'span 3',
                     },
                   },
                   {
                     selector: '[key="Enter"]',
                     styles: {
-                      height: '100%',
-                      gridRow: 'span 2',
+                      width: '100%',
+                      gridColumn: 'span 2',
                     },
                   },
                 ],

@@ -2,6 +2,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@1,500&display=swap');
 
 [data-theme='dark'] {
+  --ready-border-width: 2px;
+  --ready-border-radius: 14px;
   --ready-color-default: rgba(255, 255, 255, 1);
   --ready-color-border: rgba(255, 255, 255, 0.65);
   --ready-color-disabled: rgba(212, 212, 212, 0.65);
@@ -26,6 +28,8 @@
 }
 
 [data-theme='light'] {
+  --ready-border-width: 2px;
+  --ready-border-radius: 14px;
   --ready-color-default: rgba(0, 0, 0, 1);
   --ready-color-border: rgba(0, 0, 0, 0.4);
   --ready-color-disabled: rgba(44, 44, 44, 0.4);

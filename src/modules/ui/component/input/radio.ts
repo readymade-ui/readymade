@@ -25,7 +25,7 @@ export interface RdRadioGroupAttributes {
       display: block;
       width: 16px;
       height: 16px;
-      border: 2px solid var(--ready-color-border);
+      border: var(--ready-border-width) solid var(--ready-color-border);
       border-radius: 50%;
       background: var(--ready-color-bg);
     }
@@ -46,7 +46,7 @@ export interface RdRadioGroupAttributes {
     ::slotted(input[type='radio']:hover):before,
     ::slotted(input[type='radio']:focus):before,
     ::slotted(input[type='radio']:active):before {
-      border: 2px solid var(--ready-color-highlight);
+      border: var(--ready-border-width) solid var(--ready-color-highlight);
     }
     ::slotted(input[type='radio'][disabled]):before {
       opacity: var(--ready-opacity-disabled);
@@ -56,7 +56,7 @@ export interface RdRadioGroupAttributes {
     ::slotted(input[type='radio'][disabled]:hover):before,
     ::slotted(input[type='radio'][disabled]:focus):before,
     ::slotted(input[type='radio'][disabled]:active):before {
-      border: 2px solid var(--ready-color-border);
+      border: var(--ready-border-width) solid var(--ready-color-border);
       outline: none;
       box-shadow: none;
     }
@@ -67,12 +67,12 @@ export interface RdRadioGroupAttributes {
     }
     .group {
       box-sizing: border-box:
-      border: 2px solid transparent;
+      border: var(--ready-border-width) solid transparent;
       padding: 12px;
-      border-radius: 14px;
+      border-radius:  var(--ready-border-radius);
     }
     .group.required {
-      border: 2px solid var(--ready-color-error);
+      border: var(--ready-border-width) solid var(--ready-color-error);
     }
     .group.required ::slotted(input[type='radio']) {
      transform: translateX(-1px) translateY(3px);
@@ -251,7 +251,7 @@ class RdRadioGroup extends FormElement {
         const input = document.createElement('input');
         const label = document.createElement('label');
         input.setAttribute('type', 'radio');
-        input.setAttribute('name', 'control');
+        input.setAttribute('name', control.attributes.inputs[i].name);
         input.setAttribute('value', control.attributes.inputs[i].value);
         label.setAttribute('for', control.attributes.inputs[i].value);
         label.textContent = control.attributes.inputs[i].label;

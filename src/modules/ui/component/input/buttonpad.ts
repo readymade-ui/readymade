@@ -204,7 +204,7 @@ export function buttonPadKeyPress(elem: Element) {
       display: inline-block;
       outline: none;
       user-select: none;
-      border-radius: 14px;
+      border-radius:  var(--ready-border-radius);
     }
     :host([disabled]) {
       opacity: var(--ready-opacity-disabled);
@@ -216,7 +216,7 @@ export function buttonPadKeyPress(elem: Element) {
     :host([disabled]):focus,
     :host([disabled]):active,
     :host([disabled]).active {
-      border: 2px solid var(--ready-color-border);
+      border: var(--ready-border-width) solid var(--ready-color-border);
       outline: none;
       box-shadow: none;
     }
