@@ -18,6 +18,17 @@ p {
   font-size: 1.2em;
 }
 
+ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  -webkit-margin-start: 0px;
+  -webkit-margin-end: 0px;
+  -webkit-padding-start: 0px;
+  -webkit-margin-before: 0px;
+  -webkit-margin-after: 0px;
+}
+
 .theme__toggle {
   width: 32px;
   height: 32px;
@@ -46,4 +57,22 @@ p {
 
 .full {
   grid-column: span 3;
+}
+
+.definition__list li {
+  padding-bottom: 0.5em;
+}
+
+.definition__title {
+  font-style: italic;
+  color: #ababab;
+  margin-right: 0.2em;
+}
+
+.i__e {
+  color: rgba(117, 191, 255, 1);
+}
+
+.i__c {
+  color: #e6d06c;
 }

@@ -17,6 +17,8 @@ import {
   RdControlSurface,
 } from '@readymade/ui';
 
+import documentation from './docs';
+
 @Component({
   selector: 'app-library',
   style,
@@ -72,6 +74,9 @@ class LibraryComponent extends CustomElement {
               max: 1.0,
             },
           },
+          hint: {
+            template: documentation.dial,
+          },
         },
         {
           label: 'Input',
@@ -101,6 +106,9 @@ class LibraryComponent extends CustomElement {
           control: {
             name: 'button',
             attributes: {},
+          },
+          hint: {
+            template: documentation.button,
           },
         },
         {

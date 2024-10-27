@@ -14,6 +14,7 @@
   --ready-color-bg: rgba(0, 0, 0, 0.5);
   --ready-color-body-bg: rgba(2, 0, 0, 0.95);
   --ready-color-container-bg: rgba(0, 0, 0, 1);
+  --ready-popover-bg: rgba(0, 0, 0, 0.85);
   --ready-opacity-disabled: 0.5;
   --ready-icon-hor: url("data:image/svg+xml;charset=UTF-8,%3c?xml version='1.0' encoding='UTF-8'?%3e%3csvg width='32px' height='32px' viewBox='0 0 32 32' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3e%3cg id='slider-handle-horizonal' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd' stroke-linecap='square' stroke-opacity='0.65'%3e%3cg id='Group' transform='translate(16.000000, 16.000000) rotate(90.000000) translate(-16.000000, -16.000000) translate(0.000000, 14.000000)' stroke='%23FFFFFF' stroke-width='2'%3e%3cpath d='M0,2 L32,2' id='Line-Copy'%3e%3c/path%3e%3c/g%3e%3c/g%3e%3c/svg%3e");
   --ready-icon-vert: url("data:image/svg+xml;charset=UTF-8,%3c?xml version='1.0' encoding='UTF-8'?%3e%3csvg width='32px' height='32px' viewBox='0 0 32 32' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3e%3cg id='slider-handle-vertical' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd' stroke-linecap='square' stroke-opacity='0.65'%3e%3cg id='Group' transform='translate(0.000000, 13.000000)' stroke='%23FFFFFF' stroke-width='2'%3e%3cpath d='M0,2 L32,2' id='Line-Copy'%3e%3c/path%3e%3c/g%3e%3c/g%3e%3c/svg%3e");
@@ -40,6 +41,7 @@
   --ready-color-bg: rgba(255, 255, 255, 0.5);
   --ready-color-body-bg: rgba(253, 255, 255, 0.95);
   --ready-color-container-bg: rgba(255, 255, 255, 1);
+  --ready-popover-bg: rgba(255, 255, 255, 0.85);
   --ready-opacity-disabled: 0.5;
   --ready-icon-hor: url("data:image/svg+xml;charset=UTF-8,%3c?xml version='1.0' encoding='UTF-8'?%3e%3csvg width='32px' height='32px' viewBox='0 0 32 32' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3e%3cg id='slider-handle-horizonal' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd' stroke-linecap='square' stroke-opacity='1.0'%3e%3cg id='Group' transform='translate(16.000000, 16.000000) rotate(90.000000) translate(-16.000000, -16.000000) translate(0.000000, 14.000000)' stroke='rgba(0, 0, 0, 0.4)' stroke-width='2'%3e%3cpath d='M0,2 L32,2' id='Line-Copy'%3e%3c/path%3e%3c/g%3e%3c/g%3e%3c/svg%3e");
   --ready-icon-vert: url("data:image/svg+xml;charset=UTF-8,%3c?xml version='1.0' encoding='UTF-8'?%3e%3csvg width='32px' height='32px' viewBox='0 0 32 32' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3e%3cg id='slider-handle-vertical' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd' stroke-linecap='square' stroke-opacity='1.0'%3e%3cg id='Group' transform='translate(0.000000, 13.000000)' stroke='rgba(0, 0, 0, 0.4)' stroke-width='2'%3e%3cpath d='M0,2 L32,2' id='Line-Copy'%3e%3c/path%3e%3c/g%3e%3c/g%3e%3c/svg%3e");
