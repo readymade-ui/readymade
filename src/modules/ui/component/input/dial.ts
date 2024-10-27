@@ -48,7 +48,7 @@ export interface RdDialAttributes {
       width: 32px;
       height: 32px;
       border-radius: 50%;
-      background: var(--ready-icon-joy);
+      border: var(--ready-border-width) solid var(--ready-color-border);
       background-repeat: no-repeat;
       transition: transform 0.175;
       pointer-events: none;
@@ -458,8 +458,8 @@ class RdDial extends FormElement {
     this._lastAngle = radians;
 
     return [
-      Math.cos(radians) * radius + center[0],
-      Math.sin(radians) * radius + center[1],
+      Math.cos(radians) * (radius - 4) + center[0],
+      Math.sin(radians) * (radius - 4) + center[1],
     ];
   }
 

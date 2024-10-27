@@ -54,7 +54,9 @@ class LibraryComponent extends CustomElement {
         columnGap: '88px',
         rowGap: '44px',
         paddingTop: '44px',
+        paddingLeft: '20px',
         width: '100%',
+        overflowX: 'hidden',
       },
       controls: [
         {
@@ -203,16 +205,21 @@ class LibraryComponent extends CustomElement {
           selector: 'rd-buttonpad',
           channel: this.channelName,
           style: {
-            maxWidth: '200px',
+            gridColumn: '2 / span 2',
+            marginRight: '124px',
           },
           control: {
-            name: 'numberpad',
+            name: 'keyboard',
             attributes: {
               buttons: StandardKeyboard,
               grid: {
                 gap: '4px',
                 columns: {
                   count: 14,
+                },
+                buttonStyles: {
+                  width: '64px',
+                  height: '64px',
                 },
                 cells: [
                   {
@@ -279,9 +286,6 @@ class LibraryComponent extends CustomElement {
     const button = (<unknown>(
       this.shadowRoot?.querySelector('rd-button')
     )) as RdButton;
-    // const buttonPad = (<unknown>(
-    //   this.shadowRoot?.querySelector('rd-buttonpad')
-    // )) as RdButtonPad;
     const buttonNumberPad = (<unknown>(
       this.shadowRoot?.querySelectorAll('rd-buttonpad')
     )) as RdButtonPad;
@@ -294,12 +298,6 @@ class LibraryComponent extends CustomElement {
     const vertSlider = (<unknown>(
       this.shadowRoot?.querySelector('[type="vert"]')
     )) as RdSlider;
-    // const horizontalSlider = (<unknown>(
-    //   this.shadowRoot?.querySelector('[type="hor"]')
-    // )) as RdSlider;
-    // const submit = (<unknown>(
-    //   this.shadowRoot?.querySelector('[type="submit"]')
-    // )) as RdButton;
     if (this.mode === 'form') {
       this.channel?.close();
       radio.onchange = (ev: Event) => {
@@ -382,13 +380,10 @@ class LibraryComponent extends CustomElement {
       textarea.onchange = () => {};
       select.onchange = () => {};
       button.onclick = () => {};
-      // buttonPad.onclick = () => {};
       buttonNumberPad.onclick = () => {};
       dial.oninput = () => {};
       squareJoystick.oninput = () => {};
       vertSlider.oninput = () => {};
-      // horizontalSlider.oninput = () => {};
-      // submit.onclick = () => {};
     }
   }
 }

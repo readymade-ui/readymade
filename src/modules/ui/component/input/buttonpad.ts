@@ -10,17 +10,13 @@ import { RdControl } from '../control';
 
 export interface ButtonGridModifier {
   gap?: string;
+  buttonStyles?: Partial<CSSStyleDeclaration>;
   columns?: {
     count?: number;
   };
   cells?: Array<{
     selector?: string;
-    styles?: {
-      height?: string;
-      width?: string;
-      gridColumn?: string;
-      gridRow?: string;
-    };
+    styles?: Partial<CSSStyleDeclaration>;
   }>;
 }
 
@@ -326,6 +322,17 @@ class RdButtonPad extends FormElement {
     }
     if (grid.columns?.count) {
       elem.style.gridTemplateColumns = `repeat(${grid.columns.count}, 1fr)`;
+    }
+    if (grid.buttonStyles) {
+      const buttons = this.shadowRoot.querySelectorAll('rd-button');
+      buttons.forEach((button) => {
+        if (grid.buttonStyles.width) {
+          button.setAttribute('width', grid.buttonStyles.width);
+        }
+        if (grid.buttonStyles.height) {
+          button.setAttribute('height', grid.buttonStyles.height);
+        }
+      });
     }
     if (grid.cells) {
       for (let i = 0; i < grid.cells.length; i++) {
