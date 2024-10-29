@@ -24,7 +24,6 @@ import { BlockComponent } from '@readymade/dom';
       font-size: 1em;
       text-align: center;
       margin-left: 0.5em;
-      transform: translateY(0.1em);
       cursor: pointer;
       user-select: none;
     }

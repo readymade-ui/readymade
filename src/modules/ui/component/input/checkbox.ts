@@ -210,7 +210,6 @@ class RdCheckBox extends FormElement {
   setControl(control: RdControl<RdCheckboxAttributes>) {
     this.control = control;
     this.setAttribute('name', control.name);
-    this.setAttribute('type', control.type);
     if (
       (control.currentValue && typeof control.currentValue === 'boolean') ||
       control.attributes.checked

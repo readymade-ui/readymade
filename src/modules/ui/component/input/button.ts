@@ -257,7 +257,7 @@ class RdButton extends FormElement {
         control.attributes.width;
     }
     if (control.attributes.height) {
-      this.shadowRoot.querySelector('button').style.width =
+      this.shadowRoot.querySelector('button').style.height =
         control.attributes.height;
     }
     if (

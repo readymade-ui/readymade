@@ -89,6 +89,9 @@ class LibraryComponent extends CustomElement {
             name: 'input',
             attributes: {},
           },
+          hint: {
+            template: documentation.input,
+          },
         },
         {
           label: 'Textarea',
@@ -97,6 +100,9 @@ class LibraryComponent extends CustomElement {
           control: {
             name: 'textarea',
             attributes: {},
+          },
+          hint: {
+            template: documentation.textarea,
           },
         },
         {
@@ -129,6 +135,9 @@ class LibraryComponent extends CustomElement {
               ],
             },
           },
+          hint: {
+            template: documentation.dropdown,
+          },
         },
         {
           label: 'Checkbox',
@@ -138,6 +147,9 @@ class LibraryComponent extends CustomElement {
             name: 'checkbox',
             attributes: {},
           },
+          hint: {
+            template: documentation.checkbox,
+          },
         },
         {
           label: 'Switch',
@@ -146,6 +158,9 @@ class LibraryComponent extends CustomElement {
           control: {
             name: 'swtich',
             attributes: {},
+          },
+          hint: {
+            template: documentation.switch,
           },
         },
         {
@@ -175,6 +190,9 @@ class LibraryComponent extends CustomElement {
               ],
             },
           },
+          hint: {
+            template: documentation.radio,
+          },
         },
         {
           label: 'Slider',
@@ -189,6 +207,9 @@ class LibraryComponent extends CustomElement {
               min: 0,
               max: 255,
             },
+          },
+          hint: {
+            template: documentation.slider,
           },
         },
         {
@@ -206,6 +227,9 @@ class LibraryComponent extends CustomElement {
               snapToCenter: true,
               numberType: 'int',
             },
+          },
+          hint: {
+            template: documentation.slider,
           },
         },
         {
@@ -248,13 +272,185 @@ class LibraryComponent extends CustomElement {
               },
             },
           },
+          hint: {
+            template: documentation.buttonpad,
+          },
         },
       ],
     };
-    const surface = this.shadowRoot?.querySelector('rd-surface') as RdSurface;
+    const surface = this.shadowRoot?.querySelectorAll(
+      'rd-surface',
+    )[0] as RdSurface;
+
+    const videoGameController = this.shadowRoot?.querySelectorAll(
+      'rd-surface',
+    )[1] as RdSurface;
+
+    const videoGameControllerSurface: RdControlSurface = {
+      style: {
+        display: 'grid',
+        gridTemplateColumns:
+          '[column1] 67px [column2] 67px [column3] 67px [column4] 60px [column5] 67px [column6] 67px [column7] 67px [column8]',
+        gridTemplateRows:
+          '[row1] 44px [row2] 44px [row3] 44px [row4] 44px [row5] 67px [row6] 67px [row7] 67px [row8]',
+        columnGap: '0px',
+        rowGap: '0px',
+        padding: '44px',
+        paddingLeft: '20px',
+        width: 'auto',
+        overflowX: 'hidden',
+      },
+      controls: [
+        {
+          selector: 'rd-slider',
+          channel: this.channelName,
+          style: {
+            gridColumnStart: 'column1',
+            gridColumnEnd: 'column4',
+            gridRowStart: 'row5',
+            gridRowEnd: 'row8',
+          },
+          control: {
+            type: 'joystick',
+            name: 'left-joystick',
+            currentValue: [0, 0],
+            attributes: {
+              orient: 'is--joystick',
+              min: [0, 0],
+              max: [1024, 1024],
+              numberType: 'int',
+            },
+          },
+        },
+        {
+          selector: 'rd-button',
+          channel: this.channelName,
+          style: {
+            gridColumnStart: 'column2',
+            gridColumnEnd: 'column3',
+            gridRowStart: 'row3',
+            gridRowEnd: 'row4',
+          },
+          control: {
+            name: 'start-button',
+            attributes: {
+              width: '44px',
+              height: '16px',
+            },
+          },
+        },
+        {
+          selector: 'rd-button',
+          channel: this.channelName,
+          style: {
+            gridColumnStart: 'column3',
+            gridColumnEnd: 'column4',
+            gridRowStart: 'row3',
+            gridRowEnd: 'row4',
+          },
+          control: {
+            name: 'select-button',
+            attributes: {
+              width: '44px',
+              height: '16px',
+            },
+          },
+        },
+        {
+          selector: 'rd-button',
+          channel: this.channelName,
+          style: {
+            gridColumnStart: 'column5',
+            gridColumnEnd: 'column6',
+            gridRowStart: 'row2',
+            gridRowEnd: 'row3',
+          },
+          control: {
+            name: 'A',
+            attributes: {
+              width: '44px',
+              height: '44px',
+            },
+          },
+        },
+        {
+          selector: 'rd-button',
+          channel: this.channelName,
+          style: {
+            gridColumnStart: 'column6',
+            gridColumnEnd: 'column7',
+            gridRowStart: 'row1',
+            gridRowEnd: 'row2',
+          },
+          control: {
+            name: 'B',
+            attributes: {
+              width: '44px',
+              height: '44px',
+            },
+          },
+        },
+        {
+          selector: 'rd-button',
+          channel: this.channelName,
+          style: {
+            gridColumnStart: 'column6',
+            gridColumnEnd: 'column7',
+            gridRowStart: 'row3',
+            gridRowEnd: 'row4',
+          },
+          control: {
+            name: 'X',
+            attributes: {
+              width: '44px',
+              height: '44px',
+            },
+          },
+        },
+        {
+          selector: 'rd-button',
+          channel: this.channelName,
+          style: {
+            gridColumnStart: 'column7',
+            gridColumnEnd: 'column8',
+            gridRowStart: 'row2',
+            gridRowEnd: 'row3',
+          },
+          control: {
+            name: 'Y',
+            attributes: {
+              width: '44px',
+              height: '44px',
+            },
+          },
+        },
+        {
+          selector: 'rd-slider',
+          channel: this.channelName,
+          style: {
+            gridColumnStart: 'column5',
+            gridColumnEnd: 'column8',
+            gridRowStart: 'row5',
+            gridRowEnd: 'row8',
+          },
+          control: {
+            type: 'joystick',
+            name: 'right-joystick',
+            currentValue: [0, 0],
+            attributes: {
+              orient: 'is--joystick',
+              min: [0, 0],
+              max: [1024, 1024],
+              numberType: 'int',
+            },
+          },
+        },
+      ],
+    };
 
     setTimeout(() => {
       surface.setControlSurface(controlSurface);
+      videoGameController.setControlSurface(videoGameControllerSurface);
       this.onModeChange();
     });
 
@@ -335,11 +531,6 @@ class LibraryComponent extends CustomElement {
       button.onclick = (ev: Event) => {
         console.log(ev);
       };
-      // buttonPad.onclick = (ev: Event) => {
-      //   if ((ev.target as HTMLElement).tagName === 'RD-BUTTON') {
-      //     console.dir((form[16] as HTMLInputElement).value);
-      //   }
-      // };
       buttonNumberPad.onclick = (ev: Event) => {
         if ((ev.target as HTMLElement).tagName === 'RD-BUTTON') {
           console.dir((form[17] as HTMLInputElement).value);
@@ -354,25 +545,6 @@ class LibraryComponent extends CustomElement {
       vertSlider.oninput = (ev: CustomEvent) => {
         console.log((ev.target as any).value);
       };
-      // horizontalSlider.oninput = (ev: CustomEvent) => {
-      //   console.log((ev.target as any).value);
-      // };
-      // submit.onclick = (ev: Event) => {
-      //   ev.preventDefault();
-      //   const values = Array.from(
-      //     this.shadowRoot?.querySelectorAll('.form__item'),
-      //   ).map((item: any) => {
-      //     if (item.onValidate) {
-      //       item.onValidate();
-      //     }
-      //     return {
-      //       tag: item.tagName,
-      //       value: item.value,
-      //       validity: item.checkValidity ? item.checkValidity() : null,
-      //     };
-      //   });
-      //   console.log(values);
-      // };
     }
     if (this.mode === 'channel') {
       this.channel = new BroadcastChannel(this.channelName);
