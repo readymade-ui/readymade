@@ -260,6 +260,18 @@ class RdButton extends FormElement {
       this.shadowRoot.querySelector('button').style.height =
         control.attributes.height;
     }
+    if (control.attributes.style) {
+      for (const styleName in control.attributes.style) {
+        if (
+          this.shadowRoot
+            .querySelector('button')
+            .style.hasOwnProperty(styleName)
+        ) {
+          this.shadowRoot.querySelector('button').style[styleName] =
+            control.attributes.style[styleName];
+        }
+      }
+    }
     if (
       (control.currentValue && typeof control.currentValue === 'string') ||
       control.attributes.value

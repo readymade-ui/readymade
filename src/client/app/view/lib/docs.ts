@@ -38,6 +38,7 @@ const documentation = {
       <li><span class="definition__title">label</span> label displayed outside the element (optional)</li>
       <li><span class="definition__title">width</span> the CSS width of the element (optional)</li>
       <li><span class="definition__title">height</span> the CSS height of the element (optional)</li>
+      <li><span class="definition__title">style</span> CSS styles for the internal HTMLButtonElement (optional)</li>
   </ul>
   
   <r-code type="javascript">

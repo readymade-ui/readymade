@@ -1,4 +1,5 @@
 import { Component, CustomElement, FormElement, State } from '@readymade/core';
+import { Transmitter } from '@readymade/transmit';
 import template from './lib.html?raw';
 import style from './lib.css?raw';
 import {
@@ -28,11 +29,20 @@ class LibraryComponent extends CustomElement {
   theme: string = 'dark';
   mode: 'form' | 'channel' = 'channel';
   channelName = 'rd-messages';
+  dataChannel: Transmitter;
   channel: BroadcastChannel;
   constructor() {
     super();
   }
   connectedCallback() {
+    const surface = this.shadowRoot?.querySelectorAll(
+      'rd-surface',
+    )[0] as RdSurface;
+
+    const videoGameController = this.shadowRoot?.querySelectorAll(
+      'rd-surface',
+    )[1] as RdSurface;
+
     this.shadowRoot?.querySelector('.theme__toggle')?.classList.add(this.theme);
     this.shadowRoot
       ?.querySelector('.theme__toggle')
@@ -48,6 +58,69 @@ class LibraryComponent extends CustomElement {
       this.mode = (ev.target as any).value;
       this.onModeChange();
     };
+
+    const onMessage = (message) => {
+      if (message.payload.event === 'ping') {
+        this.dataChannel.send({ event: 'pong' });
+      }
+      if (message.payload.control) {
+        const control = JSON.parse(message.payload.control);
+        const controlElement = surface.querySelector(
+          `[name="${control.name}"]`,
+        );
+        controlElement.value = control.currentValue;
+      }
+    };
+    const onConnect = () => this.dataChannel.send({ event: 'ping' });
+
+    fetch('http://localhost:4449/ice')
+      .then((res) => res.json())
+      .then((iceServers) => {
+        this.dataChannel = new Transmitter({
+          sharedKey: 'lobby',
+          rtc: {
+            iceServers,
+          },
+          serverConfig: {
+            osc: {
+              localAddress: '127.0.0.1',
+              localPort: 57121,
+              remoteAddress: '127.0.0.1',
+              remotePort: 57122,
+            },
+            http: {
+              protocol: 'http',
+              hostname: 'localhost',
+              port: 4449,
+            },
+            ws: {
+              osc: {
+                protocol: 'ws',
+                hostname: 'localhost',
+                port: 4445,
+              },
+              signal: {
+                protocol: 'ws',
+                hostname: 'localhost',
+                port: 4446,
+              },
+              announce: {
+                protocol: 'ws',
+                hostname: 'localhost',
+                port: 4447,
+              },
+              message: {
+                protocol: 'ws',
+                hostname: 'localhost',
+                port: 4448,
+              },
+            },
+          },
+          onMessage,
+          onConnect,
+        });
+      })
+      .catch((err) => console.error(err));
 
     const controlSurface: RdControlSurface = {
       style: {
@@ -278,21 +351,13 @@ class LibraryComponent extends CustomElement {
         },
       ],
     };
-    const surface = this.shadowRoot?.querySelectorAll(
-      'rd-surface',
-    )[0] as RdSurface;
-
-    const videoGameController = this.shadowRoot?.querySelectorAll(
-      'rd-surface',
-    )[1] as RdSurface;
 
     const videoGameControllerSurface: RdControlSurface = {
       style: {
         display: 'grid',
         gridTemplateColumns:
-          '[column1] 67px [column2] 67px [column3] 67px [column4] 60px [column5] 67px [column6] 67px [column7] 67px [column8]',
-        gridTemplateRows:
-          '[row1] 44px [row2] 44px [row3] 44px [row4] 44px [row5] 67px [row6] 67px [row7] 67px [row8]',
+          '[column1] 200px [column2] 50px [column3] 50px [column4] 67px [column5] 67px [column6] 67px [column7]',
+        gridTemplateRows: '[row1] 67px [row2] 67px [row3] 67px [row4]',
         columnGap: '0px',
         rowGap: '0px',
         padding: '44px',
@@ -306,9 +371,9 @@ class LibraryComponent extends CustomElement {
           channel: this.channelName,
           style: {
             gridColumnStart: 'column1',
-            gridColumnEnd: 'column4',
-            gridRowStart: 'row5',
-            gridRowEnd: 'row8',
+            gridColumnEnd: 'column2',
+            gridRowStart: 'row1',
+            gridRowEnd: 'row4',
           },
           control: {
             type: 'joystick',
@@ -330,9 +395,12 @@ class LibraryComponent extends CustomElement {
             gridColumnEnd: 'column3',
             gridRowStart: 'row3',
             gridRowEnd: 'row4',
+            justifySelf: 'start',
+            alignSelf: 'end',
+            transform: 'translateY(24px)',
           },
           control: {
-            name: 'start-button',
+            name: 'select-button',
             attributes: {
               width: '44px',
               height: '16px',
@@ -347,9 +415,12 @@ class LibraryComponent extends CustomElement {
             gridColumnEnd: 'column4',
             gridRowStart: 'row3',
             gridRowEnd: 'row4',
+            justifySelf: 'end',
+            alignSelf: 'end',
+            transform: 'translateY(24px)',
           },
           control: {
-            name: 'select-button',
+            name: 'start-button',
             attributes: {
               width: '44px',
               height: '16px',
@@ -360,16 +431,20 @@ class LibraryComponent extends CustomElement {
           selector: 'rd-button',
           channel: this.channelName,
           style: {
-            gridColumnStart: 'column5',
-            gridColumnEnd: 'column6',
+            gridColumnStart: 'column4',
+            gridColumnEnd: 'column5',
             gridRowStart: 'row2',
             gridRowEnd: 'row3',
+            justifySelf: 'end',
           },
           control: {
             name: 'A',
             attributes: {
               width: '44px',
               height: '44px',
+              style: {
+                borderRadius: '50%',
+              },
             },
           },
         },
@@ -377,16 +452,21 @@ class LibraryComponent extends CustomElement {
           selector: 'rd-button',
           channel: this.channelName,
           style: {
-            gridColumnStart: 'column6',
-            gridColumnEnd: 'column7',
+            gridColumnStart: 'column5',
+            gridColumnEnd: 'column6',
             gridRowStart: 'row1',
             gridRowEnd: 'row2',
+            alignSelf: 'end',
+            justifySelf: 'center',
           },
           control: {
             name: 'B',
             attributes: {
               width: '44px',
               height: '44px',
+              style: {
+                borderRadius: '50%',
+              },
             },
           },
         },
@@ -396,14 +476,19 @@ class LibraryComponent extends CustomElement {
           style: {
             gridColumnStart: 'column6',
             gridColumnEnd: 'column7',
-            gridRowStart: 'row3',
-            gridRowEnd: 'row4',
+            gridRowStart: 'row2',
+            gridRowEnd: 'row3',
+            justifySelf: 'start',
+            transform: 'translateX(2px)',
           },
           control: {
-            name: 'X',
+            name: 'Y',
             attributes: {
               width: '44px',
               height: '44px',
+              style: {
+                borderRadius: '50%',
+              },
             },
           },
         },
@@ -411,37 +496,22 @@ class LibraryComponent extends CustomElement {
           selector: 'rd-button',
           channel: this.channelName,
           style: {
-            gridColumnStart: 'column7',
-            gridColumnEnd: 'column8',
-            gridRowStart: 'row2',
-            gridRowEnd: 'row3',
+            gridColumnStart: 'column5',
+            gridColumnEnd: 'column6',
+            gridRowStart: 'row3',
+            gridRowEnd: 'row4',
+            alignSelf: 'start',
+            justifySelf: 'center',
+            transform: 'translateY(-8px)',
           },
           control: {
-            name: 'Y',
+            name: 'X',
             attributes: {
               width: '44px',
               height: '44px',
-            },
-          },
-        },
-        {
-          selector: 'rd-slider',
-          channel: this.channelName,
-          style: {
-            gridColumnStart: 'column5',
-            gridColumnEnd: 'column8',
-            gridRowStart: 'row5',
-            gridRowEnd: 'row8',
-          },
-          control: {
-            type: 'joystick',
-            name: 'right-joystick',
-            currentValue: [0, 0],
-            attributes: {
-              orient: 'is--joystick',
-              min: [0, 0],
-              max: [1024, 1024],
-              numberType: 'int',
+              style: {
+                borderRadius: '50%',
+              },
             },
           },
         },
@@ -549,7 +619,14 @@ class LibraryComponent extends CustomElement {
     if (this.mode === 'channel') {
       this.channel = new BroadcastChannel(this.channelName);
       this.channel.onmessage = (event) => {
-        console.log(event.data);
+        if (!this.dataChannel.isOpen) {
+          console.log(event);
+        } else {
+          const message = {
+            control: JSON.stringify(event.data),
+          };
+          this.dataChannel.send(message);
+        }
       };
       radio.onchange = () => {};
       toggle.onchange = () => {};

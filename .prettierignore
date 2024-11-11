@@ -1,2 +1,3 @@
 src/client/app/view/home/home.html
 src/client/app/view/home/home.ts
+src/client/app/view/lib/lib.html

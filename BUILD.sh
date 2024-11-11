@@ -26,3 +26,9 @@ cp src/modules/ui/package.json dist/packages/@readymade/ui/package.json
 cp src/modules/ui/LICENSE.txt dist/packages/@readymade/ui/LICENSE.txt
 cp src/modules/ui/README.md dist/packages/@readymade/ui/README.md
 cp src/client/style/readymade-ui.css dist/packages/@readymade/ui/readymade-ui.css
+
+npx tsc -p src/modules/transmit/tsconfig.json --outDir dist/packages/@readymade/transmit/esm2022 --declarationDir  dist/packages/@readymade/transmit/typings
+npx rollup -c src/modules/transmit/rollup.config.js
+cp src/modules/transmit/package.json dist/packages/@readymade/transmit/package.json
+cp src/modules/transmit/LICENSE.txt dist/packages/@readymade/transmit/LICENSE.txt
+cp src/modules/transmit/README.md dist/packages/@readymade/transmit/README.md

@@ -1,0 +1,36 @@
+{
+  "name": "@readymade/transmit",
+  "version": "3.0.1",
+  "description": "WebSocket Server for communicating over TouchOSC",
+  "type": "module",
+  "module": "./index.js",
+  "exports": {
+    "./package.json": {
+      "default": "./package.json"
+    },
+    ".": {
+      "esm": "./index.js",
+      "esm2022": "./index.js",
+      "default": "./index.js"
+    }
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/readymade-ui/readymade.git"
+  },
+  "keywords": [
+    "javascript",
+    "touchosc",
+    "osc",
+    "web socker"
+  ],
+  "author": "Steve Belovarich",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/readymade-ui/readymade/issues"
+  },
+  "homepage": "https://github.com/readymade-ui/readymade#readme"
+}

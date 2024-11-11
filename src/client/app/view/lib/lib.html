@@ -32,25 +32,225 @@
     </div>
 
     <rd-surface></rd-surface>
+    
+    <div class="spacer"></div>
 
-    <h2>Surface</h2>
+    <h2>Surfaces</h2>
 
     <p>
       Readymade UI elements can be attached to a control surface named
-      RdSurface. The rd-surface element provides an interface for laying out a
+      <span class="i__c">RdSurface</span>. The rd-surface element provides an interface for laying out a
       control surface comprised of Readymade UI elements. The above
       documentation is displayed on an instance of RdSurface that is configured
       to display with CSS Grid.
     </p>
 
     <p>
-      Below is another example of using RdSurface to layout a video game
+      Below is another example of using <span class="i__c">RdSurface</span> to layout a video game
       controller using CSS Grid in a more complex layout.
     </p>
 
     <rd-surface></rd-surface>
+    
+    <p>
+     <span class="i__c">RdSurface</span> sets styles and controls via a singular interface, a method named <span class="i__e">setControlSurface</span>.
+    </p>
+    
+    <h3>Methods</h3>
+    
+    <ul class="definition__list">
+        <li><span class="definition__title">setControlSurface</span> model for <span class="i__c">RdSurface</span> that styles the layout and sets the order of controls</li>
+    </ul>
+    
+    
+    <p>
+     Below is an example of the model used to generate the video game controller example.
+    </p>
+    
+    
+    <r-code type="javascript">
+                  <span hidden>
+const videoGameControllerSurface: RdControlSurface = {
+  style: {
+    display: 'grid',
+    gridTemplateColumns:
+      '[column1] 200px [column2] 50px [column3] 50px [column4] 67px [column5] 67px [column6] 67px [column7]',
+    gridTemplateRows: '[row1] 67px [row2] 67px [row3] 67px [row4]',
+    columnGap: '0px',
+    rowGap: '0px',
+    padding: '44px',
+    paddingLeft: '20px',
+    width: 'auto',
+    overflowX: 'hidden',
+  },
+  controls: [
+    {
+      selector: 'rd-slider',
+      channel: this.channelName,
+      style: {
+        gridColumnStart: 'column1',
+        gridColumnEnd: 'column2',
+        gridRowStart: 'row1',
+        gridRowEnd: 'row4',
+      },
+      control: {
+        type: 'joystick',
+        name: 'left-joystick',
+        currentValue: [0, 0],
+        attributes: {
+          orient: 'is--joystick',
+          min: [0, 0],
+          max: [1024, 1024],
+          numberType: 'int',
+        },
+      },
+    },
+    {
+      selector: 'rd-button',
+      channel: this.channelName,
+      style: {
+        gridColumnStart: 'column2',
+        gridColumnEnd: 'column3',
+        gridRowStart: 'row3',
+        gridRowEnd: 'row4',
+        justifySelf: 'start',
+        alignSelf: 'end',
+        transform: 'translateY(24px)',
+      },
+      control: {
+        name: 'select-button',
+        attributes: {
+          width: '44px',
+          height: '16px',
+        },
+      },
+    },
+    {
+      selector: 'rd-button',
+      channel: this.channelName,
+      style: {
+        gridColumnStart: 'column3',
+        gridColumnEnd: 'column4',
+        gridRowStart: 'row3',
+        gridRowEnd: 'row4',
+        justifySelf: 'end',
+        alignSelf: 'end',
+        transform: 'translateY(24px)',
+      },
+      control: {
+        name: 'start-button',
+        attributes: {
+          width: '44px',
+          height: '16px',
+        },
+      },
+    },
+    {
+      selector: 'rd-button',
+      channel: this.channelName,
+      style: {
+        gridColumnStart: 'column4',
+        gridColumnEnd: 'column5',
+        gridRowStart: 'row2',
+        gridRowEnd: 'row3',
+        justifySelf: 'end',
+      },
+      control: {
+        name: 'A',
+        attributes: {
+          width: '44px',
+          height: '44px',
+          style: {
+            borderRadius: '50%',
+          },
+        },
+      },
+    },
+    {
+      selector: 'rd-button',
+      channel: this.channelName,
+      style: {
+        gridColumnStart: 'column5',
+        gridColumnEnd: 'column6',
+        gridRowStart: 'row1',
+        gridRowEnd: 'row2',
+        alignSelf: 'end',
+        justifySelf: 'center',
+      },
+      control: {
+        name: 'B',
+        attributes: {
+          width: '44px',
+          height: '44px',
+          style: {
+            borderRadius: '50%',
+          },
+        },
+      },
+    },
+    {
+      selector: 'rd-button',
+      channel: this.channelName,
+      style: {
+        gridColumnStart: 'column6',
+        gridColumnEnd: 'column7',
+        gridRowStart: 'row2',
+        gridRowEnd: 'row3',
+        justifySelf: 'start',
+        transform: 'translateX(2px)',
+      },
+      control: {
+        name: 'Y',
+        attributes: {
+          width: '44px',
+          height: '44px',
+          style: {
+            borderRadius: '50%',
+          },
+        },
+      },
+    },
+    {
+      selector: 'rd-button',
+      channel: this.channelName,
+      style: {
+        gridColumnStart: 'column5',
+        gridColumnEnd: 'column6',
+        gridRowStart: 'row3',
+        gridRowEnd: 'row4',
+        alignSelf: 'start',
+        justifySelf: 'center',
+        transform: 'translateY(-8px)',
+      },
+      control: {
+        name: 'X',
+        attributes: {
+          width: '44px',
+          height: '44px',
+          style: {
+            borderRadius: '50%',
+          },
+        },
+      },
+    },
+  ],
+};
+
+const videoGameController = document.querySelector('rd-surface') as RdSurface;
+
+videoGameController.setControlSurface(videoGameControllerSurface);
+              </span>
+      </r-code>
+
+    
   </div>
   <div class="spacer"></div>
+
+  <h2>Transmit</h2>
+  
+  <p>
+    Readymade includes packages for transmitting control events over TouchOSC, WebSocket and WebRTC DataChannel. 
+  </p>
 
   <p>This documentation portal was built with Readymade.</p>
 </div>
