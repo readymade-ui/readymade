@@ -1,7 +1,7 @@
 {
   "name": "@readymade/transmit",
-  "version": "3.0.1",
-  "description": "WebSocket Server for communicating over TouchOSC",
+  "version": "3.1.0",
+  "description": "Swiss-army knife for communicating over WebRTC DataChannel, WebSocket or Touch OSC",
   "type": "module",
   "module": "./index.js",
   "exports": {
