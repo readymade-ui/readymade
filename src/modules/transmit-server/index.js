@@ -8,7 +8,7 @@ import cors from 'cors';
 
 import config from './config.js';
 
-const DEBUG = process.env.DEBUG ? process.env.DEBUG : true;
+const DEBUG = process.env.DEBUG ? Boolean(process.env.DEBUG) : false;
 const HTTP_PROTOCOLS = {
   http,
   https,
@@ -48,18 +48,55 @@ const messageClients = new Map();
 if (config.osc) {
   const udpPort = new osc.UDPPort(config.osc);
   udpPort.open();
-  touchOSCWSS.on('connection', (ws) => {
-    ws.on('message', (oscMessage) => {
-      // This is the format of oscMessage
-      // {
-      //   address: '/osc/address',
-      //   args: [message],
-      // }
-      udpPort.send(JSON.parse(oscMessage));
-    });
 
-    udpPort.on('message', (oscMessage) => {
+  touchOSCWSS.on('connection', (ws) => {
+    // This is the format of oscM mssage
+    // {
+    //   address: '/osc/address',
+    //   args: [message],
+    //   message can equal value or { type: string, value: string } when typed
+    // }
+    udpPort.on('message', function (oscMessage, timeTag, info) {
+      if (DEBUG) console.log('received osc message:', oscMessage, info);
       ws.send(JSON.stringify(oscMessage));
+    });
+    ws.on('message', (data) => {
+      if (Buffer.isBuffer(data)) {
+        const jsonString = data.toString();
+        try {
+          const jsonData = JSON.parse(jsonString);
+          if (DEBUG)
+            console.log(
+              'osc:',
+              jsonData,
+              config.osc.remoteAddress + ':' + config.osc.remotePort,
+            );
+          udpPort.send(
+            jsonData,
+            config.osc.remoteAddress,
+            config.osc.remotePort,
+          );
+        } catch (error) {
+          console.error('Invalid JSON received:', error);
+        }
+      } else {
+        try {
+          const jsonData = JSON.parse(data);
+          if (DEBUG)
+            console.log(
+              'osc:',
+              jsonData,
+              config.osc.remoteAddress + ':' + config.osc.remotePort,
+            );
+          udpPort.send(
+            jsonData,
+            config.osc.remoteAddress,
+            config.osc.remotePort,
+          );
+        } catch (error) {
+          console.error('Invalid JSON received:', error);
+        }
+      }
     });
   });
 }

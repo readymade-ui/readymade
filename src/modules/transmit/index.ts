@@ -20,13 +20,7 @@ type RTCBundlePolicy = 'balanced' | 'max-bundle' | 'max-compat';
 type RTCRtcpMuxPolicy = 'require';
 type RTCIceCredentialType = 'password' | 'oauth';
 
-export interface ReadymadeServerConfiguration {
-  osc?: {
-    localAddress: string;
-    localPort: number;
-    remoteAddress: string;
-    remotePort: number;
-  };
+export interface TransmitterServerConfiguration {
   http?: {
     protocol: string;
     hostname: string;
@@ -38,12 +32,12 @@ export interface ReadymadeServerConfiguration {
       hostname: string;
       port: number;
     };
-    signal: {
+    signal?: {
       protocol: string;
       hostname: string;
       port: number;
     };
-    announce: {
+    announce?: {
       protocol: string;
       hostname: string;
       port: number;
@@ -56,15 +50,15 @@ export interface ReadymadeServerConfiguration {
   };
 }
 
-export interface TransmitterConfig {
+export interface TransmitterConfiguration {
   id?: string;
   sharedKey?: string;
-  serverConfig?: ReadymadeServerConfiguration;
-  channel?: string;
+  channelName?: string;
   onMessage?: any;
   onConnect?: any;
   onDisconnect?: any;
-  rtc?: RTCConfiguration;
+  rtcConfig?: RTCConfiguration;
+  serverConfig?: TransmitterServerConfiguration;
 }
 
 export interface TransmitterMessage {
@@ -83,7 +77,7 @@ const uuid = function () {
   });
 };
 
-const defaultRoom = function () {
+const randomSharedKey = function () {
   let text = '';
   const possible = 'ABCDEFGHJKMNOPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz023456789';
 
@@ -100,23 +94,23 @@ export class Transmitter {
   public name: string;
   public dataChannelConfig: any;
   public remotePeerId: any;
-  public localConnection: RTCPeerConnection;
+  public peerConnection: RTCPeerConnection;
   public hasPulse: boolean;
   public isOpen: boolean;
   public channelName: any;
   public dataChannel: any;
-  public connections: any;
+  public connections: Record<string, RTCPeerConnection>;
   public debug: boolean = true;
   public rtcConfiguration: RTCConfiguration;
-  public config: TransmitterConfig;
+  public config: TransmitterConfiguration;
   public store: {
     messages: Array<any>;
   };
   private ws: Record<string, WebSocket>;
-  constructor(config: TransmitterConfig) {
+  constructor(config: TransmitterConfiguration) {
     this.config = config;
     this.id = this.config.id || uuid();
-    this.sharedKey = this.config.sharedKey || defaultRoom(); // the sharedKey name.
+    this.sharedKey = this.config.sharedKey || randomSharedKey();
     this.channelName = this.config.channelName
       ? this.config.channelName
       : 'channel'; // the name of the channel
@@ -125,7 +119,7 @@ export class Transmitter {
     this.connections = {};
     this.remotePeerId = null;
     this.store = { messages: [] };
-    this.rtcConfiguration = config.rtc
+    this.rtcConfiguration = config.rtcConfig
       ? config.rtc
       : {
           iceServers: [
@@ -140,16 +134,22 @@ export class Transmitter {
       maxPacketLifeTime: 1000,
     };
     this.ws = {
-      osc: new WebSocket(
-        this.getWebSocketAddress(this.config.serverConfig?.ws?.osc),
-      ),
-      signal: new WebSocket(
-        this.getWebSocketAddress(this.config.serverConfig?.ws?.signal),
-      ),
-      announce: {},
-      message: new WebSocket(
-        this.getWebSocketAddress(this.config.serverConfig?.ws?.message),
-      ),
+      osc: this.config.serverConfig?.ws?.osc
+        ? new WebSocket(
+            this.getWebSocketAddress(this.config.serverConfig?.ws?.osc),
+          )
+        : null,
+      signal: this.config.serverConfig?.ws?.signal
+        ? new WebSocket(
+            this.getWebSocketAddress(this.config.serverConfig?.ws?.signal),
+          )
+        : null,
+      announce: null,
+      message: this.config.serverConfig?.ws?.message
+        ? new WebSocket(
+            this.getWebSocketAddress(this.config.serverConfig?.ws?.message),
+          )
+        : null,
     };
     const connectMessage = {
       sharedKey: this.sharedKey,
@@ -163,12 +163,12 @@ export class Transmitter {
       console.log('sharedKey: ', this.sharedKey);
     }
 
-    this.ws.signal.addEventListener('open', () => {
+    this.ws.signal?.addEventListener('open', () => {
       if (this.debug) console.log('Connected to Signal WebSocket server');
       this.ws.signal.send(JSON.stringify(connectMessage));
     });
 
-    this.ws.signal.addEventListener('message', (event) => {
+    this.ws.signal?.addEventListener('message', (event) => {
       if (this.debug)
         console.log('Message from Signal server:', JSON.parse(event.data));
       const data = JSON.parse(event.data);
@@ -178,14 +178,14 @@ export class Transmitter {
     });
 
     // Event listener for when the connection is opened
-    this.ws.message.addEventListener('open', () => {
+    this.ws.message?.addEventListener('open', () => {
       if (this.debug) console.log('Connected to Message WebSocket server');
       // Send a message to the server
       this.ws.message.send(JSON.stringify(connectMessage));
     });
 
     // Event listener for when a message is received from the server
-    this.ws.message.addEventListener('message', (event) => {
+    this.ws.message?.addEventListener('message', (event) => {
       if (this.debug)
         console.log('Message from Message server:', JSON.parse(event.data));
       const data = JSON.parse(event.data);
@@ -193,8 +193,14 @@ export class Transmitter {
         this.onWebSocketMessage(event);
       }
     });
-    this.init();
-    this.sendAnnounce();
+
+    if (
+      this.config.serverConfig?.ws?.signal &&
+      this.config.serverConfig?.ws?.announce
+    ) {
+      this.init();
+      this.sendAnnounce();
+    }
   }
 
   init(): void {
@@ -203,18 +209,18 @@ export class Transmitter {
       (<any>window).mozRTCPeerConnection ||
       (<any>window).webkitRTCPeerConnection;
 
-    this.localConnection = new RTCPeerConnection(this.rtcConfiguration);
-    this.localConnection.onicecandidate = this.onICECandidate.bind(this);
-    this.localConnection.oniceconnectionstatechange =
+    this.peerConnection = new RTCPeerConnection(this.rtcConfiguration);
+    this.peerConnection.onicecandidate = this.onICECandidate.bind(this);
+    this.peerConnection.oniceconnectionstatechange =
       this.onICEStateChange.bind(this);
-    this.channel = this.localConnection.createDataChannel(
+    this.channel = this.peerConnection.createDataChannel(
       this.channelName,
       this.dataChannelConfig,
     );
     this.channel.onopen = this.onDataChannelOpen.bind(this);
     this.channel.onmessage = this.onDataChannelMessage.bind(this);
 
-    this.connections[this.remotePeerId] = this.localConnection;
+    this.connections[this.remotePeerId] = this.peerConnection;
 
     if (this.debug)
       console.log('Setting up peer connection with ' + this.remotePeerId);
@@ -271,15 +277,15 @@ export class Transmitter {
   sendSignal(msg): void {
     msg.source = this.id;
     msg.target = this.remotePeerId;
-    this.ws.signal.send(JSON.stringify(msg));
+    this.ws.signal?.send(JSON.stringify(msg));
   }
 
   connect(): void {
-    this.localConnection
+    this.peerConnection
       .createOffer()
       .then((sessionDescription) => {
         if (this.debug) console.log('Sending offer to ' + this.remotePeerId);
-        this.localConnection.setLocalDescription(
+        this.peerConnection.setLocalDescription(
           new RTCSessionDescription(sessionDescription),
         );
         this.sendSignal(sessionDescription);
@@ -297,13 +303,13 @@ export class Transmitter {
     if (this.debug) console.log('Client has pulse');
     this.remotePeerId = msg.source;
     this.init();
-    this.localConnection.setRemoteDescription(new RTCSessionDescription(msg));
-    this.localConnection
+    this.peerConnection.setRemoteDescription(new RTCSessionDescription(msg));
+    this.peerConnection
       .createAnswer()
       .then((sessionDescription) => {
         if (this.debug) console.log('Sending answer to ' + msg.source);
         this.sendSignal(sessionDescription);
-        this.localConnection.setLocalDescription(
+        this.peerConnection.setLocalDescription(
           new RTCSessionDescription(sessionDescription),
         );
       })
@@ -317,14 +323,14 @@ export class Transmitter {
       (<any>window).RTCSessionDescription ||
       (<any>window).mozRTCSessionDescription;
     if (this.debug) console.log('Handling answer from ' + this.remotePeerId);
-    this.localConnection.setRemoteDescription(new RTCSessionDescription(msg));
+    this.peerConnection.setRemoteDescription(new RTCSessionDescription(msg));
   }
 
   onCandidateSignal(msg): void {
     const candidate = new (<any>window).RTCIceCandidate(msg);
     if (this.debug)
-      console.log('Adding candidate to localConnection: ' + this.remotePeerId);
-    this.localConnection.addIceCandidate(candidate);
+      console.log('Adding candidate to peerConnection: ' + this.remotePeerId);
+    this.peerConnection.addIceCandidate(candidate);
   }
 
   onSignal(snapshot): void {
@@ -352,7 +358,7 @@ export class Transmitter {
   }
 
   onICEStateChange(): void {
-    if (this.localConnection.iceConnectionState == 'disconnected') {
+    if (this.peerConnection.iceConnectionState == 'disconnected') {
       if (this.debug) console.log('Client disconnected!');
       if (this.config.onDisconnect) {
         this.config.onDisconnect({ remotePeerId: this.remotePeerId });
@@ -386,12 +392,9 @@ export class Transmitter {
 
   onDataChannelClosed(): void {
     if (this.debug) console.log('The data channel has been closed!');
-  }
-
-  createWebSocketChannel() {
-    return {
-      send: this.sendSocketMessage.bind(this),
-    };
+    if (this.config.onDisconnect) {
+      this.config.onDisconnect({ remotePeerId: this.remotePeerId });
+    }
   }
 
   onWebSocketSignal(snapshot): void {
@@ -438,23 +441,18 @@ export class Transmitter {
 
   sendSocketMessage(data: any): void {
     const msg = this.createMessage(data);
-    this.ws.message.send(msg);
+    this.ws.message?.send(msg);
   }
 
-  sendTouchOSCMessage(
-    address: string,
-    data: Array<{ type: string; value: any }>,
-  ): void {
-    this.ws.osc.send(
-      JSON.stringify({
-        address,
-        args: data,
-      }),
-    );
+  sendTouchOSCMessage(address: string, data: Array<any>): void {
+    const jsonString = JSON.stringify({
+      address,
+      args: data,
+    });
+    this.ws.osc?.send(jsonString);
   }
 
   onMessage(message: MessageEvent): void {
-    console.log(message);
     const data = JSON.parse(message.data);
     this.store.messages.push(data);
     if (data.target === this.id) {
@@ -463,10 +461,6 @@ export class Transmitter {
         this.config.onMessage(data);
       }
     }
-  }
-
-  findMessagesBySender(source: string): Array<TransmitterMessage> {
-    return this.store.messages.filter((message) => message.source === source);
   }
 
   onDataChannelMessage(message): void {
@@ -483,5 +477,9 @@ export class Transmitter {
     port: number;
   }): string {
     return `${config?.protocol ? config.protocol : 'ws'}://${config?.hostname ? config.hostname : 'localhost'}:${config?.port ? config.port : 4448}`;
+  }
+
+  findMessagesByProperty(prop: string, value: any): Array<TransmitterMessage> {
+    return this.store.messages.filter((message) => message[prop] === value);
   }
 }

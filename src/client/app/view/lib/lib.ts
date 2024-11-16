@@ -26,10 +26,11 @@ import documentation from './docs';
   template,
 })
 class LibraryComponent extends CustomElement {
+  touchOSCEnabled = false;
   theme: string = 'dark';
   mode: 'form' | 'channel' = 'channel';
   channelName = 'rd-messages';
-  dataChannel: Transmitter;
+  transmitter: Transmitter;
   channel: BroadcastChannel;
   constructor() {
     super();
@@ -61,7 +62,7 @@ class LibraryComponent extends CustomElement {
 
     const onMessage = (message) => {
       if (message.payload.event === 'ping') {
-        this.dataChannel.send({ event: 'pong' });
+        this.transmitter.send({ event: 'pong' });
       }
       if (message.payload.control) {
         const control = JSON.parse(message.payload.control);
@@ -71,23 +72,17 @@ class LibraryComponent extends CustomElement {
         controlElement.value = control.currentValue;
       }
     };
-    const onConnect = () => this.dataChannel.send({ event: 'ping' });
+    const onConnect = () => this.transmitter.send({ event: 'ping' });
 
     fetch('http://localhost:4449/ice')
       .then((res) => res.json())
       .then((iceServers) => {
-        this.dataChannel = new Transmitter({
+        this.transmitter = new Transmitter({
           sharedKey: 'lobby',
           rtc: {
             iceServers,
           },
           serverConfig: {
-            osc: {
-              localAddress: '127.0.0.1',
-              localPort: 57121,
-              remoteAddress: '127.0.0.1',
-              remotePort: 57122,
-            },
             http: {
               protocol: 'http',
               hostname: 'localhost',
@@ -229,7 +224,7 @@ class LibraryComponent extends CustomElement {
           selector: 'rd-switch',
           channel: this.channelName,
           control: {
-            name: 'swtich',
+            name: 'switch',
             attributes: {},
           },
           hint: {
@@ -619,13 +614,31 @@ class LibraryComponent extends CustomElement {
     if (this.mode === 'channel') {
       this.channel = new BroadcastChannel(this.channelName);
       this.channel.onmessage = (event) => {
-        if (!this.dataChannel.isOpen) {
-          console.log(event);
+        if (!this.transmitter.isOpen) {
+          if (this.touchOSCEnabled) {
+            if (event.data.name === 'switch') {
+              this.transmitter.sendTouchOSCMessage(
+                '/OSCQUERY/Left Controls/Flip H',
+                [
+                  {
+                    type: 'i',
+                    value: event.data.currentValue === true ? 1 : 0,
+                  },
+                ],
+              );
+            }
+            if (event.data.name === 'dial') {
+              this.transmitter.sendTouchOSCMessage(
+                '/OSCQUERY/Left Controls/Dial',
+                [{ type: 'f', value: event.data.currentValue }],
+              );
+            }
+          }
         } else {
           const message = {
             control: JSON.stringify(event.data),
           };
-          this.dataChannel.send(message);
+          this.transmitter.send(message);
         }
       };
       radio.onchange = () => {};

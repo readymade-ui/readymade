@@ -1,9 +1,9 @@
 const ReadymadeServerConfiguration = {
   osc: {
-    localAddress: '127.0.0.1',
-    localPort: 57121,
     remoteAddress: '127.0.0.1',
     remotePort: 57122,
+    broadcast: true,
+    metadata: false,
   },
   http: {
     protocol: 'http',
