@@ -3335,6 +3335,72 @@ function Listen(eventName, channelName) {
     };
   };
 }
+class StructuralElement extends HTMLElement {
+  constructor() {
+    super();
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
+  }
+  get$(selector) {
+    return this.shadowRoot ? this.shadowRoot.querySelector(selector) : this.querySelector(selector);
+  }
+  getAll$(selector) {
+    return this.shadowRoot ? this.shadowRoot.querySelectorAll(selector) : this.querySelectorAll(selector);
+  }
+  wait$(selector, timeout = 6e4) {
+    return new Promise((resolve, reject) => {
+      const startTime = Date.now();
+      const interval = 100;
+      const checkForElement = () => {
+        const elapsedTime = Date.now() - startTime;
+        const root = this.shadowRoot ? this.shadowRoot : this;
+        const element = root.querySelector(selector);
+        if (element) {
+          resolve(element);
+        } else if (elapsedTime >= timeout) {
+          reject(
+            new Error(
+              `Element with selector "${selector}" did not appear within ${timeout} milliseconds`
+            )
+          );
+        } else {
+          setTimeout(checkForElement, interval);
+        }
+      };
+      checkForElement();
+    });
+  }
+  waitAll$(selector, timeout = 6e4) {
+    return new Promise((resolve, reject) => {
+      const startTime = Date.now();
+      const interval = 100;
+      const checkForElement = () => {
+        const elapsedTime = Date.now() - startTime;
+        const root = this.shadowRoot ? this.shadowRoot : this;
+        const element = root.querySelectorAll(selector);
+        if (element && element.length) {
+          resolve(element);
+        } else if (elapsedTime >= timeout) {
+          reject(
+            new Error(
+              `Elements with selector "${selector}" did not appear within ${timeout} milliseconds`
+            )
+          );
+        } else {
+          setTimeout(checkForElement, interval);
+        }
+      };
+      checkForElement();
+    });
+  }
+}
 class PseudoElement extends HTMLElement {
   constructor() {
     super();
@@ -3499,6 +3565,22 @@ class ButtonComponent extends HTMLButtonElement {
     }
   }
 }
+class BlockComponent extends HTMLDivElement {
+  constructor() {
+    super();
+    attachDOM(this);
+    attachStyle(this);
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
+  }
+}
 class InputComponent extends HTMLInputElement {
   constructor() {
     super();
@@ -3528,14 +3610,14 @@ class TemplateComponent extends HTMLTemplateElement {
     }
   }
 }
-var __defProp$u = Object.defineProperty;
-var __getOwnPropDesc$u = Object.getOwnPropertyDescriptor;
-var __decorateClass$u = (decorators, target, key, kind) => {
-  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc$u(target, key) : target;
+var __defProp$x = Object.defineProperty;
+var __getOwnPropDesc$x = Object.getOwnPropertyDescriptor;
+var __decorateClass$x = (decorators, target, key, kind) => {
+  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc$x(target, key) : target;
   for (var i = decorators.length - 1, decorator; i >= 0; i--)
     if (decorator = decorators[i])
       result = (kind ? decorator(target, key, result) : decorator(result)) || result;
-  if (kind && result) __defProp$u(target, key, result);
+  if (kind && result) __defProp$x(target, key, result);
   return result;
 };
 function changeNode(protoNode, key, value) {
@@ -3704,7 +3786,7 @@ let TemplateRepeater = class extends TemplateComponent {
     }
   }
 };
-TemplateRepeater = __decorateClass$u([
+TemplateRepeater = __decorateClass$x([
   Component({
     selector: "r-repeat",
     custom: { extends: "template" }
@@ -3748,7 +3830,7 @@ let Repeater = class extends PseudoElement {
     this.render();
   }
 };
-Repeater = __decorateClass$u([
+Repeater = __decorateClass$x([
   Component({
     selector: "r-repeatr"
   })
@@ -3869,14 +3951,14 @@ class Router {
     return !!(typeof window !== "undefined" && window.history && window.history.pushState);
   }
 }
-var __defProp$t = Object.defineProperty;
-var __getOwnPropDesc$t = Object.getOwnPropertyDescriptor;
-var __decorateClass$t = (decorators, target, key, kind) => {
-  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc$t(target, key) : target;
+var __defProp$w = Object.defineProperty;
+var __getOwnPropDesc$w = Object.getOwnPropertyDescriptor;
+var __decorateClass$w = (decorators, target, key, kind) => {
+  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc$w(target, key) : target;
   for (var i = decorators.length - 1, decorator; i >= 0; i--)
     if (decorator = decorators[i])
       result = (kind ? decorator(target, key, result) : decorator(result)) || result;
-  if (kind && result) __defProp$t(target, key, result);
+  if (kind && result) __defProp$w(target, key, result);
   return result;
 };
 let RdButton = class extends FormElement {
@@ -3886,7 +3968,7 @@ let RdButton = class extends FormElement {
     this.type = "button";
   }
   static get observedAttributes() {
-    return ["type", "label", "width", "height", "channel"];
+    return ["type", "label", "width", "height", "channel", "control"];
   }
   attributeChangedCallback(name, old, next) {
     switch (name) {
@@ -3909,6 +3991,11 @@ let RdButton = class extends FormElement {
       case "channel":
         this.setChannel(next);
         break;
+      case "control":
+        if (!next.startsWith("{{")) {
+          this.setControl(JSON.parse(next));
+        }
+        break;
     }
   }
   formDisabledCallback(disabled) {
@@ -3923,11 +4010,8 @@ let RdButton = class extends FormElement {
     });
     this.$elem.onclick = () => {
       if (this.channel) {
-        this.channel.postMessage({
-          type: this.type,
-          name: this.name,
-          value: this.value.length ? this.value : "bang"
-        });
+        this.control.currentValue = this.value ? this.value : "bang";
+        this.channel.postMessage(this.control);
       }
     };
     if (this.type === "submit") {
@@ -3978,12 +4062,12 @@ let RdButton = class extends FormElement {
   }
   set value(value) {
     this.$elem.value = value;
+    if (this.control) {
+      this.control.currentValue = value;
+    }
   }
   get $elem() {
     return this.shadowRoot.querySelector("button");
-  }
-  setChannel(name) {
-    this.channel = new BroadcastChannel(name);
   }
   simulatePress() {
     this.$elem.classList.add("active");
@@ -3993,11 +4077,38 @@ let RdButton = class extends FormElement {
       this.removeAttribute("modifier");
     }, 100);
   }
+  setChannel(name) {
+    this.channel = new BroadcastChannel(name);
+  }
+  setControl(control) {
+    this.control = control;
+    this.setAttribute("name", control.name);
+    this.setAttribute("type", control.type);
+    if (control.attributes.label) {
+      this.shadowRoot.querySelector(".label").innerText = control.attributes.label;
+    }
+    if (control.attributes.width) {
+      this.shadowRoot.querySelector("button").style.width = control.attributes.width;
+    }
+    if (control.attributes.height) {
+      this.shadowRoot.querySelector("button").style.height = control.attributes.height;
+    }
+    if (control.attributes.style) {
+      for (const styleName in control.attributes.style) {
+        if (this.shadowRoot.querySelector("button").style.hasOwnProperty(styleName)) {
+          this.shadowRoot.querySelector("button").style[styleName] = control.attributes.style[styleName];
+        }
+      }
+    }
+    if (control.currentValue && typeof control.currentValue === "string" || control.attributes.value) {
+      this.value = control.currentValue ? control.currentValue : control.attributes.value;
+    }
+  }
 };
-__decorateClass$t([
+__decorateClass$w([
   Listen("press")
 ], RdButton.prototype, "onPress", 1);
-RdButton = __decorateClass$t([
+RdButton = __decorateClass$w([
   Component({
     selector: "rd-button",
     delegatesFocus: true,
@@ -4009,9 +4120,9 @@ RdButton = __decorateClass$t([
     :host button {
       width: 72px;
       height: 36px;
-      border: 2px solid var(--ready-color-border);
+      border: var(--ready-border-width) solid var(--ready-color-border);
       background-color: var(--ready-color-bg);
-      border-radius: 14px;
+      border-radius: var(--ready-border-radius);
       color: var(--ready-color-default);
       cursor: pointer;
       display: flex;
@@ -4040,7 +4151,7 @@ RdButton = __decorateClass$t([
     }
     :host button.is--medium {
       min-height: 32px;
-      border-radius: 14px;
+      border-radius: var(--ready-border-radius);
     }
     :host button.is--medium .icon:not(.is--empty) {
       display: inline-block;
@@ -4049,7 +4160,7 @@ RdButton = __decorateClass$t([
     }
     :host button.is--large {
       min-height: 44px;
-      border-radius: 18px;
+      border-radius: var(--ready-border-radius);
     }
     :host button.is--large .icon:not(.is--empty) {
       display: inline-block;
@@ -4058,20 +4169,20 @@ RdButton = __decorateClass$t([
     }
     :host button:hover {
       background-color: var(--ready-color-bg);
-      border: 2px solid var(--ready-color-highlight);
+      border: var(--ready-border-width) solid var(--ready-color-highlight);
     }
     :host button:focus {
       outline: 0px;
       outline-offset: 0px;
       background-color: var(--ready-color-bg);
-      border: 2px solid var(--ready-color-highlight);
+      border: var(--ready-border-width) solid var(--ready-color-highlight);
     }
     :host button:active,
     :host button.active {
       outline: 0px;
       outline-offset: 0px;
       background-color: var(--ready-color-selected);
-      border: 2px solid var(--ready-color-highlight);
+      border: var(--ready-border-width) solid var(--ready-color-highlight);
     }
     :host button[disabled] {
       opacity: var(--ready-opacity-disabled);
@@ -4082,7 +4193,7 @@ RdButton = __decorateClass$t([
     :host button[disabled]:focus,
     :host button[disabled]:active,
     :host button[disabled].active {
-      border: 2px solid var(--ready-color-border);
+      border: var(--ready-border-width) solid var(--ready-color-border);
       outline: none;
       box-shadow: none;
     }
@@ -4095,14 +4206,14 @@ RdButton = __decorateClass$t([
   `
   })
 ], RdButton);
-var __defProp$s = Object.defineProperty;
-var __getOwnPropDesc$s = Object.getOwnPropertyDescriptor;
-var __decorateClass$s = (decorators, target, key, kind) => {
-  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc$s(target, key) : target;
+var __defProp$v = Object.defineProperty;
+var __getOwnPropDesc$v = Object.getOwnPropertyDescriptor;
+var __decorateClass$v = (decorators, target, key, kind) => {
+  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc$v(target, key) : target;
   for (var i = decorators.length - 1, decorator; i >= 0; i--)
     if (decorator = decorators[i])
       result = (kind ? decorator(target, key, result) : decorator(result)) || result;
-  if (kind && result) __defProp$s(target, key, result);
+  if (kind && result) __defProp$v(target, key, result);
   return result;
 };
 const StandardKeyboardModifiers = {
@@ -4223,26 +4334,6 @@ const StandardKeyboard = [
   { key: "ArrowDown", code: "ArrowDown", label: "↓" },
   { key: "ArrowRight", code: "ArrowRight", label: "→" }
 ];
-const StandardKeyboardNumPad = [
-  { key: "Clear", code: "NumLock", label: "clear" },
-  { key: "=", code: "NumpadEqual", label: "=" },
-  { key: "/", code: "NumpadDivide", label: "/" },
-  { key: "*", code: "NumpadMultiply", label: "*" },
-  { key: "7", code: "Numpad7", label: "7" },
-  { key: "8", code: "Numpad8", label: "8" },
-  { key: "9", code: "Numpad9", label: "9" },
-  { key: "-", code: "NumpadSubtract", label: "-" },
-  { key: "4", code: "Numpad4", label: "4" },
-  { key: "5", code: "Numpad5", label: "5" },
-  { key: "6", code: "Numpad6", label: "6" },
-  { key: "+", code: "NumpadAdd", label: "+" },
-  { key: "1", code: "Numpad1", label: "1" },
-  { key: "2", code: "Numpad2", label: "2" },
-  { key: "3", code: "Numpad3", label: "3" },
-  { key: "Enter", code: "NumpadEnter", label: "↵" },
-  { key: "0", code: "Numpad0", label: "0" },
-  { key: ".", code: "NumpadDecimal", label: "." }
-];
 const StandardKeyboardModifierCodeKeyMap = {
   ShiftLeft: "Shift",
   ShiftRight: "Shift",
@@ -4260,7 +4351,7 @@ let RdButtonPad = class extends FormElement {
     this.currentModifier = null;
   }
   static get observedAttributes() {
-    return ["grid", "buttons", "disabled", "channel"];
+    return ["grid", "buttons", "disabled", "channel", "control"];
   }
   attributeChangedCallback(name, old, next) {
     switch (name) {
@@ -4283,6 +4374,11 @@ let RdButtonPad = class extends FormElement {
         break;
       case "channel":
         this.setChannel(next);
+        break;
+      case "control":
+        if (!next.startsWith("{{")) {
+          this.setControl(JSON.parse(next));
+        }
         break;
     }
   }
@@ -4325,6 +4421,17 @@ let RdButtonPad = class extends FormElement {
     if ((_a = grid.columns) == null ? void 0 : _a.count) {
       elem.style.gridTemplateColumns = `repeat(${grid.columns.count}, 1fr)`;
     }
+    if (grid.buttonStyles) {
+      const buttons = this.shadowRoot.querySelectorAll("rd-button");
+      buttons.forEach((button) => {
+        if (grid.buttonStyles.width) {
+          button.setAttribute("width", grid.buttonStyles.width);
+        }
+        if (grid.buttonStyles.height) {
+          button.setAttribute("height", grid.buttonStyles.height);
+        }
+      });
+    }
     if (grid.cells) {
       for (let i = 0; i < grid.cells.length; i++) {
         const cell = grid.cells[i];
@@ -4364,6 +4471,9 @@ let RdButtonPad = class extends FormElement {
   }
   set value(value) {
     this.currentKey = value;
+    if (this.control) {
+      this.control.currentValue = value;
+    }
   }
   get grid() {
     return this.getState().grid;
@@ -4383,23 +4493,19 @@ let RdButtonPad = class extends FormElement {
     this.setState("buttons", JSON.stringify(buttons));
   }
   click$(ev) {
-    if (this.onclick) {
-      let value = ev.target.getAttribute("key");
-      if (this.currentModifier && StandardKeyboardModifiers[`${this.currentModifier}+${ev.target.getAttribute(
+    let value = ev.target.getAttribute("key");
+    if (this.currentModifier && StandardKeyboardModifiers[`${this.currentModifier}+${ev.target.getAttribute(
+      "code"
+    )}`]) {
+      value = StandardKeyboardModifiers[`${this.currentModifier}+${ev.target.getAttribute(
         "code"
-      )}`]) {
-        value = StandardKeyboardModifiers[`${this.currentModifier}+${ev.target.getAttribute(
-          "code"
-        )}`].key;
-      }
-      this.value = value;
-      if (this.channel) {
-        this.channel.postMessage({
-          type: this.type,
-          name: this.name,
-          value: this.currentKey
-        });
-      }
+      )}`].key;
+    }
+    this.value = value;
+    if (this.channel) {
+      this.channel.postMessage(this.control);
+    }
+    if (this.onclick) {
       this.onclick(ev);
     }
   }
@@ -4474,20 +4580,37 @@ let RdButtonPad = class extends FormElement {
   setChannel(name) {
     this.channel = new BroadcastChannel(name);
   }
+  setControl(control) {
+    this.control = control;
+    this.setAttribute("name", control.name);
+    this.setAttribute("type", control.type);
+    if (control.attributes.grid) {
+      this.grid = control.attributes.grid;
+    }
+    if (control.attributes.buttons) {
+      this.buttons = control.attributes.buttons;
+    }
+    if (control.attributes.disabled) {
+      this.disabled = control.attributes.disabled;
+    }
+    if (control.currentValue && typeof control.currentValue === "string") {
+      this.value = control.currentValue;
+    }
+  }
 };
-__decorateClass$s([
+__decorateClass$v([
   State()
 ], RdButtonPad.prototype, "getState", 1);
-__decorateClass$s([
+__decorateClass$v([
   Listen("click")
 ], RdButtonPad.prototype, "onClick", 1);
-__decorateClass$s([
+__decorateClass$v([
   Listen("keyup")
 ], RdButtonPad.prototype, "press$", 1);
-__decorateClass$s([
+__decorateClass$v([
   Listen("keydown")
 ], RdButtonPad.prototype, "pressModifier$", 1);
-RdButtonPad = __decorateClass$s([
+RdButtonPad = __decorateClass$v([
   Component({
     selector: "rd-buttonpad",
     delegatesFocus: true,
@@ -4496,7 +4619,7 @@ RdButtonPad = __decorateClass$s([
       display: inline-block;
       outline: none;
       user-select: none;
-      border-radius: 14px;
+      border-radius: var(--ready-border-radius);
     }
     :host([disabled]) {
       opacity: var(--ready-opacity-disabled);
@@ -4508,7 +4631,7 @@ RdButtonPad = __decorateClass$s([
     :host([disabled]):focus,
     :host([disabled]):active,
     :host([disabled]).active {
-      border: 2px solid var(--ready-color-border);
+      border: var(--ready-border-width) solid var(--ready-color-border);
       outline: none;
       box-shadow: none;
     }
@@ -4530,14 +4653,14 @@ RdButtonPad = __decorateClass$s([
   `
   })
 ], RdButtonPad);
-var __defProp$r = Object.defineProperty;
-var __getOwnPropDesc$r = Object.getOwnPropertyDescriptor;
-var __decorateClass$r = (decorators, target, key, kind) => {
-  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc$r(target, key) : target;
+var __defProp$u = Object.defineProperty;
+var __getOwnPropDesc$u = Object.getOwnPropertyDescriptor;
+var __decorateClass$u = (decorators, target, key, kind) => {
+  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc$u(target, key) : target;
   for (var i = decorators.length - 1, decorator; i >= 0; i--)
     if (decorator = decorators[i])
       result = (kind ? decorator(target, key, result) : decorator(result)) || result;
-  if (kind && result) __defProp$r(target, key, result);
+  if (kind && result) __defProp$u(target, key, result);
   return result;
 };
 let RdCheckBox = class extends FormElement {
@@ -4545,7 +4668,7 @@ let RdCheckBox = class extends FormElement {
     super();
   }
   static get observedAttributes() {
-    return ["checked", "channel"];
+    return ["checked", "channel", "control"];
   }
   attributeChangedCallback(name, old, next) {
     switch (name) {
@@ -4554,6 +4677,11 @@ let RdCheckBox = class extends FormElement {
         break;
       case "channel":
         this.setChannel(next);
+        break;
+      case "control":
+        if (!next.startsWith("{{")) {
+          this.setControl(JSON.parse(next));
+        }
         break;
     }
   }
@@ -4586,11 +4714,11 @@ let RdCheckBox = class extends FormElement {
         );
       }
       if (this.channel) {
-        this.channel.postMessage({
-          type: this.type,
-          name: this.name,
-          value: ev.target.checked
-        });
+        this.control.currentValue = ev.target.checked;
+        if (this.control.attributes) {
+          this.control.attributes.checked = ev.target.checked;
+        }
+        this.channel.postMessage(this.control);
       }
     };
     this.$elem.onblur = () => {
@@ -4630,6 +4758,12 @@ let RdCheckBox = class extends FormElement {
   set value(value) {
     if (typeof value === "boolean") {
       this.$elem.checked = value;
+      if (this.control) {
+        this.control.currentValue = value;
+        if (this.control.attributes.checked) {
+          this.control.attributes.checked = value;
+        }
+      }
     }
   }
   get $elem() {
@@ -4638,11 +4772,18 @@ let RdCheckBox = class extends FormElement {
   setChannel(name) {
     this.channel = new BroadcastChannel(name);
   }
+  setControl(control) {
+    this.control = control;
+    this.setAttribute("name", control.name);
+    if (control.currentValue && typeof control.currentValue === "boolean" || control.attributes.checked) {
+      this.checked = control.currentValue ? Boolean(control.currentValue) : control.attributes.checked;
+    }
+  }
 };
-__decorateClass$r([
+__decorateClass$u([
   Emitter("change")
 ], RdCheckBox.prototype, "connectedCallback", 1);
-RdCheckBox = __decorateClass$r([
+RdCheckBox = __decorateClass$u([
   Component({
     selector: "rd-checkbox",
     delegatesFocus: true,
@@ -4664,7 +4805,7 @@ RdCheckBox = __decorateClass$r([
       display: block;
       width: 24px;
       height: 24px;
-      border: 2px solid var(--ready-color-border);
+      border: var(--ready-border-width) solid var(--ready-color-border);
       border-radius: 6px;
       background: var(--ready-color-bg);
     }
@@ -4681,7 +4822,7 @@ RdCheckBox = __decorateClass$r([
     :host input[type='checkbox']:hover:before,
     :host input[type='checkbox']:focus:before,
     :host input[type='checkbox']:active:before {
-      border: 2px solid var(--ready-color-highlight);
+      border: var(--ready-border-width) solid var(--ready-color-highlight);
     }
     :host input[type='checkbox'][disabled]:before {
       opacity: var(--ready-opacity-disabled);
@@ -4696,7 +4837,7 @@ RdCheckBox = __decorateClass$r([
     :host input[type='checkbox'][disabled]:hover:before,
     :host input[type='checkbox'][disabled]:focus:before,
     :host input[type='checkbox'][disabled]:active:before {
-      border: 2px solid var(--ready-color-border);
+      border: var(--ready-border-width) solid var(--ready-color-border);
       outline: none;
       box-shadow: none;
     }
@@ -4704,7 +4845,7 @@ RdCheckBox = __decorateClass$r([
     :host input[type='checkbox'].required:hover:before,
     :host input[type='checkbox'].required:focus:before,
     :host input[type='checkbox'].required:active:before {
-      border: 2px solid var(--ready-color-error);
+      border: var(--ready-border-width) solid var(--ready-color-error);
       outline: none;
       box-shadow: none;
     }
@@ -4712,14 +4853,14 @@ RdCheckBox = __decorateClass$r([
     template: html` <input type="checkbox" /> `
   })
 ], RdCheckBox);
-var __defProp$q = Object.defineProperty;
-var __getOwnPropDesc$q = Object.getOwnPropertyDescriptor;
-var __decorateClass$q = (decorators, target, key, kind) => {
-  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc$q(target, key) : target;
+var __defProp$t = Object.defineProperty;
+var __getOwnPropDesc$t = Object.getOwnPropertyDescriptor;
+var __decorateClass$t = (decorators, target, key, kind) => {
+  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc$t(target, key) : target;
   for (var i = decorators.length - 1, decorator; i >= 0; i--)
     if (decorator = decorators[i])
       result = (kind ? decorator(target, key, result) : decorator(result)) || result;
-  if (kind && result) __defProp$q(target, key, result);
+  if (kind && result) __defProp$t(target, key, result);
   return result;
 };
 let RdSwitch = class extends RdCheckBox {
@@ -4727,7 +4868,7 @@ let RdSwitch = class extends RdCheckBox {
     super();
   }
 };
-RdSwitch = __decorateClass$q([
+RdSwitch = __decorateClass$t([
   Component({
     selector: "rd-switch",
     delegatesFocus: true,
@@ -4750,26 +4891,26 @@ RdSwitch = __decorateClass$q([
     :host input[type='checkbox']:before {
       content: '';
       width: 100%;
-      border: 2px solid var(--ready-color-border);
+      border: var(--ready-border-width) solid var(--ready-color-border);
       background-color: var(--ready-color-bg);
-      border-radius: 1em;
+      border-radius: var(--ready-border-radius);
       color: var(--ready-color-default);
       padding: 1px 0px;
       background-image: var(--ready-icon-switch);
       background-size: 22px 22px;
       background-repeat: no-repeat;
-      background-position: left 2px top 50%;
+      background-position: left var(--ready-border-width) top 50%;
     }
     :host input[type='checkbox']:checked:before {
       background-image: var(--ready-icon-switch);
       background-size: 22px 22px;
       background-repeat: no-repeat;
-      background-position: right 2px top 50%;
+      background-position: right var(--ready-border-width) top 50%;
     }
     :host input[type='checkbox']:hover:before,
     :host input[type='checkbox']:focus:before,
     :host input[type='checkbox']:active:before {
-      border: 2px solid var(--ready-color-highlight);
+      border: var(--ready-border-width) solid var(--ready-color-highlight);
     }
     :host input[type='checkbox']:focus,
     :host input[type='checkbox']:active {
@@ -4778,7 +4919,7 @@ RdSwitch = __decorateClass$q([
     }
     :host input[type='checkbox']:active:before {
       background-color: var(--ready-color-selected);
-      border: 2px solid var(--ready-color-highlight);
+      border: var(--ready-border-width) solid var(--ready-color-highlight);
     }
     :host input[type='checkbox'][disabled]:before {
       opacity: var(--ready-opacity-disabled);
@@ -4786,19 +4927,19 @@ RdSwitch = __decorateClass$q([
       background-image: var(--ready-icon-switch);
       background-size: 22px 22px;
       background-repeat: no-repeat;
-      background-position: left 2px top 50%;
+      background-position: left var(--ready-border-width) top 50%;
       cursor: not-allowed;
     }
     :host input[type='checkbox'][disabled]:checked:before {
       background-image: var(--ready-icon-switch);
       background-size: 22px 22px;
       background-repeat: no-repeat;
-      background-position: right 2px top 50%;
+      background-position: right var(--ready-border-width) top 50%;
     }
     :host input[type='checkbox'][disabled]:hover:before,
     :host input[type='checkbox'][disabled]:focus:before,
     :host input[type='checkbox'][disabled]:active:before {
-      border: 2px solid var(--ready-color-border);
+      border: var(--ready-border-width) solid var(--ready-color-border);
       outline: none;
       box-shadow: none;
     }
@@ -4806,7 +4947,7 @@ RdSwitch = __decorateClass$q([
     :host input[type='checkbox'].required:hover:before,
     :host input[type='checkbox'].required:focus:before,
     :host input[type='checkbox'].required:active:before {
-      border: 2px solid var(--ready-color-error);
+      border: var(--ready-border-width) solid var(--ready-color-error);
       outline: none;
       box-shadow: none;
     }
@@ -4814,14 +4955,14 @@ RdSwitch = __decorateClass$q([
     template: html` <input type="checkbox" /> `
   })
 ], RdSwitch);
-var __defProp$p = Object.defineProperty;
-var __getOwnPropDesc$p = Object.getOwnPropertyDescriptor;
-var __decorateClass$p = (decorators, target, key, kind) => {
-  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc$p(target, key) : target;
+var __defProp$s = Object.defineProperty;
+var __getOwnPropDesc$s = Object.getOwnPropertyDescriptor;
+var __decorateClass$s = (decorators, target, key, kind) => {
+  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc$s(target, key) : target;
   for (var i = decorators.length - 1, decorator; i >= 0; i--)
     if (decorator = decorators[i])
       result = (kind ? decorator(target, key, result) : decorator(result)) || result;
-  if (kind && result) __defProp$p(target, key, result);
+  if (kind && result) __defProp$s(target, key, result);
   return result;
 };
 let RdInput = class extends FormElement {
@@ -4835,6 +4976,11 @@ let RdInput = class extends FormElement {
     switch (name) {
       case "channel":
         this.setChannel(next);
+        break;
+      case "control":
+        if (!next.startsWith("{{")) {
+          this.setControl(JSON.parse(next));
+        }
         break;
     }
   }
@@ -4856,11 +5002,9 @@ let RdInput = class extends FormElement {
         this.oninput(ev);
       }
       if (this.channel) {
-        this.channel.postMessage({
-          type: this.type,
-          name: this.name,
-          value: this.value
-        });
+        this.control.currentValue = this.value;
+        this.control.attributes.value = this.value;
+        this.channel.postMessage(this.control);
       }
     };
     this.$elem.onblur = () => {
@@ -4909,6 +5053,10 @@ let RdInput = class extends FormElement {
   }
   set value(value) {
     this.$elem.value = value;
+    if (this.control) {
+      this.control.currentValue = value;
+      this.control.attributes.value = value;
+    }
   }
   get $elem() {
     return this.shadowRoot.querySelector("input");
@@ -4916,11 +5064,19 @@ let RdInput = class extends FormElement {
   setChannel(name) {
     this.channel = new BroadcastChannel(name);
   }
+  setControl(control) {
+    this.control = control;
+    this.setAttribute("name", control.name);
+    this.setAttribute("type", control.type);
+    if (control.currentValue && typeof control.currentValue === "string") {
+      this.value = control.currentValue;
+    }
+  }
 };
-__decorateClass$p([
+__decorateClass$s([
   Emitter("change")
 ], RdInput.prototype, "connectedCallback", 1);
-RdInput = __decorateClass$p([
+RdInput = __decorateClass$s([
   Component({
     selector: "rd-input",
     delegatesFocus: true,
@@ -4932,8 +5088,8 @@ RdInput = __decorateClass$p([
     :host input {
       width: 100%;
       background-color: var(--ready-color-bg);
-      border: 2px solid var(--ready-color-border);
-      border-radius: 1em;
+      border: var(--ready-border-width) solid var(--ready-color-border);
+      border-radius: var(--ready-border-radius);
       color: var(--ready-color-default);
       font: var(--font-family);
       min-height: 2em;
@@ -4942,7 +5098,7 @@ RdInput = __decorateClass$p([
     :host input:hover,
     :host input:focus,
     :host input:active {
-      border: 2px solid var(--ready-color-highlight);
+      border: var(--ready-border-width) solid var(--ready-color-highlight);
       outline: none;
       box-shadow: none;
     }
@@ -4954,7 +5110,7 @@ RdInput = __decorateClass$p([
     :host input[disabled]:hover,
     :host input[disabled]:focus,
     :host input[disabled]:active {
-      border: 2px solid var(--ready-color-border);
+      border: var(--ready-border-width) solid var(--ready-color-border);
       outline: none;
       box-shadow: none;
     }
@@ -4962,7 +5118,7 @@ RdInput = __decorateClass$p([
     :host input.required:hover,
     :host input.required:focus,
     :host input.required:active {
-      border: 2px solid var(--ready-color-error);
+      border: var(--ready-border-width) solid var(--ready-color-error);
       outline: none;
       box-shadow: none;
     }
@@ -4970,14 +5126,14 @@ RdInput = __decorateClass$p([
     template: html` <input type="text" /> `
   })
 ], RdInput);
-var __defProp$o = Object.defineProperty;
-var __getOwnPropDesc$o = Object.getOwnPropertyDescriptor;
-var __decorateClass$o = (decorators, target, key, kind) => {
-  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc$o(target, key) : target;
+var __defProp$r = Object.defineProperty;
+var __getOwnPropDesc$r = Object.getOwnPropertyDescriptor;
+var __decorateClass$r = (decorators, target, key, kind) => {
+  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc$r(target, key) : target;
   for (var i = decorators.length - 1, decorator; i >= 0; i--)
     if (decorator = decorators[i])
       result = (kind ? decorator(target, key, result) : decorator(result)) || result;
-  if (kind && result) __defProp$o(target, key, result);
+  if (kind && result) __defProp$r(target, key, result);
   return result;
 };
 let RdRadioGroup = class extends FormElement {
@@ -4985,7 +5141,7 @@ let RdRadioGroup = class extends FormElement {
     super();
   }
   static get observedAttributes() {
-    return ["direction", "channel"];
+    return ["direction", "channel", "control"];
   }
   attributeChangedCallback(name, old, next) {
     var _a, _b;
@@ -5001,6 +5157,11 @@ let RdRadioGroup = class extends FormElement {
       case "channel":
         this.setChannel(next);
         break;
+      case "control":
+        if (!next.startsWith("{{")) {
+          this.setControl(JSON.parse(next));
+        }
+        break;
     }
   }
   connectedCallback() {
@@ -5008,13 +5169,10 @@ let RdRadioGroup = class extends FormElement {
       elem.onblur = () => {
         this.onValidate();
       };
-      elem.onclick = () => {
+      elem.onclick = (ev) => {
         if (this.channel) {
-          this.channel.postMessage({
-            type: "radio",
-            name: this.name,
-            value: this.value
-          });
+          this.control.currentValue = ev.target.value;
+          this.channel.postMessage(this.control);
         }
       };
     });
@@ -5058,6 +5216,9 @@ let RdRadioGroup = class extends FormElement {
         elem.checked = false;
       }
     });
+    if (this.control) {
+      this.control.currentValue = value;
+    }
   }
   get form() {
     return this.$internals.form;
@@ -5076,8 +5237,50 @@ let RdRadioGroup = class extends FormElement {
   setChannel(name) {
     this.channel = new BroadcastChannel(name);
   }
+  setControl(control) {
+    var _a, _b;
+    this.control = control;
+    this.setAttribute("name", control.name);
+    this.setAttribute("type", control.type);
+    if (control.attributes.direction) {
+      this.direction = control.attributes.direction;
+      if (this.direction === "vertical") {
+        (_a = this.shadowRoot) == null ? void 0 : _a.querySelector(".group").classList.add("vertical");
+      } else {
+        (_b = this.shadowRoot) == null ? void 0 : _b.querySelector(".group").classList.remove("vertical");
+      }
+    }
+    if (control.attributes.inputs) {
+      this.innerHTML = "";
+      for (let i = control.attributes.inputs.length - 1; i >= 0; i--) {
+        const input = document.createElement("input");
+        const label = document.createElement("label");
+        input.setAttribute("type", "radio");
+        input.setAttribute("name", control.attributes.inputs[i].name);
+        input.setAttribute("value", control.attributes.inputs[i].value);
+        label.setAttribute("for", control.attributes.inputs[i].value);
+        label.textContent = control.attributes.inputs[i].label;
+        this.appendChild(input);
+        this.appendChild(label);
+      }
+      this.$elem.forEach((elem) => {
+        elem.onblur = () => {
+          this.onValidate();
+        };
+        elem.onclick = (ev) => {
+          if (this.channel) {
+            this.control.currentValue = ev.target.value;
+            this.channel.postMessage(this.control);
+          }
+        };
+      });
+    }
+    if (control.currentValue && typeof control.currentValue === "string") {
+      this.value = control.currentValue;
+    }
+  }
 };
-RdRadioGroup = __decorateClass$o([
+RdRadioGroup = __decorateClass$r([
   Component({
     selector: "rd-radiogroup",
     style: css`
@@ -5096,7 +5299,7 @@ RdRadioGroup = __decorateClass$o([
       display: block;
       width: 16px;
       height: 16px;
-      border: 2px solid var(--ready-color-border);
+      border: var(--ready-border-width) solid var(--ready-color-border);
       border-radius: 50%;
       background: var(--ready-color-bg);
     }
@@ -5117,7 +5320,7 @@ RdRadioGroup = __decorateClass$o([
     ::slotted(input[type='radio']:hover):before,
     ::slotted(input[type='radio']:focus):before,
     ::slotted(input[type='radio']:active):before {
-      border: 2px solid var(--ready-color-highlight);
+      border: var(--ready-border-width) solid var(--ready-color-highlight);
     }
     ::slotted(input[type='radio'][disabled]):before {
       opacity: var(--ready-opacity-disabled);
@@ -5127,7 +5330,7 @@ RdRadioGroup = __decorateClass$o([
     ::slotted(input[type='radio'][disabled]:hover):before,
     ::slotted(input[type='radio'][disabled]:focus):before,
     ::slotted(input[type='radio'][disabled]:active):before {
-      border: 2px solid var(--ready-color-border);
+      border: var(--ready-border-width) solid var(--ready-color-border);
       outline: none;
       box-shadow: none;
     }
@@ -5138,12 +5341,12 @@ RdRadioGroup = __decorateClass$o([
     }
     .group {
       box-sizing: border-box:
-      border: 2px solid transparent;
+      border: var(--ready-border-width) solid transparent;
       padding: 12px;
-      border-radius: 14px;
+      border-radius:  var(--ready-border-radius);
     }
     .group.required {
-      border: 2px solid var(--ready-color-error);
+      border: var(--ready-border-width) solid var(--ready-color-error);
     }
     .group.required ::slotted(input[type='radio']) {
      transform: translateX(-1px) translateY(3px);
@@ -5177,14 +5380,14 @@ RdRadioGroup = __decorateClass$o([
     template: html` <div class="group"><slot></slot></div> `
   })
 ], RdRadioGroup);
-var __defProp$n = Object.defineProperty;
-var __getOwnPropDesc$n = Object.getOwnPropertyDescriptor;
-var __decorateClass$n = (decorators, target, key, kind) => {
-  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc$n(target, key) : target;
+var __defProp$q = Object.defineProperty;
+var __getOwnPropDesc$q = Object.getOwnPropertyDescriptor;
+var __decorateClass$q = (decorators, target, key, kind) => {
+  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc$q(target, key) : target;
   for (var i = decorators.length - 1, decorator; i >= 0; i--)
     if (decorator = decorators[i])
       result = (kind ? decorator(target, key, result) : decorator(result)) || result;
-  if (kind && result) __defProp$n(target, key, result);
+  if (kind && result) __defProp$q(target, key, result);
   return result;
 };
 let RdTextArea = class extends RdInput {
@@ -5195,7 +5398,7 @@ let RdTextArea = class extends RdInput {
     return this.shadowRoot.querySelector("textarea");
   }
 };
-RdTextArea = __decorateClass$n([
+RdTextArea = __decorateClass$q([
   Component({
     selector: "rd-textarea",
     delegatesFocus: true,
@@ -5206,8 +5409,8 @@ RdTextArea = __decorateClass$n([
     }
     :host textarea {
       background-color: var(--ready-color-bg);
-      border: 2px solid var(--ready-color-border);
-      border-radius: 1em;
+      border: var(--ready-border-width) solid var(--ready-color-border);
+      border-radius: var(--ready-border-radius);
       color: var(--ready-color-default);
       font: var(--font-family);
       outline: none;
@@ -5223,7 +5426,7 @@ RdTextArea = __decorateClass$n([
     :host textarea:hover,
     :host textarea:focus,
     :host textarea:active {
-      border: 2px solid var(--ready-color-highlight);
+      border: var(--ready-border-width) solid var(--ready-color-highlight);
       outline: none;
       box-shadow: none;
     }
@@ -5235,7 +5438,7 @@ RdTextArea = __decorateClass$n([
     :host textarea[disabled]:hover,
     :host textarea[disabled]:focus,
     :host textarea[disabled]:active {
-      border: 2px solid var(--ready-color-border);
+      border: var(--ready-border-width) solid var(--ready-color-border);
       outline: none;
       box-shadow: none;
     }
@@ -5243,7 +5446,7 @@ RdTextArea = __decorateClass$n([
     :host textarea.required:hover,
     :host textarea.required:focus,
     :host textarea.required:active {
-      border: 2px solid var(--ready-color-error);
+      border: var(--ready-border-width) solid var(--ready-color-error);
       outline: none;
       box-shadow: none;
     }
@@ -5254,14 +5457,14 @@ RdTextArea = __decorateClass$n([
     template: html` <textarea></textarea> `
   })
 ], RdTextArea);
-var __defProp$m = Object.defineProperty;
-var __getOwnPropDesc$m = Object.getOwnPropertyDescriptor;
-var __decorateClass$m = (decorators, target, key, kind) => {
-  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc$m(target, key) : target;
+var __defProp$p = Object.defineProperty;
+var __getOwnPropDesc$p = Object.getOwnPropertyDescriptor;
+var __decorateClass$p = (decorators, target, key, kind) => {
+  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc$p(target, key) : target;
   for (var i = decorators.length - 1, decorator; i >= 0; i--)
     if (decorator = decorators[i])
       result = (kind ? decorator(target, key, result) : decorator(result)) || result;
-  if (kind && result) __defProp$m(target, key, result);
+  if (kind && result) __defProp$p(target, key, result);
   return result;
 };
 let RdDropdown = class extends FormElement {
@@ -5275,6 +5478,11 @@ let RdDropdown = class extends FormElement {
     switch (name) {
       case "channel":
         this.setChannel(next);
+        break;
+      case "control":
+        if (!next.startsWith("{{")) {
+          this.setControl(JSON.parse(next));
+        }
         break;
     }
   }
@@ -5294,11 +5502,8 @@ let RdDropdown = class extends FormElement {
         this.oninput(ev);
       }
       if (this.channel) {
-        this.channel.postMessage({
-          type: "select",
-          name: this.name,
-          value: this.value
-        });
+        this.control.currentValue = ev.target.value;
+        this.channel.postMessage(this.control);
       }
     };
     this.$elem.onblur = () => {
@@ -5344,6 +5549,9 @@ let RdDropdown = class extends FormElement {
   }
   set value(value) {
     this.$elem.value = value;
+    if (this.control) {
+      this.control.currentValue = value;
+    }
   }
   get $elem() {
     return this.shadowRoot.querySelector("slot").assignedNodes().filter((elem) => elem.tagName === "SELECT")[0];
@@ -5351,11 +5559,29 @@ let RdDropdown = class extends FormElement {
   setChannel(name) {
     this.channel = new BroadcastChannel(name);
   }
+  setControl(control) {
+    this.control = control;
+    this.setAttribute("name", control.name);
+    this.setAttribute("type", control.type);
+    if (control.attributes.options) {
+      this.innerHTML = "";
+      const select = document.createElement("select");
+      for (let i = 0; i <= control.attributes.options.length; i++) {
+        const option = document.createElement("option");
+        option.textContent = control.attributes.options[i];
+        select.appendChild(option);
+      }
+      this.appendChild(select);
+    }
+    if (control.currentValue && typeof control.currentValue === "string") {
+      this.value = control.currentValue;
+    }
+  }
 };
-__decorateClass$m([
+__decorateClass$p([
   Emitter("select")
 ], RdDropdown.prototype, "connectedCallback", 1);
-RdDropdown = __decorateClass$m([
+RdDropdown = __decorateClass$p([
   Component({
     selector: "rd-dropdown",
     delegatesFocus: true,
@@ -5368,8 +5594,8 @@ RdDropdown = __decorateClass$m([
       display: block;
       width: 100%;
       background-color: var(--ready-color-bg);
-      border: 2px solid var(--ready-color-border);
-      border-radius: 1em;
+      border: var(--ready-border-width) solid var(--ready-color-border);
+      border-radius: var(--ready-border-radius);
       color: var(--ready-color-default);
       font: var(--font-family);
       line-height: 1.3;
@@ -5390,7 +5616,7 @@ RdDropdown = __decorateClass$m([
     ::slotted(select:hover),
     ::slotted(select:focus),
     ::slotted(select:active) {
-      border: 2px solid var(--ready-color-highlight);
+      border: var(--ready-border-width) solid var(--ready-color-highlight);
       outline: none;
       box-shadow: none;
     }
@@ -5419,7 +5645,7 @@ RdDropdown = __decorateClass$m([
     ::slotted(select[disabled]:hover),
     ::slotted(select[disabled]:focus),
     ::slotted(select[disabled]:active) {
-      border: 2px solid var(--ready-color-border);
+      border: var(--ready-border-width) solid var(--ready-color-border);
       outline: none;
       box-shadow: none;
     }
@@ -5427,7 +5653,7 @@ RdDropdown = __decorateClass$m([
     ::slotted(select.required:hover),
     ::slotted(select.required:focus),
     ::slotted(select.required:active) {
-      border: 2px solid var(--ready-color-error);
+      border: var(--ready-border-width) solid var(--ready-color-error);
       outline: none;
       box-shadow: none;
     }
@@ -5435,14 +5661,14 @@ RdDropdown = __decorateClass$m([
     template: html` <slot></slot> `
   })
 ], RdDropdown);
-var __defProp$l = Object.defineProperty;
-var __getOwnPropDesc$l = Object.getOwnPropertyDescriptor;
-var __decorateClass$l = (decorators, target, key, kind) => {
-  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc$l(target, key) : target;
+var __defProp$o = Object.defineProperty;
+var __getOwnPropDesc$o = Object.getOwnPropertyDescriptor;
+var __decorateClass$o = (decorators, target, key, kind) => {
+  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc$o(target, key) : target;
   for (var i = decorators.length - 1, decorator; i >= 0; i--)
     if (decorator = decorators[i])
       result = (kind ? decorator(target, key, result) : decorator(result)) || result;
-  if (kind && result) __defProp$l(target, key, result);
+  if (kind && result) __defProp$o(target, key, result);
   return result;
 };
 let RdSlider = class extends FormElement {
@@ -5526,28 +5752,31 @@ let RdSlider = class extends FormElement {
   }
   onSliderInit() {
     this._touchItem = null;
-    this.control.height = this.clientHeight;
-    this.control.width = this.clientWidth;
-    if (this.control.numberType) {
-      this._numberType = this.control.numberType;
+    this.control.attributes.height = this.clientHeight;
+    this.control.attributes.width = this.clientWidth;
+    if (this.control.attributes.numberType) {
+      this._numberType = this.control.attributes.numberType;
     } else {
       this._numberType = "float";
     }
-    if (this.control.orient === "is--hor") {
+    if (this.control.attributes.orient === "is--hor") {
       this.style.maxWidth = "200px";
       this.control.currentValue = 0;
-      this.control.position = "translate(0px,0px)";
-    } else if (this.control.orient === "is--vert") {
+      this.control.attributes.position = "translate(0px,0px)";
+    } else if (this.control.attributes.orient === "is--vert") {
       this.style.height = "200px";
       this.control.currentValue = 0;
-      this.control.position = "translate(0px,0px)";
-    } else if (this.control.orient.includes("is--joystick")) {
+      this.control.attributes.position = "translate(0px,0px)";
+    } else if (this.control.attributes.orient.includes("is--joystick")) {
       this.style.maxWidth = "200px";
       this.style.maxHeight = "200px";
       this.control.currentValue = [0, 0];
-      this.control.x = this.control.y = 76;
-      this.control.position = "translate(76px,76px)";
-      const joyStickType = this.control.orient.replace("is--joystick--", "");
+      this.control.attributes.x = this.control.attributes.y = 76;
+      this.control.attributes.position = "translate(76px,76px)";
+      const joyStickType = this.control.attributes.orient.replace(
+        "is--joystick--",
+        ""
+      );
       if (joyStickType === "is--joystick") {
         this._joystickType = "circle";
       } else {
@@ -5555,8 +5784,7 @@ let RdSlider = class extends FormElement {
       }
       this.shadowRoot.querySelector(".slider").classList.add(this._joystickType);
     }
-    this._lastPos = { transform: this.control.position };
-    this.setActualPosition(this.control.position);
+    this.setActualPosition(this.control.attributes.position);
   }
   onMouseLeave() {
   }
@@ -5575,16 +5803,16 @@ let RdSlider = class extends FormElement {
     this.control.hasUserInput = true;
     this.$elem.classList.add("active");
     this._rect = this.getBoundingClientRect();
-    this.control.height = this.clientHeight;
-    this.control.width = this.clientWidth;
+    this.control.attributes.height = this.clientHeight;
+    this.control.attributes.width = this.clientWidth;
     this.addEventListener("touchmove", this.onTouchMove.bind(this));
     this.addEventListener("touchend", this.onMouseUp.bind(this));
     if (this._touchItem === null) {
       this._touchItem = e.touches.length - 1;
     }
-    this.control.x = e.touches[this._touchItem].pageX - this._rect.left - this.$handle.clientWidth / 2;
-    this.control.y = e.touches[this._touchItem].pageY - this._rect.top - this.$handle.clientHeight / 2;
-    this.setPosition(this.control.x, this.control.y);
+    this.control.attributes.x = e.touches[this._touchItem].pageX - this._rect.left - this.$handle.clientWidth / 2;
+    this.control.attributes.y = e.touches[this._touchItem].pageY - this._rect.top - this.$handle.clientHeight / 2;
+    this.setPosition(this.control.attributes.x, this.control.attributes.y);
   }
   onMouseDown(e) {
     e.preventDefault();
@@ -5592,17 +5820,17 @@ let RdSlider = class extends FormElement {
     this.control.hasUserInput = true;
     this.$elem.classList.add("active");
     this._rect = this.getBoundingClientRect();
-    this.control.height = this.clientHeight;
-    this.control.width = this.clientWidth;
+    this.control.attributes.height = this.clientHeight;
+    this.control.attributes.width = this.clientWidth;
     if (this._joystickType) {
-      this.control.x = e.offsetX;
-      this.control.y = e.offsetY;
+      this.control.attributes.x = e.offsetX;
+      this.control.attributes.y = e.offsetY;
     }
     this.addEventListener("mousemove", this.onMouseMove.bind(this));
     this.addEventListener("mouseup", this.onMouseUp.bind(this));
     window.addEventListener("mousemove", this.onMouseMove.bind(this));
     window.addEventListener("mouseup", this.onMouseUp.bind(this));
-    this.setPosition(this.control.x, this.control.y);
+    this.setPosition(this.control.attributes.x, this.control.attributes.y);
   }
   // Handle drag event
   onTouchMove(e) {
@@ -5611,27 +5839,23 @@ let RdSlider = class extends FormElement {
       this._touchItem = e.touches.length - 1;
     }
     if (this._joystickType) {
-      this.control.x = (this.getBoundingClientRect().left - e.touches[this._touchItem].pageX) * -1;
-      this.control.y = (this.offsetTop - e.touches[this._touchItem].pageY) * -1;
+      this.control.attributes.x = (this.getBoundingClientRect().left - e.touches[this._touchItem].pageX) * -1;
+      this.control.attributes.y = (this.offsetTop - e.touches[this._touchItem].pageY) * -1;
     }
-    if (this.control.orient === "is--hor") {
-      this.control.x = (this.getBoundingClientRect().left - e.touches[this._touchItem].pageX) * -1 - this.$handle.getBoundingClientRect().width / 2;
-      this.control.y = 0;
+    if (this.control.attributes.orient === "is--hor") {
+      this.control.attributes.x = (this.getBoundingClientRect().left - e.touches[this._touchItem].pageX) * -1 - this.$handle.getBoundingClientRect().width / 2;
+      this.control.attributes.y = 0;
     }
-    if (this.control.orient === "is--vert") {
-      this.control.x = 0;
-      this.control.y = (this.offsetTop - e.touches[this._touchItem].pageY) * -1 - this.$handle.getBoundingClientRect().height / 2;
+    if (this.control.attributes.orient === "is--vert") {
+      this.control.attributes.x = 0;
+      this.control.attributes.y = (this.offsetTop - e.touches[this._touchItem].pageY) * -1 - this.$handle.getBoundingClientRect().height / 2;
     }
     if (this.control.hasUserInput && this.control.isActive) {
-      this.setPosition(this.control.x, this.control.y);
+      this.setPosition(this.control.attributes.x, this.control.attributes.y);
       this.mapValue();
       this.control.timeStamp = e.timeStamp;
       if (this.channel) {
-        this.channel.postMessage({
-          type: this.type,
-          name: this.name,
-          value: this.control.currentValue
-        });
+        this.channel.postMessage(this.control);
       }
       this.onEvent();
     }
@@ -5642,27 +5866,23 @@ let RdSlider = class extends FormElement {
     }
     this.$elem.classList.add("active");
     if (this._joystickType) {
-      this.control.x = (this.getBoundingClientRect().left - e.pageX) * -1;
-      this.control.y = (this.offsetTop - e.pageY) * -1;
+      this.control.attributes.x = (this.getBoundingClientRect().left - e.pageX) * -1;
+      this.control.attributes.y = (this.offsetTop - e.pageY) * -1;
     }
-    if (this.control.orient === "is--hor") {
-      this.control.x = (this.getBoundingClientRect().left - e.pageX) * -1 - this.$handle.getBoundingClientRect().width / 2;
-      this.control.y = 0;
+    if (this.control.attributes.orient === "is--hor") {
+      this.control.attributes.x = (this.getBoundingClientRect().left - e.pageX) * -1 - this.$handle.getBoundingClientRect().width / 2;
+      this.control.attributes.y = 0;
     }
-    if (this.control.orient === "is--vert") {
-      this.control.x = 0;
-      this.control.y = (this.offsetTop - e.pageY) * -1 - this.$handle.getBoundingClientRect().height / 2;
+    if (this.control.attributes.orient === "is--vert") {
+      this.control.attributes.x = 0;
+      this.control.attributes.y = (this.offsetTop - e.pageY) * -1 - this.$handle.getBoundingClientRect().height / 2;
     }
     if (this.control.hasUserInput && this.control.isActive) {
-      this.setPosition(this.control.x, this.control.y);
+      this.setPosition(this.control.attributes.x, this.control.attributes.y);
       this.mapValue();
       this.control.timeStamp = e.timeStamp;
       if (this.channel) {
-        this.channel.postMessage({
-          type: this.type,
-          name: this.name,
-          value: this.control.currentValue
-        });
+        this.channel.postMessage(this.control);
       }
       this.onEvent();
     }
@@ -5677,13 +5897,13 @@ let RdSlider = class extends FormElement {
       this.removeEventListener("mousemove", this.onMouseMove.bind(this));
       this.removeEventListener("mouseup", this.onMouseUp.bind(this));
     }
-    if (this._joystickType && this.control.snapToCenter === true) {
+    if (this._joystickType && this.control.attributes.snapToCenter === true) {
       const center = this.getCenter(
-        [0, this.control.width - this.$handle.offsetWidth],
-        [0, this.control.height - this.$handle.offsetHeight]
+        [0, this.control.attributes.width - this.$handle.offsetWidth],
+        [0, this.control.attributes.height - this.$handle.offsetHeight]
       );
-      this.control.x = center[0];
-      this.control.y = center[1];
+      this.control.attributes.x = center[0];
+      this.control.attributes.y = center[1];
       this.setPosition(center[0], center[1]);
     }
   }
@@ -5745,17 +5965,17 @@ let RdSlider = class extends FormElement {
   }
   // set currentValue on control
   clampSlider(val) {
-    if (val < this.control.min) {
+    if (val < this.control.attributes.min) {
       if (this._numberType === "int") {
-        return Math.trunc(this.control.min);
+        return Math.trunc(this.control.attributes.min);
       }
-      return this.control.min;
+      return this.control.attributes.min;
     }
-    if (val > this.control.max) {
+    if (val > this.control.attributes.max) {
       if (this._numberType === "int") {
-        return Math.trunc(this.control.max);
+        return Math.trunc(this.control.attributes.max);
       }
-      return this.control.max;
+      return this.control.attributes.max;
     }
     if (this._numberType === "int") {
       val = Math.trunc(val);
@@ -5763,17 +5983,17 @@ let RdSlider = class extends FormElement {
     return val;
   }
   clampJoystickX(val) {
-    if (val < this.control.min[0]) {
+    if (val < this.control.attributes.min[0]) {
       if (this._numberType === "int") {
-        return Math.trunc(this.control.min[0]);
+        return Math.trunc(this.control.attributes.min[0]);
       }
-      return this.control.min[0];
+      return this.control.attributes.min[0];
     }
-    if (val > this.control.max[0]) {
+    if (val > this.control.attributes.max[0]) {
       if (this._numberType === "int") {
-        return Math.trunc(this.control.max[0]);
+        return Math.trunc(this.control.attributes.max[0]);
       }
-      return this.control.max[0];
+      return this.control.attributes.max[0];
     }
     if (this._numberType === "int") {
       val = Math.trunc(val);
@@ -5781,17 +6001,17 @@ let RdSlider = class extends FormElement {
     return val;
   }
   clampJoystickY(val) {
-    if (val < this.control.min[1]) {
+    if (val < this.control.attributes.min[1]) {
       if (this._numberType === "int") {
-        return Math.trunc(this.control.min[1]);
+        return Math.trunc(this.control.attributes.min[1]);
       }
-      return this.control.min[1];
+      return this.control.attributes.min[1];
     }
-    if (val > this.control.max[1]) {
+    if (val > this.control.attributes.max[1]) {
       if (this._numberType === "int") {
-        return Math.trunc(this.control.max[1]);
+        return Math.trunc(this.control.attributes.max[1]);
       }
-      return this.control.max[1];
+      return this.control.attributes.max[1];
     }
     if (this._numberType === "int") {
       val = Math.trunc(val);
@@ -5799,25 +6019,25 @@ let RdSlider = class extends FormElement {
     return val;
   }
   mapValue() {
-    if (this.control.orient === "is--hor") {
+    if (this.control.attributes.orient === "is--hor") {
       this.control.currentValue = this.clampSlider(
         this.scale(
-          this.control.x,
+          this.control.attributes.x,
           0,
-          this.control.width - 44,
-          this.control.min,
-          this.control.max
+          this.control.attributes.width - this.$handle.offsetWidth,
+          this.control.attributes.min,
+          this.control.attributes.max
         )
       );
     }
-    if (this.control.orient === "is--vert") {
+    if (this.control.attributes.orient === "is--vert") {
       this.control.currentValue = this.clampSlider(
         this.scale(
-          this.control.y,
+          this.control.attributes.y,
           0,
-          this.control.height - 44,
-          this.control.min,
-          this.control.max
+          this.control.attributes.height - this.$handle.offsetHeight,
+          this.control.attributes.min,
+          this.control.attributes.max
         )
       );
     }
@@ -5825,20 +6045,20 @@ let RdSlider = class extends FormElement {
       this.control.currentValue = [
         this.clampJoystickX(
           this.scale(
-            this.control.x,
+            this.control.attributes.x,
             0,
-            this.control.width - 44,
-            this.control.min[0],
-            this.control.max[0]
+            this.control.attributes.width - 44,
+            this.control.attributes.min[0],
+            this.control.attributes.max[0]
           )
         ),
         this.clampJoystickY(
           this.scale(
-            this.control.y,
+            this.control.attributes.y,
             0,
-            this.control.height - 44,
-            this.control.min[1],
-            this.control.max[1]
+            this.control.attributes.height - 44,
+            this.control.attributes.min[1],
+            this.control.attributes.max[1]
           )
         )
       ];
@@ -5852,108 +6072,120 @@ let RdSlider = class extends FormElement {
       }
       return val;
     };
-    if (this.control.orient === "is--joystick") {
+    if (this.control.attributes.orient === "is--joystick") {
       this._joystickPos = this.circularBounds(
-        this.control.x,
-        this.control.y,
-        [0, this.control.width - this.$handle.offsetWidth],
-        [0, this.control.height - this.$handle.offsetHeight]
+        this.control.attributes.x,
+        this.control.attributes.y,
+        [0, this.control.attributes.width - this.$handle.offsetWidth],
+        [0, this.control.attributes.height - this.$handle.offsetHeight]
       );
-      this.control.x = this.clamp(this._joystickPos[0], [
+      this.control.attributes.x = this.clamp(this._joystickPos[0], [
         0,
-        this.control.width - this.$handle.offsetWidth
+        this.control.attributes.width - this.$handle.offsetWidth
       ]);
-      this.control.y = this.clamp(this._joystickPos[1], [
+      this.control.attributes.y = this.clamp(this._joystickPos[1], [
         0,
-        this.control.height - this.$handle.offsetHeight
+        this.control.attributes.height - this.$handle.offsetHeight
       ]);
-      this.control.position = "translate(" + this.control.x + "px," + this.control.y + "px)";
-      this.setActualPosition(this.control.position);
+      this.control.attributes.position = "translate(" + this.control.attributes.x + "px," + this.control.attributes.y + "px)";
+      this.setActualPosition(this.control.attributes.position);
     } else {
       if (x <= 0) {
-        this.control.x = 0;
+        this.control.attributes.x = 0;
       } else if (x > this.clientWidth - this.$handle.offsetWidth) {
-        this.control.x = this.clientWidth - this.$handle.offsetWidth;
+        this.control.attributes.x = this.clientWidth - this.$handle.offsetWidth;
       } else {
-        this.control.x = x;
+        this.control.attributes.x = x;
       }
       if (y <= 0) {
-        this.control.y = 0;
+        this.control.attributes.y = 0;
       } else if (y > this.clientHeight - this.$handle.offsetHeight) {
-        this.control.y = this.clientHeight - this.$handle.offsetHeight;
+        this.control.attributes.y = this.clientHeight - this.$handle.offsetHeight;
       } else {
-        this.control.y = y;
+        this.control.attributes.y = y;
       }
-      this.control.position = "translate(" + clampPos(this.control.x) + "px," + clampPos(this.control.y) + "px)";
-      this.setActualPosition(this.control.position);
+      this.control.attributes.position = "translate(" + clampPos(this.control.attributes.x) + "px," + clampPos(this.control.attributes.y) + "px)";
+      this.setActualPosition(this.control.attributes.position);
     }
   }
   updateControl(controlValue) {
     if (this._joystickType) {
-      this.control.x = this.scale(
+      this.control.attributes.x = this.scale(
         controlValue[0],
-        this.control.min[0],
-        this.control.max[0],
+        this.control.attributes.min[0],
+        this.control.attributes.max[0],
         0,
         this.clientWidth
       );
-      this.control.y = this.scale(
+      this.control.attributes.y = this.scale(
         controlValue[1],
-        this.control.min[1],
-        this.control.max[1],
+        this.control.attributes.min[1],
+        this.control.attributes.max[1],
         0,
         this.clientHeight
       );
     }
-    if (this.control.orient === "is--hor") {
-      this.control.x = this.scale(
+    if (this.control.attributes.orient === "is--hor") {
+      this.control.attributes.x = this.scale(
         controlValue,
-        this.control.min,
-        this.control.max,
+        this.control.attributes.min,
+        this.control.attributes.max,
         0,
         this.clientWidth
       );
-      this.control.y = 0;
+      this.control.attributes.y = 0;
     }
-    if (this.control.orient === "is--vert") {
-      this.control.x = 0;
-      this.control.y = this.scale(
+    if (this.control.attributes.orient === "is--vert") {
+      this.control.attributes.x = 0;
+      this.control.attributes.y = this.scale(
         controlValue,
-        this.control.min,
-        this.control.max,
+        this.control.attributes.min,
+        this.control.attributes.max,
         0,
         this.clientHeight
       );
     }
-    this.setPosition(this.control.x, this.control.y);
+    this.setPosition(this.control.attributes.x, this.control.attributes.y);
     this.mapValue();
   }
   setChannel(name) {
     this.channel = new BroadcastChannel(name);
   }
+  setControl(control) {
+    this.control = control;
+    this.setAttribute("name", control.name);
+    this.setAttribute("type", control.type);
+    if (this.control.attributes.size) {
+      this.shadowRoot.querySelector(".slider").classList.add(this.control.attributes.size);
+    }
+    if (control.currentValue !== void 0) {
+      this.value = control.currentValue;
+    }
+    this.onSliderInit();
+  }
 };
-__decorateClass$l([
+__decorateClass$o([
   Emitter("input")
 ], RdSlider.prototype, "onSliderInit", 1);
-__decorateClass$l([
+__decorateClass$o([
   Listen("mouseleave")
 ], RdSlider.prototype, "onMouseLeave", 1);
-__decorateClass$l([
+__decorateClass$o([
   Listen("mouseenter")
 ], RdSlider.prototype, "onMouseEnter", 1);
-__decorateClass$l([
+__decorateClass$o([
   Listen("touchstart")
 ], RdSlider.prototype, "onTouchStart", 1);
-__decorateClass$l([
+__decorateClass$o([
   Listen("mousedown")
 ], RdSlider.prototype, "onMouseDown", 1);
-__decorateClass$l([
+__decorateClass$o([
   Listen("mouseup")
 ], RdSlider.prototype, "onMouseUp", 1);
-__decorateClass$l([
+__decorateClass$o([
   Listen("touchend")
 ], RdSlider.prototype, "onTouchEnd", 1);
-RdSlider = __decorateClass$l([
+RdSlider = __decorateClass$o([
   Component({
     selector: "rd-slider",
     style: css`
@@ -5969,7 +6201,7 @@ RdSlider = __decorateClass$l([
       display: block;
       z-index: 1000;
       background-color: var(--ready-color-bg);
-      border: 2px solid var(--ready-color-border);
+      border: var(--ready-border-width) solid var(--ready-color-border);
     }
     .draggable .range {
       width: 100%;
@@ -6000,7 +6232,7 @@ RdSlider = __decorateClass$l([
     }
     .slider.hor .draggable {
       width: 100%;
-      border-radius: 14px;
+      border-radius:  var(--ready-border-radius);
     }
     .slider.hor .draggable .handle {
       background: var(--ready-icon-hor);
@@ -6027,7 +6259,7 @@ RdSlider = __decorateClass$l([
       width: 32px;
       height: 100%;
       min-height: 208px;
-      border-radius: 14px;
+      border-radius:  var(--ready-border-radius);
     }
     .slider.vert .draggable .handle {
       background: var(--ready-icon-vert);
@@ -6068,7 +6300,7 @@ RdSlider = __decorateClass$l([
     }
     .slider .draggable:hover, 
     .slider .draggable.active {
-      border: 2px solid var(--ready-color-highlight);
+      border: var(--ready-border-width) solid var(--ready-color-highlight);
       outline: none;
       box-shadow: none;
     }
@@ -6084,14 +6316,14 @@ RdSlider = __decorateClass$l([
     }
     .slider .draggable[disabled]:hover, 
     .slider .draggable[disabled].active {
-      border: 2px solid var(--ready-color-border);
+      border: var(--ready-border-width) solid var(--ready-color-border);
       outline: none;
       box-shadow: none;
     }
     :host.required .slider .draggable,
     :host.required .slider .draggable[disabled]:hover, 
     :host.required .slider .draggable[disabled].active {
-      border: 2px solid var(--ready-color-error);
+      border: var(--ready-border-width) solid var(--ready-color-error);
       outline: none;
       box-shadow: none;
     }
@@ -6108,6 +6340,643 @@ RdSlider = __decorateClass$l([
   `
   })
 ], RdSlider);
+var __defProp$n = Object.defineProperty;
+var __getOwnPropDesc$n = Object.getOwnPropertyDescriptor;
+var __decorateClass$n = (decorators, target, key, kind) => {
+  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc$n(target, key) : target;
+  for (var i = decorators.length - 1, decorator; i >= 0; i--)
+    if (decorator = decorators[i])
+      result = (kind ? decorator(target, key, result) : decorator(result)) || result;
+  if (kind && result) __defProp$n(target, key, result);
+  return result;
+};
+let RdDial = class extends FormElement {
+  constructor() {
+    super();
+    this._revolutions = 0;
+    this._type = "dial";
+    this._limit = false;
+    this._belowRotationalLimit = false;
+    this._wasBelowLimit = false;
+  }
+  static get observedAttributes() {
+    return ["size", "control", "channel", "control"];
+  }
+  attributeChangedCallback(name, old, next) {
+    switch (name) {
+      case "size":
+        this.shadowRoot.querySelector(".slider").classList.add(next);
+        break;
+      case "control":
+        if (!next.startsWith("{{")) {
+          this.control = JSON.parse(next);
+          this.onSliderInit();
+          this.updateControl(this.value);
+        }
+        break;
+      case "channel":
+        this.setChannel(next);
+        break;
+    }
+  }
+  formDisabledCallback(disabled) {
+    if (disabled) {
+      this.$elem.setAttribute("disabled", "true");
+    } else {
+      this.$elem.removeAttribute("disabled");
+    }
+  }
+  formResetCallback() {
+    this.onSliderInit();
+  }
+  onValidate() {
+    if (this.hasAttribute("required")) {
+      this.$internals.setValidity({ customError: true }, "required");
+      this.$elem.classList.add("required");
+    } else {
+      this.$internals.setValidity({});
+      this.$elem.classList.remove("required");
+    }
+  }
+  get type() {
+    return this._type;
+  }
+  set type(value) {
+    this._type = value;
+  }
+  get form() {
+    return this.$internals.form;
+  }
+  get name() {
+    return this.getAttribute("name");
+  }
+  get validity() {
+    return this.$internals.validity;
+  }
+  get validationMessage() {
+    return this.$internals.validationMessage;
+  }
+  get willValidate() {
+    return this.$internals.willValidate;
+  }
+  get value() {
+    return this.control.currentValue;
+  }
+  set value(controlValue) {
+    setTimeout(() => this.updateControl(controlValue));
+  }
+  get $elem() {
+    return this.shadowRoot.querySelector(".draggable");
+  }
+  get $handle() {
+    return this.shadowRoot.querySelector(".handle");
+  }
+  onSliderInit() {
+    this._touchItem = null;
+    this._rect = this.getBoundingClientRect();
+    this.control.attributes.height = this.clientHeight;
+    this.control.attributes.width = this.clientWidth;
+    if (this.control.attributes.numberType) {
+      this._numberType = this.control.attributes.numberType;
+    } else {
+      this._numberType = "float";
+    }
+    this.style.maxWidth = "200px";
+    this.style.maxHeight = "200px";
+    if (!this.control.attributes.stops) {
+      this.control.attributes.stops = [-90, 270];
+    }
+  }
+  onMouseLeave() {
+  }
+  onMouseEnter() {
+    var _a;
+    if ((_a = this.control) == null ? void 0 : _a.isActive) {
+      this.control.hasUserInput = true;
+    }
+  }
+  onTouchStart(e) {
+    this.control.hasUserInput = true;
+    this.onTouchDown(e);
+  }
+  onTouchDown(e) {
+    e.preventDefault();
+    this.control.isActive = true;
+    this.control.hasUserInput = true;
+    this.$elem.classList.add("active");
+    this._rect = this.getBoundingClientRect();
+    this.control.attributes.height = this.clientHeight;
+    this.control.attributes.width = this.clientWidth;
+    this.addEventListener("touchmove", this.onTouchMove.bind(this));
+    this.addEventListener("touchend", this.onMouseUp.bind(this));
+    if (this._touchItem === null) {
+      this._touchItem = e.touches.length - 1;
+    }
+    this.control.attributes.x = e.touches[this._touchItem].pageX - this._rect.left - this.$handle.clientWidth / 2;
+    this.control.attributes.y = e.touches[this._touchItem].pageY - this._rect.top - this.$handle.clientHeight / 2;
+    this.setPosition();
+  }
+  onMouseDown(e) {
+    e.preventDefault();
+    this.control.isActive = true;
+    this.control.hasUserInput = true;
+    this.$elem.classList.add("active");
+    this._rect = this.getBoundingClientRect();
+    this.control.attributes.height = this.clientHeight;
+    this.control.attributes.width = this.clientWidth;
+    this.control.attributes.x = e.offsetX;
+    this.control.attributes.y = e.offsetY;
+    this.addEventListener("mousemove", this.onMouseMove.bind(this));
+    this.addEventListener("mouseup", this.onMouseUp.bind(this));
+    window.addEventListener("mousemove", this.onMouseMove.bind(this));
+    window.addEventListener("mouseup", this.onMouseUp.bind(this));
+    this.setPosition();
+  }
+  // Handle drag event
+  onTouchMove(e) {
+    e.preventDefault();
+    if (this._touchItem === null) {
+      this._touchItem = e.touches.length - 1;
+    }
+    this.control.attributes.x = (this.getBoundingClientRect().left - e.touches[this._touchItem].pageX) * -1;
+    this.control.attributes.y = (this.offsetTop - e.touches[this._touchItem].pageY) * -1;
+    if (this.control.hasUserInput && this.control.isActive) {
+      this.setPosition();
+      this.control.currentValue = this.mapValue();
+      this.control.timeStamp = e.timeStamp;
+      if (this.channel) {
+        this.channel.postMessage(this.control);
+      }
+      this.onEvent();
+    }
+  }
+  onMouseMove(e) {
+    if (!this.control.isActive) {
+      return;
+    }
+    this.$elem.classList.add("active");
+    this.control.attributes.x = (this.getBoundingClientRect().left - e.pageX) * -1;
+    this.control.attributes.y = (this.offsetTop - e.pageY) * -1;
+    if (this.control.hasUserInput && this.control.isActive) {
+      this.setPosition();
+      this.control.currentValue = this.mapValue();
+      this.control.timeStamp = e.timeStamp;
+      if (this.channel) {
+        this.channel.postMessage(this.control);
+      }
+      this.onEvent();
+    }
+  }
+  onMouseUp() {
+    this.control.isActive = false;
+    this.control.hasUserInput = false;
+    this.$elem.classList.remove("active");
+    if ("ontouchstart" in document.documentElement) {
+      this._touchItem = null;
+    } else {
+      this.removeEventListener("mousemove", this.onMouseMove.bind(this));
+      this.removeEventListener("mouseup", this.onMouseUp.bind(this));
+    }
+  }
+  onTouchEnd() {
+    this.onMouseUp();
+  }
+  onEvent() {
+    const event = new CustomEvent("input", {
+      bubbles: true,
+      composed: true,
+      detail: this.control
+    });
+    this.emitter.emit(event);
+    if (this.onchange) {
+      this.onchange(event);
+    }
+  }
+  // Get Center of Circle
+  getCenter(xRange, yRange) {
+    const cX = xRange[1] - (xRange[1] - xRange[0]) / 2;
+    const cY = yRange[1] - (yRange[1] - yRange[0]) / 2;
+    return [cX, cY];
+  }
+  // Distance Between Two Points
+  distance(dot1, dot2) {
+    const x1 = dot1[0], y1 = dot1[1], x2 = dot2[0], y2 = dot2[1];
+    return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+  }
+  // Convert between two ranges, for outputting user value
+  scale(v, min, max, gmin, gmax) {
+    return (v - min) / (max - min) * (gmax - gmin) + gmin;
+  }
+  // Find if cursor is within radius of elem
+  circularBounds(x, y, xRange, yRange) {
+    const center = this.getCenter(xRange, yRange);
+    const radius = xRange[1] - center[0];
+    x = x - center[0];
+    y = y - center[1];
+    const radians = Math.atan2(y, x);
+    const angle = this.scale(
+      this.radiansToDegrees(radians),
+      -180,
+      180,
+      1e-27,
+      360
+    );
+    if (radians < 0 && this._lastAngle > 0 && angle > 0 && angle < 10) {
+      this._revolutions = this._revolutions + 1;
+    }
+    if (radians > 0 && this._lastAngle < 0 && angle < 365 && angle > 355) {
+      this._revolutions = this._revolutions - 1;
+    }
+    if (!this._belowRotationalLimit) {
+      this._angle = Math.round(angle) - 360;
+    } else {
+      this._angle = Math.round(angle);
+    }
+    this._lastAngle = radians;
+    return [
+      Math.cos(radians) * (radius - 4) + center[0],
+      Math.sin(radians) * (radius - 4) + center[1]
+    ];
+  }
+  radiansToDegrees(radians) {
+    return Math.floor(radians * (180 / Math.PI));
+  }
+  degreesToCoordinates(angle) {
+    angle = (angle - 180) % 360;
+    const xRange = [0, this.clientWidth - this.$handle.offsetWidth];
+    const yRange = [0, this.clientHeight - this.$handle.offsetHeight];
+    const center = this.getCenter(xRange, yRange);
+    const radius = xRange[1] - center[0];
+    const radians = angle * (Math.PI / 180);
+    const x = center[0] + radius * Math.cos(radians);
+    const y = center[1] + radius * Math.sin(radians);
+    return [x, y];
+  }
+  clamp(value, range) {
+    return Math.max(Math.min(value, range[1]), range[0]);
+  }
+  setActualPosition(pos) {
+    if (this._limit) {
+      return;
+    }
+    const transformRegex = new RegExp(/(\d+(\.\d+)?)/g);
+    const positions = pos.match(transformRegex);
+    if (positions) {
+      this.$handle.style.transform = "matrix3d(1,0,0.00,0,0.00,1,0.00,0,0,0,1,0," + positions[0] + "," + positions[1] + ",0,1)";
+    }
+  }
+  mapValue() {
+    let rotationalValue = 360 * this._revolutions + this._angle;
+    const min = this.control.attributes.min;
+    const max = this.control.attributes.max;
+    if (this.control.attributes.stops[0] < 0 && this.control.attributes.stops[1] < 360 && rotationalValue > this.control.attributes.stops[1] && rotationalValue < 360 && this._revolutions === 0) {
+      rotationalValue = rotationalValue - 360;
+      this._belowRotationalLimit = true;
+    } else if (this._belowRotationalLimit === true && rotationalValue >= 360) {
+      this._belowRotationalLimit = false;
+    }
+    const value = this.scale(
+      rotationalValue,
+      this.control.attributes.stops[0],
+      this.control.attributes.stops[1],
+      min,
+      max
+    );
+    let currentValue;
+    if (value > max && !this._belowRotationalLimit) {
+      currentValue = this.control.attributes.max;
+      this._limit = true;
+    } else if (value < min) {
+      currentValue = this.control.attributes.min;
+      this._limit = true;
+    } else {
+      currentValue = value;
+      this._limit = false;
+    }
+    if (this._numberType === "int") {
+      currentValue = Math.trunc(currentValue);
+    }
+    return currentValue;
+  }
+  // Move handle, within elem
+  setPosition() {
+    this._joystickPos = this.circularBounds(
+      this.control.attributes.x,
+      this.control.attributes.y,
+      [0, this.clientWidth - this.$handle.offsetWidth],
+      [0, this.clientHeight - this.$handle.offsetHeight]
+    );
+    this.control.attributes.x = this.clamp(this._joystickPos[0], [
+      0,
+      this.clientWidth - this.$handle.offsetWidth
+    ]);
+    this.control.attributes.y = this.clamp(this._joystickPos[1], [
+      0,
+      this.clientHeight - this.$handle.offsetHeight
+    ]);
+    this.control.attributes.position = "translate(" + this.control.attributes.x + "px," + this.control.attributes.y + "px)";
+    this.setActualPosition(this.control.attributes.position);
+  }
+  updateControl(controlValue) {
+    const angle = this.scale(
+      controlValue,
+      this.control.attributes.min,
+      this.control.attributes.max,
+      this.control.attributes.stops[0],
+      this.control.attributes.stops[1]
+    );
+    const coords = this.degreesToCoordinates(angle);
+    this.control.attributes.x = coords[0];
+    this.control.attributes.y = coords[1];
+    this.setPosition();
+    this.control.currentValue = controlValue;
+  }
+  setChannel(name) {
+    this.channel = new BroadcastChannel(name);
+  }
+  setControl(control) {
+    this.control = control;
+    this.onSliderInit();
+    this.setAttribute("name", control.name);
+    if (this.control.attributes.size) {
+      this.shadowRoot.querySelector(".slider").classList.add(this.control.attributes.size);
+    }
+    if (control.currentValue !== void 0) {
+      this.value = control.currentValue;
+    }
+  }
+};
+__decorateClass$n([
+  Emitter("input")
+], RdDial.prototype, "onSliderInit", 1);
+__decorateClass$n([
+  Listen("mouseleave")
+], RdDial.prototype, "onMouseLeave", 1);
+__decorateClass$n([
+  Listen("mouseenter")
+], RdDial.prototype, "onMouseEnter", 1);
+__decorateClass$n([
+  Listen("touchstart")
+], RdDial.prototype, "onTouchStart", 1);
+__decorateClass$n([
+  Listen("mousedown")
+], RdDial.prototype, "onMouseDown", 1);
+__decorateClass$n([
+  Listen("mouseup")
+], RdDial.prototype, "onMouseUp", 1);
+__decorateClass$n([
+  Listen("touchend")
+], RdDial.prototype, "onTouchEnd", 1);
+RdDial = __decorateClass$n([
+  Component({
+    selector: "rd-dial",
+    style: css`
+    :host {
+      display: block;
+    }
+    :host:after {
+      content: '';
+      display: table;
+      clear: both;
+    }
+    .draggable {
+      display: block;
+      z-index: 1000;
+      background-color: var(--ready-color-bg);
+      border: var(--ready-border-width) solid var(--ready-color-border);
+    }
+    .draggable .range {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+    .draggable .handle {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: var(--ready-border-width) solid var(--ready-color-border);
+      background-repeat: no-repeat;
+      transition: transform 0.175;
+      pointer-events: none;
+    }
+    .slider {
+      position: relative;
+    }
+    .slider.small .draggable {
+      border: none;
+    }  
+    .slider.small .draggable.active {
+      border: none;
+    }
+    .slider.joystick {
+      width: 200px;
+      height: 200px;
+    }
+    .slider.joystick .draggable {
+      width: 200px;
+      height: 200px;
+      cursor: var(--ready-icon-handle-bg) 0 0, pointer;
+    }
+    .slider.joystick.circle .draggable {
+      border-radius: 50%;
+    }
+    .slider.joystick.square .draggable{
+      border-radius: 22px;
+    }
+    .slider.joystick .draggable .handle {
+      position: absolute;
+      background-size: 44px 44px;
+      width: 44px;
+      height: 44px;
+    }
+    .slider .draggable:hover, 
+    .slider .draggable.active {
+      border: var(--ready-border-width) solid var(--ready-color-highlight);
+      outline: none;
+      box-shadow: none;
+    }
+    .slider .draggable:hover .handle, 
+    .slider .draggable.active .handle {
+      -webkit-filter: grayscale(100%) brightness(5);
+      filter: grayscale(100%) brightness(5); 
+    }
+    .slider .draggable[disabled] {
+      opacity: var(--ready-opacity-disabled);
+      background: var(--ready-color-disabled);
+      cursor: not-allowed;
+    }
+    .slider .draggable[disabled]:hover, 
+    .slider .draggable[disabled].active {
+      border: var(--ready-border-width) solid var(--ready-color-border);
+      outline: none;
+      box-shadow: none;
+    }
+    :host.required .slider .draggable,
+    :host.required .slider .draggable[disabled]:hover, 
+    :host.required .slider .draggable[disabled].active {
+      border: var(--ready-border-width) solid var(--ready-color-error);
+      outline: none;
+      box-shadow: none;
+    }
+  }
+  `,
+    template: html`
+    <div class="slider joystick circle">
+      <div class="draggable">
+        <div class="range">
+          <div class="handle"></div>
+        </div>
+      </div>
+    </div>
+  `
+  })
+], RdDial);
+var __defProp$m = Object.defineProperty;
+var __getOwnPropDesc$m = Object.getOwnPropertyDescriptor;
+var __decorateClass$m = (decorators, target, key, kind) => {
+  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc$m(target, key) : target;
+  for (var i = decorators.length - 1, decorator; i >= 0; i--)
+    if (decorator = decorators[i])
+      result = (kind ? decorator(target, key, result) : decorator(result)) || result;
+  if (kind && result) __defProp$m(target, key, result);
+  return result;
+};
+let RdSurface = class extends StructuralElement {
+  constructor() {
+    super();
+  }
+  setControlSurface(surface) {
+    if (!surface) {
+      return;
+    }
+    if (surface.classes) {
+      this.setAttribute("class", "");
+      surface.classes.forEach((className) => this.classList.add(className));
+    }
+    if (surface.style) {
+      for (const styleName in surface.style) {
+        if (surface.style.hasOwnProperty(styleName)) {
+          this.style[styleName] = surface.style[styleName];
+        }
+      }
+    }
+    for (let i = 0; i <= surface.controls.length; i++) {
+      const element = document.createElement("div", { is: "rd-element" });
+      element.setAttribute("is", "rd-element");
+      element.setControlSurface(surface.controls[i]);
+      this.appendChild(element);
+    }
+  }
+};
+RdSurface = __decorateClass$m([
+  Component({
+    selector: "rd-surface",
+    style: css``,
+    template: html``
+  })
+], RdSurface);
+var __defProp$l = Object.defineProperty;
+var __getOwnPropDesc$l = Object.getOwnPropertyDescriptor;
+var __decorateClass$l = (decorators, target, key, kind) => {
+  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc$l(target, key) : target;
+  for (var i = decorators.length - 1, decorator; i >= 0; i--)
+    if (decorator = decorators[i])
+      result = (kind ? decorator(target, key, result) : decorator(result)) || result;
+  if (kind && result) __defProp$l(target, key, result);
+  return result;
+};
+let RdSurfaceElement = class extends BlockComponent {
+  constructor() {
+    super();
+  }
+  setControlSurface(surface) {
+    if (!surface) {
+      return;
+    }
+    if (surface.classes) {
+      this.setAttribute("class", "");
+      surface.classes.forEach((className) => this.classList.add(className));
+    }
+    if (surface.style) {
+      for (const styleName in surface.style) {
+        if (surface.style.hasOwnProperty(styleName)) {
+          this.style[styleName] = surface.style[styleName];
+        }
+      }
+    }
+    const element = document.createElement(surface.selector);
+    const label = document.createElement("label");
+    label.classList.add("surface-label");
+    label.textContent = surface.label;
+    if (surface.hint) {
+      const hint = document.createElement("span");
+      hint.classList.add("hint");
+      hint.textContent = "i";
+      hint.setAttribute("popovertarget", `${surface.control.name}-dialog`);
+      label.appendChild(hint);
+      const dialog = document.createElement("div");
+      dialog.setAttribute("id", `${surface.control.name}-dialog`);
+      dialog.setAttribute("popover", "auto");
+      dialog.innerHTML = surface.hint.template;
+      hint.addEventListener("click", () => {
+        dialog.togglePopover();
+      });
+      this.appendChild(dialog);
+    }
+    this.appendChild(label);
+    this.appendChild(element);
+    element.setControl(surface.control);
+    if (surface.channel) {
+      element.setChannel(surface.channel);
+    }
+  }
+};
+RdSurfaceElement = __decorateClass$l([
+  Component({
+    selector: "rd-element",
+    style: css`
+    :host {
+      display: flex;
+      flex-direction: column;
+    }
+    .surface-label {
+      margin-bottom: 1em;
+    }
+    .surface-label .hint {
+      display: inline-block;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      padding-right: 2px;
+      background: var(--ready-color-selected);
+      color: var(--ready-color-default);
+      font-style: italic;
+      font-size: 1em;
+      text-align: center;
+      margin-left: 0.5em;
+      cursor: pointer;
+      user-select: none;
+    }
+    [popover] {
+      position: fixed;
+      padding: 1em;
+      border: 1px solid var(--ready-color-border);
+      border-radius: 0.5em;
+      background: var(--ready-popover-bg);
+      color: var(--ready-color-default);
+      width: 640px;
+      height: 100vh;
+      right: 0px;
+      inset: auto;
+      overflow: scroll;
+    }
+    ::backdrop {
+      background: var(--ready-popover-bg);
+    }
+  `,
+    custom: { extends: "div" }
+  })
+], RdSurfaceElement);
 const routing = [
   { path: "/", component: "app-home", title: "Readymade" },
   { path: "/test", component: "app-testbed", title: "Readymade Test Page" },
@@ -7164,7 +8033,7 @@ const template$6 = html`
         <span><a data-link="#resources">Resources</a></span>
       </li>
       <li>
-        <span><a href="#/lib">@readymade/ui</a></span>
+        <span><a href="#/lib">Readymade UI</a></span>
       </li>
     </ul>
   </nav>
@@ -7658,7 +8527,7 @@ const template$5 = `<r-side-nav></r-side-nav>
         <ul>
             <li> 🎰 Declare metadata for CSS and HTML ShadowDOM template</li>
             <li> ☕️ Single interface for 'autonomous custom' and 'customized built-in' elements </li>
-            <li> 🏋️‍ Weighing in under 1.2Kb for 'Hello World' <span class="hint">(gzipped)</span> </li>
+            <li> 🏋️‍ Weighing in at 1Kb for 'Hello World' <span class="hint">(gzipped)</span> </li>
             <li> 1️⃣ One-way data binding </li>
             <li> 🎤 Event Emitter pattern </li>
             <li> 🖥 Server side renderable </li>
@@ -8962,8 +9831,1363 @@ TestBedComponent = __decorateClass$2([
     template: template$2
   })
 ], TestBedComponent);
-const template$1 = '<div class="testbed">\n  <div class="theme__toggle"></div>\n  <div>\n    <h1>Readymade UI</h1>\n\n    <div>\n      <p>\n        Readymade UI is a specialized user-interface library for remote control\n        surfaces. Designed primarily for touch surfaces, Readymade UI is built\n        with web specifications, making them portable wherever browsers are\n        available. Many Readymade UI elements can participate in HTML forms,\n        however their real power is unlocked when using the elements as a remote\n        control. Every Readymade UI element can dispatch events to a global\n        event bus that can then transmit events over Touch OSC, WebSocket, or\n        WebRTC.\n      </p>\n\n      <p>\n        Examples of each Readymade UI element are below. Open DevTools console\n        to observe messages dispatched from each element.\n      </p>\n      <div>\n        <rd-radiogroup class="form__item">\n          <input type="radio" name="control" value="form" checked />\n          <label for="form">Form</label>\n          <input type="radio" name="control" value="channel" />\n          <label for="channel">Channel</label>\n        </rd-radiogroup>\n      </div>\n    </div>\n\n    <form class="grid">\n      <div class="pane">\n        <h3>Button</h3>\n        <rd-button name="button"></rd-button>\n      </div>\n      <div class="pane">\n        <h3>Switch</h3>\n        <rd-switch name="switch" class="form__item"></rd-switch>\n      </div>\n      <div class="pane">\n        <h3>Input</h3>\n        <rd-input name="input" class="form__item"></rd-input>\n      </div>\n      <div class="pane">\n        <h3>Text Area</h3>\n        <rd-textarea name="textarea" class="form__item" required />\n      </div>\n      <div class="pane">\n        <h3>Select</h3>\n        <rd-dropdown name="dropdown" class="form__item">\n          <select>\n            <option>Option 1</option>\n            <option>Option 2</option>\n            <option>Option With Very Long Title</option>\n          </select>\n        </rd-dropdown>\n      </div>\n      <div class="pane">\n        <h3>Radio (Vertical)</h3>\n        <rd-radiogroup\n          name="radio"\n          class="form__item"\n          direction="vertical"\n          required\n        >\n          <input type="radio" name="control" value="hue" />\n          <label for="hue">Hue</label>\n          <input type="radio" name="control" value="saturation" />\n          <label for="saturation">Saturation</label>\n          <input type="radio" name="control" value="brightness" />\n          <label for="brightess">Brightness</label>\n        </rd-radiogroup>\n      </div>\n      <div class="pane">\n        <h3>Check Box</h3>\n        <rd-checkbox name="checkbox" class="form__item" checked></rd-checkbox>\n      </div>\n      <div class="pane">\n        <h3>Slider (Horizontal)</h3>\n        <rd-slider\n          class="form__item"\n          name="horizontal slider"\n          type="hor"\n          control="{{ horControl }}"\n        ></rd-slider>\n      </div>\n      <div class="pane">\n        <h3>Slider (Vertical)</h3>\n        <rd-slider\n          class="form__item"\n          name="vertical slider"\n          type="vert"\n          control="{{ vertControl }}"\n        ></rd-slider>\n      </div>\n      <div class="pane">\n        <h3>Joystick</h3>\n        <rd-slider\n          class="form__item"\n          name="joystick"\n          type="joystick"\n          control="{{ joyControl }}"\n        ></rd-slider>\n      </div>\n      <div class="pane">\n        <h3>Joystick (Square)</h3>\n        <rd-slider\n          class="form__item"\n          name="joystick square"\n          type="joystick"\n          control="{{ joySquareControl }}"\n        ></rd-slider>\n      </div>\n      <div class="pane">\n        <h3>Form Submit</h3>\n        <rd-button name="submit" type="submit"></rd-button>\n      </div>\n      <div class="pane full">\n        <h3>Button Pad (Keyboard)</h3>\n        <rd-buttonpad\n          name="keyboard"\n          tabindex="0"\n          class="form__item"\n        ></rd-buttonpad>\n      </div>\n      <div class="pane full">\n        <h3>Button Pad (Number)</h3>\n        <rd-buttonpad\n          name="numberpad"\n          tabindex="0"\n          class="form__item"\n        ></rd-buttonpad>\n      </div>\n    </form>\n  </div>\n  <div class="spacer"></div>\n</div>\n';
-const style$1 = ":host {\n  display: block;\n  font-weight: 400;\n  font-size: 16px;\n  padding: 20px;\n  margin: 0px;\n  width: 100%;\n  height: 100%;\n  min-height: 100vh;\n  overflow-y: auto;\n  -webkit-font-smoothing: auto;\n  -moz-osx-font-smoothing: grayscale;\n  margin-bottom: 360px;\n}\n\np {\n  max-width: 640px;\n  font-size: 1.2em;\n}\n\n.theme__toggle {\n  width: 32px;\n  height: 32px;\n  border-radius: 50%;\n  position: absolute;\n  top: 10px;\n  right: 10px;\n  cursor: pointer;\n  &.dark {\n    background: #ffffff;\n  }\n  &.light {\n    background: #000000;\n  }\n}\n\n.grid {\n  display: grid;\n  grid-template-columns: repeat(3, 1fr);\n  gap: 20px;\n}\n\n.pane {\n  margin-top: 20px;\n}\n\n.full {\n  grid-column: span 3;\n}\n";
+const uuid = function() {
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(c) {
+    const r = Math.random() * 16 | 0, v = c == "x" ? r : r & 3 | 8;
+    return v.toString(16);
+  });
+};
+const randomSharedKey = function() {
+  let text = "";
+  const possible = "ABCDEFGHJKMNOPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz023456789";
+  for (let i = 0; i < 5; i++) {
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+  }
+  return text.charAt(0).toUpperCase() + text.slice(1);
+};
+class Transmitter {
+  constructor(config) {
+    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q, _r, _s, _t;
+    this.debug = true;
+    this.config = config;
+    this.id = this.config.id || uuid();
+    this.sharedKey = this.config.sharedKey || randomSharedKey();
+    this.channelName = this.config.channelName ? this.config.channelName : "channel";
+    this.hasPulse = false;
+    this.isOpen = false;
+    this.connections = {};
+    this.remotePeerId = null;
+    this.store = { messages: [] };
+    this.rtcConfiguration = config.rtcConfig ? config.rtc : {
+      iceServers: [
+        {
+          url: "stun:stun.l.google.com:19302",
+          urls: ["stun:stun.l.google.com:19302"]
+        }
+      ]
+    };
+    this.dataChannelConfig = {
+      ordered: false,
+      maxPacketLifeTime: 1e3
+    };
+    this.ws = {
+      osc: ((_b = (_a = this.config.serverConfig) == null ? void 0 : _a.ws) == null ? void 0 : _b.osc) ? new WebSocket(
+        this.getWebSocketAddress((_d = (_c = this.config.serverConfig) == null ? void 0 : _c.ws) == null ? void 0 : _d.osc)
+      ) : null,
+      signal: ((_f = (_e = this.config.serverConfig) == null ? void 0 : _e.ws) == null ? void 0 : _f.signal) ? new WebSocket(
+        this.getWebSocketAddress((_h = (_g = this.config.serverConfig) == null ? void 0 : _g.ws) == null ? void 0 : _h.signal)
+      ) : null,
+      announce: null,
+      message: ((_j = (_i = this.config.serverConfig) == null ? void 0 : _i.ws) == null ? void 0 : _j.message) ? new WebSocket(
+        this.getWebSocketAddress((_l = (_k = this.config.serverConfig) == null ? void 0 : _k.ws) == null ? void 0 : _l.message)
+      ) : null
+    };
+    const connectMessage = {
+      sharedKey: this.sharedKey,
+      id: this.id,
+      type: "connect",
+      method: "webrtc"
+    };
+    if (this.debug) {
+      console.log("id: ", this.id);
+      console.log("sharedKey: ", this.sharedKey);
+    }
+    (_m = this.ws.signal) == null ? void 0 : _m.addEventListener("open", () => {
+      if (this.debug) console.log("Connected to Signal WebSocket server");
+      this.ws.signal.send(JSON.stringify(connectMessage));
+    });
+    (_n = this.ws.signal) == null ? void 0 : _n.addEventListener("message", (event) => {
+      if (this.debug)
+        console.log("Message from Signal server:", JSON.parse(event.data));
+      const data = JSON.parse(event.data);
+      if (data.id !== this.id) {
+        this.onSignal(data);
+      }
+    });
+    (_o = this.ws.message) == null ? void 0 : _o.addEventListener("open", () => {
+      if (this.debug) console.log("Connected to Message WebSocket server");
+      this.ws.message.send(JSON.stringify(connectMessage));
+    });
+    (_p = this.ws.message) == null ? void 0 : _p.addEventListener("message", (event) => {
+      if (this.debug)
+        console.log("Message from Message server:", JSON.parse(event.data));
+      const data = JSON.parse(event.data);
+      if (data.id !== this.id) {
+        this.onWebSocketMessage(event);
+      }
+    });
+    if (((_r = (_q = this.config.serverConfig) == null ? void 0 : _q.ws) == null ? void 0 : _r.signal) && ((_t = (_s = this.config.serverConfig) == null ? void 0 : _s.ws) == null ? void 0 : _t.announce)) {
+      this.init();
+      this.sendAnnounce();
+    }
+  }
+  init() {
+    const RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
+    this.peerConnection = new RTCPeerConnection(this.rtcConfiguration);
+    this.peerConnection.onicecandidate = this.onICECandidate.bind(this);
+    this.peerConnection.oniceconnectionstatechange = this.onICEStateChange.bind(this);
+    this.channel = this.peerConnection.createDataChannel(
+      this.channelName,
+      this.dataChannelConfig
+    );
+    this.channel.onopen = this.onDataChannelOpen.bind(this);
+    this.channel.onmessage = this.onDataChannelMessage.bind(this);
+    this.connections[this.remotePeerId] = this.peerConnection;
+    if (this.debug)
+      console.log("Setting up peer connection with " + this.remotePeerId);
+  }
+  sendAnnounce() {
+    var _a, _b;
+    const connectMessage = {
+      sharedKey: this.sharedKey,
+      id: this.id,
+      type: "connect",
+      method: "webrtc"
+    };
+    this.ws.announce = new WebSocket(
+      this.getWebSocketAddress((_b = (_a = this.config.serverConfig) == null ? void 0 : _a.ws) == null ? void 0 : _b.announce)
+    );
+    this.ws.announce.addEventListener("open", () => {
+      if (this.debug) console.log("Connected to Announce WebSocket server");
+      this.ws.announce.send(JSON.stringify(connectMessage));
+      if (this.debug)
+        console.log("Announced our sharedKey is " + this.sharedKey);
+      if (this.debug) console.log("Announced our ID is " + this.id);
+    });
+    this.ws.announce.addEventListener("close", () => {
+      if (this.debug) console.log("Disconnected from WebSocket server");
+    });
+    this.ws.announce.addEventListener("error", (event) => {
+      console.error("WebSocket error:", event);
+    });
+    this.ws.announce.addEventListener("message", (event) => {
+      const data = JSON.parse(event.data);
+      this.onAnnounce(data);
+    });
+  }
+  onAnnounce(snapshot) {
+    const msg = snapshot;
+    if (msg.id != this.id && msg.sharedKey == this.sharedKey) {
+      if (this.debug)
+        console.log("Discovered matching announcement from " + msg.id);
+      this.remotePeerId = msg.id;
+      this.connect();
+    }
+  }
+  sendSignal(msg) {
+    var _a;
+    msg.source = this.id;
+    msg.target = this.remotePeerId;
+    (_a = this.ws.signal) == null ? void 0 : _a.send(JSON.stringify(msg));
+  }
+  connect() {
+    this.peerConnection.createOffer().then((sessionDescription) => {
+      if (this.debug) console.log("Sending offer to " + this.remotePeerId);
+      this.peerConnection.setLocalDescription(
+        new RTCSessionDescription(sessionDescription)
+      );
+      this.sendSignal(sessionDescription);
+    }).catch(function(err) {
+      console.error("Could not create offer for " + this.remotePeerId, err);
+    });
+  }
+  onOffer(msg) {
+    const RTCSessionDescription2 = window.RTCSessionDescription || window.mozRTCSessionDescription;
+    this.hasPulse = true;
+    if (this.debug) console.log("Client has pulse");
+    this.remotePeerId = msg.source;
+    this.init();
+    this.peerConnection.setRemoteDescription(new RTCSessionDescription2(msg));
+    this.peerConnection.createAnswer().then((sessionDescription) => {
+      if (this.debug) console.log("Sending answer to " + msg.source);
+      this.sendSignal(sessionDescription);
+      this.peerConnection.setLocalDescription(
+        new RTCSessionDescription2(sessionDescription)
+      );
+    }).catch(function(err) {
+      console.error("Could not create answer for " + this.remotePeerId, err);
+    });
+  }
+  onAnswerSignal(msg) {
+    const RTCSessionDescription2 = window.RTCSessionDescription || window.mozRTCSessionDescription;
+    if (this.debug) console.log("Handling answer from " + this.remotePeerId);
+    this.peerConnection.setRemoteDescription(new RTCSessionDescription2(msg));
+  }
+  onCandidateSignal(msg) {
+    const candidate = new window.RTCIceCandidate(msg);
+    if (this.debug)
+      console.log("Adding candidate to peerConnection: " + this.remotePeerId);
+    this.peerConnection.addIceCandidate(candidate);
+  }
+  onSignal(snapshot) {
+    const msg = snapshot;
+    const sender = msg.source;
+    const type = msg.type;
+    if (!this.isOpen) {
+      if (this.debug)
+        console.log(
+          "Received a '" + type + "' signal from " + sender + " of type " + type
+        );
+      if (type == "offer") {
+        this.onOffer(msg);
+      } else if (type == "answer") {
+        this.onAnswerSignal(msg);
+      } else if (type == "candidate" && this.hasPulse) {
+        this.onCandidateSignal(msg);
+      }
+    }
+  }
+  onICEStateChange() {
+    if (this.peerConnection.iceConnectionState == "disconnected") {
+      if (this.debug) console.log("Client disconnected!");
+      if (this.config.onDisconnect) {
+        this.config.onDisconnect({ remotePeerId: this.remotePeerId });
+      }
+    }
+  }
+  onICECandidate(ev) {
+    const candidate = ev.candidate;
+    if (candidate) {
+      if (this.debug) console.log("Sending candidate to " + this.remotePeerId);
+      this.sendSignal(candidate);
+    } else {
+      if (this.debug) console.log("All candidates sent");
+    }
+  }
+  onDataChannelOpen() {
+    if (this.debug)
+      console.log(
+        "Data channel created! The channel is: " + this.channel.readyState
+      );
+    if (this.channel.readyState == "open") {
+      this.isOpen = true;
+      if (this.config.onConnect) {
+        this.config.onConnect();
+      }
+    }
+  }
+  onDataChannelClosed() {
+    if (this.debug) console.log("The data channel has been closed!");
+    if (this.config.onDisconnect) {
+      this.config.onDisconnect({ remotePeerId: this.remotePeerId });
+    }
+  }
+  onWebSocketSignal(snapshot) {
+    const msg = snapshot.val();
+    const sender = msg.source;
+    const type = msg.type;
+    if (sender === this.remotePeerId) {
+      if (this.debug)
+        console.log(
+          "Received a '" + type + "' signal from " + sender + " of type " + type
+        );
+      if (type == "offer") {
+        this.onOffer(msg);
+      } else if (type == "answer") {
+        this.onAnswerSignal(msg);
+      } else if (type == "candidate" && this.hasPulse) {
+        this.onCandidateSignal(msg);
+      }
+    }
+  }
+  createMessage(data) {
+    const msg = {
+      id: uuid(),
+      type: "message",
+      source: this.id,
+      target: this.remotePeerId,
+      payload: data
+    };
+    if (this.debug)
+      console.log("Sending message from: " + msg.source + " to: " + msg.target);
+    return JSON.stringify(msg);
+  }
+  send(data) {
+    const msg = this.createMessage(data);
+    this.channel.send(msg);
+  }
+  sendSocketMessage(data) {
+    var _a;
+    const msg = this.createMessage(data);
+    (_a = this.ws.message) == null ? void 0 : _a.send(msg);
+  }
+  sendTouchOSCMessage(address, data) {
+    var _a;
+    const jsonString = JSON.stringify({
+      address,
+      args: data
+    });
+    (_a = this.ws.osc) == null ? void 0 : _a.send(jsonString);
+  }
+  onMessage(message) {
+    const data = JSON.parse(message.data);
+    this.store.messages.push(data);
+    if (data.target === this.id) {
+      if (this.debug) console.log("Received Message: ", message);
+      if (this.config.onMessage) {
+        this.config.onMessage(data);
+      }
+    }
+  }
+  onDataChannelMessage(message) {
+    this.onMessage(message);
+  }
+  onWebSocketMessage(message) {
+    this.onMessage(message);
+  }
+  getWebSocketAddress(config) {
+    return `${(config == null ? void 0 : config.protocol) ? config.protocol : "ws"}://${(config == null ? void 0 : config.hostname) ? config.hostname : "localhost"}:${(config == null ? void 0 : config.port) ? config.port : 4448}`;
+  }
+  findMessagesByProperty(prop, value) {
+    return this.store.messages.filter((message) => message[prop] === value);
+  }
+}
+const template$1 = `<div class="testbed">
+  <div class="theme__toggle"></div>
+  <div>
+    <h1>Readymade UI</h1>
+
+    <div>
+      <p>
+        Readymade UI is a specialized user-interface library for remote control
+        surfaces. Designed primarily for touch surfaces, Readymade UI is built
+        with web specifications, making them portable wherever browsers are
+        available. Many Readymade UI elements can participate in HTML forms,
+        however their real power is unlocked when using the elements as a remote
+        control. Every Readymade UI element can dispatch events to a global
+        event bus that can then transmit events over Touch OSC, WebSocket, or
+        WebRTC.
+      </p>
+
+      <h2>Elements</h2>
+
+      <p>
+        Examples of each Readymade UI element are below. Open DevTools console
+        to observe messages dispatched from each element.
+      </p>
+      <div>
+        <rd-radiogroup class="form__item">
+          <input type="radio" name="control" value="form" />
+          <label for="form">Form</label>
+          <input type="radio" name="control" value="channel" checked />
+          <label for="channel">Channel</label>
+        </rd-radiogroup>
+      </div>
+    </div>
+
+    <rd-surface></rd-surface>
+    
+    <div class="spacer"></div>
+    
+      
+      <h2>RdControl</h2>
+      
+      <p>
+       Each Readymade UI custom element can participate in a form because they are form-associated custom elements, but the real power of the controls is unlocked when you use them with other technologies like BroadcastChannel, WebSocket, WebRTC DataChannel or Touch OSC. To enable an event paradigm on all these technologies, Readymade UI elements communicate with the <span class="i__c">RdControl</span> interface.
+      </p>
+      
+    
+    <r-code type="javascript">
+      <span hidden>
+         
+ interface RdControl<A> {
+   type?: string;
+   name: string;
+   isActive?: boolean;
+   hasUserInput?: boolean;
+   hasRemoteInput?: boolean;
+   currentValue?: number | string | Array<number> | Array<string> | boolean;
+   timeStamp?: Date | number;
+   attributes?: A;
+ }
+      </span>
+    </r-code>
+    
+    <p>
+     Every control has the same interface, while attributes unique to the control can be type defined through <span class="i__e">A</span>. 
+    </p>
+    
+    
+    <p>
+      Making your own custom elements work alongside Readymade UI is easy. Import the type interface and define any types unique to the new control. Attributes could be 
+      any model usually passed through DOM attributes or anything you would like to set on the custom element.  
+    </p>
+    
+    <p>
+     Add a <span class="i__e">setControl</span> method that sets the control model on the custom element, updating any appropriate parts of the custom element.
+    </p>
+    
+    <r-code type="javascript">
+    <span hidden>
+    setControl(control: RdControl<RdInputAttributes>) {
+      this.control = control;
+      this.setAttribute('name', control.name);
+      this.setAttribute('type', control.type);
+      this.value = control.currentValue as string;
+    }
+    </span>
+    </r-code>
+    
+    <p>
+     To work alongside other Readymade UI elements, the custom element should also implement a <span class="i__e">setChannel</span> method that sets the <span class="i__e">channel</span>. <span class="i__c">BroadcastChannel</span> is used to dispatch events to a single place.
+    </p>
+    
+    
+    <r-code type="javascript">
+    <span hidden>
+    setChannel(name: string) {
+      this.channel = new BroadcastChannel(name);
+    }
+    </span>
+    </r-code>
+    
+    <p>If you prefer listening to native callbacks for control updates, that is also possible by implementing a form-associated custom element.</p>
+    
+    <p>Where the value of the custom element is set, update the <span class="i__e">currentValue</span> and any <span class="i__e">attributes</span>.</p>
+    
+    <r-code type="javascript">
+    <span hidden>
+      
+    set value(value) {
+      this.$elem.value = value;
+      if (this.control) {
+        this.control.currentValue = value;
+        this.control.attributes.value = value;
+      }
+    }
+    
+    </span>
+    </r-code>
+    
+    <p>Finally, emit the control to the channel wherever the value is updated.</p>
+    
+    
+    <r-code type="javascript">
+    <span hidden>
+    
+    this.channel.postMessage(this.control)
+    </span>
+    </r-code>
+    
+    <p>When the above steps are completed, a custom element can participate in <span class="i__c">RdSurface</span> alongside other Readymade UI elements.</p>
+    
+    
+    <div class="spacer"></div>
+        
+
+    <h2>Surfaces</h2>
+
+    <p>
+      Readymade UI elements can be attached to a control surface named
+      <span class="i__c">RdSurface</span>. The rd-surface element provides an interface for laying out a
+      control surface comprised of Readymade UI elements. The above
+      documentation is displayed on an instance of RdSurface that is configured
+      to display with CSS Grid.
+    </p>
+
+    <p>
+      Below is another example of using <span class="i__c">RdSurface</span> to layout a video game
+      controller using CSS Grid in a more complex layout.
+    </p>
+
+    <rd-surface></rd-surface>
+    
+    <p>
+     <span class="i__c">RdSurface</span> sets styles and controls via a singular interface, a method named <span class="i__e">setControlSurface</span>.
+    </p>
+    
+    <h3>Methods</h3>
+    
+    <ul class="definition__list">
+        <li><span class="definition__title">setControlSurface</span> model for <span class="i__c">RdSurface</span> that styles the layout and sets the order of controls</li>
+    </ul>
+    
+    
+    <p>
+     Below is an example of the model used to generate the video game controller example.
+    </p>
+    
+    
+    <r-code type="javascript">
+                  <span hidden>
+const videoGameControllerSurface: RdControlSurface = {
+  style: {
+    display: 'grid',
+    gridTemplateColumns:
+      '[column1] 200px [column2] 50px [column3] 50px [column4] 67px [column5] 67px [column6] 67px [column7]',
+    gridTemplateRows: '[row1] 67px [row2] 67px [row3] 67px [row4]',
+    columnGap: '0px',
+    rowGap: '0px',
+    padding: '44px',
+    paddingLeft: '20px',
+    width: 'auto',
+    overflowX: 'hidden',
+  },
+  controls: [
+    {
+      selector: 'rd-slider',
+      channel: this.channelName,
+      style: {
+        gridColumnStart: 'column1',
+        gridColumnEnd: 'column2',
+        gridRowStart: 'row1',
+        gridRowEnd: 'row4',
+      },
+      control: {
+        type: 'joystick',
+        name: 'left-joystick',
+        currentValue: [0, 0],
+        attributes: {
+          orient: 'is--joystick',
+          min: [0, 0],
+          max: [1024, 1024],
+          numberType: 'int',
+        },
+      },
+    },
+    {
+      selector: 'rd-button',
+      channel: this.channelName,
+      style: {
+        gridColumnStart: 'column2',
+        gridColumnEnd: 'column3',
+        gridRowStart: 'row3',
+        gridRowEnd: 'row4',
+        justifySelf: 'start',
+        alignSelf: 'end',
+        transform: 'translateY(24px)',
+      },
+      control: {
+        name: 'select-button',
+        attributes: {
+          width: '44px',
+          height: '16px',
+        },
+      },
+    },
+    {
+      selector: 'rd-button',
+      channel: this.channelName,
+      style: {
+        gridColumnStart: 'column3',
+        gridColumnEnd: 'column4',
+        gridRowStart: 'row3',
+        gridRowEnd: 'row4',
+        justifySelf: 'end',
+        alignSelf: 'end',
+        transform: 'translateY(24px)',
+      },
+      control: {
+        name: 'start-button',
+        attributes: {
+          width: '44px',
+          height: '16px',
+        },
+      },
+    },
+    {
+      selector: 'rd-button',
+      channel: this.channelName,
+      style: {
+        gridColumnStart: 'column4',
+        gridColumnEnd: 'column5',
+        gridRowStart: 'row2',
+        gridRowEnd: 'row3',
+        justifySelf: 'end',
+      },
+      control: {
+        name: 'A',
+        attributes: {
+          width: '44px',
+          height: '44px',
+          style: {
+            borderRadius: '50%',
+          },
+        },
+      },
+    },
+    {
+      selector: 'rd-button',
+      channel: this.channelName,
+      style: {
+        gridColumnStart: 'column5',
+        gridColumnEnd: 'column6',
+        gridRowStart: 'row1',
+        gridRowEnd: 'row2',
+        alignSelf: 'end',
+        justifySelf: 'center',
+      },
+      control: {
+        name: 'B',
+        attributes: {
+          width: '44px',
+          height: '44px',
+          style: {
+            borderRadius: '50%',
+          },
+        },
+      },
+    },
+    {
+      selector: 'rd-button',
+      channel: this.channelName,
+      style: {
+        gridColumnStart: 'column6',
+        gridColumnEnd: 'column7',
+        gridRowStart: 'row2',
+        gridRowEnd: 'row3',
+        justifySelf: 'start',
+        transform: 'translateX(2px)',
+      },
+      control: {
+        name: 'Y',
+        attributes: {
+          width: '44px',
+          height: '44px',
+          style: {
+            borderRadius: '50%',
+          },
+        },
+      },
+    },
+    {
+      selector: 'rd-button',
+      channel: this.channelName,
+      style: {
+        gridColumnStart: 'column5',
+        gridColumnEnd: 'column6',
+        gridRowStart: 'row3',
+        gridRowEnd: 'row4',
+        alignSelf: 'start',
+        justifySelf: 'center',
+        transform: 'translateY(-8px)',
+      },
+      control: {
+        name: 'X',
+        attributes: {
+          width: '44px',
+          height: '44px',
+          style: {
+            borderRadius: '50%',
+          },
+        },
+      },
+    },
+  ],
+};
+
+const videoGameController = document.querySelector('rd-surface') as RdSurface;
+
+videoGameController.setControlSurface(videoGameControllerSurface);
+              </span>
+      </r-code>
+
+    
+  </div>
+  <div class="spacer"></div>
+  
+  <h2>BroadcastChannel</h2>
+  
+  <p>
+    <span class="i__c">RdSurface</span> utilizes <span class="i__c">BroadcastChannel</span> to give you a single interface where control events are dispatched.
+  </p>
+  
+
+<r-code type="javascript">
+  <span hidden>
+      
+const channelName = 'my-channel';
+const channel = new BroadcastChannel(this.channelName);
+channel.onmessage = (event) => {
+    // event.data = RdControl
+}
+  </span>
+</r-code>
+
+
+  <div class="spacer"></div>
+  
+  
+<h2>Transmitter</h2>
+ 
+ <p>Swiss-army knife for communicating over WebRTC DataChannel, WebSocket or Touch OSC.</p>
+ 
+<r-code type="javascript">
+ <span hidden> 
+ npm install @readymade/transmit
+ yarn add @readymade/transmit
+  </span>
+ </r-code>
+
+ 
+<h3>Getting Started</h3>
+ 
+ <p>Import <span class="i__c">Transmitter</span> and instantiate with a configuration Object.</p>
+ 
+<r-code type="javascript">
+ <span hidden>
+     
+ import { Transmitter, TransmitterConfig } from '@readymade/transmit';
+ 
+ const config: TransmitterConfig = {
+   sharedKey: 'lobby',
+   rtc: {
+     iceServers,
+   },
+   serverConfig: {
+     http: {
+       protocol: 'http',
+       hostname: 'localhost',
+       port: 4449,
+     },
+     ws: {
+       osc: {
+         protocol: 'ws',
+         hostname: 'localhost',
+         port: 4445,
+       },
+       signal: {
+         protocol: 'ws',
+         hostname: 'localhost',
+         port: 4446,
+       },
+       announce: {
+         protocol: 'ws',
+         hostname: 'localhost',
+         port: 4447,
+       },
+       message: {
+         protocol: 'ws',
+         hostname: 'localhost',
+         port: 4448,
+       },
+     },
+   },
+   onMessage,
+   onConnect,
+ }
+ 
+ const transmitter = new Transmitter(config);
+  </span>
+ </r-code>
+
+ 
+<h3>Messages</h3>
+ 
+ <p> When <span class="i__e">signal</span> and <span class="i__e">announce</span> servers are configured, the instance of <span class="i__c">Transmitter</span> will automatically attempt a handshake with a remote peer. If a peer is found, a WebRTC DataChannel peer to peer connection will open. To send a message over the data channel use the <span class="i__e">send</span> method.</p>
+ 
+<r-code type="javascript">
+ <span hidden>
+ transmitter.send({ message: 'ping' });
+  </span>
+</r-code>
+
+ 
+<p>If you want to send messages over WebSocket, use <span class="i__e">sendSocketMessage</span>.</p>
+ 
+<r-code type="javascript">
+ <span hidden>
+ transmitter.sendSocketMessage({ message: 'ping' });
+  </span>
+ </r-code>
+
+ 
+ <p>To send a message over TouchOSC, use <span class="i__e">sendTouchOSCMessage</span>, ensuring the data your are sending follows the OSC protocol. Below is an example of sending a OSC message with type definitions.</p>
+ 
+<r-code type="javascript">
+ <span hidden>
+ transmitter.sendTouchOSCMessage('/Controls/Flip', [
+   {
+     type: 'i',
+     value: 1,
+   },
+ ]);
+  </span>
+ </r-code>
+
+ 
+<p>To listen for messages, inject a callback into the configuration. In the above example, <span class="i__e">onMessage</span> would appear like so: </p>
+ 
+<r-code type="javascript">
+ <span hidden>
+ const onMessage = (message) => {
+   if (message.payload.event === 'ping') {
+     this.transmitter.send({ event: 'pong' });
+   }
+ };
+  </span>
+ </r-code>
+
+ 
+<p>To react to a peer to peer connection, bind an <span class="i__e">onConnect</span> callback to the configuration.</p>
+ 
+<h3>transit-server</h3>
+ 
+ <p>For plug and play functionality use the Readymade <span class="i__c">transmit-server</span>, a Node.js server that provides a WebRTC signaling server, WebSocket messaging channel, and WebSocket bridge for communicating over TouchOSC.</p>
+ 
+ <p><span class="i__c">transmit-server</span> is included in the Readymade starter code. Create a new Readymade project using the command <span class="i__c">npx primr my-app</span>, renaming the directory <span class="i__c">my-app</span> with your project name. <span class="i__c">transmit-server</span> will be included in the project directory. After installing dependencies, run <span class="i__c">yarn build:transmit</span> and <span class="i__c">yarn serve:transmit</span>. Automatically, the WebSocket and Express servers should instantiate.</p>
+ 
+<r-code type="javascript">
+ <span hidden>
+ yarn serve:transmit
+ Express Server is listening on http://localhost:4449
+ Free ICE servers available by making a GET request to http://localhost:4449/ice
+ TouchOSC Message Server is listening on http://localhost:4445
+ Signal Server is listening on http://localhost:4446
+ Announce Server is listening on http://localhost:4447
+ Message Server is listening on http://localhost:4448
+  </span>
+ </r-code>
+
+ 
+  <p>For more information about <span class="i__c">primr</span>, read the <a href="https://readymade-ui.github.io">Readymade documentation</a>.</p>
+  
+  <h1>Readymade UI</h1>
+  
+  <p>Readymade UI is a user-interface library built with Readymade, a lightweight package for making custom elements using Decorators. Transmitter supplements Readymade UI by giving you plug-and-play dispatching of events over web standards like WebRTC DataChannel, WebSocket, and Touch OSC. transmit-server is built with primr, the Readymade starter kit, providing a server-side event dispatching service that could be used for game projects, messaging apps, and other creative pursuits. Some possible implementations of Readymade UI include: </p>
+  
+  <ul class="doc-list">
+    <li>Multiplayer Game</li>
+    <li>Chat App</li>
+    <li>Smartphone Remote Control</li>
+    <li>VJ Control Surface</li>
+    <li>Interactive Art Installation</li>
+  </ul>
+  
+  <p>Readymade is built using web standards. This documentation portal is built with Readymade.</p>
+
+</div>
+`;
+const style$1 = ":host {\n  display: block;\n  font-weight: 400;\n  font-size: 16px;\n  padding: 20px;\n  margin: 0px;\n  width: 100%;\n  height: 100%;\n  min-height: 100vh;\n  overflow-y: auto;\n  -webkit-font-smoothing: auto;\n  -moz-osx-font-smoothing: grayscale;\n  margin-bottom: 360px;\n}\n\np {\n  max-width: 640px;\n  font-size: 1.2em;\n}\n\nul {\n  padding: 0;\n  margin: 0;\n  list-style: none;\n  -webkit-margin-start: 0px;\n  -webkit-margin-end: 0px;\n  -webkit-padding-start: 0px;\n  -webkit-margin-before: 0px;\n  -webkit-margin-after: 0px;\n}\n\n.theme__toggle {\n  width: 32px;\n  height: 32px;\n  border-radius: 50%;\n  position: absolute;\n  top: 40px;\n  right: 20px;\n  cursor: pointer;\n  &.dark {\n    background: #ffffff;\n  }\n  &.light {\n    background: #000000;\n  }\n}\n\n.grid {\n  display: grid;\n  grid-template-columns: repeat(3, 1fr);\n  gap: 20px;\n}\n\n.pane {\n  margin-top: 20px;\n}\n\n.full {\n  grid-column: span 3;\n}\n\n.definition__list li {\n  padding-bottom: 0.5em;\n}\n\n.definition__title {\n  font-style: italic;\n  color: #ababab;\n  margin-right: 0.2em;\n}\n\n.i__e {\n  color: rgba(117, 191, 255, 1);\n}\n\n.i__c {\n  color: #e6d06c;\n}\n\nrd-surface {\n  margin-bottom: 40px;\n}\n\nr-code {\n  width: 100%;\n  margin-left: -24px;\n}\n\nul.doc-list {\n  padding: initial;\n  margin: initial;\n  list-style: initial;\n  -webkit-margin-start: initial;\n  -webkit-margin-end: initial;\n  -webkit-padding-start: initial;\n  -webkit-margin-before: initial;\n  -webkit-margin-after: initial;\n  font-size: 1.1em;\n  margin-left: 20px;\n}\n";
+const documentation = {
+  button: `
+  <h2>rd-button</h2>
+  <p>Button element that behaves like <span class="i__c">HTMLButtonElement</span> that can also be remotely triggered.</p>
+  
+  <p>rd-button can participate in a HTML form or be set as a <span class="i__c">RdControl</span> on <span class="i__c">RdSurface</span>. The element has a similar interface to <span class="i__c">HTMLButtonElement</span>.</p>
+  
+  <h3>Attributes</h3>
+  
+  <ul class="definition__list">
+      <li><span class="definition__title">type</span> internal type for <span class="i__c">HTMLButtonElement</span>, i.e. "submit" </li>
+      <li><span class="definition__title">value</span> the current form control value of the button</li>
+      <li><span class="definition__title">label</span> label displayed outside the element</li>
+      <li><span class="definition__title">width</span> the CSS width of the element</li>
+      <li><span class="definition__title">height</span> the CSS height of the element</li>
+      <li><span class="definition__title">control</span> model for <span class="i__c">RdControl</span> </li>
+      <li><span class="definition__title">channel</span> name of the <span class="i__c">BroadcastChannel</span> (optional)</li>
+  </ul>
+  
+  <h3>Methods</h3>
+  
+  <ul class="definition__list">
+      <li><span class="definition__title">setControl</span> model for <span class="i__c">RdControl</span> </li>
+      <li><span class="definition__title">setChannel</span> name of the <span class="i__c">BroadcastChannel</span> (optional)</li>
+      <li><span class="definition__title">simulatePress</span> flashes an active state, signaling the button has been activated</li>
+  </ul>
+  
+  <h3>RdControl</h3>
+  
+ <ul class="definition__list">
+     <li><span class="definition__title">name</span> unique id for the element in a form or surface </li>
+     <li><span class="definition__title">type</span> internal type for <span class="i__c">HTMLButtonElement</span>, i.e. "submit"  </li>
+ </ul>     
+  
+  <h3>RdControl Attributes</h3>
+  
+  <ul class="definition__list">
+      <li><span class="definition__title">label</span> label displayed outside the element (optional)</li>
+      <li><span class="definition__title">width</span> the CSS width of the element (optional)</li>
+      <li><span class="definition__title">height</span> the CSS height of the element (optional)</li>
+      <li><span class="definition__title">style</span> CSS styles for the internal HTMLButtonElement (optional)</li>
+  </ul>
+  
+  <r-code type="javascript">
+              <span hidden>
+{
+name: 'button',
+  attributes: {
+    width: '100px',
+    height: '44px',
+    label: 'Label'
+  },
+}
+        </span>
+</r-code>
+`,
+  switch: `
+  <h2>rd-switch</h2>
+  <p>Toggle button <span class="i__c">HTMLButtonElement</span> that behaves like <span class="i__c">HTMLInputElement</span> with type <span class="i__c">checkbox</span>.</p>
+  
+  <p>rd-switch can participate in a HTML form or be set as a <span class="i__c">RdControl</span> on <span class="i__c">RdSurface</span>.</p>
+  
+  <h3>Attributes</h3>
+  
+  <ul class="definition__list">
+      <li><span class="definition__title">checked</span> boolean value designating "true" or "false"</li>
+      <li><span class="definition__title">control</span> model for <span class="i__c">RdControl</span> </li>
+      <li><span class="definition__title">channel</span> name of the <span class="i__c">BroadcastChannel</span> (optional)</li>
+  </ul>
+  
+  <h3>Methods</h3>
+  
+  <ul class="definition__list">
+      <li><span class="definition__title">setControl</span> model for <span class="i__c">RdControl</span> </li>
+      <li><span class="definition__title">setChannel</span> name of the <span class="i__c">BroadcastChannel</span> (optional)</li>
+  </ul>
+  
+  <h3>RdControl</h3>
+  
+ <ul class="definition__list">
+     <li><span class="definition__title">name</span> unique id for the element in a form or surface </li>
+ </ul>     
+  
+  <h3>RdControl Attributes</h3>
+  
+  <ul class="definition__list">
+      <li><span class="definition__title">checked</span> boolean value designating "true" or "false" (readonly)</li>
+  </ul>
+  
+  <r-code type="javascript">
+              <span hidden>
+{
+  name: 'switch',
+  currentValue: true,
+  attributes: {
+    checked: true
+  },
+}
+        </span>
+</r-code>
+                                `,
+  checkbox: `
+  <h2>rd-checkbox</h2>
+  <p>Checkbox <span class="i__c">HTMLButtonElement</span> that behaves like <span class="i__c">HTMLInputElement</span> with type <span class="i__c">checkbox</span>.</p>
+  
+  <p>rd-checkbox can participate in a HTML form or be set as a <span class="i__c">RdControl</span> on <span class="i__c">RdSurface</span>.</p>
+  
+  <h3>Attributes</h3>
+  
+  <ul class="definition__list">
+      <li><span class="definition__title">checked</span> boolean value designating "true" or "false"</li>
+      <li><span class="definition__title">control</span> model for <span class="i__c">RdControl</span> </li>
+      <li><span class="definition__title">channel</span> name of the <span class="i__c">BroadcastChannel</span> (optional)</li>
+  </ul>
+  
+  <h3>Methods</h3>
+  
+  <ul class="definition__list">
+      <li><span class="definition__title">setControl</span> model for <span class="i__c">RdControl</span> </li>
+      <li><span class="definition__title">setChannel</span> name of the <span class="i__c">BroadcastChannel</span> (optional)</li>
+  </ul>
+  
+  <h3>RdControl</h3>
+  
+ <ul class="definition__list">
+     <li><span class="definition__title">name</span> unique id for the element in a form or surface </li>
+ </ul>     
+  
+  <h3>RdControl Attributes</h3>
+  
+  <ul class="definition__list">
+      <li><span class="definition__title">checked</span> boolean value designating "true" or "false" (readonly)</li>
+  </ul>
+  
+  <r-code type="javascript">
+              <span hidden>
+{
+  name: 'checkbox',
+  currentValue: true,
+  attributes: {
+    checked: true
+  },
+}
+        </span>
+</r-code>
+`,
+  dial: `
+  <h2>rd-dial</h2>
+  <p>Rotary dial that sets a number between a minimum and maximum value.</p>
+  
+  <p>rd-dial can participate in a HTML form or be set as a <span class="i__c">RdControl</span> on <span class="i__c">RdSurface</span>.  Both modes require setting the <span class="i__c">RdControl</span> on the element.</p>
+  
+  <h3>Attributes</h3>
+  
+  <ul class="definition__list">
+      <li><span class="definition__title">control</span> model for <span class="i__c">RdControl</span> </li>
+      <li><span class="definition__title">channel</span> name of the <span class="i__c">BroadcastChannel</span> (optional)</li>
+  </ul>
+  
+  <h3>Methods</h3>
+  
+  <ul class="definition__list">
+      <li><span class="definition__title">setControl</span> model for <span class="i__c">RdControl</span> </li>
+      <li><span class="definition__title">setChannel</span> name of the <span class="i__c">BroadcastChannel</span> (optional)</li>
+  </ul>
+  
+  <h3>RdControl</h3>
+  
+ <ul class="definition__list">
+     <li><span class="definition__title">name</span> unique id for the element in a form or surface </li>
+     <li><span class="definition__title">currentValue</span> number that represents the current state of the control</li>
+ </ul>     
+  
+  <h3>RdControl Attributes</h3>
+  
+  <ul class="definition__list">
+      <li><span class="definition__title">min</span> minimum value that should be output </li>
+      <li><span class="definition__title">max</span> maximum value that should be output</li>
+      <li><span class="definition__title">stops</span> Array of numbers, a mimumum and maximum angle, with 0 angle at the left-most position along the circumferance of the circle (optional)</li>
+      <li><span class="definition__title">numberType</span> "int" or "float"</li>
+  </ul>
+  
+  <r-code type="javascript">
+              <span hidden>
+{
+name: 'dial',
+ currentValue: 0.0,
+ attributes: {
+   min: 0.0,
+   max: 1.0,
+   stops: [-90, 270]
+ },
+}
+          </span>
+  </r-code>
+`,
+  slider: `
+  <h2>rd-slider</h2>
+  <p>Slider that sets a number or Array of number between a minimum and maximum value.</p>
+  
+  <p>rd-slider can participate in a HTML form or be set as a <span class="i__c">RdControl</span> on <span class="i__c">RdSurface</span>.  Both modes require setting the <span class="i__c">RdControl</span> on the element.</p>
+  
+  <h3>Attributes</h3>
+  
+  <ul class="definition__list">
+      <li><span class="definition__title">control</span> model for <span class="i__c">RdControl</span> </li>
+      <li><span class="definition__title">channel</span> name of the <span class="i__c">BroadcastChannel</span> (optional)</li>
+  </ul>
+  
+  <h3>Methods</h3>
+  
+  <ul class="definition__list">
+      <li><span class="definition__title">setControl</span> model for <span class="i__c">RdControl</span> </li>
+      <li><span class="definition__title">setChannel</span> name of the <span class="i__c">BroadcastChannel</span> (optional)</li>
+  </ul>
+  
+  <h3>RdControl</h3>
+  
+ <ul class="definition__list">
+     <li><span class="definition__title">name</span> unique id for the element in a form or surface </li>
+     <li><span class="definition__title">type</span> specifies the type of slider, i.e. "hor", "vert", "joystick". When set to "joystick", rd-slider becomes two-dimensional and supports Array of number. </li>
+     <li><span class="definition__title">currentValue</span> number or Array of number that represents the current state of the control</li>
+ </ul>     
+  
+  <h3>RdControl Attributes</h3>
+  
+  <ul class="definition__list">
+      <li><span class="definition__title">min</span> minimum value that should be output, Array of number for joystick </li>
+      <li><span class="definition__title">max</span> maximum value that should be output, Array of number for joystick</li>
+      <li><span class="definition__title">numberType</span> "int" or "float" (optional)</li>
+      <li><span class="definition__title">snapToCenter</span> boolean, imitates how a traditional joystick returns to center (optional)</li>
+      <li><span class="definition__title">orient</span> "is--vert", "is--hor", "is--joystick", "is--joystick-square" (optional)</li>
+  </ul>
+  
+  
+<r-code type="javascript">
+              <span hidden>
+{
+   name: 'slider',
+   type: 'is-vert',
+   currentValue: 0,
+   attributes: {
+     min: 0.0,
+     max: 1.0,
+   },
+}
+          </span>
+  </r-code>
+
+  <r-code type="javascript">
+              <span hidden>
+{
+   name: 'slider',
+   type: 'is-joystick',
+   currentValue: [0,0],
+   attributes: {
+     min: [0,0],
+     max: [255,255],
+     numberType: 'int'
+   },
+  }
+          </span>
+  </r-code>
+`,
+  input: `
+  <h2>rd-input</h2>
+  <p>Text input form control that behaves like <span class="i__c">HTMLInputElement</span>.</p>
+  
+  <p>rd-input can participate in a HTML form or be set as a <span class="i__c">RdControl</span> on <span class="i__c">RdSurface</span>. The element has a similar interface to <span class="i__c">HTMLInputElement</span>.</p>
+  
+  <h3>Attributes</h3>
+  
+  <ul class="definition__list">
+      <li><span class="definition__title">control</span> model for <span class="i__c">RdControl</span> </li>
+      <li><span class="definition__title">channel</span> name of the <span class="i__c">BroadcastChannel</span> (optional)</li>
+  </ul>
+  
+  <h3>Methods</h3>
+  
+  <ul class="definition__list">
+      <li><span class="definition__title">setControl</span> model for <span class="i__c">RdControl</span> </li>
+      <li><span class="definition__title">setChannel</span> name of the <span class="i__c">BroadcastChannel</span> (optional)</li>
+  </ul>
+  
+  <h3>RdControl</h3>
+  
+ <ul class="definition__list">
+     <li><span class="definition__title">name</span> unique id for the element in a form or surface </li>
+     <li><span class="definition__title">type</span> internal type for <span class="i__c">HTMLInputElement</span>. If looking for "checkbox", or "radio", see other components.  </li>
+ </ul>     
+
+  
+  <r-code type="javascript">
+              <span hidden>
+{
+  name: 'input',
+  currentValue: '',
+  attributes: {},
+}
+        </span>
+</r-code>
+`,
+  textarea: `
+  <h2>rd-textaea</h2>
+  <p>Text region form control that behaves like <span class="i__c">HTMLTextAreaElement</span>.</p>
+  
+  <p>rd-textarea can participate in a HTML form or be set as a <span class="i__c">RdControl</span> on <span class="i__c">RdSurface</span>.</p>
+  
+  <h3>Attributes</h3>
+  
+  <ul class="definition__list">
+      <li><span class="definition__title">control</span> model for <span class="i__c">RdControl</span> </li>
+      <li><span class="definition__title">channel</span> name of the <span class="i__c">BroadcastChannel</span> (optional)</li>
+  </ul>
+  
+  <h3>Methods</h3>
+  
+  <ul class="definition__list">
+      <li><span class="definition__title">setControl</span> model for <span class="i__c">RdControl</span> </li>
+      <li><span class="definition__title">setChannel</span> name of the <span class="i__c">BroadcastChannel</span> (optional)</li>
+  </ul>
+  
+  <h3>RdControl</h3>
+  
+ <ul class="definition__list">
+     <li><span class="definition__title">name</span> unique id for the element in a form or surface </li>
+ </ul>     
+
+  
+  <r-code type="javascript">
+              <span hidden>
+{
+  name: 'textarea',
+  currentValue: '',
+  attributes: {},
+}
+        </span>
+</r-code>
+`,
+  dropdown: `
+  <h2>rd-dropdown</h2>
+  <p>Select from a list of options from a dropdown that behaves like <span class="i__c">HTMLSelectElement</span>.</p>
+  
+  <p>rd-dropdown can participate in a HTML form or be set as a <span class="i__c">RdControl</span> on <span class="i__c">RdSurface</span>.</p>
+  
+  <h3>Attributes</h3>
+  
+  <ul class="definition__list">
+      <li><span class="definition__title">control</span> model for <span class="i__c">RdControl</span> </li>
+      <li><span class="definition__title">channel</span> name of the <span class="i__c">BroadcastChannel</span> (optional)</li>
+  </ul>
+  
+  <h3>Methods</h3>
+  
+  <ul class="definition__list">
+      <li><span class="definition__title">setControl</span> model for <span class="i__c">RdControl</span> </li>
+      <li><span class="definition__title">setChannel</span> name of the <span class="i__c">BroadcastChannel</span> (optional)</li>
+  </ul>
+  
+  <h3>RdControl</h3>
+  
+ <ul class="definition__list">
+     <li><span class="definition__title">name</span> unique id for the element in a form or surface </li>
+ </ul>   
+ 
+ <h3>RdControl Attributes</h3>
+ 
+ <ul class="definition__list">
+     <li><span class="definition__title">options</span> Array of String that represent each option in the dropdown list. </li>
+ </ul>  
+  
+  <r-code type="javascript">
+              <span hidden>
+{
+  name: 'dropdown',
+  currentValue: '',
+  attributes: {
+    options: [
+      'Option 1',
+      'Option 2',
+      'Option 3',
+    ],
+  },
+}
+        </span>
+</r-code>
+`,
+  radio: `
+  <h2>rd-radiogroup</h2>
+  <p>Group of selectable radio buttons that behave like <span class="i__c">HTMLInputElement</span>.</p>
+  
+  <p>rd-radiogroup can participate in a HTML form or be set as a <span class="i__c">RdControl</span> on <span class="i__c">RdSurface</span>.</p>
+  
+  <h3>Attributes</h3>
+  
+  <ul class="definition__list">
+      <li><span class="definition__title">control</span> model for <span class="i__c">RdControl</span> </li>
+      <li><span class="definition__title">channel</span> name of the <span class="i__c">BroadcastChannel</span> (optional)</li>
+  </ul>
+  
+  <h3>Methods</h3>
+  
+  <ul class="definition__list">
+      <li><span class="definition__title">setControl</span> model for <span class="i__c">RdControl</span> </li>
+      <li><span class="definition__title">setChannel</span> name of the <span class="i__c">BroadcastChannel</span> (optional)</li>
+  </ul>
+  
+  <h3>RdControl</h3>
+  
+ <ul class="definition__list">
+     <li><span class="definition__title">name</span> unique id for the element in a form or surface </li>
+     <li><span class="definition__title">currentValue</span> the current selected radio button </li>
+ </ul>   
+ 
+ <h3>RdControl Attributes</h3>
+ 
+ <ul class="definition__list">
+     <li><span class="definition__title">inputs</span> Array of Object that represent each input.</li>
+     <li><span class="definition__title">direction</span> changes the orientation of the radio group to 'horizontal' or 'vertical' </li>
+ </ul>  
+  
+  <r-code type="javascript">
+              <span hidden>
+{
+  name: 'radio-group',
+  currentValue: 'hue',
+  attributes: {
+    direction: 'vertical',
+    inputs: [
+      {
+        value: 'hue',
+        label: 'Hue',
+        name: 'radio-group',
+      },
+      {
+        value: 'saturation',
+        label: 'Saturation',
+        name: 'radio-group',
+      },
+      {
+        value: 'brightness',
+        label: 'Brightness',
+        name: 'radio-group',
+      },
+    ],
+  },
+}
+        </span>
+</r-code>
+`,
+  buttonpad: `
+  <h2>rd-buttonpad</h2>
+  <p>Group of buttons displayed in a list or grid.</p>
+  
+  <p>rd-radiogroup can participate in a HTML form or be set as a <span class="i__c">RdControl</span> on <span class="i__c">RdSurface</span>.</p>
+  
+  <h3>Attributes</h3>
+  
+  <ul class="definition__list">
+      <li><span class="definition__title">grid</span> model for styling the CSS grid and individual buttons</li>
+      <li><span class="definition__title">buttons</span> Array of buttons that define the index, value and label of each button</li>
+      <li><span class="definition__title">disabled</span> prevents the button pad from gaining focus (optional)</li>
+      <li><span class="definition__title">control</span> model for <span class="i__c">RdControl</span> </li>
+      <li><span class="definition__title">channel</span> name of the <span class="i__c">BroadcastChannel</span> (optional)</li>
+  </ul>
+  
+  <h3>Methods</h3>
+  
+  <ul class="definition__list">
+      <li><span class="definition__title">setControl</span> model for <span class="i__c">RdControl</span> </li>
+      <li><span class="definition__title">setChannel</span> name of the <span class="i__c">BroadcastChannel</span> (optional)</li>
+  </ul>
+  
+  <h3>RdControl</h3>
+  
+ <ul class="definition__list">
+     <li><span class="definition__title">name</span> unique id for the element in a form or surface </li>
+ </ul>   
+ 
+ <h3>RdControl Attributes</h3>
+ 
+ <ul class="definition__list">
+    <li><span class="definition__title">grid</span> model for styling the CSS grid and individual buttons</li>
+    <li><span class="definition__title">buttons</span> Array of buttons that define the index, value and label of each button</li>
+    <li><span class="definition__title">disabled</span> prevents the button pad from gaining focus (optional)</li>
+ </ul>  
+ 
+ 
+ The model for a standard keyboard is exported from @readymade/ui package named StandardKeyboard.
+  
+  <r-code type="javascript">
+              <span hidden>
+{
+  name: 'keyboard',
+  attributes: {
+    buttons: StandardKeyboard,
+    grid: {
+      gap: '4px',
+      columns: {
+        count: 14,
+      },
+      buttonStyles: {
+        width: '64px',
+        height: '64px',
+      },
+      cells: [
+        {
+          selector: '[key="Space"]',
+          styles: {
+            width: '100%',
+            gridColumn: 'span 3',
+          },
+        },
+        {
+          selector: '[key="Enter"]',
+          styles: {
+            width: '100%',
+            gridColumn: 'span 2',
+          },
+        },
+      ],
+    },
+  },
+}
+        </span>
+</r-code>
+`
+};
+var docs_default = documentation;
 var __defProp$1 = Object.defineProperty;
 var __getOwnPropDesc$1 = Object.getOwnPropertyDescriptor;
 var __decorateClass$1 = (decorators, target, key, kind) => {
@@ -8977,128 +11201,485 @@ var __decorateClass$1 = (decorators, target, key, kind) => {
 let LibraryComponent = class extends CustomElement {
   constructor() {
     super();
+    this.touchOSCEnabled = false;
+    this.transmit = false;
     this.theme = "dark";
-    this.mode = "form";
+    this.mode = "channel";
     this.channelName = "rd-messages";
   }
   connectedCallback() {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k;
-    (_b = (_a = this.shadowRoot) == null ? void 0 : _a.querySelector(".theme__toggle")) == null ? void 0 : _b.classList.add(this.theme);
-    (_d = (_c = this.shadowRoot) == null ? void 0 : _c.querySelector(".theme__toggle")) == null ? void 0 : _d.addEventListener("click", () => {
+    var _a, _b, _c, _d, _e, _f, _g;
+    const surface = (_a = this.shadowRoot) == null ? void 0 : _a.querySelectorAll(
+      "rd-surface"
+    )[0];
+    const videoGameController = (_b = this.shadowRoot) == null ? void 0 : _b.querySelectorAll(
+      "rd-surface"
+    )[1];
+    (_d = (_c = this.shadowRoot) == null ? void 0 : _c.querySelector(".theme__toggle")) == null ? void 0 : _d.classList.add(this.theme);
+    (_f = (_e = this.shadowRoot) == null ? void 0 : _e.querySelector(".theme__toggle")) == null ? void 0 : _f.addEventListener("click", () => {
       this.toggleTheme();
     });
-    const modeRadio = (_e = this.shadowRoot) == null ? void 0 : _e.querySelectorAll("rd-radiogroup")[0];
+    const modeRadio = (_g = this.shadowRoot) == null ? void 0 : _g.querySelectorAll("rd-radiogroup.form__item")[0];
     modeRadio.onchange = (ev) => {
       this.mode = ev.target.value;
       this.onModeChange();
     };
-    const buttonPad = (_f = this.shadowRoot) == null ? void 0 : _f.querySelector("rd-buttonpad");
-    const buttonNumberPad = (_g = this.shadowRoot) == null ? void 0 : _g.querySelectorAll("rd-buttonpad")[1];
-    const joystick = (_h = this.shadowRoot) == null ? void 0 : _h.querySelector('[type="joystick"]');
-    const squareJoystick = (_i = this.shadowRoot) == null ? void 0 : _i.querySelectorAll('[type="joystick"]')[1];
-    const vertSlider = (_j = this.shadowRoot) == null ? void 0 : _j.querySelector('[type="vert"]');
-    const horizontalSlider = (_k = this.shadowRoot) == null ? void 0 : _k.querySelector('[type="hor"]');
-    buttonPad.setAttribute(
-      "grid",
-      JSON.stringify({
-        gap: "4px",
-        columns: {
-          count: 14
-        },
-        cells: [
-          {
-            selector: '[key="Space"]',
-            styles: {
-              width: "100%",
-              gridColumn: "span 3"
+    const onMessage = (message) => {
+      if (message.payload.event === "ping") {
+        this.transmitter.send({ event: "pong" });
+      }
+      if (message.payload.control) {
+        const control = JSON.parse(message.payload.control);
+        const controlElement = surface.querySelector(
+          `[name="${control.name}"]`
+        );
+        controlElement.value = control.currentValue;
+      }
+    };
+    const onConnect = () => this.transmitter.send({ event: "ping" });
+    if (this.transmit === true) {
+      fetch("http://localhost:4449/ice").then((res) => res.json()).then((iceServers) => {
+        this.transmitter = new Transmitter({
+          sharedKey: "lobby",
+          rtc: {
+            iceServers
+          },
+          serverConfig: {
+            http: {
+              protocol: "http",
+              hostname: "localhost",
+              port: 4449
+            },
+            ws: {
+              osc: {
+                protocol: "ws",
+                hostname: "localhost",
+                port: 4445
+              },
+              signal: {
+                protocol: "ws",
+                hostname: "localhost",
+                port: 4446
+              },
+              announce: {
+                protocol: "ws",
+                hostname: "localhost",
+                port: 4447
+              },
+              message: {
+                protocol: "ws",
+                hostname: "localhost",
+                port: 4448
+              }
             }
           },
-          {
-            selector: '[key="Enter"]',
-            styles: {
-              width: "100%",
-              gridColumn: "span 2"
-            }
-          }
-        ]
-      })
-    );
-    buttonPad.setAttribute("buttons", JSON.stringify(StandardKeyboard));
-    buttonNumberPad.setAttribute(
-      "grid",
-      JSON.stringify({
-        gap: "4px",
-        columns: {
-          count: 4
-        },
-        cells: [
-          {
-            selector: '[key="0"]',
-            styles: {
-              width: "100%",
-              gridColumn: "span 2"
+          onMessage,
+          onConnect
+        });
+      }).catch((err) => console.error(err));
+    }
+    const controlSurface = {
+      style: {
+        display: "grid",
+        gridTemplateColumns: "repeat(3, 30% [col-start])",
+        columnGap: "88px",
+        rowGap: "44px",
+        paddingTop: "44px",
+        paddingLeft: "20px",
+        width: "100%",
+        overflowX: "hidden"
+      },
+      controls: [
+        {
+          label: "Dial",
+          selector: "rd-dial",
+          channel: this.channelName,
+          control: {
+            type: "dial",
+            name: "dial",
+            currentValue: 0,
+            attributes: {
+              min: 0,
+              max: 1
             }
           },
-          {
-            selector: '[key="Enter"]',
-            styles: {
-              height: "100%",
-              gridRow: "span 2"
+          hint: {
+            template: docs_default.dial
+          }
+        },
+        {
+          label: "Input",
+          selector: "rd-input",
+          channel: this.channelName,
+          style: {
+            width: "290px"
+          },
+          control: {
+            name: "input",
+            attributes: {}
+          },
+          hint: {
+            template: docs_default.input
+          }
+        },
+        {
+          label: "Textarea",
+          selector: "rd-textarea",
+          channel: this.channelName,
+          control: {
+            name: "textarea",
+            attributes: {}
+          },
+          hint: {
+            template: docs_default.textarea
+          }
+        },
+        {
+          label: "Button",
+          selector: "rd-button",
+          channel: this.channelName,
+          control: {
+            name: "button",
+            attributes: {}
+          },
+          hint: {
+            template: docs_default.button
+          }
+        },
+        {
+          label: "Select",
+          selector: "rd-dropdown",
+          channel: this.channelName,
+          style: {
+            width: "320px"
+          },
+          control: {
+            name: "dropdown",
+            attributes: {
+              options: [
+                "Option 1",
+                "Option 2",
+                "Option 3",
+                "Option With Really, Really, Really, Really, Really Long Name"
+              ]
+            }
+          },
+          hint: {
+            template: docs_default.dropdown
+          }
+        },
+        {
+          label: "Checkbox",
+          selector: "rd-checkbox",
+          channel: this.channelName,
+          control: {
+            name: "checkbox",
+            attributes: {}
+          },
+          hint: {
+            template: docs_default.checkbox
+          }
+        },
+        {
+          label: "Switch",
+          selector: "rd-switch",
+          channel: this.channelName,
+          control: {
+            name: "switch",
+            attributes: {}
+          },
+          hint: {
+            template: docs_default.switch
+          }
+        },
+        {
+          label: "Radio Group",
+          selector: "rd-radiogroup",
+          channel: this.channelName,
+          control: {
+            name: "radio-group",
+            attributes: {
+              direction: "vertical",
+              inputs: [
+                {
+                  value: "hue",
+                  label: "Hue",
+                  name: "radio-group"
+                },
+                {
+                  value: "saturation",
+                  label: "Saturation",
+                  name: "radio-group"
+                },
+                {
+                  value: "brightness",
+                  label: "Brightness",
+                  name: "radio-group"
+                }
+              ]
+            }
+          },
+          hint: {
+            template: docs_default.radio
+          }
+        },
+        {
+          label: "Slider",
+          selector: "rd-slider",
+          channel: this.channelName,
+          control: {
+            type: "vert",
+            name: "slider",
+            currentValue: 100,
+            attributes: {
+              orient: "is--vert",
+              min: 0,
+              max: 255
+            }
+          },
+          hint: {
+            template: docs_default.slider
+          }
+        },
+        {
+          label: "Joystick",
+          selector: "rd-slider",
+          channel: this.channelName,
+          control: {
+            type: "joystick",
+            name: "square-joystick",
+            currentValue: [0, 0],
+            attributes: {
+              orient: "is--joystick",
+              min: [0, 0],
+              max: [1024, 1024],
+              snapToCenter: true,
+              numberType: "int"
+            }
+          },
+          hint: {
+            template: docs_default.slider
+          }
+        },
+        {
+          label: "Button Pad",
+          selector: "rd-buttonpad",
+          channel: this.channelName,
+          style: {
+            gridColumn: "2 / span 2",
+            marginRight: "124px"
+          },
+          control: {
+            name: "keyboard",
+            attributes: {
+              buttons: StandardKeyboard,
+              grid: {
+                gap: "4px",
+                columns: {
+                  count: 14
+                },
+                buttonStyles: {
+                  width: "64px",
+                  height: "64px"
+                },
+                cells: [
+                  {
+                    selector: '[key="Space"]',
+                    styles: {
+                      width: "100%",
+                      gridColumn: "span 3"
+                    }
+                  },
+                  {
+                    selector: '[key="Enter"]',
+                    styles: {
+                      width: "100%",
+                      gridColumn: "span 2"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          hint: {
+            template: docs_default.buttonpad
+          }
+        }
+      ]
+    };
+    const videoGameControllerSurface = {
+      style: {
+        display: "grid",
+        gridTemplateColumns: "[column1] 200px [column2] 50px [column3] 50px [column4] 67px [column5] 67px [column6] 67px [column7]",
+        gridTemplateRows: "[row1] 67px [row2] 67px [row3] 67px [row4]",
+        columnGap: "0px",
+        rowGap: "0px",
+        padding: "44px",
+        paddingLeft: "20px",
+        width: "auto",
+        overflowX: "hidden"
+      },
+      controls: [
+        {
+          selector: "rd-slider",
+          channel: this.channelName,
+          style: {
+            gridColumnStart: "column1",
+            gridColumnEnd: "column2",
+            gridRowStart: "row1",
+            gridRowEnd: "row4"
+          },
+          control: {
+            type: "joystick",
+            name: "left-joystick",
+            currentValue: [0, 0],
+            attributes: {
+              orient: "is--joystick",
+              min: [0, 0],
+              max: [1024, 1024],
+              numberType: "int"
             }
           }
-        ]
-      })
-    );
-    buttonNumberPad.setAttribute(
-      "buttons",
-      JSON.stringify(StandardKeyboardNumPad)
-    );
-    setTimeout(() => vertSlider.value = 100);
-    setTimeout(() => horizontalSlider.value = 1e3);
-    setTimeout(() => joystick.value = [140, 140]);
-    setTimeout(() => squareJoystick.value = [140, 140]);
-    this.onModeChange();
+        },
+        {
+          selector: "rd-button",
+          channel: this.channelName,
+          style: {
+            gridColumnStart: "column2",
+            gridColumnEnd: "column3",
+            gridRowStart: "row3",
+            gridRowEnd: "row4",
+            justifySelf: "start",
+            alignSelf: "end",
+            transform: "translateY(24px)"
+          },
+          control: {
+            name: "select-button",
+            attributes: {
+              width: "44px",
+              height: "16px"
+            }
+          }
+        },
+        {
+          selector: "rd-button",
+          channel: this.channelName,
+          style: {
+            gridColumnStart: "column3",
+            gridColumnEnd: "column4",
+            gridRowStart: "row3",
+            gridRowEnd: "row4",
+            justifySelf: "end",
+            alignSelf: "end",
+            transform: "translateY(24px)"
+          },
+          control: {
+            name: "start-button",
+            attributes: {
+              width: "44px",
+              height: "16px"
+            }
+          }
+        },
+        {
+          selector: "rd-button",
+          channel: this.channelName,
+          style: {
+            gridColumnStart: "column4",
+            gridColumnEnd: "column5",
+            gridRowStart: "row2",
+            gridRowEnd: "row3",
+            justifySelf: "end"
+          },
+          control: {
+            name: "A",
+            attributes: {
+              width: "44px",
+              height: "44px",
+              style: {
+                borderRadius: "50%"
+              }
+            }
+          }
+        },
+        {
+          selector: "rd-button",
+          channel: this.channelName,
+          style: {
+            gridColumnStart: "column5",
+            gridColumnEnd: "column6",
+            gridRowStart: "row1",
+            gridRowEnd: "row2",
+            alignSelf: "end",
+            justifySelf: "center"
+          },
+          control: {
+            name: "B",
+            attributes: {
+              width: "44px",
+              height: "44px",
+              style: {
+                borderRadius: "50%"
+              }
+            }
+          }
+        },
+        {
+          selector: "rd-button",
+          channel: this.channelName,
+          style: {
+            gridColumnStart: "column6",
+            gridColumnEnd: "column7",
+            gridRowStart: "row2",
+            gridRowEnd: "row3",
+            justifySelf: "start",
+            transform: "translateX(2px)"
+          },
+          control: {
+            name: "Y",
+            attributes: {
+              width: "44px",
+              height: "44px",
+              style: {
+                borderRadius: "50%"
+              }
+            }
+          }
+        },
+        {
+          selector: "rd-button",
+          channel: this.channelName,
+          style: {
+            gridColumnStart: "column5",
+            gridColumnEnd: "column6",
+            gridRowStart: "row3",
+            gridRowEnd: "row4",
+            alignSelf: "start",
+            justifySelf: "center",
+            transform: "translateY(-8px)"
+          },
+          control: {
+            name: "X",
+            attributes: {
+              width: "44px",
+              height: "44px",
+              style: {
+                borderRadius: "50%"
+              }
+            }
+          }
+        }
+      ]
+    };
+    setTimeout(() => {
+      surface.setControlSurface(controlSurface);
+      videoGameController.setControlSurface(videoGameControllerSurface);
+      this.onModeChange();
+    });
     modeRadio.value = this.mode;
   }
   getState() {
-    return {
-      vertControl: JSON.stringify({
-        type: "slider",
-        name: "slider",
-        orient: "is--vert",
-        min: 0,
-        max: 255,
-        size: "small",
-        gridArea: "1 / 1 / span 3 / span 1"
-      }),
-      horControl: JSON.stringify({
-        type: "slider",
-        name: "h",
-        orient: "is--hor",
-        min: 0,
-        max: 1e3,
-        gridArea: "1 / 3 / span 1 / span 3"
-      }),
-      joyControl: JSON.stringify({
-        type: "slider",
-        name: "joystick",
-        orient: "is--joystick",
-        min: [0, 0],
-        max: [255, 255],
-        snapToCenter: false,
-        gridArea: "1 / 2 / span 4 / span 1"
-      }),
-      joySquareControl: JSON.stringify({
-        type: "slider",
-        name: "square-joystick",
-        orient: "is--joystick--square",
-        min: [0, 0],
-        max: [12, 12],
-        snapToCenter: false,
-        gridArea: "1 / 2 / span 4 / span 1",
-        numberType: "int"
-      })
-    };
+    return {};
   }
   toggleTheme() {
     var _a, _b, _c;
@@ -9109,7 +11690,7 @@ let LibraryComponent = class extends CustomElement {
     (_c = this.shadowRoot) == null ? void 0 : _c.querySelector(".theme__toggle").classList.add(this.theme);
   }
   onModeChange() {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m;
     const form = (_a = this.shadowRoot) == null ? void 0 : _a.querySelector("form");
     const radio = (_b = this.shadowRoot) == null ? void 0 : _b.querySelectorAll("rd-radiogroup")[1];
     const toggle = (_c = this.shadowRoot) == null ? void 0 : _c.querySelector("rd-switch");
@@ -9118,15 +11699,12 @@ let LibraryComponent = class extends CustomElement {
     const textarea = (_f = this.shadowRoot) == null ? void 0 : _f.querySelector("rd-textarea");
     const select = (_g = this.shadowRoot) == null ? void 0 : _g.querySelector("rd-dropdown");
     const button = (_h = this.shadowRoot) == null ? void 0 : _h.querySelector("rd-button");
-    const buttonPad = (_i = this.shadowRoot) == null ? void 0 : _i.querySelector("rd-buttonpad");
-    const buttonNumberPad = (_j = this.shadowRoot) == null ? void 0 : _j.querySelectorAll("rd-buttonpad")[1];
-    const joystick = (_k = this.shadowRoot) == null ? void 0 : _k.querySelector('[type="joystick"]');
-    const squareJoystick = (_l = this.shadowRoot) == null ? void 0 : _l.querySelectorAll('[type="joystick"]')[1];
-    const vertSlider = (_m = this.shadowRoot) == null ? void 0 : _m.querySelector('[type="vert"]');
-    const horizontalSlider = (_n = this.shadowRoot) == null ? void 0 : _n.querySelector('[type="hor"]');
-    const submit = (_o = this.shadowRoot) == null ? void 0 : _o.querySelector('[type="submit"]');
+    const buttonNumberPad = (_i = this.shadowRoot) == null ? void 0 : _i.querySelectorAll("rd-buttonpad");
+    const dial = (_j = this.shadowRoot) == null ? void 0 : _j.querySelector('[name="dial"]');
+    const squareJoystick = (_k = this.shadowRoot) == null ? void 0 : _k.querySelector('[type="joystick"]');
+    const vertSlider = (_l = this.shadowRoot) == null ? void 0 : _l.querySelector('[type="vert"]');
     if (this.mode === "form") {
-      (_p = this.channel) == null ? void 0 : _p.close();
+      (_m = this.channel) == null ? void 0 : _m.close();
       radio.onchange = (ev) => {
         console.log(ev.target.value);
       };
@@ -9154,17 +11732,12 @@ let LibraryComponent = class extends CustomElement {
       button.onclick = (ev) => {
         console.log(ev);
       };
-      buttonPad.onclick = (ev) => {
-        if (ev.target.tagName === "RD-BUTTON") {
-          console.dir(form[16].value);
-        }
-      };
       buttonNumberPad.onclick = (ev) => {
         if (ev.target.tagName === "RD-BUTTON") {
           console.dir(form[17].value);
         }
       };
-      joystick.oninput = (ev) => {
+      dial.oninput = (ev) => {
         console.log(ev.target.value);
       };
       squareJoystick.oninput = (ev) => {
@@ -9173,45 +11746,38 @@ let LibraryComponent = class extends CustomElement {
       vertSlider.oninput = (ev) => {
         console.log(ev.target.value);
       };
-      horizontalSlider.oninput = (ev) => {
-        console.log(ev.target.value);
-      };
-      submit.onclick = (ev) => {
-        var _a2;
-        ev.preventDefault();
-        const values = Array.from(
-          (_a2 = this.shadowRoot) == null ? void 0 : _a2.querySelectorAll(".form__item")
-        ).map((item) => {
-          if (item.onValidate) {
-            item.onValidate();
-          }
-          return {
-            tag: item.tagName,
-            value: item.value,
-            validity: item.checkValidity ? item.checkValidity() : null
-          };
-        });
-        console.log(values);
-      };
     }
     if (this.mode === "channel") {
       this.channel = new BroadcastChannel(this.channelName);
-      radio.setAttribute("channel", this.channelName);
-      toggle.setAttribute("channel", this.channelName);
-      checkbox.setAttribute("channel", this.channelName);
-      input.setAttribute("channel", this.channelName);
-      textarea.setAttribute("channel", this.channelName);
-      select.setAttribute("channel", this.channelName);
-      button.setAttribute("channel", this.channelName);
-      buttonPad.setAttribute("channel", this.channelName);
-      buttonNumberPad.setAttribute("channel", this.channelName);
-      joystick.setAttribute("channel", this.channelName);
-      squareJoystick.setAttribute("channel", this.channelName);
-      vertSlider.setAttribute("channel", this.channelName);
-      horizontalSlider.setAttribute("channel", this.channelName);
-      submit.setAttribute("channel", this.channelName);
       this.channel.onmessage = (event) => {
-        console.log(event.data);
+        var _a2, _b2;
+        console.log(event);
+        if (!((_a2 = this.transmitter) == null ? void 0 : _a2.isOpen)) {
+          if (this.touchOSCEnabled) {
+            if (event.data.name === "switch") {
+              this.transmitter.sendTouchOSCMessage(
+                "/OSCQUERY/Left Controls/Flip H",
+                [
+                  {
+                    type: "i",
+                    value: event.data.currentValue === true ? 1 : 0
+                  }
+                ]
+              );
+            }
+            if (event.data.name === "dial") {
+              this.transmitter.sendTouchOSCMessage(
+                "/OSCQUERY/Left Controls/Dial",
+                [{ type: "f", value: event.data.currentValue }]
+              );
+            }
+          }
+        } else {
+          const message = {
+            control: JSON.stringify(event.data)
+          };
+          (_b2 = this.transmitter) == null ? void 0 : _b2.send(message);
+        }
       };
       radio.onchange = () => {
       };
@@ -9231,19 +11797,13 @@ let LibraryComponent = class extends CustomElement {
       };
       button.onclick = () => {
       };
-      buttonPad.onclick = () => {
-      };
       buttonNumberPad.onclick = () => {
       };
-      joystick.oninput = () => {
+      dial.oninput = () => {
       };
       squareJoystick.oninput = () => {
       };
       vertSlider.oninput = () => {
-      };
-      horizontalSlider.oninput = () => {
-      };
-      submit.onclick = () => {
       };
     }
   }
@@ -9303,7 +11863,7 @@ NotFoundComponent = __decorateClass([
   window["clientRouter"] = new Router("#root", routing, true);
 }
 </script>
-    <style rel="stylesheet" crossorigin>@import url("https://fonts.googleapis.com/css?family=Major+Mono+Display|Source Sans Pro:100,300,400");@import url("https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@1,500&display=swap");[data-theme=dark]{--ready-color-default:#fff;--ready-color-border:hsla(0,0%,100%,.65);--ready-color-disabled:hsla(0,0%,83%,.65);--ready-color-warning:#ff0;--ready-color-error:red;--ready-color-highlight:#fff;--ready-color-selected:hsla(0,0%,100%,.3);--ready-color-bg:rgba(0,0,0,.5);--ready-color-body-bg:rgba(2,0,0,.95);--ready-color-container-bg:#000;--ready-opacity-disabled:0.5;--ready-icon-hor:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath fill='none' fill-rule='evenodd' stroke='%23FFF' stroke-linecap='square' stroke-opacity='.65' stroke-width='2' d='M16 0v32'/%3E%3C/svg%3E");--ready-icon-vert:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath fill='none' fill-rule='evenodd' stroke='%23FFF' stroke-linecap='square' stroke-opacity='.65' stroke-width='2' d='M0 15h32'/%3E%3C/svg%3E");--ready-icon-joy:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44' viewBox='0 0 44 44'%3E%3Ccircle cx='22' cy='22' r='21' fill='%23FFF' fill-opacity='.65' fill-rule='evenodd' stroke-opacity='0'/%3E%3C/svg%3E");--ready-icon-handle-bg:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Ccircle cx='22' cy='22' r='21' fill='%23FFF' fill-opacity='.4' fill-rule='evenodd' transform='translate(3 3)'/%3E%3C/svg%3E");--ready-icon-vert-sm:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='34' height='12' viewBox='0 0 34 12'%3E%3Cpath fill='none' fill-rule='evenodd' stroke='%23000' stroke-linecap='square' stroke-opacity='.3' stroke-width='2' d='M0 15h30'/%3E%3C/svg%3E");--ready-icon-hor-sm:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='34' viewBox='0 0 12 34'%3E%3Cpath fill='none' fill-rule='evenodd' stroke='%23000' stroke-linecap='square' stroke-opacity='.3' stroke-width='2' d='M16 0v30'/%3E%3C/svg%3E");--ready-icon-menu:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='9' viewBox='0 0 10 9'%3E%3Cpath fill='%23FFF' fill-opacity='.65' fill-rule='evenodd' stroke='none' stroke-opacity='0' d='M5 9 1 1h8z'/%3E%3C/svg%3E");--ready-icon-expand:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='10' viewBox='0 0 11 10'%3E%3Cpath fill='%23FFF' fill-opacity='.65' fill-rule='evenodd' stroke='%23000' stroke-opacity='.004' d='M9.828 8.828 1.343 6 7 .343z'/%3E%3C/svg%3E");--ready-icon-check:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 22 22'%3E%3Ccircle cx='329' cy='110' r='10' fill='%23FFF' fill-opacity='.65' fill-rule='evenodd' stroke='none' stroke-opacity='0' transform='translate(-318 -99)'/%3E%3C/svg%3E");--ready-icon-switch:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3E%3Ccircle cx='367' cy='245' r='14' fill='%23FFF' fill-opacity='.65' fill-rule='evenodd' stroke='none' stroke-opacity='0' transform='translate(-352 -230)'/%3E%3C/svg%3E")}[data-theme=light]{--ready-color-default:#000;--ready-color-border:rgba(0,0,0,.4);--ready-color-disabled:rgba(44,44,44,.4);--ready-color-warning:#ff0;--ready-color-error:red;--ready-color-highlight:#000;--ready-color-selected:rgba(0,0,0,.4);--ready-color-bg:hsla(0,0%,100%,.5);--ready-color-body-bg:rgba(253,255,255,.95);--ready-color-container-bg:#fff;--ready-opacity-disabled:0.5;--ready-icon-hor:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath fill='none' fill-rule='evenodd' stroke='rgba(0, 0, 0, 0.4)' stroke-linecap='square' stroke-width='2' d='M16 0v32'/%3E%3C/svg%3E");--ready-icon-vert:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath fill='none' fill-rule='evenodd' stroke='rgba(0, 0, 0, 0.4)' stroke-linecap='square' stroke-width='2' d='M0 15h32'/%3E%3C/svg%3E");--ready-icon-joy:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44' viewBox='0 0 44 44'%3E%3Ccircle cx='22' cy='22' r='21' fill='rgba(0, 0, 0, 0.4)' fill-rule='evenodd' stroke-opacity='0'/%3E%3C/svg%3E");--ready-icon-handle-bg:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Ccircle cx='22' cy='22' r='21' fill='rgba(0, 0, 0, 1.0)' fill-opacity='.2' fill-rule='evenodd' transform='translate(3 3)'/%3E%3C/svg%3E");--ready-icon-vert-sm:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='34' height='12' viewBox='0 0 34 12'%3E%3Cpath fill='none' fill-rule='evenodd' stroke='%23FFF' stroke-linecap='square' stroke-opacity='.3' stroke-width='2' d='M0 15h30'/%3E%3C/svg%3E");--ready-icon-hor-sm:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='34' viewBox='0 0 12 34'%3E%3Cpath fill='none' fill-rule='evenodd' stroke='%23FFF' stroke-linecap='square' stroke-opacity='.3' stroke-width='2' d='M16 0v30'/%3E%3C/svg%3E");--ready-icon-menu:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='9' viewBox='0 0 10 9'%3E%3Cpath fill='%23000' fill-opacity='.4' fill-rule='evenodd' stroke='none' stroke-opacity='0' d='M5 9 1 1h8z'/%3E%3C/svg%3E");--ready-icon-expand:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='10' viewBox='0 0 11 10'%3E%3Cpath fill='%23000' fill-opacity='.4' fill-rule='evenodd' stroke='%23000' stroke-opacity='.004' d='M9.828 8.828 1.343 6 7 .343z'/%3E%3C/svg%3E");--ready-icon-check:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 22 22'%3E%3Ccircle cx='329' cy='110' r='10' fill='%23000' fill-opacity='.4' fill-rule='evenodd' stroke='none' stroke-opacity='0' transform='translate(-318 -99)'/%3E%3C/svg%3E");--ready-icon-switch:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3E%3Ccircle cx='367' cy='245' r='14' fill='%23000' fill-opacity='.4' fill-rule='evenodd' stroke='none' stroke-opacity='0' transform='translate(-352 -230)'/%3E%3C/svg%3E")}body{background:var(--ready-color-body-bg);color:var(--ready-color-default);font-family:Source Sans Pro,sans-serif;font-size:16px;font-weight:400;height:100%;margin:0;overflow-y:auto;padding:0;width:100%;-webkit-font-smoothing:auto;-moz-osx-font-smoothing:grayscale}</style>
+    <style rel="stylesheet" crossorigin>@import url("https://fonts.googleapis.com/css?family=Major+Mono+Display|Source Sans Pro:100,300,400");@import url("https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@1,500&display=swap");[data-theme=dark]{--ready-border-width:2px;--ready-border-radius:14px;--ready-color-default:#fff;--ready-color-border:hsla(0,0%,100%,.65);--ready-color-disabled:hsla(0,0%,83%,.65);--ready-color-warning:#ff0;--ready-color-error:red;--ready-color-highlight:#fff;--ready-color-selected:hsla(0,0%,100%,.3);--ready-color-bg:rgba(0,0,0,.5);--ready-color-body-bg:rgba(2,0,0,.95);--ready-color-container-bg:#000;--ready-popover-bg:rgba(0,0,0,.85);--ready-opacity-disabled:0.5;--ready-icon-hor:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath fill='none' fill-rule='evenodd' stroke='%23FFF' stroke-linecap='square' stroke-opacity='.65' stroke-width='2' d='M16 0v32'/%3E%3C/svg%3E");--ready-icon-vert:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath fill='none' fill-rule='evenodd' stroke='%23FFF' stroke-linecap='square' stroke-opacity='.65' stroke-width='2' d='M0 15h32'/%3E%3C/svg%3E");--ready-icon-joy:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44' viewBox='0 0 44 44'%3E%3Ccircle cx='22' cy='22' r='21' fill='%23FFF' fill-opacity='.65' fill-rule='evenodd' stroke-opacity='0'/%3E%3C/svg%3E");--ready-icon-handle-bg:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Ccircle cx='22' cy='22' r='21' fill='%23FFF' fill-opacity='.4' fill-rule='evenodd' transform='translate(3 3)'/%3E%3C/svg%3E");--ready-icon-vert-sm:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='34' height='12' viewBox='0 0 34 12'%3E%3Cpath fill='none' fill-rule='evenodd' stroke='%23000' stroke-linecap='square' stroke-opacity='.3' stroke-width='2' d='M0 15h30'/%3E%3C/svg%3E");--ready-icon-hor-sm:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='34' viewBox='0 0 12 34'%3E%3Cpath fill='none' fill-rule='evenodd' stroke='%23000' stroke-linecap='square' stroke-opacity='.3' stroke-width='2' d='M16 0v30'/%3E%3C/svg%3E");--ready-icon-menu:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='9' viewBox='0 0 10 9'%3E%3Cpath fill='%23FFF' fill-opacity='.65' fill-rule='evenodd' stroke='none' stroke-opacity='0' d='M5 9 1 1h8z'/%3E%3C/svg%3E");--ready-icon-expand:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='10' viewBox='0 0 11 10'%3E%3Cpath fill='%23FFF' fill-opacity='.65' fill-rule='evenodd' stroke='%23000' stroke-opacity='.004' d='M9.828 8.828 1.343 6 7 .343z'/%3E%3C/svg%3E");--ready-icon-check:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 22 22'%3E%3Ccircle cx='329' cy='110' r='10' fill='%23FFF' fill-opacity='.65' fill-rule='evenodd' stroke='none' stroke-opacity='0' transform='translate(-318 -99)'/%3E%3C/svg%3E");--ready-icon-switch:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3E%3Ccircle cx='367' cy='245' r='14' fill='%23FFF' fill-opacity='.65' fill-rule='evenodd' stroke='none' stroke-opacity='0' transform='translate(-352 -230)'/%3E%3C/svg%3E")}[data-theme=light]{--ready-border-width:2px;--ready-border-radius:14px;--ready-color-default:#000;--ready-color-border:rgba(0,0,0,.4);--ready-color-disabled:rgba(44,44,44,.4);--ready-color-warning:#ff0;--ready-color-error:red;--ready-color-highlight:#000;--ready-color-selected:rgba(0,0,0,.4);--ready-color-bg:hsla(0,0%,100%,.5);--ready-color-body-bg:rgba(253,255,255,.95);--ready-color-container-bg:#fff;--ready-popover-bg:hsla(0,0%,100%,.85);--ready-opacity-disabled:0.5;--ready-icon-hor:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath fill='none' fill-rule='evenodd' stroke='rgba(0, 0, 0, 0.4)' stroke-linecap='square' stroke-width='2' d='M16 0v32'/%3E%3C/svg%3E");--ready-icon-vert:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath fill='none' fill-rule='evenodd' stroke='rgba(0, 0, 0, 0.4)' stroke-linecap='square' stroke-width='2' d='M0 15h32'/%3E%3C/svg%3E");--ready-icon-joy:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44' viewBox='0 0 44 44'%3E%3Ccircle cx='22' cy='22' r='21' fill='rgba(0, 0, 0, 0.4)' fill-rule='evenodd' stroke-opacity='0'/%3E%3C/svg%3E");--ready-icon-handle-bg:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Ccircle cx='22' cy='22' r='21' fill='rgba(0, 0, 0, 1.0)' fill-opacity='.2' fill-rule='evenodd' transform='translate(3 3)'/%3E%3C/svg%3E");--ready-icon-vert-sm:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='34' height='12' viewBox='0 0 34 12'%3E%3Cpath fill='none' fill-rule='evenodd' stroke='%23FFF' stroke-linecap='square' stroke-opacity='.3' stroke-width='2' d='M0 15h30'/%3E%3C/svg%3E");--ready-icon-hor-sm:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='34' viewBox='0 0 12 34'%3E%3Cpath fill='none' fill-rule='evenodd' stroke='%23FFF' stroke-linecap='square' stroke-opacity='.3' stroke-width='2' d='M16 0v30'/%3E%3C/svg%3E");--ready-icon-menu:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='9' viewBox='0 0 10 9'%3E%3Cpath fill='%23000' fill-opacity='.4' fill-rule='evenodd' stroke='none' stroke-opacity='0' d='M5 9 1 1h8z'/%3E%3C/svg%3E");--ready-icon-expand:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='10' viewBox='0 0 11 10'%3E%3Cpath fill='%23000' fill-opacity='.4' fill-rule='evenodd' stroke='%23000' stroke-opacity='.004' d='M9.828 8.828 1.343 6 7 .343z'/%3E%3C/svg%3E");--ready-icon-check:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 22 22'%3E%3Ccircle cx='329' cy='110' r='10' fill='%23000' fill-opacity='.4' fill-rule='evenodd' stroke='none' stroke-opacity='0' transform='translate(-318 -99)'/%3E%3C/svg%3E");--ready-icon-switch:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3E%3Ccircle cx='367' cy='245' r='14' fill='%23000' fill-opacity='.4' fill-rule='evenodd' stroke='none' stroke-opacity='0' transform='translate(-352 -230)'/%3E%3C/svg%3E")}body{background:var(--ready-color-body-bg);color:var(--ready-color-default);font-family:Source Sans Pro,sans-serif;font-size:16px;font-weight:400;height:100%;margin:0;overflow-y:auto;padding:0;width:100%;-webkit-font-smoothing:auto;-moz-osx-font-smoothing:grayscale}</style>
   </head>
   <body data-theme="dark">
     <template id="object-repeater" items="item of {{items}}">
