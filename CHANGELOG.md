@@ -2,7 +2,7 @@
 
 ### 3.1.0
 
-Readymade 3.1.0 Large Glass breaks the mold, adding new features that allow UI controls to communicate over WebSocket, WebRTC Data Channel, and Touch OSC.
+Readymade 3.1.0 Large Glass breaks the glass, adding new features that allow UI controls to communicate over WebSocket, WebRTC Data Channel, and Touch OSC.
 
 ### @readymade/ui
 
