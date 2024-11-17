@@ -85,3 +85,16 @@ r-code {
   width: 100%;
   margin-left: -24px;
 }
+
+ul.list {
+  padding: initial;
+  margin: initial;
+  list-style: initial;
+  -webkit-margin-start: initial;
+  -webkit-margin-end: initial;
+  -webkit-padding-start: initial;
+  -webkit-margin-before: initial;
+  -webkit-margin-after: initial;
+  font-size: 1.1em;
+  margin-left: 20px;
+}
