@@ -4,7 +4,7 @@ JavaScript microlibrary for developing Web Components with Decorators that uses 
 
 - 🎰 Declare metadata for CSS and HTML ShadowDOM template
 - ☕️ Single interface for 'autonomous custom elements' and 'customized built-in elements'
-- 🏋️‍ Weighing in ~1.2Kb for 'Hello World' (gzipped)
+- 🏋️‍ Weighing in ~1Kb for 'Hello World' (gzipped)
 - 🎤 Event Emitter pattern
 - 1️⃣ One-way data binding
 - 🖥 Server side renderable
