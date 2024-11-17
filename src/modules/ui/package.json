@@ -11,8 +11,8 @@
     },
     ".": {
       "types": "./typings/ui/index.d.ts",
-      "esm": "./esm2022/index.js",
-      "esm2022": "./esm2022/index.js",
+      "esm": "./esm2022/ui/index.js",
+      "esm2022": "./esm2022/ui/index.js",
       "default": "./fesm2022/index.js"
     }
   },

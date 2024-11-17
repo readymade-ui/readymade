@@ -27,6 +27,7 @@ import documentation from './docs';
 })
 class LibraryComponent extends CustomElement {
   touchOSCEnabled = false;
+  transmit = false;
   theme: string = 'dark';
   mode: 'form' | 'channel' = 'channel';
   channelName = 'rd-messages';
@@ -74,48 +75,50 @@ class LibraryComponent extends CustomElement {
     };
     const onConnect = () => this.transmitter.send({ event: 'ping' });
 
-    fetch('http://localhost:4449/ice')
-      .then((res) => res.json())
-      .then((iceServers) => {
-        this.transmitter = new Transmitter({
-          sharedKey: 'lobby',
-          rtc: {
-            iceServers,
-          },
-          serverConfig: {
-            http: {
-              protocol: 'http',
-              hostname: 'localhost',
-              port: 4449,
+    if (this.transmit === true) {
+      fetch('http://localhost:4449/ice')
+        .then((res) => res.json())
+        .then((iceServers) => {
+          this.transmitter = new Transmitter({
+            sharedKey: 'lobby',
+            rtc: {
+              iceServers,
             },
-            ws: {
-              osc: {
-                protocol: 'ws',
+            serverConfig: {
+              http: {
+                protocol: 'http',
                 hostname: 'localhost',
-                port: 4445,
+                port: 4449,
               },
-              signal: {
-                protocol: 'ws',
-                hostname: 'localhost',
-                port: 4446,
-              },
-              announce: {
-                protocol: 'ws',
-                hostname: 'localhost',
-                port: 4447,
-              },
-              message: {
-                protocol: 'ws',
-                hostname: 'localhost',
-                port: 4448,
+              ws: {
+                osc: {
+                  protocol: 'ws',
+                  hostname: 'localhost',
+                  port: 4445,
+                },
+                signal: {
+                  protocol: 'ws',
+                  hostname: 'localhost',
+                  port: 4446,
+                },
+                announce: {
+                  protocol: 'ws',
+                  hostname: 'localhost',
+                  port: 4447,
+                },
+                message: {
+                  protocol: 'ws',
+                  hostname: 'localhost',
+                  port: 4448,
+                },
               },
             },
-          },
-          onMessage,
-          onConnect,
-        });
-      })
-      .catch((err) => console.error(err));
+            onMessage,
+            onConnect,
+          });
+        })
+        .catch((err) => console.error(err));
+    }
 
     const controlSurface: RdControlSurface = {
       style: {
@@ -614,7 +617,8 @@ class LibraryComponent extends CustomElement {
     if (this.mode === 'channel') {
       this.channel = new BroadcastChannel(this.channelName);
       this.channel.onmessage = (event) => {
-        if (!this.transmitter.isOpen) {
+        console.log(event);
+        if (!this.transmitter?.isOpen) {
           if (this.touchOSCEnabled) {
             if (event.data.name === 'switch') {
               this.transmitter.sendTouchOSCMessage(
@@ -638,7 +642,7 @@ class LibraryComponent extends CustomElement {
           const message = {
             control: JSON.stringify(event.data),
           };
-          this.transmitter.send(message);
+          this.transmitter?.send(message);
         }
       };
       radio.onchange = () => {};

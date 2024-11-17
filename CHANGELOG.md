@@ -1,5 +1,173 @@
 # CHANGELOG
 
+### 3.1.0
+
+Readymade 3.1.0 Large Glass breaks the mold, adding new features that allow UI controls to communicate over WebSocket, WebRTC Data Channel, and Touch OSC.
+
+### @readymade/ui
+
+- new: `RdDial` has similar interface to `RdSlider` but action is limited to a rotary dial
+- new: documentation available at [https://readymade-ui.github.io/readymade/#/lib](https://readymade-ui.github.io/readymade/#/lib)
+- feat: `RdControl` can now be set via attribute or via `setControl` method on all inputs in @readymade/ui
+- feat: provide CSS styles for `RdButton` via `setControl`. Any provided styles are bound to the internal `HTMLButtonElement`
+
+### @readymade/transmit
+
+- feat: `Transmitter` is a new `class` for handling `WebRTC DataChannel`, `WebSocket` and `Touch OSC` communication.
+
+`Transmitter` is a Swiss-army knife for communicating over WebRTC DataChannel, WebSocket or Touch OSC.
+
+#### Getting Started
+
+```bash
+npm install @readymade/transmit
+```
+
+```bash
+yarn add @readymade/transmit
+```
+
+Import `Transmitter` and instantiate with a configuration Object.
+
+```javascript
+import { Transmitter, TransmitterConfig } from '@readymade/transmit';
+
+const config: TransmitterConfig = {
+  sharedKey: 'lobby',
+  rtc: {
+    iceServers,
+  },
+  serverConfig: {
+    http: {
+      protocol: 'http',
+      hostname: 'localhost',
+      port: 4449,
+    },
+    ws: {
+      osc: {
+        protocol: 'ws',
+        hostname: 'localhost',
+        port: 4445,
+      },
+      signal: {
+        protocol: 'ws',
+        hostname: 'localhost',
+        port: 4446,
+      },
+      announce: {
+        protocol: 'ws',
+        hostname: 'localhost',
+        port: 4447,
+      },
+      message: {
+        protocol: 'ws',
+        hostname: 'localhost',
+        port: 4448,
+      },
+    },
+  },
+  onMessage,
+  onConnect,
+}
+
+const transmitter = new Transmitter(config);
+```
+
+### Messages
+
+When `signal` and `announce` servers are configured, the instance of `Transmitter` will automatically attempt a handshake with a remote peer. If a peer is found, a WebRTC DataChannel peer to peer connection will open. To send a message over the data channel use the `send` method.
+
+```javascript
+transmitter.send({ message: 'ping' });
+```
+
+If you want to send messages over WebSocket, use `sendSocketMessage`.
+
+```javascript
+transmitter.sendSocketMessage({ message: 'ping' });
+```
+
+To send a message over TouchOSC, use `sendTouchOSCMessage`, ensuring the data your are sending follows the OSC protocol. Below is an example of sending a OSC message with type definitions.
+
+```javascript
+transmitter.sendTouchOSCMessage('/OSCQUERY/Left Controls/Flip H', [
+  {
+    type: 'i',
+    value: 1,
+  },
+]);
+```
+
+To listen for messages, inject a callback into the configuration. In the above example, `onMessage` would appear like so:
+
+```javascript
+const onMessage = (message) => {
+  if (message.payload.event === 'ping') {
+    this.transmitter.send({ event: 'pong' });
+  }
+};
+```
+
+To react to a peer to peer connection, bind an `onConnect` callback to the configuration.
+
+### BREAKING CHANGES
+
+`RdControl` type definition in @readymade/ui has been updated to normalize types for all controls and make type definitions more specific per control. `RdLegacyControl` is now exported which is the old type definition. The interface of all controls have been normalized, some properties are deprecated, while other shared properties are now moved to `attributes` that are unique to each control.
+
+#### Before
+
+```typescript
+interface RdControl {
+  type: string;
+  name: string;
+  orient?: string;
+  min?: number | number[];
+  max?: number | number[];
+  isActive?: boolean;
+  placeSelf?: string;
+  transform?: string;
+  numberType?: 'int' | 'float';
+}
+```
+
+#### After
+
+```typescript
+interface RdControl<A> {
+  type?: string;
+  name: string;
+  isActive?: boolean;
+  hasUserInput?: boolean;
+  hasRemoteInput?: boolean;
+  currentValue?: number | string | Array<number> | Array<string> | boolean;
+  timeStamp?: Date | number;
+  attributes?: A;
+}
+```
+
+For instance, in `RdSlider` which is a custom element that has several unique attributes, the type definition is now:
+
+```typescript
+interface RdSliderAttributes {
+  size?: string;
+  height?: number;
+  width?: number;
+  orient?: string;
+  min?: number | number[];
+  max?: number | number[];
+  position?: string;
+  x?: number;
+  y?: number;
+  snapToCenter?: boolean;
+  transform?: string;
+  numberType?: 'int' | 'float';
+}
+
+RdControl<RdSliderAttributes>;
+```
+
+The reason for this change is to support @readymade/transmit. Passing an event from custom element to `BroadcastChannel` or any of the available channels in `Transmitter` is much simpler when the API is normalized.
+
 ### 3.0.0
 
 Readymade 3.0.0 Large Glass brings project dependencies up to date, adds new features and introduces several bugfixes and enhancements.
