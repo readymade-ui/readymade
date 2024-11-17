@@ -39,7 +39,7 @@
       <h2>RdControl</h2>
       
       <p>
-       Each custom element in @readymade/ui can participate in a form because they are form-associated custom elements, but the real power of the controls is unlocked when you use them with other technologies like BroadcastChannel, WebSocket, WebRTC DataChannel or Touch OSC. To enable an event paradigm on all these technologies, Readymade UI elements communicate with the <span class="i__c">RdControl</span> interface.
+       Each Readymade UI custom element can participate in a form because they are form-associated custom elements, but the real power of the controls is unlocked when you use them with other technologies like BroadcastChannel, WebSocket, WebRTC DataChannel or Touch OSC. To enable an event paradigm on all these technologies, Readymade UI elements communicate with the <span class="i__c">RdControl</span> interface.
       </p>
       
     
@@ -452,7 +452,7 @@ channel.onmessage = (event) => {
  
 <r-code type="javascript">
  <span hidden>
- transmitter.sendTouchOSCMessage('/OSCQUERY/Left Controls/Flip H', [
+ transmitter.sendTouchOSCMessage('/Controls/Flip', [
    {
      type: 'i',
      value: 1,
@@ -479,9 +479,9 @@ channel.onmessage = (event) => {
  
 <h3>transit-server</h3>
  
- <p>For plug and play functionality use a Readymade <span class="i__c">transmit-server</span>, a Node.js server that provides a WebRTC signaling server, WebSocket messaging channel, and WebSocket bridge for communicating over TouchOSC.</p>
+ <p>For plug and play functionality use the Readymade <span class="i__c">transmit-server</span>, a Node.js server that provides a WebRTC signaling server, WebSocket messaging channel, and WebSocket bridge for communicating over TouchOSC.</p>
  
- <p><span class="i__c">transmit-server</span> is included in the Readymade starter code. Create a new Readymade project using the command <span class="i__c">npx primr my-app</span>, renaming the directory <span class="i__c">my-app</span> with your project name. <span class="i__c">transmit-server</span> will be included in the project directory. After installing dependencies, run <span class="i__c">yarn build:transmit</span> and <span class="i__c">yarn serve:transmit</span>. Automatically, the WebSocket and Express servers should instantiate like so:</p>
+ <p><span class="i__c">transmit-server</span> is included in the Readymade starter code. Create a new Readymade project using the command <span class="i__c">npx primr my-app</span>, renaming the directory <span class="i__c">my-app</span> with your project name. <span class="i__c">transmit-server</span> will be included in the project directory. After installing dependencies, run <span class="i__c">yarn build:transmit</span> and <span class="i__c">yarn serve:transmit</span>. Automatically, the WebSocket and Express servers should instantiate.</p>
  
 <r-code type="javascript">
  <span hidden>
