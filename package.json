@@ -1,6 +1,6 @@
 {
   "name": "readymade",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "JavaScript microlibrary for developing Web Components with Decorators",
   "type": "module",
   "main": "index.html",
@@ -59,7 +59,7 @@
     "ui",
     "library"
   ],
-  "author": "Steve Belovarich",
+  "author": "Stephen Belovarich",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/steveblue/custom-elements/issues"

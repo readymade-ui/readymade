@@ -4,13 +4,13 @@
   "description": "UI library of standard elements built with Readymade",
   "type": "module",
   "module": "./fesm2022/index.js",
-  "typings": "./typings/index.d.ts",
+  "typings": "./typings/ui/index.d.ts",
   "exports": {
     "./package.json": {
       "default": "./package.json"
     },
     ".": {
-      "types": "./typings/index.d.ts",
+      "types": "./typings/ui/index.d.ts",
       "esm": "./esm2022/index.js",
       "esm2022": "./esm2022/index.js",
       "default": "./fesm2022/index.js"
@@ -30,7 +30,7 @@
     "decorators",
     "javascript"
   ],
-  "author": "Steve Belovarich",
+  "author": "Stephen Belovarich",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/readymade-ui/readymade/issues"

@@ -3,15 +3,17 @@
   "version": "3.1.0",
   "description": "Swiss-army knife for communicating over WebRTC DataChannel, WebSocket or Touch OSC",
   "type": "module",
-  "module": "./index.js",
+  "module": "./fesm2022/index.js",
+  "typings": "./typings/index.d.ts",
   "exports": {
     "./package.json": {
       "default": "./package.json"
     },
     ".": {
-      "esm": "./index.js",
-      "esm2022": "./index.js",
-      "default": "./index.js"
+      "types": "./typings/index.d.ts",
+      "esm": "./esm2022/index.js",
+      "esm2022": "./esm2022/index.js",
+      "default": "./fesm2022/index.js"
     }
   },
   "scripts": {
@@ -25,9 +27,11 @@
     "javascript",
     "touchosc",
     "osc",
-    "web socker"
+    "websocket",
+    "web socket",
+    "webrtc"
   ],
-  "author": "Steve Belovarich",
+  "author": "Stephen Belovarich",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/readymade-ui/readymade/issues"

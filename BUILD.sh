@@ -32,3 +32,10 @@ npx rollup -c src/modules/transmit/rollup.config.js
 cp src/modules/transmit/package.json dist/packages/@readymade/transmit/package.json
 cp src/modules/transmit/LICENSE.txt dist/packages/@readymade/transmit/LICENSE.txt
 cp src/modules/transmit/README.md dist/packages/@readymade/transmit/README.md
+
+
+rm -rf dist/packages/@readymade/core/fesm2022/typings
+rm -rf dist/packages/@readymade/dom/fesm2022/typings
+rm -rf dist/packages/@readymade/router/fesm2022/typings
+rm -rf dist/packages/@readymade/transmit/fesm2022/typings
+rm -rf dist/packages/@readymade/ui/fesm2022/typings
