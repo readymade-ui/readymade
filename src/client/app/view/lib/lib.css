@@ -80,3 +80,8 @@ ul {
 rd-surface {
   margin-bottom: 40px;
 }
+
+r-code {
+  width: 100%;
+  margin-left: -24px;
+}
