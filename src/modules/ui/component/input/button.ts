@@ -1,4 +1,12 @@
 import { Component, Listen, FormElement, html, css } from '@readymade/core';
+import { RdControl } from '../control';
+
+export interface RdButtonAttributes {
+  value?: string;
+  label?: string;
+  width?: string;
+  height?: string;
+}
 
 @Component({
   selector: 'rd-button',
@@ -11,9 +19,9 @@ import { Component, Listen, FormElement, html, css } from '@readymade/core';
     :host button {
       width: 72px;
       height: 36px;
-      border: 2px solid var(--ready-color-border);
+      border: var(--ready-border-width) solid var(--ready-color-border);
       background-color: var(--ready-color-bg);
-      border-radius: 14px;
+      border-radius: var(--ready-border-radius);
       color: var(--ready-color-default);
       cursor: pointer;
       display: flex;
@@ -42,7 +50,7 @@ import { Component, Listen, FormElement, html, css } from '@readymade/core';
     }
     :host button.is--medium {
       min-height: 32px;
-      border-radius: 14px;
+      border-radius: var(--ready-border-radius);
     }
     :host button.is--medium .icon:not(.is--empty) {
       display: inline-block;
@@ -51,7 +59,7 @@ import { Component, Listen, FormElement, html, css } from '@readymade/core';
     }
     :host button.is--large {
       min-height: 44px;
-      border-radius: 18px;
+      border-radius: var(--ready-border-radius);
     }
     :host button.is--large .icon:not(.is--empty) {
       display: inline-block;
@@ -60,20 +68,20 @@ import { Component, Listen, FormElement, html, css } from '@readymade/core';
     }
     :host button:hover {
       background-color: var(--ready-color-bg);
-      border: 2px solid var(--ready-color-highlight);
+      border: var(--ready-border-width) solid var(--ready-color-highlight);
     }
     :host button:focus {
       outline: 0px;
       outline-offset: 0px;
       background-color: var(--ready-color-bg);
-      border: 2px solid var(--ready-color-highlight);
+      border: var(--ready-border-width) solid var(--ready-color-highlight);
     }
     :host button:active,
     :host button.active {
       outline: 0px;
       outline-offset: 0px;
       background-color: var(--ready-color-selected);
-      border: 2px solid var(--ready-color-highlight);
+      border: var(--ready-border-width) solid var(--ready-color-highlight);
     }
     :host button[disabled] {
       opacity: var(--ready-opacity-disabled);
@@ -84,7 +92,7 @@ import { Component, Listen, FormElement, html, css } from '@readymade/core';
     :host button[disabled]:focus,
     :host button[disabled]:active,
     :host button[disabled].active {
-      border: 2px solid var(--ready-color-border);
+      border: var(--ready-border-width) solid var(--ready-color-border);
       outline: none;
       box-shadow: none;
     }
@@ -98,6 +106,7 @@ import { Component, Listen, FormElement, html, css } from '@readymade/core';
 })
 class RdButton extends FormElement {
   channel: BroadcastChannel;
+  control: RdControl<RdButtonAttributes>;
   _type: 'submit' | 'reset' | 'button' = 'button';
   constructor() {
     super();
@@ -105,7 +114,7 @@ class RdButton extends FormElement {
   }
 
   static get observedAttributes() {
-    return ['type', 'label', 'width', 'height', 'channel'];
+    return ['type', 'label', 'width', 'height', 'channel', 'control'];
   }
 
   attributeChangedCallback(name: string, old: string, next: string) {
@@ -130,6 +139,11 @@ class RdButton extends FormElement {
       case 'channel':
         this.setChannel(next);
         break;
+      case 'control':
+        if (!next.startsWith('{{')) {
+          this.setControl(JSON.parse(next));
+        }
+        break;
     }
   }
 
@@ -146,11 +160,8 @@ class RdButton extends FormElement {
     });
     this.$elem.onclick = () => {
       if (this.channel) {
-        this.channel.postMessage({
-          type: this.type,
-          name: this.name,
-          value: this.value.length ? this.value : 'bang',
-        });
+        this.control.currentValue = this.value ? this.value : 'bang';
+        this.channel.postMessage(this.control);
       }
     };
     if (this.type === 'submit') {
@@ -211,14 +222,13 @@ class RdButton extends FormElement {
 
   set value(value) {
     this.$elem.value = value;
+    if (this.control) {
+      this.control.currentValue = value;
+    }
   }
 
   get $elem(): HTMLButtonElement {
     return this.shadowRoot.querySelector('button');
-  }
-
-  setChannel(name: string) {
-    this.channel = new BroadcastChannel(name);
   }
 
   simulatePress() {
@@ -228,6 +238,48 @@ class RdButton extends FormElement {
       this.$elem.classList.remove('active');
       this.removeAttribute('modifier');
     }, 100);
+  }
+
+  setChannel(name: string) {
+    this.channel = new BroadcastChannel(name);
+  }
+
+  setControl(control: RdControl<RdButtonAttributes>) {
+    this.control = control;
+    this.setAttribute('name', control.name);
+    this.setAttribute('type', control.type);
+    if (control.attributes.label) {
+      (this.shadowRoot.querySelector('.label') as HTMLSpanElement).innerText =
+        control.attributes.label;
+    }
+    if (control.attributes.width) {
+      this.shadowRoot.querySelector('button').style.width =
+        control.attributes.width;
+    }
+    if (control.attributes.height) {
+      this.shadowRoot.querySelector('button').style.height =
+        control.attributes.height;
+    }
+    if (control.attributes.style) {
+      for (const styleName in control.attributes.style) {
+        if (
+          this.shadowRoot
+            .querySelector('button')
+            .style.hasOwnProperty(styleName)
+        ) {
+          this.shadowRoot.querySelector('button').style[styleName] =
+            control.attributes.style[styleName];
+        }
+      }
+    }
+    if (
+      (control.currentValue && typeof control.currentValue === 'string') ||
+      control.attributes.value
+    ) {
+      this.value = control.currentValue
+        ? (control.currentValue as string)
+        : control.attributes.value;
+    }
   }
 }
 

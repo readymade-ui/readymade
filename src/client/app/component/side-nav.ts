@@ -56,7 +56,7 @@ const template = html`
         <span><a data-link="#resources">Resources</a></span>
       </li>
       <li>
-        <span><a href="#/lib">@readymade/ui</a></span>
+        <span><a href="#/lib">Readymade UI</a></span>
       </li>
     </ul>
   </nav>

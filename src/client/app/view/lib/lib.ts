@@ -1,12 +1,24 @@
 import { Component, CustomElement, FormElement, State } from '@readymade/core';
+import { Transmitter } from '@readymade/transmit';
 import template from './lib.html?raw';
 import style from './lib.css?raw';
 import {
   StandardKeyboard,
-  StandardKeyboardNumPad,
   RdSlider,
   RdRadioGroup,
+  RdDial,
+  RdButtonPad,
+  RdButton,
+  RdDropdown,
+  RdCheckBox,
+  RdSwitch,
+  RdInput,
+  RdTextArea,
+  RdSurface,
+  RdControlSurface,
 } from '@readymade/ui';
+
+import documentation from './docs';
 
 @Component({
   selector: 'app-library',
@@ -14,14 +26,25 @@ import {
   template,
 })
 class LibraryComponent extends CustomElement {
+  touchOSCEnabled = false;
+  transmit = false;
   theme: string = 'dark';
-  mode: 'form' | 'channel' = 'form';
+  mode: 'form' | 'channel' = 'channel';
   channelName = 'rd-messages';
+  transmitter: Transmitter;
   channel: BroadcastChannel;
   constructor() {
     super();
   }
   connectedCallback() {
+    const surface = this.shadowRoot?.querySelectorAll(
+      'rd-surface',
+    )[0] as RdSurface;
+
+    const videoGameController = this.shadowRoot?.querySelectorAll(
+      'rd-surface',
+    )[1] as RdSurface;
+
     this.shadowRoot?.querySelector('.theme__toggle')?.classList.add(this.theme);
     this.shadowRoot
       ?.querySelector('.theme__toggle')
@@ -30,7 +53,7 @@ class LibraryComponent extends CustomElement {
       });
 
     const modeRadio = (<unknown>(
-      this.shadowRoot?.querySelectorAll('rd-radiogroup')[0]
+      this.shadowRoot?.querySelectorAll('rd-radiogroup.form__item')[0]
     )) as FormElement;
 
     modeRadio.onchange = (ev: Event) => {
@@ -38,130 +61,472 @@ class LibraryComponent extends CustomElement {
       this.onModeChange();
     };
 
-    const buttonPad = (<unknown>(
-      this.shadowRoot?.querySelector('rd-buttonpad')
-    )) as FormElement;
-    const buttonNumberPad = (<unknown>(
-      this.shadowRoot?.querySelectorAll('rd-buttonpad')[1]
-    )) as FormElement;
-    const joystick = (<unknown>(
-      this.shadowRoot?.querySelector('[type="joystick"]')
-    )) as RdSlider;
-    const squareJoystick = (<unknown>(
-      this.shadowRoot?.querySelectorAll('[type="joystick"]')[1]
-    )) as RdSlider;
-    const vertSlider = (<unknown>(
-      this.shadowRoot?.querySelector('[type="vert"]')
-    )) as RdSlider;
-    const horizontalSlider = (<unknown>(
-      this.shadowRoot?.querySelector('[type="hor"]')
-    )) as RdSlider;
+    const onMessage = (message) => {
+      if (message.payload.event === 'ping') {
+        this.transmitter.send({ event: 'pong' });
+      }
+      if (message.payload.control) {
+        const control = JSON.parse(message.payload.control);
+        const controlElement = surface.querySelector(
+          `[name="${control.name}"]`,
+        );
+        controlElement.value = control.currentValue;
+      }
+    };
+    const onConnect = () => this.transmitter.send({ event: 'ping' });
 
-    buttonPad.setAttribute(
-      'grid',
-      JSON.stringify({
-        gap: '4px',
-        columns: {
-          count: 14,
+    if (this.transmit === true) {
+      fetch('http://localhost:4449/ice')
+        .then((res) => res.json())
+        .then((iceServers) => {
+          this.transmitter = new Transmitter({
+            sharedKey: 'lobby',
+            rtc: {
+              iceServers,
+            },
+            serverConfig: {
+              http: {
+                protocol: 'http',
+                hostname: 'localhost',
+                port: 4449,
+              },
+              ws: {
+                osc: {
+                  protocol: 'ws',
+                  hostname: 'localhost',
+                  port: 4445,
+                },
+                signal: {
+                  protocol: 'ws',
+                  hostname: 'localhost',
+                  port: 4446,
+                },
+                announce: {
+                  protocol: 'ws',
+                  hostname: 'localhost',
+                  port: 4447,
+                },
+                message: {
+                  protocol: 'ws',
+                  hostname: 'localhost',
+                  port: 4448,
+                },
+              },
+            },
+            onMessage,
+            onConnect,
+          });
+        })
+        .catch((err) => console.error(err));
+    }
+
+    const controlSurface: RdControlSurface = {
+      style: {
+        display: 'grid',
+        gridTemplateColumns: 'repeat(3, 30% [col-start])',
+        columnGap: '88px',
+        rowGap: '44px',
+        paddingTop: '44px',
+        paddingLeft: '20px',
+        width: '100%',
+        overflowX: 'hidden',
+      },
+      controls: [
+        {
+          label: 'Dial',
+          selector: 'rd-dial',
+          channel: this.channelName,
+          control: {
+            type: 'dial',
+            name: 'dial',
+            currentValue: 0.0,
+            attributes: {
+              min: 0.0,
+              max: 1.0,
+            },
+          },
+          hint: {
+            template: documentation.dial,
+          },
         },
-        cells: [
-          {
-            selector: '[key="Space"]',
-            styles: {
-              width: '100%',
-              gridColumn: 'span 3',
-            },
+        {
+          label: 'Input',
+          selector: 'rd-input',
+          channel: this.channelName,
+          style: {
+            width: '290px',
           },
-          {
-            selector: '[key="Enter"]',
-            styles: {
-              width: '100%',
-              gridColumn: 'span 2',
-            },
+          control: {
+            name: 'input',
+            attributes: {},
           },
-        ],
-      }),
-    );
-    buttonPad.setAttribute('buttons', JSON.stringify(StandardKeyboard));
-
-    buttonNumberPad.setAttribute(
-      'grid',
-      JSON.stringify({
-        gap: '4px',
-        columns: {
-          count: 4,
+          hint: {
+            template: documentation.input,
+          },
         },
-        cells: [
-          {
-            selector: '[key="0"]',
-            styles: {
-              width: '100%',
-              gridColumn: 'span 2',
+        {
+          label: 'Textarea',
+          selector: 'rd-textarea',
+          channel: this.channelName,
+          control: {
+            name: 'textarea',
+            attributes: {},
+          },
+          hint: {
+            template: documentation.textarea,
+          },
+        },
+        {
+          label: 'Button',
+          selector: 'rd-button',
+          channel: this.channelName,
+          control: {
+            name: 'button',
+            attributes: {},
+          },
+          hint: {
+            template: documentation.button,
+          },
+        },
+        {
+          label: 'Select',
+          selector: 'rd-dropdown',
+          channel: this.channelName,
+          style: {
+            width: '320px',
+          },
+          control: {
+            name: 'dropdown',
+            attributes: {
+              options: [
+                'Option 1',
+                'Option 2',
+                'Option 3',
+                'Option With Really, Really, Really, Really, Really Long Name',
+              ],
             },
           },
-          {
-            selector: '[key="Enter"]',
-            styles: {
-              height: '100%',
-              gridRow: 'span 2',
+          hint: {
+            template: documentation.dropdown,
+          },
+        },
+        {
+          label: 'Checkbox',
+          selector: 'rd-checkbox',
+          channel: this.channelName,
+          control: {
+            name: 'checkbox',
+            attributes: {},
+          },
+          hint: {
+            template: documentation.checkbox,
+          },
+        },
+        {
+          label: 'Switch',
+          selector: 'rd-switch',
+          channel: this.channelName,
+          control: {
+            name: 'switch',
+            attributes: {},
+          },
+          hint: {
+            template: documentation.switch,
+          },
+        },
+        {
+          label: 'Radio Group',
+          selector: 'rd-radiogroup',
+          channel: this.channelName,
+          control: {
+            name: 'radio-group',
+            attributes: {
+              direction: 'vertical',
+              inputs: [
+                {
+                  value: 'hue',
+                  label: 'Hue',
+                  name: 'radio-group',
+                },
+                {
+                  value: 'saturation',
+                  label: 'Saturation',
+                  name: 'radio-group',
+                },
+                {
+                  value: 'brightness',
+                  label: 'Brightness',
+                  name: 'radio-group',
+                },
+              ],
             },
           },
-        ],
-      }),
-    );
-    buttonNumberPad.setAttribute(
-      'buttons',
-      JSON.stringify(StandardKeyboardNumPad),
-    );
+          hint: {
+            template: documentation.radio,
+          },
+        },
+        {
+          label: 'Slider',
+          selector: 'rd-slider',
+          channel: this.channelName,
+          control: {
+            type: 'vert',
+            name: 'slider',
+            currentValue: 100,
+            attributes: {
+              orient: 'is--vert',
+              min: 0,
+              max: 255,
+            },
+          },
+          hint: {
+            template: documentation.slider,
+          },
+        },
+        {
+          label: 'Joystick',
+          selector: 'rd-slider',
+          channel: this.channelName,
+          control: {
+            type: 'joystick',
+            name: 'square-joystick',
+            currentValue: [0, 0],
+            attributes: {
+              orient: 'is--joystick',
+              min: [0, 0],
+              max: [1024, 1024],
+              snapToCenter: true,
+              numberType: 'int',
+            },
+          },
+          hint: {
+            template: documentation.slider,
+          },
+        },
+        {
+          label: 'Button Pad',
+          selector: 'rd-buttonpad',
+          channel: this.channelName,
+          style: {
+            gridColumn: '2 / span 2',
+            marginRight: '124px',
+          },
+          control: {
+            name: 'keyboard',
+            attributes: {
+              buttons: StandardKeyboard,
+              grid: {
+                gap: '4px',
+                columns: {
+                  count: 14,
+                },
+                buttonStyles: {
+                  width: '64px',
+                  height: '64px',
+                },
+                cells: [
+                  {
+                    selector: '[key="Space"]',
+                    styles: {
+                      width: '100%',
+                      gridColumn: 'span 3',
+                    },
+                  },
+                  {
+                    selector: '[key="Enter"]',
+                    styles: {
+                      width: '100%',
+                      gridColumn: 'span 2',
+                    },
+                  },
+                ],
+              },
+            },
+          },
+          hint: {
+            template: documentation.buttonpad,
+          },
+        },
+      ],
+    };
 
-    setTimeout(() => (vertSlider.value = 100));
-    setTimeout(() => (horizontalSlider.value = 1000));
-    setTimeout(() => (joystick.value = [140, 140]));
-    setTimeout(() => (squareJoystick.value = [140, 140]));
+    const videoGameControllerSurface: RdControlSurface = {
+      style: {
+        display: 'grid',
+        gridTemplateColumns:
+          '[column1] 200px [column2] 50px [column3] 50px [column4] 67px [column5] 67px [column6] 67px [column7]',
+        gridTemplateRows: '[row1] 67px [row2] 67px [row3] 67px [row4]',
+        columnGap: '0px',
+        rowGap: '0px',
+        padding: '44px',
+        paddingLeft: '20px',
+        width: 'auto',
+        overflowX: 'hidden',
+      },
+      controls: [
+        {
+          selector: 'rd-slider',
+          channel: this.channelName,
+          style: {
+            gridColumnStart: 'column1',
+            gridColumnEnd: 'column2',
+            gridRowStart: 'row1',
+            gridRowEnd: 'row4',
+          },
+          control: {
+            type: 'joystick',
+            name: 'left-joystick',
+            currentValue: [0, 0],
+            attributes: {
+              orient: 'is--joystick',
+              min: [0, 0],
+              max: [1024, 1024],
+              numberType: 'int',
+            },
+          },
+        },
+        {
+          selector: 'rd-button',
+          channel: this.channelName,
+          style: {
+            gridColumnStart: 'column2',
+            gridColumnEnd: 'column3',
+            gridRowStart: 'row3',
+            gridRowEnd: 'row4',
+            justifySelf: 'start',
+            alignSelf: 'end',
+            transform: 'translateY(24px)',
+          },
+          control: {
+            name: 'select-button',
+            attributes: {
+              width: '44px',
+              height: '16px',
+            },
+          },
+        },
+        {
+          selector: 'rd-button',
+          channel: this.channelName,
+          style: {
+            gridColumnStart: 'column3',
+            gridColumnEnd: 'column4',
+            gridRowStart: 'row3',
+            gridRowEnd: 'row4',
+            justifySelf: 'end',
+            alignSelf: 'end',
+            transform: 'translateY(24px)',
+          },
+          control: {
+            name: 'start-button',
+            attributes: {
+              width: '44px',
+              height: '16px',
+            },
+          },
+        },
+        {
+          selector: 'rd-button',
+          channel: this.channelName,
+          style: {
+            gridColumnStart: 'column4',
+            gridColumnEnd: 'column5',
+            gridRowStart: 'row2',
+            gridRowEnd: 'row3',
+            justifySelf: 'end',
+          },
+          control: {
+            name: 'A',
+            attributes: {
+              width: '44px',
+              height: '44px',
+              style: {
+                borderRadius: '50%',
+              },
+            },
+          },
+        },
+        {
+          selector: 'rd-button',
+          channel: this.channelName,
+          style: {
+            gridColumnStart: 'column5',
+            gridColumnEnd: 'column6',
+            gridRowStart: 'row1',
+            gridRowEnd: 'row2',
+            alignSelf: 'end',
+            justifySelf: 'center',
+          },
+          control: {
+            name: 'B',
+            attributes: {
+              width: '44px',
+              height: '44px',
+              style: {
+                borderRadius: '50%',
+              },
+            },
+          },
+        },
+        {
+          selector: 'rd-button',
+          channel: this.channelName,
+          style: {
+            gridColumnStart: 'column6',
+            gridColumnEnd: 'column7',
+            gridRowStart: 'row2',
+            gridRowEnd: 'row3',
+            justifySelf: 'start',
+            transform: 'translateX(2px)',
+          },
+          control: {
+            name: 'Y',
+            attributes: {
+              width: '44px',
+              height: '44px',
+              style: {
+                borderRadius: '50%',
+              },
+            },
+          },
+        },
+        {
+          selector: 'rd-button',
+          channel: this.channelName,
+          style: {
+            gridColumnStart: 'column5',
+            gridColumnEnd: 'column6',
+            gridRowStart: 'row3',
+            gridRowEnd: 'row4',
+            alignSelf: 'start',
+            justifySelf: 'center',
+            transform: 'translateY(-8px)',
+          },
+          control: {
+            name: 'X',
+            attributes: {
+              width: '44px',
+              height: '44px',
+              style: {
+                borderRadius: '50%',
+              },
+            },
+          },
+        },
+      ],
+    };
 
-    this.onModeChange();
+    setTimeout(() => {
+      surface.setControlSurface(controlSurface);
+      videoGameController.setControlSurface(videoGameControllerSurface);
+      this.onModeChange();
+    });
+
     (modeRadio as RdRadioGroup).value = this.mode;
   }
   @State()
   public getState() {
-    return {
-      vertControl: JSON.stringify({
-        type: 'slider',
-        name: 'slider',
-        orient: 'is--vert',
-        min: 0,
-        max: 255,
-        size: 'small',
-        gridArea: '1 / 1 / span 3 / span 1',
-      }),
-      horControl: JSON.stringify({
-        type: 'slider',
-        name: 'h',
-        orient: 'is--hor',
-        min: 0,
-        max: 1000,
-        gridArea: '1 / 3 / span 1 / span 3',
-      }),
-      joyControl: JSON.stringify({
-        type: 'slider',
-        name: 'joystick',
-        orient: 'is--joystick',
-        min: [0.0, 0.0],
-        max: [255.0, 255.0],
-        snapToCenter: false,
-        gridArea: '1 / 2 / span 4 / span 1',
-      }),
-      joySquareControl: JSON.stringify({
-        type: 'slider',
-        name: 'square-joystick',
-        orient: 'is--joystick--square',
-        min: [0, 0],
-        max: [12, 12],
-        snapToCenter: false,
-        gridArea: '1 / 2 / span 4 / span 1',
-        numberType: 'int',
-      }),
-    };
+    return {};
   }
   toggleTheme() {
     this.theme = this.theme === 'light' ? 'dark' : 'light';
@@ -174,46 +539,37 @@ class LibraryComponent extends CustomElement {
     const form = this.shadowRoot?.querySelector('form');
     const radio = (<unknown>(
       this.shadowRoot?.querySelectorAll('rd-radiogroup')[1]
-    )) as FormElement;
+    )) as RdRadioGroup;
     const toggle = (<unknown>(
       this.shadowRoot?.querySelector('rd-switch')
-    )) as FormElement;
+    )) as RdSwitch;
     const checkbox = (<unknown>(
       this.shadowRoot?.querySelector('rd-checkbox')
-    )) as FormElement;
+    )) as RdCheckBox;
     const input = (<unknown>(
       this.shadowRoot?.querySelector('rd-input')
-    )) as FormElement;
+    )) as RdInput;
     const textarea = (<unknown>(
       this.shadowRoot?.querySelector('rd-textarea')
-    )) as FormElement;
+    )) as RdTextArea;
     const select = (<unknown>(
       this.shadowRoot?.querySelector('rd-dropdown')
-    )) as FormElement;
+    )) as RdDropdown;
     const button = (<unknown>(
       this.shadowRoot?.querySelector('rd-button')
-    )) as FormElement;
-    const buttonPad = (<unknown>(
-      this.shadowRoot?.querySelector('rd-buttonpad')
-    )) as FormElement;
+    )) as RdButton;
     const buttonNumberPad = (<unknown>(
-      this.shadowRoot?.querySelectorAll('rd-buttonpad')[1]
-    )) as FormElement;
-    const joystick = (<unknown>(
-      this.shadowRoot?.querySelector('[type="joystick"]')
-    )) as RdSlider;
+      this.shadowRoot?.querySelectorAll('rd-buttonpad')
+    )) as RdButtonPad;
+    const dial = (<unknown>(
+      this.shadowRoot?.querySelector('[name="dial"]')
+    )) as RdDial;
     const squareJoystick = (<unknown>(
-      this.shadowRoot?.querySelectorAll('[type="joystick"]')[1]
+      this.shadowRoot?.querySelector('[type="joystick"]')
     )) as RdSlider;
     const vertSlider = (<unknown>(
       this.shadowRoot?.querySelector('[type="vert"]')
     )) as RdSlider;
-    const horizontalSlider = (<unknown>(
-      this.shadowRoot?.querySelector('[type="hor"]')
-    )) as RdSlider;
-    const submit = (<unknown>(
-      this.shadowRoot?.querySelector('[type="submit"]')
-    )) as FormElement;
     if (this.mode === 'form') {
       this.channel?.close();
       radio.onchange = (ev: Event) => {
@@ -243,17 +599,12 @@ class LibraryComponent extends CustomElement {
       button.onclick = (ev: Event) => {
         console.log(ev);
       };
-      buttonPad.onclick = (ev: Event) => {
-        if ((ev.target as HTMLElement).tagName === 'RD-BUTTON') {
-          console.dir((form[16] as HTMLInputElement).value);
-        }
-      };
       buttonNumberPad.onclick = (ev: Event) => {
         if ((ev.target as HTMLElement).tagName === 'RD-BUTTON') {
           console.dir((form[17] as HTMLInputElement).value);
         }
       };
-      joystick.oninput = (ev: CustomEvent) => {
+      dial.oninput = (ev: CustomEvent) => {
         console.log((ev.target as any).value);
       };
       squareJoystick.oninput = (ev: CustomEvent) => {
@@ -262,44 +613,37 @@ class LibraryComponent extends CustomElement {
       vertSlider.oninput = (ev: CustomEvent) => {
         console.log((ev.target as any).value);
       };
-      horizontalSlider.oninput = (ev: CustomEvent) => {
-        console.log((ev.target as any).value);
-      };
-      submit.onclick = (ev: Event) => {
-        ev.preventDefault();
-        const values = Array.from(
-          this.shadowRoot?.querySelectorAll('.form__item'),
-        ).map((item: any) => {
-          if (item.onValidate) {
-            item.onValidate();
-          }
-          return {
-            tag: item.tagName,
-            value: item.value,
-            validity: item.checkValidity ? item.checkValidity() : null,
-          };
-        });
-        console.log(values);
-      };
     }
     if (this.mode === 'channel') {
       this.channel = new BroadcastChannel(this.channelName);
-      radio.setAttribute('channel', this.channelName);
-      toggle.setAttribute('channel', this.channelName);
-      checkbox.setAttribute('channel', this.channelName);
-      input.setAttribute('channel', this.channelName);
-      textarea.setAttribute('channel', this.channelName);
-      select.setAttribute('channel', this.channelName);
-      button.setAttribute('channel', this.channelName);
-      buttonPad.setAttribute('channel', this.channelName);
-      buttonNumberPad.setAttribute('channel', this.channelName);
-      joystick.setAttribute('channel', this.channelName);
-      squareJoystick.setAttribute('channel', this.channelName);
-      vertSlider.setAttribute('channel', this.channelName);
-      horizontalSlider.setAttribute('channel', this.channelName);
-      submit.setAttribute('channel', this.channelName);
       this.channel.onmessage = (event) => {
-        console.log(event.data);
+        console.log(event);
+        if (!this.transmitter?.isOpen) {
+          if (this.touchOSCEnabled) {
+            if (event.data.name === 'switch') {
+              this.transmitter.sendTouchOSCMessage(
+                '/OSCQUERY/Left Controls/Flip H',
+                [
+                  {
+                    type: 'i',
+                    value: event.data.currentValue === true ? 1 : 0,
+                  },
+                ],
+              );
+            }
+            if (event.data.name === 'dial') {
+              this.transmitter.sendTouchOSCMessage(
+                '/OSCQUERY/Left Controls/Dial',
+                [{ type: 'f', value: event.data.currentValue }],
+              );
+            }
+          }
+        } else {
+          const message = {
+            control: JSON.stringify(event.data),
+          };
+          this.transmitter?.send(message);
+        }
       };
       radio.onchange = () => {};
       toggle.onchange = () => {};
@@ -310,13 +654,10 @@ class LibraryComponent extends CustomElement {
       textarea.onchange = () => {};
       select.onchange = () => {};
       button.onclick = () => {};
-      buttonPad.onclick = () => {};
       buttonNumberPad.onclick = () => {};
-      joystick.oninput = () => {};
+      dial.oninput = () => {};
       squareJoystick.oninput = () => {};
       vertSlider.oninput = () => {};
-      horizontalSlider.oninput = () => {};
-      submit.onclick = () => {};
     }
   }
 }

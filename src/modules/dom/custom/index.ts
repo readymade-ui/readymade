@@ -229,6 +229,33 @@ export class CollectionComponent extends HTMLCollection {
   public onDestroy?(): void;
 }
 
+export class DialogComponent extends HTMLDialogElement {
+  public emitter: EventDispatcher;
+  public elementMeta: ElementMeta;
+  constructor() {
+    super();
+    attachDOM(this);
+    attachStyle(this);
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
+  }
+  public onInit?(): void;
+  public bindEmitters?(): void;
+  public bindListeners?(): void;
+  public bindState?(): void;
+
+  public setState?(property: string, model: any): void;
+  public onUpdate?(): void;
+  public onDestroy?(): void;
+}
+
 export class DListComponent extends HTMLDListElement {
   public emitter: EventDispatcher;
   public elementMeta: ElementMeta;
@@ -313,6 +340,33 @@ export class DivComponent extends HTMLDivElement {
       mode: this.elementMeta?.mode || 'open',
       delegatesFocus: this.elementMeta?.delegatesFocus || false,
     });
+    if (this.bindEmitters) {
+      this.bindEmitters();
+    }
+    if (this.bindListeners) {
+      this.bindListeners();
+    }
+    if (this.onInit) {
+      this.onInit();
+    }
+  }
+  public onInit?(): void;
+  public bindEmitters?(): void;
+  public bindListeners?(): void;
+  public bindState?(): void;
+
+  public setState?(property: string, model: any): void;
+  public onUpdate?(): void;
+  public onDestroy?(): void;
+}
+
+export class BlockComponent extends HTMLDivElement {
+  public emitter: EventDispatcher;
+  public elementMeta: ElementMeta;
+  constructor() {
+    super();
+    attachDOM(this);
+    attachStyle(this);
     if (this.bindEmitters) {
       this.bindEmitters();
     }

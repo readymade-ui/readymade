@@ -16,7 +16,8 @@
       "@readymade/core": ["src/modules/core"],
       "@readymade/dom": ["src/modules/dom"],
       "@readymade/router": ["src/modules/router"],
-      "@readymade/ui": ["src/modules/ui"]
+      "@readymade/ui": ["src/modules/ui"],
+      "@readymade/transmit": ["src/modules/transmit"]
     }
   }
 }

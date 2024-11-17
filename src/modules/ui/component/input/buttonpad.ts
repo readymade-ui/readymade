@@ -6,18 +6,17 @@ import {
   css,
   State,
 } from '@readymade/core';
+import { RdControl } from '../control';
 
 export interface ButtonGridModifier {
   gap?: string;
+  buttonStyles?: Partial<CSSStyleDeclaration>;
   columns?: {
     count?: number;
   };
   cells?: Array<{
     selector?: string;
-    styles?: {
-      width?: string;
-      gridColumn?: string;
-    };
+    styles?: Partial<CSSStyleDeclaration>;
   }>;
 }
 
@@ -25,6 +24,12 @@ export interface Button {
   key: string;
   code: string;
   label: string;
+}
+
+export interface RdButtonPadAttributes {
+  disabled?: boolean;
+  grid?: ButtonGridModifier;
+  buttons?: Array<Button>;
 }
 
 export const StandardKeyboardModifiers = {
@@ -195,7 +200,7 @@ export function buttonPadKeyPress(elem: Element) {
       display: inline-block;
       outline: none;
       user-select: none;
-      border-radius: 14px;
+      border-radius: var(--ready-border-radius);
     }
     :host([disabled]) {
       opacity: var(--ready-opacity-disabled);
@@ -207,7 +212,7 @@ export function buttonPadKeyPress(elem: Element) {
     :host([disabled]):focus,
     :host([disabled]):active,
     :host([disabled]).active {
-      border: 2px solid var(--ready-color-border);
+      border: var(--ready-border-width) solid var(--ready-color-border);
       outline: none;
       box-shadow: none;
     }
@@ -233,12 +238,13 @@ class RdButtonPad extends FormElement {
   currentKey: string | null = null;
   currentModifier: string | null = null;
   disabled: boolean;
+  control: RdControl<RdButtonPadAttributes>;
   constructor() {
     super();
   }
 
   static get observedAttributes() {
-    return ['grid', 'buttons', 'disabled', 'channel'];
+    return ['grid', 'buttons', 'disabled', 'channel', 'control'];
   }
 
   attributeChangedCallback(name: string, old: string, next: string) {
@@ -262,6 +268,11 @@ class RdButtonPad extends FormElement {
         break;
       case 'channel':
         this.setChannel(next);
+        break;
+      case 'control':
+        if (!next.startsWith('{{')) {
+          this.setControl(JSON.parse(next));
+        }
         break;
     }
   }
@@ -312,6 +323,17 @@ class RdButtonPad extends FormElement {
     if (grid.columns?.count) {
       elem.style.gridTemplateColumns = `repeat(${grid.columns.count}, 1fr)`;
     }
+    if (grid.buttonStyles) {
+      const buttons = this.shadowRoot.querySelectorAll('rd-button');
+      buttons.forEach((button) => {
+        if (grid.buttonStyles.width) {
+          button.setAttribute('width', grid.buttonStyles.width);
+        }
+        if (grid.buttonStyles.height) {
+          button.setAttribute('height', grid.buttonStyles.height);
+        }
+      });
+    }
     if (grid.cells) {
       for (let i = 0; i < grid.cells.length; i++) {
         const cell = grid.cells[i];
@@ -361,6 +383,9 @@ class RdButtonPad extends FormElement {
 
   set value(value) {
     this.currentKey = value;
+    if (this.control) {
+      this.control.currentValue = value;
+    }
   }
 
   get grid() {
@@ -383,31 +408,27 @@ class RdButtonPad extends FormElement {
   }
 
   click$(ev: MouseEvent) {
-    if (this.onclick) {
-      let value = (ev.target as HTMLElement).getAttribute('key');
-      if (
-        this.currentModifier &&
+    let value = (ev.target as HTMLElement).getAttribute('key');
+    if (
+      this.currentModifier &&
+      StandardKeyboardModifiers[
+        `${this.currentModifier}+${(ev.target as HTMLElement).getAttribute(
+          'code',
+        )}`
+      ]
+    ) {
+      value =
         StandardKeyboardModifiers[
           `${this.currentModifier}+${(ev.target as HTMLElement).getAttribute(
             'code',
           )}`
-        ]
-      ) {
-        value =
-          StandardKeyboardModifiers[
-            `${this.currentModifier}+${(ev.target as HTMLElement).getAttribute(
-              'code',
-            )}`
-          ].key;
-      }
-      this.value = value;
-      if (this.channel) {
-        this.channel.postMessage({
-          type: this.type,
-          name: this.name,
-          value: this.currentKey,
-        });
-      }
+        ].key;
+    }
+    this.value = value;
+    if (this.channel) {
+      this.channel.postMessage(this.control);
+    }
+    if (this.onclick) {
       this.onclick(ev);
     }
   }
@@ -496,6 +517,24 @@ class RdButtonPad extends FormElement {
 
   setChannel(name: string) {
     this.channel = new BroadcastChannel(name);
+  }
+
+  setControl(control: RdControl<RdButtonPadAttributes>) {
+    this.control = control;
+    this.setAttribute('name', control.name);
+    this.setAttribute('type', control.type);
+    if (control.attributes.grid) {
+      this.grid = control.attributes.grid;
+    }
+    if (control.attributes.buttons) {
+      this.buttons = control.attributes.buttons;
+    }
+    if (control.attributes.disabled) {
+      this.disabled = control.attributes.disabled;
+    }
+    if (control.currentValue && typeof control.currentValue === 'string') {
+      this.value = control.currentValue as string;
+    }
   }
 }
 

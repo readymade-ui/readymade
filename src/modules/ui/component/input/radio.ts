@@ -1,4 +1,11 @@
 import { Component, FormElement, html, css } from '@readymade/core';
+import { RdControl } from '../control';
+
+export interface RdRadioGroupAttributes {
+  direction?: 'horizontal' | 'vertical';
+  checked?: boolean;
+  inputs?: Array<{ value: string; label: string }>;
+}
 
 @Component({
   selector: 'rd-radiogroup',
@@ -18,7 +25,7 @@ import { Component, FormElement, html, css } from '@readymade/core';
       display: block;
       width: 16px;
       height: 16px;
-      border: 2px solid var(--ready-color-border);
+      border: var(--ready-border-width) solid var(--ready-color-border);
       border-radius: 50%;
       background: var(--ready-color-bg);
     }
@@ -39,7 +46,7 @@ import { Component, FormElement, html, css } from '@readymade/core';
     ::slotted(input[type='radio']:hover):before,
     ::slotted(input[type='radio']:focus):before,
     ::slotted(input[type='radio']:active):before {
-      border: 2px solid var(--ready-color-highlight);
+      border: var(--ready-border-width) solid var(--ready-color-highlight);
     }
     ::slotted(input[type='radio'][disabled]):before {
       opacity: var(--ready-opacity-disabled);
@@ -49,7 +56,7 @@ import { Component, FormElement, html, css } from '@readymade/core';
     ::slotted(input[type='radio'][disabled]:hover):before,
     ::slotted(input[type='radio'][disabled]:focus):before,
     ::slotted(input[type='radio'][disabled]:active):before {
-      border: 2px solid var(--ready-color-border);
+      border: var(--ready-border-width) solid var(--ready-color-border);
       outline: none;
       box-shadow: none;
     }
@@ -60,12 +67,12 @@ import { Component, FormElement, html, css } from '@readymade/core';
     }
     .group {
       box-sizing: border-box:
-      border: 2px solid transparent;
+      border: var(--ready-border-width) solid transparent;
       padding: 12px;
-      border-radius: 14px;
+      border-radius:  var(--ready-border-radius);
     }
     .group.required {
-      border: 2px solid var(--ready-color-error);
+      border: var(--ready-border-width) solid var(--ready-color-error);
     }
     .group.required ::slotted(input[type='radio']) {
      transform: translateX(-1px) translateY(3px);
@@ -101,12 +108,13 @@ import { Component, FormElement, html, css } from '@readymade/core';
 class RdRadioGroup extends FormElement {
   direction: 'horizontal' | 'vertical';
   channel: BroadcastChannel;
+  control: RdControl<RdRadioGroupAttributes>;
   constructor() {
     super();
   }
 
   static get observedAttributes() {
-    return ['direction', 'channel'];
+    return ['direction', 'channel', 'control'];
   }
 
   attributeChangedCallback(name: string, old: string, next: string) {
@@ -122,6 +130,11 @@ class RdRadioGroup extends FormElement {
       case 'channel':
         this.setChannel(next);
         break;
+      case 'control':
+        if (!next.startsWith('{{')) {
+          this.setControl(JSON.parse(next));
+        }
+        break;
     }
   }
 
@@ -130,13 +143,10 @@ class RdRadioGroup extends FormElement {
       elem.onblur = () => {
         this.onValidate();
       };
-      elem.onclick = () => {
+      elem.onclick = (ev: MouseEvent) => {
         if (this.channel) {
-          this.channel.postMessage({
-            type: 'radio',
-            name: this.name,
-            value: this.value,
-          });
+          this.control.currentValue = (ev.target as HTMLInputElement).value;
+          this.channel.postMessage(this.control);
         }
       };
     });
@@ -191,6 +201,9 @@ class RdRadioGroup extends FormElement {
         elem.checked = false;
       }
     });
+    if (this.control) {
+      this.control.currentValue = value;
+    }
   }
 
   get form() {
@@ -218,6 +231,48 @@ class RdRadioGroup extends FormElement {
 
   setChannel(name: string) {
     this.channel = new BroadcastChannel(name);
+  }
+
+  setControl(control: RdControl<RdRadioGroupAttributes>) {
+    this.control = control;
+    this.setAttribute('name', control.name);
+    this.setAttribute('type', control.type);
+    if (control.attributes.direction) {
+      this.direction = control.attributes.direction;
+      if (this.direction === 'vertical') {
+        this.shadowRoot?.querySelector('.group').classList.add('vertical');
+      } else {
+        this.shadowRoot?.querySelector('.group').classList.remove('vertical');
+      }
+    }
+    if (control.attributes.inputs) {
+      this.innerHTML = '';
+      for (let i = control.attributes.inputs.length - 1; i >= 0; i--) {
+        const input = document.createElement('input');
+        const label = document.createElement('label');
+        input.setAttribute('type', 'radio');
+        input.setAttribute('name', control.attributes.inputs[i].name);
+        input.setAttribute('value', control.attributes.inputs[i].value);
+        label.setAttribute('for', control.attributes.inputs[i].value);
+        label.textContent = control.attributes.inputs[i].label;
+        this.appendChild(input);
+        this.appendChild(label);
+      }
+      this.$elem.forEach((elem: HTMLInputElement) => {
+        elem.onblur = () => {
+          this.onValidate();
+        };
+        elem.onclick = (ev: MouseEvent) => {
+          if (this.channel) {
+            this.control.currentValue = (ev.target as HTMLInputElement).value;
+            this.channel.postMessage(this.control);
+          }
+        };
+      });
+    }
+    if (control.currentValue && typeof control.currentValue === 'string') {
+      this.value = control.currentValue as string;
+    }
   }
 }
 

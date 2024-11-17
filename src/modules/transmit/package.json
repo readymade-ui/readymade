@@ -1,18 +1,18 @@
 {
-  "name": "@readymade/dom",
+  "name": "@readymade/transmit",
   "version": "3.1.0",
-  "description": "JavaScript microlibrary for developing Web Components with TypeScript and Decorators",
+  "description": "Swiss-army knife for communicating over WebRTC DataChannel, WebSocket or Touch OSC",
   "type": "module",
   "module": "./fesm2022/index.js",
-  "typings": "./typings/dom/index.d.ts",
+  "typings": "./typings/index.d.ts",
   "exports": {
     "./package.json": {
       "default": "./package.json"
     },
     ".": {
-      "types": "./typings/dom/index.d.ts",
-      "esm": "./esm2022/dom/index.js",
-      "esm2022": "./esm2022/dom/index.js",
+      "types": "./typings/index.d.ts",
+      "esm": "./esm2022/index.js",
+      "esm2022": "./esm2022/index.js",
       "default": "./fesm2022/index.js"
     }
   },
@@ -24,11 +24,12 @@
     "url": "git+https://github.com/readymade-ui/readymade.git"
   },
   "keywords": [
-    "custom elements",
-    "web components",
-    "typescript",
-    "decorators",
-    "javascript"
+    "javascript",
+    "touchosc",
+    "osc",
+    "websocket",
+    "web socket",
+    "webrtc"
   ],
   "author": "Stephen Belovarich",
   "license": "MIT",

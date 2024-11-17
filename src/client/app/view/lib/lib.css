@@ -18,13 +18,24 @@ p {
   font-size: 1.2em;
 }
 
+ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  -webkit-margin-start: 0px;
+  -webkit-margin-end: 0px;
+  -webkit-padding-start: 0px;
+  -webkit-margin-before: 0px;
+  -webkit-margin-after: 0px;
+}
+
 .theme__toggle {
   width: 32px;
   height: 32px;
   border-radius: 50%;
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 40px;
+  right: 20px;
   cursor: pointer;
   &.dark {
     background: #ffffff;
@@ -46,4 +57,44 @@ p {
 
 .full {
   grid-column: span 3;
+}
+
+.definition__list li {
+  padding-bottom: 0.5em;
+}
+
+.definition__title {
+  font-style: italic;
+  color: #ababab;
+  margin-right: 0.2em;
+}
+
+.i__e {
+  color: rgba(117, 191, 255, 1);
+}
+
+.i__c {
+  color: #e6d06c;
+}
+
+rd-surface {
+  margin-bottom: 40px;
+}
+
+r-code {
+  width: 100%;
+  margin-left: -24px;
+}
+
+ul.doc-list {
+  padding: initial;
+  margin: initial;
+  list-style: initial;
+  -webkit-margin-start: initial;
+  -webkit-margin-end: initial;
+  -webkit-padding-start: initial;
+  -webkit-margin-before: initial;
+  -webkit-margin-after: initial;
+  font-size: 1.1em;
+  margin-left: 20px;
 }

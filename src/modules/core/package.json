@@ -1,6 +1,6 @@
 {
   "name": "@readymade/core",
-  "version": "3.0.1",
+  "version": "3.1.0",
   "description": "JavaScript microlibrary for developing Web Components with TypeScript and Decorators",
   "type": "module",
   "module": "./fesm2022/index.js",
@@ -30,7 +30,7 @@
     "decorators",
     "javascript"
   ],
-  "author": "Steve Belovarich",
+  "author": "Stephen Belovarich",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/readymade-ui/readymade/issues"

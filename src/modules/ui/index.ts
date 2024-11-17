@@ -12,4 +12,8 @@ export {
   RdTextArea,
   RdDropdown,
   RdSlider,
+  RdDial,
+  RdSurface,
+  RdSurfaceElement,
 } from './component';
+export * from './component/control';

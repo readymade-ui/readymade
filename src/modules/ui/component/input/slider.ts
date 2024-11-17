@@ -8,6 +8,21 @@ import {
 } from '@readymade/core';
 import { RdControl } from './../control';
 
+export interface RdSliderAttributes {
+  size?: string;
+  height?: number;
+  width?: number;
+  orient?: string;
+  min?: number | number[];
+  max?: number | number[];
+  position?: string;
+  x?: number;
+  y?: number;
+  snapToCenter?: boolean;
+  transform?: string;
+  numberType?: 'int' | 'float';
+}
+
 @Component({
   selector: 'rd-slider',
   style: css`
@@ -23,7 +38,7 @@ import { RdControl } from './../control';
       display: block;
       z-index: 1000;
       background-color: var(--ready-color-bg);
-      border: 2px solid var(--ready-color-border);
+      border: var(--ready-border-width) solid var(--ready-color-border);
     }
     .draggable .range {
       width: 100%;
@@ -54,7 +69,7 @@ import { RdControl } from './../control';
     }
     .slider.hor .draggable {
       width: 100%;
-      border-radius: 14px;
+      border-radius:  var(--ready-border-radius);
     }
     .slider.hor .draggable .handle {
       background: var(--ready-icon-hor);
@@ -81,7 +96,7 @@ import { RdControl } from './../control';
       width: 32px;
       height: 100%;
       min-height: 208px;
-      border-radius: 14px;
+      border-radius:  var(--ready-border-radius);
     }
     .slider.vert .draggable .handle {
       background: var(--ready-icon-vert);
@@ -122,7 +137,7 @@ import { RdControl } from './../control';
     }
     .slider .draggable:hover, 
     .slider .draggable.active {
-      border: 2px solid var(--ready-color-highlight);
+      border: var(--ready-border-width) solid var(--ready-color-highlight);
       outline: none;
       box-shadow: none;
     }
@@ -138,14 +153,14 @@ import { RdControl } from './../control';
     }
     .slider .draggable[disabled]:hover, 
     .slider .draggable[disabled].active {
-      border: 2px solid var(--ready-color-border);
+      border: var(--ready-border-width) solid var(--ready-color-border);
       outline: none;
       box-shadow: none;
     }
     :host.required .slider .draggable,
     :host.required .slider .draggable[disabled]:hover, 
     :host.required .slider .draggable[disabled].active {
-      border: 2px solid var(--ready-color-error);
+      border: var(--ready-border-width) solid var(--ready-color-error);
       outline: none;
       box-shadow: none;
     }
@@ -162,17 +177,13 @@ import { RdControl } from './../control';
   `,
 })
 class RdSlider extends FormElement {
-  private _rect: ClientRect | DOMRect;
+  private _rect: DOMRect;
   private _joystickPos: number[];
   private _touchItem: number | null;
-  private _handle: HTMLElement;
-  private _timeout: number;
-  private _animation: Animation;
-  private _lastPos: { transform: string };
   private _joystickType: 'circle' | 'square';
   private _numberType: 'int' | 'float';
   private _type: 'joystick' | 'slider';
-  public control: RdControl;
+  public control: RdControl<RdSliderAttributes>;
   public channel: BroadcastChannel;
   constructor() {
     super();
@@ -254,7 +265,7 @@ class RdSlider extends FormElement {
   }
 
   get value(): number | number[] {
-    return this.control.currentValue;
+    return this.control.currentValue as number | number[];
   }
 
   set value(controlValue: number | number[]) {
@@ -273,30 +284,36 @@ class RdSlider extends FormElement {
   onSliderInit() {
     this._touchItem = null;
 
-    this.control.height = this.clientHeight;
-    this.control.width = this.clientWidth;
+    this.control.attributes.height = this.clientHeight;
+    this.control.attributes.width = this.clientWidth;
 
-    if (this.control.numberType) {
-      this._numberType = this.control.numberType;
+    if (this.control.attributes.numberType) {
+      this._numberType = this.control.attributes.numberType;
     } else {
       this._numberType = 'float';
     }
 
-    if (this.control.orient === 'is--hor') {
+    if (this.control.attributes.orient === 'is--hor') {
       this.style.maxWidth = '200px';
       this.control.currentValue = 0;
-      this.control.position = 'translate(' + 0 + 'px' + ',' + 0 + 'px' + ')';
-    } else if (this.control.orient === 'is--vert') {
+      this.control.attributes.position =
+        'translate(' + 0 + 'px' + ',' + 0 + 'px' + ')';
+    } else if (this.control.attributes.orient === 'is--vert') {
       this.style.height = '200px';
       this.control.currentValue = 0;
-      this.control.position = 'translate(' + 0 + 'px' + ',' + 0 + 'px' + ')';
-    } else if (this.control.orient.includes('is--joystick')) {
+      this.control.attributes.position =
+        'translate(' + 0 + 'px' + ',' + 0 + 'px' + ')';
+    } else if (this.control.attributes.orient.includes('is--joystick')) {
       this.style.maxWidth = '200px';
       this.style.maxHeight = '200px';
       this.control.currentValue = [0, 0];
-      this.control.x = this.control.y = 76;
-      this.control.position = 'translate(' + 76 + 'px' + ',' + 76 + 'px' + ')';
-      const joyStickType = this.control.orient.replace('is--joystick--', '');
+      this.control.attributes.x = this.control.attributes.y = 76;
+      this.control.attributes.position =
+        'translate(' + 76 + 'px' + ',' + 76 + 'px' + ')';
+      const joyStickType = this.control.attributes.orient.replace(
+        'is--joystick--',
+        '',
+      );
       if (joyStickType === 'is--joystick') {
         this._joystickType = 'circle';
       } else {
@@ -306,8 +323,7 @@ class RdSlider extends FormElement {
         .querySelector('.slider')
         .classList.add(this._joystickType);
     }
-    this._lastPos = { transform: this.control.position };
-    this.setActualPosition(this.control.position);
+    this.setActualPosition(this.control.attributes.position);
 
     // TODO init based on this.control.currentValue
   }
@@ -338,8 +354,8 @@ class RdSlider extends FormElement {
     this.$elem.classList.add('active');
 
     this._rect = this.getBoundingClientRect();
-    this.control.height = this.clientHeight;
-    this.control.width = this.clientWidth;
+    this.control.attributes.height = this.clientHeight;
+    this.control.attributes.width = this.clientWidth;
 
     this.addEventListener('touchmove', this.onTouchMove.bind(this));
     this.addEventListener('touchend', this.onMouseUp.bind(this));
@@ -349,16 +365,16 @@ class RdSlider extends FormElement {
       this._touchItem = e.touches.length - 1;
     }
 
-    this.control.x =
+    this.control.attributes.x =
       e.touches[this._touchItem].pageX -
       this._rect.left -
       this.$handle.clientWidth / 2;
-    this.control.y =
+    this.control.attributes.y =
       e.touches[this._touchItem].pageY -
       this._rect.top -
       this.$handle.clientHeight / 2;
 
-    this.setPosition(this.control.x, this.control.y);
+    this.setPosition(this.control.attributes.x, this.control.attributes.y);
   }
 
   @Listen('mousedown')
@@ -370,11 +386,11 @@ class RdSlider extends FormElement {
     this.$elem.classList.add('active');
 
     this._rect = this.getBoundingClientRect();
-    this.control.height = this.clientHeight;
-    this.control.width = this.clientWidth;
+    this.control.attributes.height = this.clientHeight;
+    this.control.attributes.width = this.clientWidth;
     if (this._joystickType) {
-      this.control.x = e.offsetX;
-      this.control.y = e.offsetY;
+      this.control.attributes.x = e.offsetX;
+      this.control.attributes.y = e.offsetY;
     }
 
     this.addEventListener('mousemove', this.onMouseMove.bind(this));
@@ -382,7 +398,7 @@ class RdSlider extends FormElement {
     window.addEventListener('mousemove', this.onMouseMove.bind(this));
     window.addEventListener('mouseup', this.onMouseUp.bind(this));
 
-    this.setPosition(this.control.x, this.control.y);
+    this.setPosition(this.control.attributes.x, this.control.attributes.y);
   }
 
   // Handle drag event
@@ -395,37 +411,34 @@ class RdSlider extends FormElement {
     }
 
     if (this._joystickType) {
-      this.control.x =
+      this.control.attributes.x =
         (this.getBoundingClientRect().left - e.touches[this._touchItem].pageX) *
         -1;
-      this.control.y = (this.offsetTop - e.touches[this._touchItem].pageY) * -1;
+      this.control.attributes.y =
+        (this.offsetTop - e.touches[this._touchItem].pageY) * -1;
     }
 
-    if (this.control.orient === 'is--hor') {
-      this.control.x =
+    if (this.control.attributes.orient === 'is--hor') {
+      this.control.attributes.x =
         (this.getBoundingClientRect().left - e.touches[this._touchItem].pageX) *
           -1 -
         this.$handle.getBoundingClientRect().width / 2;
-      this.control.y = 0;
+      this.control.attributes.y = 0;
     }
 
-    if (this.control.orient === 'is--vert') {
-      this.control.x = 0;
-      this.control.y =
+    if (this.control.attributes.orient === 'is--vert') {
+      this.control.attributes.x = 0;
+      this.control.attributes.y =
         (this.offsetTop - e.touches[this._touchItem].pageY) * -1 -
         this.$handle.getBoundingClientRect().height / 2;
     }
 
     if (this.control.hasUserInput && this.control.isActive) {
-      this.setPosition(this.control.x, this.control.y);
+      this.setPosition(this.control.attributes.x, this.control.attributes.y);
       this.mapValue();
       this.control.timeStamp = e.timeStamp;
       if (this.channel) {
-        this.channel.postMessage({
-          type: this.type,
-          name: this.name,
-          value: this.control.currentValue,
-        });
+        this.channel.postMessage(this.control);
       }
       this.onEvent();
     }
@@ -439,34 +452,31 @@ class RdSlider extends FormElement {
     this.$elem.classList.add('active');
 
     if (this._joystickType) {
-      this.control.x = (this.getBoundingClientRect().left - e.pageX) * -1;
-      this.control.y = (this.offsetTop - e.pageY) * -1;
+      this.control.attributes.x =
+        (this.getBoundingClientRect().left - e.pageX) * -1;
+      this.control.attributes.y = (this.offsetTop - e.pageY) * -1;
     }
 
-    if (this.control.orient === 'is--hor') {
-      this.control.x =
+    if (this.control.attributes.orient === 'is--hor') {
+      this.control.attributes.x =
         (this.getBoundingClientRect().left - e.pageX) * -1 -
         this.$handle.getBoundingClientRect().width / 2;
-      this.control.y = 0;
+      this.control.attributes.y = 0;
     }
 
-    if (this.control.orient === 'is--vert') {
-      this.control.x = 0;
-      this.control.y =
+    if (this.control.attributes.orient === 'is--vert') {
+      this.control.attributes.x = 0;
+      this.control.attributes.y =
         (this.offsetTop - e.pageY) * -1 -
         this.$handle.getBoundingClientRect().height / 2;
     }
 
     if (this.control.hasUserInput && this.control.isActive) {
-      this.setPosition(this.control.x, this.control.y);
+      this.setPosition(this.control.attributes.x, this.control.attributes.y);
       this.mapValue();
       this.control.timeStamp = e.timeStamp;
       if (this.channel) {
-        this.channel.postMessage({
-          type: this.type,
-          name: this.name,
-          value: this.control.currentValue,
-        });
+        this.channel.postMessage(this.control);
       }
       this.onEvent();
     }
@@ -487,13 +497,13 @@ class RdSlider extends FormElement {
       this.removeEventListener('mouseup', this.onMouseUp.bind(this));
     }
 
-    if (this._joystickType && this.control.snapToCenter === true) {
+    if (this._joystickType && this.control.attributes.snapToCenter === true) {
       const center = this.getCenter(
-        [0, this.control.width - this.$handle.offsetWidth],
-        [0, this.control.height - this.$handle.offsetHeight],
+        [0, this.control.attributes.width - this.$handle.offsetWidth],
+        [0, this.control.attributes.height - this.$handle.offsetHeight],
       );
-      this.control.x = center[0];
-      this.control.y = center[1];
+      this.control.attributes.x = center[0];
+      this.control.attributes.y = center[1];
       this.setPosition(center[0], center[1]);
     }
   }
@@ -574,17 +584,17 @@ class RdSlider extends FormElement {
 
   // set currentValue on control
   clampSlider(val: number) {
-    if (val < ((<unknown>this.control.min) as number)) {
+    if (val < ((<unknown>this.control.attributes.min) as number)) {
       if (this._numberType === 'int') {
-        return Math.trunc(this.control.min as number);
+        return Math.trunc(this.control.attributes.min as number);
       }
-      return this.control.min;
+      return this.control.attributes.min;
     }
-    if (val > ((<unknown>this.control.max) as number)) {
+    if (val > ((<unknown>this.control.attributes.max) as number)) {
       if (this._numberType === 'int') {
-        return Math.trunc(this.control.max as number);
+        return Math.trunc(this.control.attributes.max as number);
       }
-      return this.control.max;
+      return this.control.attributes.max;
     }
     if (this._numberType === 'int') {
       val = Math.trunc(val);
@@ -593,17 +603,17 @@ class RdSlider extends FormElement {
   }
 
   clampJoystickX(val: number) {
-    if (val < this.control.min[0]) {
+    if (val < this.control.attributes.min[0]) {
       if (this._numberType === 'int') {
-        return Math.trunc(this.control.min[0]);
+        return Math.trunc(this.control.attributes.min[0]);
       }
-      return this.control.min[0];
+      return this.control.attributes.min[0];
     }
-    if (val > this.control.max[0]) {
+    if (val > this.control.attributes.max[0]) {
       if (this._numberType === 'int') {
-        return Math.trunc(this.control.max[0]);
+        return Math.trunc(this.control.attributes.max[0]);
       }
-      return this.control.max[0];
+      return this.control.attributes.max[0];
     }
     if (this._numberType === 'int') {
       val = Math.trunc(val);
@@ -612,17 +622,17 @@ class RdSlider extends FormElement {
   }
 
   clampJoystickY(val: number) {
-    if (val < this.control.min[1]) {
+    if (val < this.control.attributes.min[1]) {
       if (this._numberType === 'int') {
-        return Math.trunc(this.control.min[1]);
+        return Math.trunc(this.control.attributes.min[1]);
       }
-      return this.control.min[1];
+      return this.control.attributes.min[1];
     }
-    if (val > this.control.max[1]) {
+    if (val > this.control.attributes.max[1]) {
       if (this._numberType === 'int') {
-        return Math.trunc(this.control.max[1]);
+        return Math.trunc(this.control.attributes.max[1]);
       }
-      return this.control.max[1];
+      return this.control.attributes.max[1];
     }
     if (this._numberType === 'int') {
       val = Math.trunc(val);
@@ -631,25 +641,25 @@ class RdSlider extends FormElement {
   }
 
   mapValue() {
-    if (this.control.orient === 'is--hor') {
+    if (this.control.attributes.orient === 'is--hor') {
       this.control.currentValue = this.clampSlider(
         this.scale(
-          this.control.x as number,
+          this.control.attributes.x as number,
           0,
-          this.control.width - 44,
-          <number>this.control.min,
-          <number>this.control.max,
+          this.control.attributes.width - this.$handle.offsetWidth,
+          <number>this.control.attributes.min,
+          <number>this.control.attributes.max,
         ),
       );
     }
-    if (this.control.orient === 'is--vert') {
+    if (this.control.attributes.orient === 'is--vert') {
       this.control.currentValue = this.clampSlider(
         this.scale(
-          this.control.y as number,
+          this.control.attributes.y as number,
           0,
-          this.control.height - 44,
-          <number>this.control.min,
-          <number>this.control.max,
+          this.control.attributes.height - this.$handle.offsetHeight,
+          <number>this.control.attributes.min,
+          <number>this.control.attributes.max,
         ),
       );
     }
@@ -657,20 +667,20 @@ class RdSlider extends FormElement {
       this.control.currentValue = [
         this.clampJoystickX(
           this.scale(
-            this.control.x as number,
+            this.control.attributes.x as number,
             0,
-            this.control.width - 44,
-            this.control.min[0],
-            this.control.max[0],
+            this.control.attributes.width - 44,
+            this.control.attributes.min[0],
+            this.control.attributes.max[0],
           ),
         ),
         this.clampJoystickY(
           this.scale(
-            this.control.y as number,
+            this.control.attributes.y as number,
             0,
-            this.control.height - 44,
-            this.control.min[1],
-            this.control.max[1],
+            this.control.attributes.height - 44,
+            this.control.attributes.min[1],
+            this.control.attributes.max[1],
           ),
         ),
       ];
@@ -686,108 +696,124 @@ class RdSlider extends FormElement {
       return val;
     };
 
-    if (this.control.orient === 'is--joystick') {
+    if (this.control.attributes.orient === 'is--joystick') {
       this._joystickPos = this.circularBounds(
-        this.control.x,
-        this.control.y,
-        [0, this.control.width - this.$handle.offsetWidth],
-        [0, this.control.height - this.$handle.offsetHeight],
+        this.control.attributes.x,
+        this.control.attributes.y,
+        [0, this.control.attributes.width - this.$handle.offsetWidth],
+        [0, this.control.attributes.height - this.$handle.offsetHeight],
       );
-      this.control.x = this.clamp(this._joystickPos[0], [
+      this.control.attributes.x = this.clamp(this._joystickPos[0], [
         0,
-        this.control.width - this.$handle.offsetWidth,
+        this.control.attributes.width - this.$handle.offsetWidth,
       ]);
-      this.control.y = this.clamp(this._joystickPos[1], [
+      this.control.attributes.y = this.clamp(this._joystickPos[1], [
         0,
-        this.control.height - this.$handle.offsetHeight,
+        this.control.attributes.height - this.$handle.offsetHeight,
       ]);
 
-      this.control.position =
+      this.control.attributes.position =
         'translate(' +
-        this.control.x +
+        this.control.attributes.x +
         'px' +
         ',' +
-        this.control.y +
+        this.control.attributes.y +
         'px' +
         ')';
 
-      this.setActualPosition(this.control.position);
+      this.setActualPosition(this.control.attributes.position);
     } else {
       if (x <= 0) {
-        this.control.x = 0;
+        this.control.attributes.x = 0;
       } else if (x > this.clientWidth - this.$handle.offsetWidth) {
-        this.control.x = this.clientWidth - this.$handle.offsetWidth;
+        this.control.attributes.x = this.clientWidth - this.$handle.offsetWidth;
       } else {
-        this.control.x = x;
+        this.control.attributes.x = x;
       }
 
       if (y <= 0) {
-        this.control.y = 0;
+        this.control.attributes.y = 0;
       } else if (y > this.clientHeight - this.$handle.offsetHeight) {
-        this.control.y = this.clientHeight - this.$handle.offsetHeight;
+        this.control.attributes.y =
+          this.clientHeight - this.$handle.offsetHeight;
       } else {
-        this.control.y = y;
+        this.control.attributes.y = y;
       }
 
-      this.control.position =
+      this.control.attributes.position =
         'translate(' +
-        clampPos(this.control.x) +
+        clampPos(this.control.attributes.x) +
         'px' +
         ',' +
-        clampPos(this.control.y) +
+        clampPos(this.control.attributes.y) +
         'px' +
         ')';
 
-      this.setActualPosition(this.control.position);
+      this.setActualPosition(this.control.attributes.position);
     }
   }
 
   updateControl(controlValue: number | number[]) {
     if (this._joystickType) {
-      this.control.x = this.scale(
+      this.control.attributes.x = this.scale(
         controlValue[0] as number,
-        this.control.min[0],
-        this.control.max[0],
+        this.control.attributes.min[0],
+        this.control.attributes.max[0],
         0,
         this.clientWidth,
       );
-      this.control.y = this.scale(
+      this.control.attributes.y = this.scale(
         controlValue[1] as number,
-        this.control.min[1],
-        this.control.max[1],
+        this.control.attributes.min[1],
+        this.control.attributes.max[1],
         0,
         this.clientHeight,
       );
     }
 
-    if (this.control.orient === 'is--hor') {
-      this.control.x = this.scale(
+    if (this.control.attributes.orient === 'is--hor') {
+      this.control.attributes.x = this.scale(
         controlValue as number,
-        this.control.min as number,
-        this.control.max as number,
+        this.control.attributes.min as number,
+        this.control.attributes.max as number,
         0,
         this.clientWidth,
       );
-      this.control.y = 0;
+      this.control.attributes.y = 0;
     }
 
-    if (this.control.orient === 'is--vert') {
-      this.control.x = 0;
-      this.control.y = this.scale(
+    if (this.control.attributes.orient === 'is--vert') {
+      this.control.attributes.x = 0;
+      this.control.attributes.y = this.scale(
         controlValue as number,
-        this.control.min as number,
-        this.control.max as number,
+        this.control.attributes.min as number,
+        this.control.attributes.max as number,
         0,
         this.clientHeight,
       );
     }
 
-    this.setPosition(this.control.x, this.control.y);
+    this.setPosition(this.control.attributes.x, this.control.attributes.y);
     this.mapValue();
   }
 
   setChannel(name: string) {
     this.channel = new BroadcastChannel(name);
+  }
+
+  setControl(control: RdControl<RdSliderAttributes>) {
+    this.control = control;
+    this.setAttribute('name', control.name);
+    this.setAttribute('type', control.type);
+    if (this.control.attributes.size) {
+      this.shadowRoot
+        .querySelector('.slider')
+        .classList.add(this.control.attributes.size);
+    }
+    if (control.currentValue !== undefined) {
+      this.value = control.currentValue as number | number[];
+    }
+    this.onSliderInit();
   }
 }
 

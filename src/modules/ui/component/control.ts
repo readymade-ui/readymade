@@ -1,7 +1,9 @@
-export interface RdControl {
+export interface RdLegacyControl {
   type: string;
   name: string;
+  selector: string;
   orient?: string;
+  stops?: number[];
   min?: number | number[];
   max?: number | number[];
   isActive?: boolean;
@@ -20,4 +22,34 @@ export interface RdControl {
   placeSelf?: string;
   transform?: string;
   numberType?: 'int' | 'float';
+  label?: string;
+  channel?: string;
+}
+
+export interface RdControl<A> {
+  type?: string;
+  name: string;
+  isActive?: boolean;
+  hasUserInput?: boolean;
+  hasRemoteInput?: boolean;
+  currentValue?: number | string | Array<number> | Array<string> | boolean;
+  timeStamp?: Date | number;
+  attributes?: A;
+}
+
+export interface RdControlSurfaceElement<C> {
+  label: string;
+  selector: string;
+  style?: Partial<CSSStyleDeclaration>;
+  classes?: Array<string>;
+  control: C;
+  channel?: string;
+}
+
+export interface RdControlSurface {
+  label?: string;
+  name?: string;
+  style?: Partial<CSSStyleDeclaration>;
+  classes?: Array<string>;
+  controls: Array<RdControlSurfaceElement<any>>;
 }

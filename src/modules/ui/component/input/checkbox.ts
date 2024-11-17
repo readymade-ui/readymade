@@ -1,4 +1,9 @@
 import { Component, Emitter, FormElement, html, css } from '@readymade/core';
+import { RdControl } from '../control';
+
+export interface RdCheckboxAttributes {
+  checked?: boolean;
+}
 
 @Component({
   selector: 'rd-checkbox',
@@ -21,7 +26,7 @@ import { Component, Emitter, FormElement, html, css } from '@readymade/core';
       display: block;
       width: 24px;
       height: 24px;
-      border: 2px solid var(--ready-color-border);
+      border: var(--ready-border-width) solid var(--ready-color-border);
       border-radius: 6px;
       background: var(--ready-color-bg);
     }
@@ -38,7 +43,7 @@ import { Component, Emitter, FormElement, html, css } from '@readymade/core';
     :host input[type='checkbox']:hover:before,
     :host input[type='checkbox']:focus:before,
     :host input[type='checkbox']:active:before {
-      border: 2px solid var(--ready-color-highlight);
+      border: var(--ready-border-width) solid var(--ready-color-highlight);
     }
     :host input[type='checkbox'][disabled]:before {
       opacity: var(--ready-opacity-disabled);
@@ -53,7 +58,7 @@ import { Component, Emitter, FormElement, html, css } from '@readymade/core';
     :host input[type='checkbox'][disabled]:hover:before,
     :host input[type='checkbox'][disabled]:focus:before,
     :host input[type='checkbox'][disabled]:active:before {
-      border: 2px solid var(--ready-color-border);
+      border: var(--ready-border-width) solid var(--ready-color-border);
       outline: none;
       box-shadow: none;
     }
@@ -61,7 +66,7 @@ import { Component, Emitter, FormElement, html, css } from '@readymade/core';
     :host input[type='checkbox'].required:hover:before,
     :host input[type='checkbox'].required:focus:before,
     :host input[type='checkbox'].required:active:before {
-      border: 2px solid var(--ready-color-error);
+      border: var(--ready-border-width) solid var(--ready-color-error);
       outline: none;
       box-shadow: none;
     }
@@ -70,12 +75,13 @@ import { Component, Emitter, FormElement, html, css } from '@readymade/core';
 })
 class RdCheckBox extends FormElement {
   channel: BroadcastChannel;
+  control: RdControl<RdCheckboxAttributes>;
   constructor() {
     super();
   }
 
   static get observedAttributes() {
-    return ['checked', 'channel'];
+    return ['checked', 'channel', 'control'];
   }
 
   attributeChangedCallback(name: string, old: string, next: string) {
@@ -85,6 +91,11 @@ class RdCheckBox extends FormElement {
         break;
       case 'channel':
         this.setChannel(next);
+        break;
+      case 'control':
+        if (!next.startsWith('{{')) {
+          this.setControl(JSON.parse(next));
+        }
         break;
     }
   }
@@ -122,11 +133,13 @@ class RdCheckBox extends FormElement {
         );
       }
       if (this.channel) {
-        this.channel.postMessage({
-          type: this.type,
-          name: this.name,
-          value: (ev.target as HTMLInputElement).checked,
-        });
+        this.control.currentValue = (ev.target as HTMLInputElement).checked;
+        if (this.control.attributes) {
+          this.control.attributes.checked = (
+            ev.target as HTMLInputElement
+          ).checked;
+        }
+        this.channel.postMessage(this.control);
       }
     };
     this.$elem.onblur = () => {
@@ -177,6 +190,12 @@ class RdCheckBox extends FormElement {
   set value(value) {
     if (typeof value === 'boolean') {
       this.$elem.checked = value;
+      if (this.control) {
+        this.control.currentValue = value;
+        if (this.control.attributes.checked) {
+          this.control.attributes.checked = value;
+        }
+      }
     }
   }
 
@@ -186,6 +205,19 @@ class RdCheckBox extends FormElement {
 
   setChannel(name: string) {
     this.channel = new BroadcastChannel(name);
+  }
+
+  setControl(control: RdControl<RdCheckboxAttributes>) {
+    this.control = control;
+    this.setAttribute('name', control.name);
+    if (
+      (control.currentValue && typeof control.currentValue === 'boolean') ||
+      control.attributes.checked
+    ) {
+      this.checked = control.currentValue
+        ? Boolean(control.currentValue)
+        : (control.attributes.checked as boolean);
+    }
   }
 }
 

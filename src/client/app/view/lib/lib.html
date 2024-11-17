@@ -15,124 +15,501 @@
         WebRTC.
       </p>
 
+      <h2>Elements</h2>
+
       <p>
         Examples of each Readymade UI element are below. Open DevTools console
         to observe messages dispatched from each element.
       </p>
       <div>
         <rd-radiogroup class="form__item">
-          <input type="radio" name="control" value="form" checked />
+          <input type="radio" name="control" value="form" />
           <label for="form">Form</label>
-          <input type="radio" name="control" value="channel" />
+          <input type="radio" name="control" value="channel" checked />
           <label for="channel">Channel</label>
         </rd-radiogroup>
       </div>
     </div>
 
-    <form class="grid">
-      <div class="pane">
-        <h3>Button</h3>
-        <rd-button name="button"></rd-button>
-      </div>
-      <div class="pane">
-        <h3>Switch</h3>
-        <rd-switch name="switch" class="form__item"></rd-switch>
-      </div>
-      <div class="pane">
-        <h3>Input</h3>
-        <rd-input name="input" class="form__item"></rd-input>
-      </div>
-      <div class="pane">
-        <h3>Text Area</h3>
-        <rd-textarea name="textarea" class="form__item" required />
-      </div>
-      <div class="pane">
-        <h3>Select</h3>
-        <rd-dropdown name="dropdown" class="form__item">
-          <select>
-            <option>Option 1</option>
-            <option>Option 2</option>
-            <option>Option With Very Long Title</option>
-          </select>
-        </rd-dropdown>
-      </div>
-      <div class="pane">
-        <h3>Radio (Vertical)</h3>
-        <rd-radiogroup
-          name="radio"
-          class="form__item"
-          direction="vertical"
-          required
-        >
-          <input type="radio" name="control" value="hue" />
-          <label for="hue">Hue</label>
-          <input type="radio" name="control" value="saturation" />
-          <label for="saturation">Saturation</label>
-          <input type="radio" name="control" value="brightness" />
-          <label for="brightess">Brightness</label>
-        </rd-radiogroup>
-      </div>
-      <div class="pane">
-        <h3>Check Box</h3>
-        <rd-checkbox name="checkbox" class="form__item" checked></rd-checkbox>
-      </div>
-      <div class="pane">
-        <h3>Slider (Horizontal)</h3>
-        <rd-slider
-          class="form__item"
-          name="horizontal slider"
-          type="hor"
-          control="{{ horControl }}"
-        ></rd-slider>
-      </div>
-      <div class="pane">
-        <h3>Slider (Vertical)</h3>
-        <rd-slider
-          class="form__item"
-          name="vertical slider"
-          type="vert"
-          control="{{ vertControl }}"
-        ></rd-slider>
-      </div>
-      <div class="pane">
-        <h3>Joystick</h3>
-        <rd-slider
-          class="form__item"
-          name="joystick"
-          type="joystick"
-          control="{{ joyControl }}"
-        ></rd-slider>
-      </div>
-      <div class="pane">
-        <h3>Joystick (Square)</h3>
-        <rd-slider
-          class="form__item"
-          name="joystick square"
-          type="joystick"
-          control="{{ joySquareControl }}"
-        ></rd-slider>
-      </div>
-      <div class="pane">
-        <h3>Form Submit</h3>
-        <rd-button name="submit" type="submit"></rd-button>
-      </div>
-      <div class="pane full">
-        <h3>Button Pad (Keyboard)</h3>
-        <rd-buttonpad
-          name="keyboard"
-          tabindex="0"
-          class="form__item"
-        ></rd-buttonpad>
-      </div>
-      <div class="pane full">
-        <h3>Button Pad (Number)</h3>
-        <rd-buttonpad
-          name="numberpad"
-          tabindex="0"
-          class="form__item"
-        ></rd-buttonpad>
-      </div>
-    </form>
+    <rd-surface></rd-surface>
+    
+    <div class="spacer"></div>
+    
+      
+      <h2>RdControl</h2>
+      
+      <p>
+       Each Readymade UI custom element can participate in a form because they are form-associated custom elements, but the real power of the controls is unlocked when you use them with other technologies like BroadcastChannel, WebSocket, WebRTC DataChannel or Touch OSC. To enable an event paradigm on all these technologies, Readymade UI elements communicate with the <span class="i__c">RdControl</span> interface.
+      </p>
+      
+    
+    <r-code type="javascript">
+      <span hidden>
+         
+ interface RdControl<A> {
+   type?: string;
+   name: string;
+   isActive?: boolean;
+   hasUserInput?: boolean;
+   hasRemoteInput?: boolean;
+   currentValue?: number | string | Array<number> | Array<string> | boolean;
+   timeStamp?: Date | number;
+   attributes?: A;
+ }
+      </span>
+    </r-code>
+    
+    <p>
+     Every control has the same interface, while attributes unique to the control can be type defined through <span class="i__e">A</span>. 
+    </p>
+    
+    
+    <p>
+      Making your own custom elements work alongside Readymade UI is easy. Import the type interface and define any types unique to the new control. Attributes could be 
+      any model usually passed through DOM attributes or anything you would like to set on the custom element.  
+    </p>
+    
+    <p>
+     Add a <span class="i__e">setControl</span> method that sets the control model on the custom element, updating any appropriate parts of the custom element.
+    </p>
+    
+    <r-code type="javascript">
+    <span hidden>
+    setControl(control: RdControl<RdInputAttributes>) {
+      this.control = control;
+      this.setAttribute('name', control.name);
+      this.setAttribute('type', control.type);
+      this.value = control.currentValue as string;
+    }
+    </span>
+    </r-code>
+    
+    <p>
+     To work alongside other Readymade UI elements, the custom element should also implement a <span class="i__e">setChannel</span> method that sets the <span class="i__e">channel</span>. <span class="i__c">BroadcastChannel</span> is used to dispatch events to a single place.
+    </p>
+    
+    
+    <r-code type="javascript">
+    <span hidden>
+    setChannel(name: string) {
+      this.channel = new BroadcastChannel(name);
+    }
+    </span>
+    </r-code>
+    
+    <p>If you prefer listening to native callbacks for control updates, that is also possible by implementing a form-associated custom element.</p>
+    
+    <p>Where the value of the custom element is set, update the <span class="i__e">currentValue</span> and any <span class="i__e">attributes</span>.</p>
+    
+    <r-code type="javascript">
+    <span hidden>
+      
+    set value(value) {
+      this.$elem.value = value;
+      if (this.control) {
+        this.control.currentValue = value;
+        this.control.attributes.value = value;
+      }
+    }
+    
+    </span>
+    </r-code>
+    
+    <p>Finally, emit the control to the channel wherever the value is updated.</p>
+    
+    
+    <r-code type="javascript">
+    <span hidden>
+    
+    this.channel.postMessage(this.control)
+    </span>
+    </r-code>
+    
+    <p>When the above steps are completed, a custom element can participate in <span class="i__c">RdSurface</span> alongside other Readymade UI elements.</p>
+    
+    
+    <div class="spacer"></div>
+        
+
+    <h2>Surfaces</h2>
+
+    <p>
+      Readymade UI elements can be attached to a control surface named
+      <span class="i__c">RdSurface</span>. The rd-surface element provides an interface for laying out a
+      control surface comprised of Readymade UI elements. The above
+      documentation is displayed on an instance of RdSurface that is configured
+      to display with CSS Grid.
+    </p>
+
+    <p>
+      Below is another example of using <span class="i__c">RdSurface</span> to layout a video game
+      controller using CSS Grid in a more complex layout.
+    </p>
+
+    <rd-surface></rd-surface>
+    
+    <p>
+     <span class="i__c">RdSurface</span> sets styles and controls via a singular interface, a method named <span class="i__e">setControlSurface</span>.
+    </p>
+    
+    <h3>Methods</h3>
+    
+    <ul class="definition__list">
+        <li><span class="definition__title">setControlSurface</span> model for <span class="i__c">RdSurface</span> that styles the layout and sets the order of controls</li>
+    </ul>
+    
+    
+    <p>
+     Below is an example of the model used to generate the video game controller example.
+    </p>
+    
+    
+    <r-code type="javascript">
+                  <span hidden>
+const videoGameControllerSurface: RdControlSurface = {
+  style: {
+    display: 'grid',
+    gridTemplateColumns:
+      '[column1] 200px [column2] 50px [column3] 50px [column4] 67px [column5] 67px [column6] 67px [column7]',
+    gridTemplateRows: '[row1] 67px [row2] 67px [row3] 67px [row4]',
+    columnGap: '0px',
+    rowGap: '0px',
+    padding: '44px',
+    paddingLeft: '20px',
+    width: 'auto',
+    overflowX: 'hidden',
+  },
+  controls: [
+    {
+      selector: 'rd-slider',
+      channel: this.channelName,
+      style: {
+        gridColumnStart: 'column1',
+        gridColumnEnd: 'column2',
+        gridRowStart: 'row1',
+        gridRowEnd: 'row4',
+      },
+      control: {
+        type: 'joystick',
+        name: 'left-joystick',
+        currentValue: [0, 0],
+        attributes: {
+          orient: 'is--joystick',
+          min: [0, 0],
+          max: [1024, 1024],
+          numberType: 'int',
+        },
+      },
+    },
+    {
+      selector: 'rd-button',
+      channel: this.channelName,
+      style: {
+        gridColumnStart: 'column2',
+        gridColumnEnd: 'column3',
+        gridRowStart: 'row3',
+        gridRowEnd: 'row4',
+        justifySelf: 'start',
+        alignSelf: 'end',
+        transform: 'translateY(24px)',
+      },
+      control: {
+        name: 'select-button',
+        attributes: {
+          width: '44px',
+          height: '16px',
+        },
+      },
+    },
+    {
+      selector: 'rd-button',
+      channel: this.channelName,
+      style: {
+        gridColumnStart: 'column3',
+        gridColumnEnd: 'column4',
+        gridRowStart: 'row3',
+        gridRowEnd: 'row4',
+        justifySelf: 'end',
+        alignSelf: 'end',
+        transform: 'translateY(24px)',
+      },
+      control: {
+        name: 'start-button',
+        attributes: {
+          width: '44px',
+          height: '16px',
+        },
+      },
+    },
+    {
+      selector: 'rd-button',
+      channel: this.channelName,
+      style: {
+        gridColumnStart: 'column4',
+        gridColumnEnd: 'column5',
+        gridRowStart: 'row2',
+        gridRowEnd: 'row3',
+        justifySelf: 'end',
+      },
+      control: {
+        name: 'A',
+        attributes: {
+          width: '44px',
+          height: '44px',
+          style: {
+            borderRadius: '50%',
+          },
+        },
+      },
+    },
+    {
+      selector: 'rd-button',
+      channel: this.channelName,
+      style: {
+        gridColumnStart: 'column5',
+        gridColumnEnd: 'column6',
+        gridRowStart: 'row1',
+        gridRowEnd: 'row2',
+        alignSelf: 'end',
+        justifySelf: 'center',
+      },
+      control: {
+        name: 'B',
+        attributes: {
+          width: '44px',
+          height: '44px',
+          style: {
+            borderRadius: '50%',
+          },
+        },
+      },
+    },
+    {
+      selector: 'rd-button',
+      channel: this.channelName,
+      style: {
+        gridColumnStart: 'column6',
+        gridColumnEnd: 'column7',
+        gridRowStart: 'row2',
+        gridRowEnd: 'row3',
+        justifySelf: 'start',
+        transform: 'translateX(2px)',
+      },
+      control: {
+        name: 'Y',
+        attributes: {
+          width: '44px',
+          height: '44px',
+          style: {
+            borderRadius: '50%',
+          },
+        },
+      },
+    },
+    {
+      selector: 'rd-button',
+      channel: this.channelName,
+      style: {
+        gridColumnStart: 'column5',
+        gridColumnEnd: 'column6',
+        gridRowStart: 'row3',
+        gridRowEnd: 'row4',
+        alignSelf: 'start',
+        justifySelf: 'center',
+        transform: 'translateY(-8px)',
+      },
+      control: {
+        name: 'X',
+        attributes: {
+          width: '44px',
+          height: '44px',
+          style: {
+            borderRadius: '50%',
+          },
+        },
+      },
+    },
+  ],
+};
+
+const videoGameController = document.querySelector('rd-surface') as RdSurface;
+
+videoGameController.setControlSurface(videoGameControllerSurface);
+              </span>
+      </r-code>
+
+    
   </div>
   <div class="spacer"></div>
+  
+  <h2>BroadcastChannel</h2>
+  
+  <p>
+    <span class="i__c">RdSurface</span> utilizes <span class="i__c">BroadcastChannel</span> to give you a single interface where control events are dispatched.
+  </p>
+  
+
+<r-code type="javascript">
+  <span hidden>
+      
+const channelName = 'my-channel';
+const channel = new BroadcastChannel(this.channelName);
+channel.onmessage = (event) => {
+    // event.data = RdControl
+}
+  </span>
+</r-code>
+
+
+  <div class="spacer"></div>
+  
+  
+<h2>Transmitter</h2>
+ 
+ <p>Swiss-army knife for communicating over WebRTC DataChannel, WebSocket or Touch OSC.</p>
+ 
+<r-code type="javascript">
+ <span hidden> 
+ npm install @readymade/transmit
+ yarn add @readymade/transmit
+  </span>
+ </r-code>
+
+ 
+<h3>Getting Started</h3>
+ 
+ <p>Import <span class="i__c">Transmitter</span> and instantiate with a configuration Object.</p>
+ 
+<r-code type="javascript">
+ <span hidden>
+     
+ import { Transmitter, TransmitterConfig } from '@readymade/transmit';
+ 
+ const config: TransmitterConfig = {
+   sharedKey: 'lobby',
+   rtc: {
+     iceServers,
+   },
+   serverConfig: {
+     http: {
+       protocol: 'http',
+       hostname: 'localhost',
+       port: 4449,
+     },
+     ws: {
+       osc: {
+         protocol: 'ws',
+         hostname: 'localhost',
+         port: 4445,
+       },
+       signal: {
+         protocol: 'ws',
+         hostname: 'localhost',
+         port: 4446,
+       },
+       announce: {
+         protocol: 'ws',
+         hostname: 'localhost',
+         port: 4447,
+       },
+       message: {
+         protocol: 'ws',
+         hostname: 'localhost',
+         port: 4448,
+       },
+     },
+   },
+   onMessage,
+   onConnect,
+ }
+ 
+ const transmitter = new Transmitter(config);
+  </span>
+ </r-code>
+
+ 
+<h3>Messages</h3>
+ 
+ <p> When <span class="i__e">signal</span> and <span class="i__e">announce</span> servers are configured, the instance of <span class="i__c">Transmitter</span> will automatically attempt a handshake with a remote peer. If a peer is found, a WebRTC DataChannel peer to peer connection will open. To send a message over the data channel use the <span class="i__e">send</span> method.</p>
+ 
+<r-code type="javascript">
+ <span hidden>
+ transmitter.send({ message: 'ping' });
+  </span>
+</r-code>
+
+ 
+<p>If you want to send messages over WebSocket, use <span class="i__e">sendSocketMessage</span>.</p>
+ 
+<r-code type="javascript">
+ <span hidden>
+ transmitter.sendSocketMessage({ message: 'ping' });
+  </span>
+ </r-code>
+
+ 
+ <p>To send a message over TouchOSC, use <span class="i__e">sendTouchOSCMessage</span>, ensuring the data your are sending follows the OSC protocol. Below is an example of sending a OSC message with type definitions.</p>
+ 
+<r-code type="javascript">
+ <span hidden>
+ transmitter.sendTouchOSCMessage('/Controls/Flip', [
+   {
+     type: 'i',
+     value: 1,
+   },
+ ]);
+  </span>
+ </r-code>
+
+ 
+<p>To listen for messages, inject a callback into the configuration. In the above example, <span class="i__e">onMessage</span> would appear like so: </p>
+ 
+<r-code type="javascript">
+ <span hidden>
+ const onMessage = (message) => {
+   if (message.payload.event === 'ping') {
+     this.transmitter.send({ event: 'pong' });
+   }
+ };
+  </span>
+ </r-code>
+
+ 
+<p>To react to a peer to peer connection, bind an <span class="i__e">onConnect</span> callback to the configuration.</p>
+ 
+<h3>transit-server</h3>
+ 
+ <p>For plug and play functionality use the Readymade <span class="i__c">transmit-server</span>, a Node.js server that provides a WebRTC signaling server, WebSocket messaging channel, and WebSocket bridge for communicating over TouchOSC.</p>
+ 
+ <p><span class="i__c">transmit-server</span> is included in the Readymade starter code. Create a new Readymade project using the command <span class="i__c">npx primr my-app</span>, renaming the directory <span class="i__c">my-app</span> with your project name. <span class="i__c">transmit-server</span> will be included in the project directory. After installing dependencies, run <span class="i__c">yarn build:transmit</span> and <span class="i__c">yarn serve:transmit</span>. Automatically, the WebSocket and Express servers should instantiate.</p>
+ 
+<r-code type="javascript">
+ <span hidden>
+ yarn serve:transmit
+ Express Server is listening on http://localhost:4449
+ Free ICE servers available by making a GET request to http://localhost:4449/ice
+ TouchOSC Message Server is listening on http://localhost:4445
+ Signal Server is listening on http://localhost:4446
+ Announce Server is listening on http://localhost:4447
+ Message Server is listening on http://localhost:4448
+  </span>
+ </r-code>
+
+ 
+  <p>For more information about <span class="i__c">primr</span>, read the <a href="https://readymade-ui.github.io">Readymade documentation</a>.</p>
+  
+  <h1>Readymade UI</h1>
+  
+  <p>Readymade UI is a user-interface library built with Readymade, a lightweight package for making custom elements using Decorators. Transmitter supplements Readymade UI by giving you plug-and-play dispatching of events over web standards like WebRTC DataChannel, WebSocket, and Touch OSC. transmit-server is built with primr, the Readymade starter kit, providing a server-side event dispatching service that could be used for game projects, messaging apps, and other creative pursuits. Some possible implementations of Readymade UI include: </p>
+  
+  <ul class="doc-list">
+    <li>Multiplayer Game</li>
+    <li>Chat App</li>
+    <li>Smartphone Remote Control</li>
+    <li>VJ Control Surface</li>
+    <li>Interactive Art Installation</li>
+  </ul>
+  
+  <p>Readymade is built using web standards. This documentation portal is built with Readymade.</p>
+
 </div>

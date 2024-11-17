@@ -1,4 +1,9 @@
 import { Component, Emitter, FormElement, html, css } from '@readymade/core';
+import { RdControl } from '../control';
+
+export interface RdInputAttributes {
+  value: string;
+}
 
 @Component({
   selector: 'rd-input',
@@ -11,8 +16,8 @@ import { Component, Emitter, FormElement, html, css } from '@readymade/core';
     :host input {
       width: 100%;
       background-color: var(--ready-color-bg);
-      border: 2px solid var(--ready-color-border);
-      border-radius: 1em;
+      border: var(--ready-border-width) solid var(--ready-color-border);
+      border-radius: var(--ready-border-radius);
       color: var(--ready-color-default);
       font: var(--font-family);
       min-height: 2em;
@@ -21,7 +26,7 @@ import { Component, Emitter, FormElement, html, css } from '@readymade/core';
     :host input:hover,
     :host input:focus,
     :host input:active {
-      border: 2px solid var(--ready-color-highlight);
+      border: var(--ready-border-width) solid var(--ready-color-highlight);
       outline: none;
       box-shadow: none;
     }
@@ -33,7 +38,7 @@ import { Component, Emitter, FormElement, html, css } from '@readymade/core';
     :host input[disabled]:hover,
     :host input[disabled]:focus,
     :host input[disabled]:active {
-      border: 2px solid var(--ready-color-border);
+      border: var(--ready-border-width) solid var(--ready-color-border);
       outline: none;
       box-shadow: none;
     }
@@ -41,7 +46,7 @@ import { Component, Emitter, FormElement, html, css } from '@readymade/core';
     :host input.required:hover,
     :host input.required:focus,
     :host input.required:active {
-      border: 2px solid var(--ready-color-error);
+      border: var(--ready-border-width) solid var(--ready-color-error);
       outline: none;
       box-shadow: none;
     }
@@ -50,6 +55,7 @@ import { Component, Emitter, FormElement, html, css } from '@readymade/core';
 })
 class RdInput extends FormElement {
   channel: BroadcastChannel;
+  control: RdControl<RdInputAttributes>;
   constructor() {
     super();
   }
@@ -62,6 +68,11 @@ class RdInput extends FormElement {
     switch (name) {
       case 'channel':
         this.setChannel(next);
+        break;
+      case 'control':
+        if (!next.startsWith('{{')) {
+          this.setControl(JSON.parse(next));
+        }
         break;
     }
   }
@@ -85,11 +96,9 @@ class RdInput extends FormElement {
         this.oninput(ev);
       }
       if (this.channel) {
-        this.channel.postMessage({
-          type: this.type,
-          name: this.name,
-          value: this.value,
-        });
+        this.control.currentValue = this.value;
+        this.control.attributes.value = this.value;
+        this.channel.postMessage(this.control);
       }
     };
     this.$elem.onblur = () => {
@@ -150,6 +159,10 @@ class RdInput extends FormElement {
 
   set value(value) {
     this.$elem.value = value;
+    if (this.control) {
+      this.control.currentValue = value;
+      this.control.attributes.value = value;
+    }
   }
 
   get $elem(): HTMLInputElement | HTMLTextAreaElement {
@@ -158,6 +171,15 @@ class RdInput extends FormElement {
 
   setChannel(name: string) {
     this.channel = new BroadcastChannel(name);
+  }
+
+  setControl(control: RdControl<RdInputAttributes>) {
+    this.control = control;
+    this.setAttribute('name', control.name);
+    this.setAttribute('type', control.type);
+    if (control.currentValue && typeof control.currentValue === 'string') {
+      this.value = control.currentValue as string;
+    }
   }
 }
 

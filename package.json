@@ -1,6 +1,6 @@
 {
   "name": "readymade",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "JavaScript microlibrary for developing Web Components with Decorators",
   "type": "module",
   "main": "index.html",
@@ -36,6 +36,7 @@
     "build:index": "vite build ./src/client/ --outDir ../../dist/client --config vite.config.index.js",
     "build:routes": "vite build ./src/client/ --outDir ../../dist/client --config vite.config.routes.js",
     "build:server": "vite build --outDir dist/server --ssr src/server/index.ts --config vite.config.server.js",
+    "build:hello": "vite build ./src/client/hello.ts --outDir ../../../dist --config vite.config.hello.js",
     "pretty": "prettier --write \"src/**/*.{js,ts,html,css,scss}\"",
     "pretty:check": "prettier \"src/**/*.{js,ts,html,css,scss}\" --check",
     "serve": "cross-env NODE_ENV=production node dist/server/index.js",
@@ -58,7 +59,7 @@
     "ui",
     "library"
   ],
-  "author": "Steve Belovarich",
+  "author": "Stephen Belovarich",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/steveblue/custom-elements/issues"
@@ -85,9 +86,11 @@
     "lit-html": "^3.2.0",
     "node-fetch": "2.6.7",
     "node-window-polyfill": "^1.0.2",
+    "osc": "^2.4.5",
     "prismjs": "^1.29.0",
     "rimraf": "^6.0.1",
-    "vite-node": "^2.1.2"
+    "vite-node": "^2.1.2",
+    "ws": "^8.18.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.12.0",
@@ -97,6 +100,7 @@
     "@types/gh-pages": "^6",
     "@types/he": "^1",
     "@types/node": "^22.7.4",
+    "@types/ws": "^8",
     "@typescript-eslint/eslint-plugin": "^8.8.0",
     "@typescript-eslint/parser": "^8.8.0",
     "chokidar": "^4.0.1",
