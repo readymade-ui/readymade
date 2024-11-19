@@ -5803,15 +5803,17 @@ let RdSlider = class extends FormElement {
     this.control.hasUserInput = true;
     this.$elem.classList.add("active");
     this._rect = this.getBoundingClientRect();
-    this.control.attributes.height = this.clientHeight;
-    this.control.attributes.width = this.clientWidth;
+    this.control.attributes.height = this.scrollHeight - 4;
+    this.control.attributes.width = this.scrollWidth - 4;
     this.addEventListener("touchmove", this.onTouchMove.bind(this));
     this.addEventListener("touchend", this.onMouseUp.bind(this));
     if (this._touchItem === null) {
       this._touchItem = e.touches.length - 1;
     }
-    this.control.attributes.x = e.touches[this._touchItem].pageX - this._rect.left - this.$handle.clientWidth / 2;
-    this.control.attributes.y = e.touches[this._touchItem].pageY - this._rect.top - this.$handle.clientHeight / 2;
+    const scrollLeft = window.scrollX;
+    const scrollTop = window.scrollY;
+    this.control.attributes.x = e.touches[0].pageX - (this._rect.left + scrollLeft);
+    this.control.attributes.y = e.touches[0].pageY - (this._rect.top + scrollTop);
     this.setPosition(this.control.attributes.x, this.control.attributes.y);
   }
   onMouseDown(e) {
@@ -5820,11 +5822,13 @@ let RdSlider = class extends FormElement {
     this.control.hasUserInput = true;
     this.$elem.classList.add("active");
     this._rect = this.getBoundingClientRect();
-    this.control.attributes.height = this.clientHeight;
-    this.control.attributes.width = this.clientWidth;
+    this.control.attributes.height = this.scrollHeight - 4;
+    this.control.attributes.width = this.scrollWidth - 4;
     if (this._joystickType) {
-      this.control.attributes.x = e.offsetX;
-      this.control.attributes.y = e.offsetY;
+      const scrollLeft = window.scrollX;
+      const scrollTop = window.scrollY;
+      this.control.attributes.x = e.pageX - (this._rect.left + scrollLeft);
+      this.control.attributes.y = e.pageY - (this._rect.top + scrollTop);
     }
     this.addEventListener("mousemove", this.onMouseMove.bind(this));
     this.addEventListener("mouseup", this.onMouseUp.bind(this));
@@ -5838,17 +5842,19 @@ let RdSlider = class extends FormElement {
     if (this._touchItem === null) {
       this._touchItem = e.touches.length - 1;
     }
+    const scrollLeft = window.scrollX;
+    const scrollTop = window.scrollY;
     if (this._joystickType) {
-      this.control.attributes.x = (this.getBoundingClientRect().left - e.touches[this._touchItem].pageX) * -1;
-      this.control.attributes.y = (this.offsetTop - e.touches[this._touchItem].pageY) * -1;
+      this.control.attributes.x = e.touches[0].pageX - (this._rect.left + scrollLeft);
+      this.control.attributes.y = e.touches[0].pageY - (this._rect.top + scrollTop);
     }
     if (this.control.attributes.orient === "is--hor") {
-      this.control.attributes.x = (this.getBoundingClientRect().left - e.touches[this._touchItem].pageX) * -1 - this.$handle.getBoundingClientRect().width / 2;
+      this.control.attributes.x = (this.getBoundingClientRect().left - e.touches[this._touchItem].pageX + window.scrollX) * -1 - this.$handle.getBoundingClientRect().width / 2;
       this.control.attributes.y = 0;
     }
     if (this.control.attributes.orient === "is--vert") {
       this.control.attributes.x = 0;
-      this.control.attributes.y = (this.offsetTop - e.touches[this._touchItem].pageY) * -1 - this.$handle.getBoundingClientRect().height / 2;
+      this.control.attributes.y = (this.getBoundingClientRect().top - e.touches[this._touchItem].pageY + window.scrollY) * -1 - this.$handle.getBoundingClientRect().height / 2;
     }
     if (this.control.hasUserInput && this.control.isActive) {
       this.setPosition(this.control.attributes.x, this.control.attributes.y);
@@ -5865,9 +5871,11 @@ let RdSlider = class extends FormElement {
       return;
     }
     this.$elem.classList.add("active");
+    const scrollLeft = window.scrollX;
+    const scrollTop = window.scrollY;
     if (this._joystickType) {
-      this.control.attributes.x = (this.getBoundingClientRect().left - e.pageX) * -1;
-      this.control.attributes.y = (this.offsetTop - e.pageY) * -1;
+      this.control.attributes.x = e.pageX - (this._rect.left + scrollLeft);
+      this.control.attributes.y = e.pageY - (this._rect.top + scrollTop);
     }
     if (this.control.attributes.orient === "is--hor") {
       this.control.attributes.x = (this.getBoundingClientRect().left - e.pageX) * -1 - this.$handle.getBoundingClientRect().width / 2;
@@ -6434,8 +6442,8 @@ let RdDial = class extends FormElement {
   onSliderInit() {
     this._touchItem = null;
     this._rect = this.getBoundingClientRect();
-    this.control.attributes.height = this.clientHeight;
-    this.control.attributes.width = this.clientWidth;
+    this.control.attributes.height = this.scrollHeight - 4;
+    this.control.attributes.width = this.scrollWidth - 4;
     if (this.control.attributes.numberType) {
       this._numberType = this.control.attributes.numberType;
     } else {
@@ -6465,15 +6473,18 @@ let RdDial = class extends FormElement {
     this.control.hasUserInput = true;
     this.$elem.classList.add("active");
     this._rect = this.getBoundingClientRect();
-    this.control.attributes.height = this.clientHeight;
-    this.control.attributes.width = this.clientWidth;
+    this.control.attributes.height = this.scrollHeight - 4;
+    this.control.attributes.width = this.scrollWidth - 4;
+    console.log(this.control.attributes.width, this.control.attributes.height);
     this.addEventListener("touchmove", this.onTouchMove.bind(this));
     this.addEventListener("touchend", this.onMouseUp.bind(this));
     if (this._touchItem === null) {
       this._touchItem = e.touches.length - 1;
     }
-    this.control.attributes.x = e.touches[this._touchItem].pageX - this._rect.left - this.$handle.clientWidth / 2;
-    this.control.attributes.y = e.touches[this._touchItem].pageY - this._rect.top - this.$handle.clientHeight / 2;
+    const scrollLeft = window.scrollX;
+    const scrollTop = window.scrollY;
+    this.control.attributes.x = e.touches[0].pageX - (this._rect.left + scrollLeft);
+    this.control.attributes.y = e.touches[0].pageY - (this._rect.top + scrollTop);
     this.setPosition();
   }
   onMouseDown(e) {
@@ -6482,10 +6493,12 @@ let RdDial = class extends FormElement {
     this.control.hasUserInput = true;
     this.$elem.classList.add("active");
     this._rect = this.getBoundingClientRect();
-    this.control.attributes.height = this.clientHeight;
-    this.control.attributes.width = this.clientWidth;
-    this.control.attributes.x = e.offsetX;
-    this.control.attributes.y = e.offsetY;
+    this.control.attributes.height = this.scrollHeight - 4;
+    this.control.attributes.width = this.scrollWidth - 4;
+    const scrollLeft = window.scrollX;
+    const scrollTop = window.scrollY;
+    this.control.attributes.x = e.pageX - (this._rect.left + scrollLeft);
+    this.control.attributes.y = e.pageY - (this._rect.top + scrollTop);
     this.addEventListener("mousemove", this.onMouseMove.bind(this));
     this.addEventListener("mouseup", this.onMouseUp.bind(this));
     window.addEventListener("mousemove", this.onMouseMove.bind(this));
@@ -6498,8 +6511,10 @@ let RdDial = class extends FormElement {
     if (this._touchItem === null) {
       this._touchItem = e.touches.length - 1;
     }
-    this.control.attributes.x = (this.getBoundingClientRect().left - e.touches[this._touchItem].pageX) * -1;
-    this.control.attributes.y = (this.offsetTop - e.touches[this._touchItem].pageY) * -1;
+    const scrollLeft = window.scrollX;
+    const scrollTop = window.scrollY;
+    this.control.attributes.x = e.touches[0].pageX - (this._rect.left + scrollLeft);
+    this.control.attributes.y = e.touches[0].pageY - (this._rect.top + scrollTop);
     if (this.control.hasUserInput && this.control.isActive) {
       this.setPosition();
       this.control.currentValue = this.mapValue();
@@ -6515,8 +6530,10 @@ let RdDial = class extends FormElement {
       return;
     }
     this.$elem.classList.add("active");
-    this.control.attributes.x = (this.getBoundingClientRect().left - e.pageX) * -1;
-    this.control.attributes.y = (this.offsetTop - e.pageY) * -1;
+    const scrollLeft = window.scrollX;
+    const scrollTop = window.scrollY;
+    this.control.attributes.x = e.pageX - (this._rect.left + scrollLeft);
+    this.control.attributes.y = e.pageY - (this._rect.top + scrollTop);
     if (this.control.hasUserInput && this.control.isActive) {
       this.setPosition();
       this.control.currentValue = this.mapValue();
@@ -6603,8 +6620,8 @@ let RdDial = class extends FormElement {
   }
   degreesToCoordinates(angle) {
     angle = (angle - 180) % 360;
-    const xRange = [0, this.clientWidth - this.$handle.offsetWidth];
-    const yRange = [0, this.clientHeight - this.$handle.offsetHeight];
+    const xRange = [0, this.scrollWidth - this.$handle.offsetWidth];
+    const yRange = [0, this.scrollHeight - this.$handle.offsetHeight];
     const center = this.getCenter(xRange, yRange);
     const radius = xRange[1] - center[0];
     const radians = angle * (Math.PI / 180);
@@ -6663,21 +6680,25 @@ let RdDial = class extends FormElement {
     this._joystickPos = this.circularBounds(
       this.control.attributes.x,
       this.control.attributes.y,
-      [0, this.clientWidth - this.$handle.offsetWidth],
-      [0, this.clientHeight - this.$handle.offsetHeight]
+      [0, this.control.attributes.width - this.$handle.offsetWidth],
+      [0, this.control.attributes.height - this.$handle.offsetHeight]
     );
     this.control.attributes.x = this.clamp(this._joystickPos[0], [
       0,
-      this.clientWidth - this.$handle.offsetWidth
+      this.control.attributes.width - this.$handle.offsetWidth
     ]);
     this.control.attributes.y = this.clamp(this._joystickPos[1], [
       0,
-      this.clientHeight - this.$handle.offsetHeight
+      this.control.attributes.height - this.$handle.offsetHeight
     ]);
     this.control.attributes.position = "translate(" + this.control.attributes.x + "px," + this.control.attributes.y + "px)";
     this.setActualPosition(this.control.attributes.position);
   }
   updateControl(controlValue) {
+    this.control.currentValue = controlValue;
+    this._rect = this.getBoundingClientRect();
+    this.control.attributes.width = this.scrollWidth - 4;
+    this.control.attributes.height = this.scrollHeight - 4;
     const angle = this.scale(
       controlValue,
       this.control.attributes.min,
@@ -6689,7 +6710,6 @@ let RdDial = class extends FormElement {
     this.control.attributes.x = coords[0];
     this.control.attributes.y = coords[1];
     this.setPosition();
-    this.control.currentValue = controlValue;
   }
   setChannel(name) {
     this.channel = new BroadcastChannel(name);
@@ -6845,7 +6865,7 @@ let RdSurface = class extends StructuralElement {
   constructor() {
     super();
   }
-  setControlSurface(surface) {
+  setStyle(surface) {
     if (!surface) {
       return;
     }
@@ -6860,6 +6880,12 @@ let RdSurface = class extends StructuralElement {
         }
       }
     }
+  }
+  setControlSurface(surface) {
+    if (!surface) {
+      return;
+    }
+    this.setStyle(surface);
     for (let i = 0; i <= surface.controls.length; i++) {
       const element = document.createElement("div", { is: "rd-element" });
       element.setAttribute("is", "rd-element");
@@ -10145,9 +10171,11 @@ class Transmitter {
 const template$1 = `<div class="testbed">
   <div class="theme__toggle"></div>
   <div>
-    <h1>Readymade UI</h1>
+    <header>
+      <h1>Readymade UI</h1>
+    </header>
 
-    <div>
+    <section>
       <p>
         Readymade UI is a specialized user-interface library for remote control
         surfaces. Designed primarily for touch surfaces, Readymade UI is built
@@ -10173,12 +10201,12 @@ const template$1 = `<div class="testbed">
           <label for="channel">Channel</label>
         </rd-radiogroup>
       </div>
-    </div>
+    </section>
 
     <rd-surface></rd-surface>
     
-    <div class="spacer"></div>
-    
+
+    <section>
       
       <h2>RdControl</h2>
       
@@ -10272,7 +10300,8 @@ const template$1 = `<div class="testbed">
     <p>When the above steps are completed, a custom element can participate in <span class="i__c">RdSurface</span> alongside other Readymade UI elements.</p>
     
     
-    <div class="spacer"></div>
+    </section>
+    <section>
         
 
     <h2>Surfaces</h2>
@@ -10313,9 +10342,11 @@ const template$1 = `<div class="testbed">
 const videoGameControllerSurface: RdControlSurface = {
   style: {
     display: 'grid',
-    gridTemplateColumns:
-      '[column1] 200px [column2] 50px [column3] 50px [column4] 67px [column5] 67px [column6] 67px [column7]',
-    gridTemplateRows: '[row1] 67px [row2] 67px [row3] 67px [row4]',
+    gridTemplateColumns:\`[column1] 200px [column2] 50px 
+      [column3] 50px [column4] 67px [column5] 67px
+      [column6] 67px [column7]\`,
+    gridTemplateRows: \`[row1] 67px [row2] 67px 
+                       [row3] 67px [row4]\`,
     columnGap: '0px',
     rowGap: '0px',
     padding: '44px',
@@ -10476,15 +10507,15 @@ const videoGameControllerSurface: RdControlSurface = {
   ],
 };
 
-const videoGameController = document.querySelector('rd-surface') as RdSurface;
-
-videoGameController.setControlSurface(videoGameControllerSurface);
+const surface = document.querySelector('rd-surface') as RdSurface;
+surface.setControlSurface(videoGameControllerSurface);
               </span>
       </r-code>
 
     
-  </div>
-  <div class="spacer"></div>
+  </section>
+  <section>
+
   
   <h2>BroadcastChannel</h2>
   
@@ -10505,8 +10536,8 @@ channel.onmessage = (event) => {
 </r-code>
 
 
-  <div class="spacer"></div>
-  
+  </section>
+  <section>
   
 <h2>Transmitter</h2>
  
@@ -10527,7 +10558,10 @@ channel.onmessage = (event) => {
 <r-code type="javascript">
  <span hidden>
      
- import { Transmitter, TransmitterConfig } from '@readymade/transmit';
+ import { 
+  Transmitter, 
+  TransmitterConfig 
+ } from '@readymade/transmit';
  
  const config: TransmitterConfig = {
    sharedKey: 'lobby',
@@ -10630,18 +10664,22 @@ channel.onmessage = (event) => {
 <r-code type="javascript">
  <span hidden>
  yarn serve:transmit
+ 
  Express Server is listening on http://localhost:4449
- Free ICE servers available by making a GET request to http://localhost:4449/ice
  TouchOSC Message Server is listening on http://localhost:4445
  Signal Server is listening on http://localhost:4446
  Announce Server is listening on http://localhost:4447
  Message Server is listening on http://localhost:4448
-  </span>
+ Free ICE servers available by making a GET request to 
+ http://localhost:4449/ice
+ </span>
  </r-code>
 
  
   <p>For more information about <span class="i__c">primr</span>, read the <a href="https://readymade-ui.github.io">Readymade documentation</a>.</p>
   
+  </section>
+  <section>
   <h1>Readymade UI</h1>
   
   <p>Readymade UI is a user-interface library built with Readymade, a lightweight package for making custom elements using Decorators. Transmitter supplements Readymade UI by giving you plug-and-play dispatching of events over web standards like WebRTC DataChannel, WebSocket, and Touch OSC. transmit-server is built with primr, the Readymade starter kit, providing a server-side event dispatching service that could be used for game projects, messaging apps, and other creative pursuits. Some possible implementations of Readymade UI include: </p>
@@ -10655,10 +10693,11 @@ channel.onmessage = (event) => {
   </ul>
   
   <p>Readymade is built using web standards. This documentation portal is built with Readymade.</p>
+  </section>
 
 </div>
 `;
-const style$1 = ":host {\n  display: block;\n  font-weight: 400;\n  font-size: 16px;\n  padding: 20px;\n  margin: 0px;\n  width: 100%;\n  height: 100%;\n  min-height: 100vh;\n  overflow-y: auto;\n  -webkit-font-smoothing: auto;\n  -moz-osx-font-smoothing: grayscale;\n  margin-bottom: 360px;\n}\n\np {\n  max-width: 640px;\n  font-size: 1.2em;\n}\n\nul {\n  padding: 0;\n  margin: 0;\n  list-style: none;\n  -webkit-margin-start: 0px;\n  -webkit-margin-end: 0px;\n  -webkit-padding-start: 0px;\n  -webkit-margin-before: 0px;\n  -webkit-margin-after: 0px;\n}\n\n.theme__toggle {\n  width: 32px;\n  height: 32px;\n  border-radius: 50%;\n  position: absolute;\n  top: 40px;\n  right: 20px;\n  cursor: pointer;\n  &.dark {\n    background: #ffffff;\n  }\n  &.light {\n    background: #000000;\n  }\n}\n\n.grid {\n  display: grid;\n  grid-template-columns: repeat(3, 1fr);\n  gap: 20px;\n}\n\n.pane {\n  margin-top: 20px;\n}\n\n.full {\n  grid-column: span 3;\n}\n\n.definition__list li {\n  padding-bottom: 0.5em;\n}\n\n.definition__title {\n  font-style: italic;\n  color: #ababab;\n  margin-right: 0.2em;\n}\n\n.i__e {\n  color: rgba(117, 191, 255, 1);\n}\n\n.i__c {\n  color: #e6d06c;\n}\n\nrd-surface {\n  margin-bottom: 40px;\n}\n\nr-code {\n  width: 100%;\n  margin-left: -24px;\n}\n\nul.doc-list {\n  padding: initial;\n  margin: initial;\n  list-style: initial;\n  -webkit-margin-start: initial;\n  -webkit-margin-end: initial;\n  -webkit-padding-start: initial;\n  -webkit-margin-before: initial;\n  -webkit-margin-after: initial;\n  font-size: 1.1em;\n  margin-left: 20px;\n}\n";
+const style$1 = ":host {\n  display: block;\n  font-weight: 400;\n  font-size: 16px;\n  padding: 20px;\n  margin: 0px;\n  -webkit-font-smoothing: auto;\n  -moz-osx-font-smoothing: grayscale;\n  margin-bottom: 360px;\n}\n\nh1,\nh2,\nh3,\nh4,\nh5,\nh6 {\n  font-family: 'Source Sans Pro', serif;\n  font-weight: 400;\n  line-height: 1.5em;\n}\n\nh1 {\n  font-weight: 700;\n}\n\nh2 {\n  margin-top: 2em;\n}\n\nh6 {\n  font-size: 1em;\n}\n\np {\n  max-width: 640px;\n  font-size: 1.2em;\n}\n\nul {\n  padding: 0;\n  margin: 0;\n  list-style: none;\n  -webkit-margin-start: 0px;\n  -webkit-margin-end: 0px;\n  -webkit-padding-start: 0px;\n  -webkit-margin-before: 0px;\n  -webkit-margin-after: 0px;\n}\n\n.theme__toggle {\n  width: 32px;\n  height: 32px;\n  border-radius: 50%;\n  position: absolute;\n  top: 40px;\n  right: 20px;\n  cursor: pointer;\n  &.dark {\n    background: #ffffff;\n  }\n  &.light {\n    background: #000000;\n  }\n}\n\nheader,\nsection,\nfooter {\n  position: relative;\n  left: 50%;\n  max-width: 640px;\n  transform: translateX(-50%);\n  padding-left: 20px;\n  padding-right: 20px;\n}\n\nheader {\n  padding-top: 4em;\n  text-align: center;\n  padding-bottom: 2em;\n}\n\nheader h2 {\n  font-size: 20px;\n  font-weight: 300;\n  margin-top: 2em;\n  margin-bottom: 2em;\n}\n\nsection {\n  margin-bottom: 20px;\n}\n\nsection h1 {\n  padding-top: 3em;\n  margin-bottom: 1em;\n  font-family: 'Source Sans Pro';\n}\n\nsection h2 {\n  padding: 2px 8px;\n  background: #cfcfcf;\n  color: #000000;\n  font-size: 1.1em;\n  font-weight: 400;\n  display: inline-block;\n}\n\nsection ul li {\n  margin-bottom: 0.25em;\n}\n\n.grid {\n  display: grid;\n  grid-template-columns: repeat(3, 1fr);\n  gap: 20px;\n}\n\n.pane {\n  margin-top: 20px;\n}\n\n.full {\n  grid-column: span 3;\n}\n\n.definition__list li {\n  padding-bottom: 0.5em;\n}\n\n.definition__title {\n  font-style: italic;\n  color: #ababab;\n  margin-right: 0.2em;\n}\n\n.i__e {\n  color: rgba(117, 191, 255, 1);\n}\n\n.i__c {\n  color: #e6d06c;\n}\n\nrd-surface {\n  margin-bottom: 40px;\n}\n\nr-code {\n  width: 100%;\n  margin-left: -24px;\n}\n\nul.doc-list {\n  padding: initial;\n  margin: initial;\n  list-style: initial;\n  -webkit-margin-start: initial;\n  -webkit-margin-end: initial;\n  -webkit-padding-start: initial;\n  -webkit-margin-before: initial;\n  -webkit-margin-after: initial;\n  font-size: 1.1em;\n  margin-left: 20px;\n}\n";
 const documentation = {
   button: `
   <h2>rd-button</h2>
@@ -11690,7 +11729,7 @@ let LibraryComponent = class extends CustomElement {
     (_c = this.shadowRoot) == null ? void 0 : _c.querySelector(".theme__toggle").classList.add(this.theme);
   }
   onModeChange() {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l;
     const form = (_a = this.shadowRoot) == null ? void 0 : _a.querySelector("form");
     const radio = (_b = this.shadowRoot) == null ? void 0 : _b.querySelectorAll("rd-radiogroup")[1];
     const toggle = (_c = this.shadowRoot) == null ? void 0 : _c.querySelector("rd-switch");
@@ -11702,9 +11741,8 @@ let LibraryComponent = class extends CustomElement {
     const buttonNumberPad = (_i = this.shadowRoot) == null ? void 0 : _i.querySelectorAll("rd-buttonpad");
     const dial = (_j = this.shadowRoot) == null ? void 0 : _j.querySelector('[name="dial"]');
     const squareJoystick = (_k = this.shadowRoot) == null ? void 0 : _k.querySelector('[type="joystick"]');
-    const vertSlider = (_l = this.shadowRoot) == null ? void 0 : _l.querySelector('[type="vert"]');
     if (this.mode === "form") {
-      (_m = this.channel) == null ? void 0 : _m.close();
+      (_l = this.channel) == null ? void 0 : _l.close();
       radio.onchange = (ev) => {
         console.log(ev.target.value);
       };
@@ -11743,15 +11781,11 @@ let LibraryComponent = class extends CustomElement {
       squareJoystick.oninput = (ev) => {
         console.log(ev.target.value);
       };
-      vertSlider.oninput = (ev) => {
-        console.log(ev.target.value);
-      };
     }
     if (this.mode === "channel") {
       this.channel = new BroadcastChannel(this.channelName);
       this.channel.onmessage = (event) => {
         var _a2, _b2;
-        console.log(event);
         if (!((_a2 = this.transmitter) == null ? void 0 : _a2.isOpen)) {
           if (this.touchOSCEnabled) {
             if (event.data.name === "switch") {
@@ -11802,8 +11836,6 @@ let LibraryComponent = class extends CustomElement {
       dial.oninput = () => {
       };
       squareJoystick.oninput = () => {
-      };
-      vertSlider.oninput = () => {
       };
     }
   }
