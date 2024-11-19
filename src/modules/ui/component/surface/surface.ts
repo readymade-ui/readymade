@@ -11,7 +11,7 @@ class RdSurface extends StructuralElement {
     super();
   }
 
-  setControlSurface(surface: RdControlSurface) {
+  setStyle(surface: Partial<RdControlSurface>) {
     if (!surface) {
       return;
     }
@@ -27,6 +27,14 @@ class RdSurface extends StructuralElement {
         }
       }
     }
+  }
+
+  setControlSurface(surface: Partial<RdControlSurface>) {
+    if (!surface) {
+      return;
+    }
+
+    this.setStyle(surface);
 
     for (let i = 0; i <= surface.controls.length; i++) {
       const element = (<unknown>(

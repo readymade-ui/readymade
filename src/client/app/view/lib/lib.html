@@ -1,9 +1,11 @@
 <div class="testbed">
   <div class="theme__toggle"></div>
   <div>
-    <h1>Readymade UI</h1>
+    <header>
+      <h1>Readymade UI</h1>
+    </header>
 
-    <div>
+    <section>
       <p>
         Readymade UI is a specialized user-interface library for remote control
         surfaces. Designed primarily for touch surfaces, Readymade UI is built
@@ -29,12 +31,12 @@
           <label for="channel">Channel</label>
         </rd-radiogroup>
       </div>
-    </div>
+    </section>
 
     <rd-surface></rd-surface>
     
-    <div class="spacer"></div>
-    
+
+    <section>
       
       <h2>RdControl</h2>
       
@@ -128,7 +130,8 @@
     <p>When the above steps are completed, a custom element can participate in <span class="i__c">RdSurface</span> alongside other Readymade UI elements.</p>
     
     
-    <div class="spacer"></div>
+    </section>
+    <section>
         
 
     <h2>Surfaces</h2>
@@ -169,9 +172,11 @@
 const videoGameControllerSurface: RdControlSurface = {
   style: {
     display: 'grid',
-    gridTemplateColumns:
-      '[column1] 200px [column2] 50px [column3] 50px [column4] 67px [column5] 67px [column6] 67px [column7]',
-    gridTemplateRows: '[row1] 67px [row2] 67px [row3] 67px [row4]',
+    gridTemplateColumns:`[column1] 200px [column2] 50px 
+      [column3] 50px [column4] 67px [column5] 67px
+      [column6] 67px [column7]`,
+    gridTemplateRows: `[row1] 67px [row2] 67px 
+                       [row3] 67px [row4]`,
     columnGap: '0px',
     rowGap: '0px',
     padding: '44px',
@@ -332,15 +337,15 @@ const videoGameControllerSurface: RdControlSurface = {
   ],
 };
 
-const videoGameController = document.querySelector('rd-surface') as RdSurface;
-
-videoGameController.setControlSurface(videoGameControllerSurface);
+const surface = document.querySelector('rd-surface') as RdSurface;
+surface.setControlSurface(videoGameControllerSurface);
               </span>
       </r-code>
 
     
-  </div>
-  <div class="spacer"></div>
+  </section>
+  <section>
+
   
   <h2>BroadcastChannel</h2>
   
@@ -361,8 +366,8 @@ channel.onmessage = (event) => {
 </r-code>
 
 
-  <div class="spacer"></div>
-  
+  </section>
+  <section>
   
 <h2>Transmitter</h2>
  
@@ -383,7 +388,10 @@ channel.onmessage = (event) => {
 <r-code type="javascript">
  <span hidden>
      
- import { Transmitter, TransmitterConfig } from '@readymade/transmit';
+ import { 
+  Transmitter, 
+  TransmitterConfig 
+ } from '@readymade/transmit';
  
  const config: TransmitterConfig = {
    sharedKey: 'lobby',
@@ -486,18 +494,22 @@ channel.onmessage = (event) => {
 <r-code type="javascript">
  <span hidden>
  yarn serve:transmit
+ 
  Express Server is listening on http://localhost:4449
- Free ICE servers available by making a GET request to http://localhost:4449/ice
  TouchOSC Message Server is listening on http://localhost:4445
  Signal Server is listening on http://localhost:4446
  Announce Server is listening on http://localhost:4447
  Message Server is listening on http://localhost:4448
-  </span>
+ Free ICE servers available by making a GET request to 
+ http://localhost:4449/ice
+ </span>
  </r-code>
 
  
   <p>For more information about <span class="i__c">primr</span>, read the <a href="https://readymade-ui.github.io">Readymade documentation</a>.</p>
   
+  </section>
+  <section>
   <h1>Readymade UI</h1>
   
   <p>Readymade UI is a user-interface library built with Readymade, a lightweight package for making custom elements using Decorators. Transmitter supplements Readymade UI by giving you plug-and-play dispatching of events over web standards like WebRTC DataChannel, WebSocket, and Touch OSC. transmit-server is built with primr, the Readymade starter kit, providing a server-side event dispatching service that could be used for game projects, messaging apps, and other creative pursuits. Some possible implementations of Readymade UI include: </p>
@@ -511,5 +523,6 @@ channel.onmessage = (event) => {
   </ul>
   
   <p>Readymade is built using web standards. This documentation portal is built with Readymade.</p>
+  </section>
 
 </div>
