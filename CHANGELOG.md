@@ -1,5 +1,10 @@
 # CHANGELOG
 
+### 3.1.1
+
+- fix: `RdDial` and `RdSlider` handles could appear with incorrect position
+- fix: Readymade UI doc styles
+
 ### 3.1.0
 
 Readymade 3.1.0 Large Glass breaks the glass, adding new features that allow UI controls to communicate over WebSocket, WebRTC Data Channel, and Touch OSC.
