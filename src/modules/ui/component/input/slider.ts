@@ -354,8 +354,10 @@ class RdSlider extends FormElement {
     this.$elem.classList.add('active');
 
     this._rect = this.getBoundingClientRect();
-    this.control.attributes.height = this.clientHeight;
-    this.control.attributes.width = this.clientWidth;
+    // only reliable dims in iOS Safari is scrollHeight, scrollWidth
+    // but that gets the width and height + border thickness
+    this.control.attributes.height = this.scrollHeight - 4;
+    this.control.attributes.width = this.scrollWidth - 4;
 
     this.addEventListener('touchmove', this.onTouchMove.bind(this));
     this.addEventListener('touchend', this.onMouseUp.bind(this));
@@ -365,14 +367,12 @@ class RdSlider extends FormElement {
       this._touchItem = e.touches.length - 1;
     }
 
+    const scrollLeft = window.scrollX;
+    const scrollTop = window.scrollY;
     this.control.attributes.x =
-      e.touches[this._touchItem].pageX -
-      this._rect.left -
-      this.$handle.clientWidth / 2;
+      e.touches[0].pageX - (this._rect.left + scrollLeft);
     this.control.attributes.y =
-      e.touches[this._touchItem].pageY -
-      this._rect.top -
-      this.$handle.clientHeight / 2;
+      e.touches[0].pageY - (this._rect.top + scrollTop);
 
     this.setPosition(this.control.attributes.x, this.control.attributes.y);
   }
@@ -386,11 +386,14 @@ class RdSlider extends FormElement {
     this.$elem.classList.add('active');
 
     this._rect = this.getBoundingClientRect();
-    this.control.attributes.height = this.clientHeight;
-    this.control.attributes.width = this.clientWidth;
+    this.control.attributes.height = this.scrollHeight - 4;
+    this.control.attributes.width = this.scrollWidth - 4;
+
     if (this._joystickType) {
-      this.control.attributes.x = e.offsetX;
-      this.control.attributes.y = e.offsetY;
+      const scrollLeft = window.scrollX;
+      const scrollTop = window.scrollY;
+      this.control.attributes.x = e.pageX - (this._rect.left + scrollLeft);
+      this.control.attributes.y = e.pageY - (this._rect.top + scrollTop);
     }
 
     this.addEventListener('mousemove', this.onMouseMove.bind(this));
@@ -410,17 +413,21 @@ class RdSlider extends FormElement {
       this._touchItem = e.touches.length - 1; // make this touch = the latest touch in the touches list instead of using event
     }
 
+    const scrollLeft = window.scrollX;
+    const scrollTop = window.scrollY;
+
     if (this._joystickType) {
       this.control.attributes.x =
-        (this.getBoundingClientRect().left - e.touches[this._touchItem].pageX) *
-        -1;
+        e.touches[0].pageX - (this._rect.left + scrollLeft);
       this.control.attributes.y =
-        (this.offsetTop - e.touches[this._touchItem].pageY) * -1;
+        e.touches[0].pageY - (this._rect.top + scrollTop);
     }
 
     if (this.control.attributes.orient === 'is--hor') {
       this.control.attributes.x =
-        (this.getBoundingClientRect().left - e.touches[this._touchItem].pageX) *
+        (this.getBoundingClientRect().left -
+          e.touches[this._touchItem].pageX +
+          window.scrollX) *
           -1 -
         this.$handle.getBoundingClientRect().width / 2;
       this.control.attributes.y = 0;
@@ -429,7 +436,10 @@ class RdSlider extends FormElement {
     if (this.control.attributes.orient === 'is--vert') {
       this.control.attributes.x = 0;
       this.control.attributes.y =
-        (this.offsetTop - e.touches[this._touchItem].pageY) * -1 -
+        (this.getBoundingClientRect().top -
+          e.touches[this._touchItem].pageY +
+          window.scrollY) *
+          -1 -
         this.$handle.getBoundingClientRect().height / 2;
     }
 
@@ -451,10 +461,12 @@ class RdSlider extends FormElement {
 
     this.$elem.classList.add('active');
 
+    const scrollLeft = window.scrollX;
+    const scrollTop = window.scrollY;
+
     if (this._joystickType) {
-      this.control.attributes.x =
-        (this.getBoundingClientRect().left - e.pageX) * -1;
-      this.control.attributes.y = (this.offsetTop - e.pageY) * -1;
+      this.control.attributes.x = e.pageX - (this._rect.left + scrollLeft);
+      this.control.attributes.y = e.pageY - (this._rect.top + scrollTop);
     }
 
     if (this.control.attributes.orient === 'is--hor') {

@@ -235,8 +235,8 @@ class RdDial extends FormElement {
     this._touchItem = null;
 
     this._rect = this.getBoundingClientRect();
-    this.control.attributes.height = this.clientHeight;
-    this.control.attributes.width = this.clientWidth;
+    this.control.attributes.height = this.scrollHeight - 4;
+    this.control.attributes.width = this.scrollWidth - 4;
 
     if (this.control.attributes.numberType) {
       this._numberType = this.control.attributes.numberType;
@@ -279,8 +279,9 @@ class RdDial extends FormElement {
     this.$elem.classList.add('active');
 
     this._rect = this.getBoundingClientRect();
-    this.control.attributes.height = this.clientHeight;
-    this.control.attributes.width = this.clientWidth;
+    this.control.attributes.height = this.scrollHeight - 4;
+    this.control.attributes.width = this.scrollWidth - 4;
+    console.log(this.control.attributes.width, this.control.attributes.height);
 
     this.addEventListener('touchmove', this.onTouchMove.bind(this));
     this.addEventListener('touchend', this.onMouseUp.bind(this));
@@ -290,14 +291,12 @@ class RdDial extends FormElement {
       this._touchItem = e.touches.length - 1;
     }
 
+    const scrollLeft = window.scrollX;
+    const scrollTop = window.scrollY;
     this.control.attributes.x =
-      e.touches[this._touchItem].pageX -
-      this._rect.left -
-      this.$handle.clientWidth / 2;
+      e.touches[0].pageX - (this._rect.left + scrollLeft);
     this.control.attributes.y =
-      e.touches[this._touchItem].pageY -
-      this._rect.top -
-      this.$handle.clientHeight / 2;
+      e.touches[0].pageY - (this._rect.top + scrollTop);
 
     this.setPosition();
   }
@@ -311,10 +310,13 @@ class RdDial extends FormElement {
     this.$elem.classList.add('active');
 
     this._rect = this.getBoundingClientRect();
-    this.control.attributes.height = this.clientHeight;
-    this.control.attributes.width = this.clientWidth;
-    this.control.attributes.x = e.offsetX;
-    this.control.attributes.y = e.offsetY;
+    this.control.attributes.height = this.scrollHeight - 4;
+    this.control.attributes.width = this.scrollWidth - 4;
+
+    const scrollLeft = window.scrollX;
+    const scrollTop = window.scrollY;
+    this.control.attributes.x = e.pageX - (this._rect.left + scrollLeft);
+    this.control.attributes.y = e.pageY - (this._rect.top + scrollTop);
 
     this.addEventListener('mousemove', this.onMouseMove.bind(this));
     this.addEventListener('mouseup', this.onMouseUp.bind(this));
@@ -333,11 +335,13 @@ class RdDial extends FormElement {
       this._touchItem = e.touches.length - 1; // make this touch = the latest touch in the touches list instead of using event
     }
 
+    const scrollLeft = window.scrollX;
+    const scrollTop = window.scrollY;
+
     this.control.attributes.x =
-      (this.getBoundingClientRect().left - e.touches[this._touchItem].pageX) *
-      -1;
+      e.touches[0].pageX - (this._rect.left + scrollLeft);
     this.control.attributes.y =
-      (this.offsetTop - e.touches[this._touchItem].pageY) * -1;
+      e.touches[0].pageY - (this._rect.top + scrollTop);
 
     if (this.control.hasUserInput && this.control.isActive) {
       this.setPosition();
@@ -357,9 +361,11 @@ class RdDial extends FormElement {
 
     this.$elem.classList.add('active');
 
-    this.control.attributes.x =
-      (this.getBoundingClientRect().left - e.pageX) * -1;
-    this.control.attributes.y = (this.offsetTop - e.pageY) * -1;
+    const scrollLeft = window.scrollX;
+    const scrollTop = window.scrollY;
+
+    this.control.attributes.x = e.pageX - (this._rect.left + scrollLeft);
+    this.control.attributes.y = e.pageY - (this._rect.top + scrollTop);
 
     if (this.control.hasUserInput && this.control.isActive) {
       this.setPosition();
@@ -471,8 +477,9 @@ class RdDial extends FormElement {
     // Offset the angle so 0 is left most edge
     angle = (angle - 180) % 360;
 
-    const xRange = [0, this.clientWidth - this.$handle.offsetWidth];
-    const yRange = [0, this.clientHeight - this.$handle.offsetHeight];
+    const xRange = [0, this.scrollWidth - this.$handle.offsetWidth];
+    const yRange = [0, this.scrollHeight - this.$handle.offsetHeight];
+
     const center = this.getCenter(xRange, yRange);
     const radius = xRange[1] - center[0];
 
@@ -558,16 +565,16 @@ class RdDial extends FormElement {
     this._joystickPos = this.circularBounds(
       this.control.attributes.x,
       this.control.attributes.y,
-      [0, this.clientWidth - this.$handle.offsetWidth],
-      [0, this.clientHeight - this.$handle.offsetHeight],
+      [0, this.control.attributes.width - this.$handle.offsetWidth],
+      [0, this.control.attributes.height - this.$handle.offsetHeight],
     );
     this.control.attributes.x = this.clamp(this._joystickPos[0], [
       0,
-      this.clientWidth - this.$handle.offsetWidth,
+      this.control.attributes.width - this.$handle.offsetWidth,
     ]);
     this.control.attributes.y = this.clamp(this._joystickPos[1], [
       0,
-      this.clientHeight - this.$handle.offsetHeight,
+      this.control.attributes.height - this.$handle.offsetHeight,
     ]);
     this.control.attributes.position =
       'translate(' +
@@ -581,6 +588,11 @@ class RdDial extends FormElement {
   }
 
   updateControl(controlValue: number | number[]) {
+    this.control.currentValue = controlValue;
+    this._rect = this.getBoundingClientRect();
+    this.control.attributes.width = this.scrollWidth - 4;
+    this.control.attributes.height = this.scrollHeight - 4;
+
     const angle = this.scale(
       controlValue as number,
       this.control.attributes.min as number,
@@ -588,11 +600,11 @@ class RdDial extends FormElement {
       this.control.attributes.stops[0],
       this.control.attributes.stops[1],
     );
+
     const coords = this.degreesToCoordinates(angle as number);
     this.control.attributes.x = coords[0];
     this.control.attributes.y = coords[1];
     this.setPosition();
-    this.control.currentValue = controlValue;
   }
 
   setChannel(name: string) {

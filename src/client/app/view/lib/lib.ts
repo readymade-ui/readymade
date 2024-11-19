@@ -73,6 +73,7 @@ class LibraryComponent extends CustomElement {
         controlElement.value = control.currentValue;
       }
     };
+
     const onConnect = () => this.transmitter.send({ event: 'ping' });
 
     if (this.transmit === true) {
@@ -567,9 +568,9 @@ class LibraryComponent extends CustomElement {
     const squareJoystick = (<unknown>(
       this.shadowRoot?.querySelector('[type="joystick"]')
     )) as RdSlider;
-    const vertSlider = (<unknown>(
-      this.shadowRoot?.querySelector('[type="vert"]')
-    )) as RdSlider;
+    // const vertSlider = (<unknown>(
+    //   this.shadowRoot?.querySelector('[type="vert"]')
+    // )) as RdSlider;
     if (this.mode === 'form') {
       this.channel?.close();
       radio.onchange = (ev: Event) => {
@@ -610,14 +611,14 @@ class LibraryComponent extends CustomElement {
       squareJoystick.oninput = (ev: CustomEvent) => {
         console.log((ev.target as any).value);
       };
-      vertSlider.oninput = (ev: CustomEvent) => {
-        console.log((ev.target as any).value);
-      };
+      // vertSlider.oninput = (ev: CustomEvent) => {
+      //   console.log((ev.target as any).value);
+      // };
     }
     if (this.mode === 'channel') {
       this.channel = new BroadcastChannel(this.channelName);
       this.channel.onmessage = (event) => {
-        console.log(event);
+        // console.log(event);
         if (!this.transmitter?.isOpen) {
           if (this.touchOSCEnabled) {
             if (event.data.name === 'switch') {
@@ -657,7 +658,7 @@ class LibraryComponent extends CustomElement {
       buttonNumberPad.onclick = () => {};
       dial.oninput = () => {};
       squareJoystick.oninput = () => {};
-      vertSlider.oninput = () => {};
+      // vertSlider.oninput = () => {};
     }
   }
 }
