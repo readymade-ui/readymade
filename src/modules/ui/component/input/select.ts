@@ -206,7 +206,13 @@ class RdDropdown extends FormElement {
     if (control.attributes.options) {
       this.innerHTML = '';
       const select = document.createElement('select');
-      for (let i = 0; i <= control.attributes.options.length; i++) {
+
+      const defaultOption = document.createElement('option');
+      defaultOption.value = '';
+      defaultOption.text = 'Select an option';
+      select.appendChild(defaultOption);
+
+      for (let i = 0; i < control.attributes.options.length; i++) {
         const option = document.createElement('option');
         option.textContent = control.attributes.options[i];
         select.appendChild(option);
