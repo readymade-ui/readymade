@@ -5675,6 +5675,12 @@ let RdSlider = class extends FormElement {
   constructor() {
     super();
   }
+  connectedCallback() {
+    this._hasConnected = true;
+    if (this._hasPendingControl) {
+      this.onSliderInit();
+    }
+  }
   static get observedAttributes() {
     return ["type", "size", "control", "channel"];
   }
@@ -5761,18 +5767,64 @@ let RdSlider = class extends FormElement {
     }
     if (this.control.attributes.orient === "is--hor") {
       this.style.maxWidth = "200px";
-      this.control.currentValue = 0;
-      this.control.attributes.position = "translate(0px,0px)";
+      this.style.maxHeight = "32px";
+      if (this.control.currentValue === void 0 || this.control.currentValue === null || isNaN(this.control.currentValue)) {
+        this.control.currentValue = 0;
+        this.control.attributes.position = "translate(0px,0px)";
+      } else {
+        this.control.attributes.x = this.scale(
+          this.control.currentValue,
+          this.control.attributes.min,
+          this.control.attributes.max,
+          0,
+          168
+        );
+        this.control.attributes.y = this.clientHeight / 2;
+        this.control.attributes.position = "translate(" + this.control.attributes.x + "px," + this.control.attributes.y + "px)";
+      }
     } else if (this.control.attributes.orient === "is--vert") {
-      this.style.height = "200px";
-      this.control.currentValue = 0;
-      this.control.attributes.position = "translate(0px,0px)";
+      this.style.maxWidth = "32px";
+      this.style.maxHeight = "200px";
+      if (this.control.currentValue === void 0 || this.control.currentValue === null || isNaN(this.control.currentValue)) {
+        this.control.currentValue = 0;
+        this.control.attributes.position = "translate(0px,0px)";
+      } else {
+        this.control.attributes.x = this.clientWidth / 2;
+        this.control.attributes.y = this.scale(
+          this.control.currentValue,
+          this.control.attributes.min,
+          this.control.attributes.max,
+          0,
+          168
+        );
+      }
     } else if (this.control.attributes.orient.includes("is--joystick")) {
       this.style.maxWidth = "200px";
       this.style.maxHeight = "200px";
-      this.control.currentValue = [0, 0];
-      this.control.attributes.x = this.control.attributes.y = 76;
-      this.control.attributes.position = "translate(76px,76px)";
+      if (this.control.currentValue === void 0 || this.control.currentValue === null) {
+        this.control.currentValue = [0, 0];
+        this.control.attributes.x = this.control.attributes.y = 76;
+      } else {
+        if (this.control.attributes.snapToCenter === true) {
+          this.control.attributes.x = this.clientWidth / 2 + this.$handle.offsetWidth / 2;
+          this.control.attributes.y = this.clientHeight / 2 + this.$handle.offsetHeight / 2;
+        } else {
+          this.control.attributes.x = this.scale(
+            this.control.currentValue[0],
+            this.control.attributes.min[0],
+            this.control.attributes.max[0],
+            0,
+            this.clientWidth
+          ) + this.$handle.offsetWidth / 2;
+          this.control.attributes.y = this.scale(
+            this.control.currentValue[1],
+            this.control.attributes.min[1],
+            this.control.attributes.max[1],
+            0,
+            this.clientHeight
+          ) + this.$handle.offsetWidth / 2;
+        }
+      }
       const joyStickType = this.control.attributes.orient.replace(
         "is--joystick--",
         ""
@@ -5784,7 +5836,8 @@ let RdSlider = class extends FormElement {
       }
       this.shadowRoot.querySelector(".slider").classList.add(this._joystickType);
     }
-    this.setActualPosition(this.control.attributes.position);
+    this.setPosition(this.control.attributes.x, this.control.attributes.y);
+    this.mapValue();
   }
   onMouseLeave() {
   }
@@ -6166,10 +6219,11 @@ let RdSlider = class extends FormElement {
     if (this.control.attributes.size) {
       this.shadowRoot.querySelector(".slider").classList.add(this.control.attributes.size);
     }
-    if (control.currentValue !== void 0) {
-      this.value = control.currentValue;
+    if (this._hasConnected === true) {
+      this.onSliderInit();
+    } else {
+      this._hasPendingControl = true;
     }
-    this.onSliderInit();
   }
 };
 __decorateClass$o([
@@ -11280,7 +11334,7 @@ let LibraryComponent = class extends CustomElement {
       fetch("http://localhost:4449/ice").then((res) => res.json()).then((iceServers) => {
         this.transmitter = new Transmitter({
           sharedKey: "lobby",
-          rtc: {
+          rtcConfig: {
             iceServers
           },
           serverConfig: {
@@ -11425,6 +11479,7 @@ let LibraryComponent = class extends CustomElement {
           channel: this.channelName,
           control: {
             name: "switch",
+            currentValue: true,
             attributes: {}
           },
           hint: {
@@ -11473,7 +11528,7 @@ let LibraryComponent = class extends CustomElement {
             attributes: {
               orient: "is--vert",
               min: 0,
-              max: 255
+              max: 200
             }
           },
           hint: {
@@ -11492,7 +11547,7 @@ let LibraryComponent = class extends CustomElement {
               orient: "is--joystick",
               min: [0, 0],
               max: [1024, 1024],
-              snapToCenter: true,
+              snapToCenter: false,
               numberType: "int"
             }
           },
