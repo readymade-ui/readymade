@@ -3239,13 +3239,12 @@ function State() {
   };
 }
 function Emitter(eventName, options, channelName) {
-  return function decorator(target) {
+  return function decorator(target, propertyKey, descriptor) {
     const channel = channelName ? channelName : "default";
-    let prop = "";
     if (eventName) {
-      prop = EMIT_KEY + channel + eventName;
+      propertyKey = EMIT_KEY + channel + eventName;
     } else {
-      prop = EMIT_KEY + channel;
+      propertyKey = EMIT_KEY + channel;
     }
     function addEvent(name, chan) {
       if (!this.emitter) {
@@ -3265,9 +3264,9 @@ function Emitter(eventName, options, channelName) {
         }
       }
     }
-    if (!target[prop]) {
-      target[prop] = function() {
-        addEvent.call(this, eventName, channelName);
+    if (!target[propertyKey]) {
+      target[propertyKey] = function() {
+        addEvent.call(this, eventName, channelName, descriptor);
       };
     }
     target.bindEmitters = function onEmitterInit() {
@@ -5256,7 +5255,7 @@ let RdRadioGroup = class extends FormElement {
         const input = document.createElement("input");
         const label = document.createElement("label");
         input.setAttribute("type", "radio");
-        input.setAttribute("name", control.attributes.inputs[i].name);
+        input.setAttribute("name", control.attributes.inputs[i].label);
         input.setAttribute("value", control.attributes.inputs[i].value);
         label.setAttribute("for", control.attributes.inputs[i].value);
         label.textContent = control.attributes.inputs[i].label;
@@ -7641,12 +7640,12 @@ let MyListComponent = class extends CustomElement {
       } else {
         this.deactivateElement(li);
       }
-      li.addEventListener("click", (clickEv) => {
+      li.addEventListener("click", () => {
         getSiblings(li).forEach((elem) => {
           this.deactivateElement(elem);
         });
         this.activateElement(li);
-        this.onSubmit(clickEv);
+        this.onSubmit();
       });
     }
   }
@@ -7657,7 +7656,7 @@ let MyListComponent = class extends CustomElement {
     const siblings = getSiblings(currentElement);
     this.currentIndex = getElementIndex(currentElement);
     if (ev.keyCode === 13) {
-      this.onSubmit(ev);
+      this.onSubmit();
     }
     if (ev.keyCode === 38) {
       if (this.currentIndex === 0) {
@@ -9938,10 +9937,9 @@ class Transmitter {
     this.connections = {};
     this.remotePeerId = null;
     this.store = { messages: [] };
-    this.rtcConfiguration = config.rtcConfig ? config.rtc : {
+    this.rtcConfiguration = config.rtcConfig ? config.rtcConfig : {
       iceServers: [
         {
-          url: "stun:stun.l.google.com:19302",
           urls: ["stun:stun.l.google.com:19302"]
         }
       ]
