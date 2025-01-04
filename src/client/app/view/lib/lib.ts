@@ -70,7 +70,7 @@ class LibraryComponent extends CustomElement {
         const controlElement = surface.querySelector(
           `[name="${control.name}"]`,
         );
-        controlElement.value = control.currentValue;
+        (controlElement as any).value = control.currentValue;
       }
     };
 

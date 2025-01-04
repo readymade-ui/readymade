@@ -251,7 +251,7 @@ class RdRadioGroup extends FormElement {
         const input = document.createElement('input');
         const label = document.createElement('label');
         input.setAttribute('type', 'radio');
-        input.setAttribute('name', control.attributes.inputs[i].name);
+        input.setAttribute('name', control.attributes.inputs[i].label);
         input.setAttribute('value', control.attributes.inputs[i].value);
         label.setAttribute('for', control.attributes.inputs[i].value);
         label.textContent = control.attributes.inputs[i].label;

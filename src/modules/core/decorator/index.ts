@@ -100,14 +100,17 @@ export function Emitter(
   options?: any,
   channelName?: string,
 ) {
-  return function decorator(target: any) {
+  return function decorator(
+    target: any,
+    propertyKey: string | symbol,
+    descriptor: PropertyDescriptor,
+  ) {
     const channel = channelName ? channelName : 'default';
-    let prop: string = '';
 
     if (eventName) {
-      prop = EMIT_KEY + channel + eventName;
+      propertyKey = EMIT_KEY + channel + eventName;
     } else {
-      prop = EMIT_KEY + channel;
+      propertyKey = EMIT_KEY + channel;
     }
 
     function addEvent(name?: string, chan?: string) {
@@ -130,9 +133,9 @@ export function Emitter(
       }
     }
 
-    if (!target[prop]) {
-      target[prop] = function () {
-        addEvent.call(this, eventName, channelName);
+    if (!target[propertyKey]) {
+      target[propertyKey] = function () {
+        addEvent.call(this, eventName, channelName, descriptor);
       };
     }
 

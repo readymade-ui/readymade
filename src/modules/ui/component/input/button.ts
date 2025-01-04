@@ -6,6 +6,7 @@ export interface RdButtonAttributes {
   label?: string;
   width?: string;
   height?: string;
+  style?: Partial<CSSStyleDeclaration>;
 }
 
 @Component({

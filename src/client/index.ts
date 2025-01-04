@@ -1,6 +1,6 @@
 import { Router, routing } from './app/routing';
 
-if (import.meta.env.DEV) {
+if (((<unknown>import.meta) as any).env.DEV) {
   window['clientRouter'] = new Router('#root', routing, true);
 }
 
