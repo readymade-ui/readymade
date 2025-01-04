@@ -82,7 +82,7 @@ class LibraryComponent extends CustomElement {
         .then((iceServers) => {
           this.transmitter = new Transmitter({
             sharedKey: 'lobby',
-            rtc: {
+            rtcConfig: {
               iceServers,
             },
             serverConfig: {
@@ -229,6 +229,7 @@ class LibraryComponent extends CustomElement {
           channel: this.channelName,
           control: {
             name: 'switch',
+            currentValue: true,
             attributes: {},
           },
           hint: {
@@ -277,7 +278,7 @@ class LibraryComponent extends CustomElement {
             attributes: {
               orient: 'is--vert',
               min: 0,
-              max: 255,
+              max: 200,
             },
           },
           hint: {
@@ -296,7 +297,7 @@ class LibraryComponent extends CustomElement {
               orient: 'is--joystick',
               min: [0, 0],
               max: [1024, 1024],
-              snapToCenter: true,
+              snapToCenter: false,
               numberType: 'int',
             },
           },

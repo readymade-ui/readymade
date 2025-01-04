@@ -38,12 +38,15 @@ export interface RdControl<A> {
 }
 
 export interface RdControlSurfaceElement<C> {
-  label: string;
+  label?: string;
   selector: string;
   style?: Partial<CSSStyleDeclaration>;
   classes?: Array<string>;
   control: C;
   channel?: string;
+  hint?: {
+    template: string;
+  };
 }
 
 export interface RdControlSurface {
