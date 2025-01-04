@@ -1,5 +1,11 @@
 # CHANGELOG
 
+### 3.1.2
+
+- fix: `RdSlider` should initialize with the correct position when using a control
+- fix: control types were not properly exported, prohibiting their use in third-party projects
+- fix: various TypeScript issues, mostly internal
+
 ### 3.1.1
 
 - fix: `RdDial` and `RdSlider` handles could appear with incorrect position

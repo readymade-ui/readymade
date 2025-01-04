@@ -2,7 +2,7 @@
 import {
   attachShadow,
   attachDOM,
-  attachStyle
+  attachStyle,
 } from '../../../../src/modules/core/element/src/attach';
 import { ElementMeta } from './../../../../src/modules/core/decorator';
 
@@ -23,7 +23,7 @@ describe('attachShadow Test', () => {
     `;
     element.elementMeta = {
       selector: 'x-test',
-      mode: 'open'
+      mode: 'open',
     };
   });
 
@@ -35,7 +35,7 @@ describe('attachShadow Test', () => {
   it('has a shadow dom template', () => {
     attachShadow(element, { mode: element.elementMeta.mode });
     expect(element.shadowRoot.querySelector('div').innerText).equals(
-      'Readymade Test'
+      'Readymade Test',
     );
   });
 });
@@ -48,7 +48,7 @@ describe('attachDOM Test', () => {
       selector: 'x-test',
       template: `
       <div>Readymade Test</div>
-      `
+      `,
     };
   });
 
@@ -75,13 +75,13 @@ describe('attachStyle Test', () => {
         :host {
           background: #ff0000;
         }
-      `
+      `,
     };
   });
 
   xit('head contains style tag with injected styles', () => {
     attachShadow(element, { mode: 'open' });
-    attachStyle(element, { mode: 'open' });
+    attachStyle(element);
     const style: HTMLElement = document
       .querySelector('head')
       .querySelector('[id="x-test-x"]');

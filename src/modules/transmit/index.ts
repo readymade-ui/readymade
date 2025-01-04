@@ -103,6 +103,7 @@ export class Transmitter {
   public debug: boolean = true;
   public rtcConfiguration: RTCConfiguration;
   public config: TransmitterConfiguration;
+  public channel: RTCDataChannel;
   public store: {
     messages: Array<any>;
   };
@@ -120,15 +121,14 @@ export class Transmitter {
     this.remotePeerId = null;
     this.store = { messages: [] };
     this.rtcConfiguration = config.rtcConfig
-      ? config.rtc
-      : {
+      ? config.rtcConfig
+      : ({
           iceServers: [
             {
-              url: 'stun:stun.l.google.com:19302',
               urls: ['stun:stun.l.google.com:19302'],
             },
           ],
-        };
+        } as RTCConfiguration);
     this.dataChannelConfig = {
       ordered: false,
       maxPacketLifeTime: 1000,

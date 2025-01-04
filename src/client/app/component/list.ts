@@ -48,12 +48,12 @@ class MyListComponent extends CustomElement {
       } else {
         this.deactivateElement(li);
       }
-      li.addEventListener('click', (clickEv: MouseEvent) => {
+      li.addEventListener('click', () => {
         getSiblings(li).forEach((elem: Element) => {
           this.deactivateElement(elem);
         });
         this.activateElement(li);
-        this.onSubmit(clickEv);
+        this.onSubmit();
       });
     }
   }
@@ -65,7 +65,7 @@ class MyListComponent extends CustomElement {
     const siblings = getSiblings(currentElement);
     this.currentIndex = getElementIndex(currentElement);
     if (ev.keyCode === 13) {
-      this.onSubmit(ev);
+      this.onSubmit();
     }
     if (ev.keyCode === 38) {
       // up
@@ -99,7 +99,7 @@ class MyListComponent extends CustomElement {
     }
   }
   public onSubmit() {
-    // console.log(this, event);
+    // noop?
   }
 }
 
