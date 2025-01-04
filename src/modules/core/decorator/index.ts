@@ -96,7 +96,7 @@ export function State() {
 }
 
 export function Emitter(
-  eventName?: string,
+  eventName: string,
   options?: any,
   channelName?: string,
 ) {

@@ -16,4 +16,9 @@ export {
   RdSurface,
   RdSurfaceElement,
 } from './component';
-export * from './component/control';
+export type {
+  RdLegacyControl,
+  RdControl,
+  RdControlSurface,
+  RdControlSurfaceElement,
+} from './component/control';
