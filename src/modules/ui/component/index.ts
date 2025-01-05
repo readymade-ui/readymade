@@ -15,4 +15,4 @@ export { RdTextArea } from './input/textarea';
 export { RdDropdown } from './input/select';
 export { RdSlider } from './input/slider';
 export { RdDial } from './input/dial';
-export { RdSurface, RdSurfaceElement } from './surface';
+export { RdSurface, RdSurfaceElement, RdDisplayInput } from './surface';

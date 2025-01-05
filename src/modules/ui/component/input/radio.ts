@@ -262,7 +262,8 @@ class RdRadioGroup extends FormElement {
         elem.onblur = () => {
           this.onValidate();
         };
-        elem.onclick = (ev: MouseEvent) => {
+        elem.onchange = (ev: MouseEvent) => {
+          this.value = (ev.target as HTMLInputElement).value;
           if (this.channel) {
             this.control.currentValue = (ev.target as HTMLInputElement).value;
             this.channel.postMessage(this.control);

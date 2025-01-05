@@ -1,6 +1,6 @@
 {
   "name": "@readymade/transmit",
-  "version": "3.1.2",
+  "version": "3.1.3",
   "description": "Swiss-army knife for communicating over WebRTC DataChannel, WebSocket or Touch OSC",
   "type": "module",
   "module": "./fesm2022/index.js",
