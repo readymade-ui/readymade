@@ -1,5 +1,13 @@
 # CHANGELOG
 
+### 3.1.3
+
+- fix: `RdSlider` can now display values when used with `RdControl`
+- fix: `RdSlider` vertical slider values were offset
+- fix: `RdRadioGroup` radio group selection when set with control group
+- fix: `RdDropdown` select menu should display default as first option
+- fix: `RdDropdown` select menu should not display empty last option
+
 ### 3.1.2
 
 - fix: `RdSlider` should initialize with the correct position when using a control
