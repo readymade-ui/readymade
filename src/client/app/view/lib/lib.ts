@@ -272,15 +272,16 @@ class LibraryComponent extends CustomElement {
           selector: 'rd-slider',
           channel: this.channelName,
           control: {
-            type: 'vert',
+            type: 'hor',
             name: 'slider',
             currentValue: 100,
             attributes: {
-              orient: 'is--vert',
+              orient: 'is--hor',
               min: 0,
               max: 200,
             },
           },
+          displayValue: true,
           hint: {
             template: documentation.slider,
           },
@@ -301,6 +302,7 @@ class LibraryComponent extends CustomElement {
               numberType: 'int',
             },
           },
+          displayValue: true,
           hint: {
             template: documentation.slider,
           },
@@ -337,7 +339,7 @@ class LibraryComponent extends CustomElement {
                   {
                     selector: '[key="Enter"]',
                     styles: {
-                      width: '100%',
+                      width: 'calc(100% - 8px)',
                       gridColumn: 'span 2',
                     },
                   },

@@ -15,6 +15,7 @@ export {
   RdDial,
   RdSurface,
   RdSurfaceElement,
+  RdDisplayInput,
 } from './component';
 export type {
   RdLegacyControl,

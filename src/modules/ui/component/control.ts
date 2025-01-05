@@ -47,6 +47,7 @@ export interface RdControlSurfaceElement<C> {
   hint?: {
     template: string;
   };
+  displayValue?: boolean;
 }
 
 export interface RdControlSurface {

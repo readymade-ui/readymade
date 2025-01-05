@@ -736,7 +736,7 @@ class RdSlider extends FormElement {
         this.scale(
           this.control.attributes.x as number,
           0,
-          this.control.attributes.width - this.$handle.offsetWidth,
+          168,
           <number>this.control.attributes.min,
           <number>this.control.attributes.max,
         ),
@@ -747,7 +747,7 @@ class RdSlider extends FormElement {
         this.scale(
           this.control.attributes.y as number,
           0,
-          this.control.attributes.height - this.$handle.offsetHeight,
+          168,
           <number>this.control.attributes.min,
           <number>this.control.attributes.max,
         ),
