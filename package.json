@@ -32,7 +32,7 @@
     "build": "cross-env NODE_ENV=production yarn clean:dist && yarn build:prod",
     "build:prod": "yarn clean:dist && concurrently \"yarn build:index\" \"yarn build:routes\" \"yarn build:server\"",
     "build:client": "cross-env NODE_ENV=development vite build ./src/client/ --config vite.config.inline.js --outDir ../../dist/client",
-    "build:library": "./BUILD.sh",
+    "build:library": "yarn clean:dist && bash ./BUILD.sh",
     "build:index": "vite build ./src/client/ --outDir ../../dist/client --config vite.config.index.js",
     "build:routes": "vite build ./src/client/ --outDir ../../dist/client --config vite.config.routes.js",
     "build:server": "vite build --outDir dist/server --ssr src/server/index.ts --config vite.config.server.js",
