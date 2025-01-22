@@ -132,7 +132,7 @@
     "tslib": "~2.7.0",
     "typescript": "~5.5.0",
     "typescript-eslint": "^8.8.1",
-    "vite": "^5.4.8",
+    "vite": "^5.4.12",
     "vite-plugin-alias": "^0.1.1",
     "vite-plugin-html": "^3.2.2",
     "vite-plugin-node-polyfills": "^0.22.0",
