@@ -87,7 +87,7 @@
     "node-fetch": "2.6.7",
     "node-window-polyfill": "^1.0.2",
     "osc": "^2.4.5",
-    "prismjs": "^1.29.0",
+    "prismjs": "^1.30.0",
     "rimraf": "^6.0.1",
     "vite-node": "^2.1.2",
     "ws": "^8.18.0"
